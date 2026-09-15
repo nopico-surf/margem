@@ -9,6 +9,9 @@
 .hero-message-group .message-component{width:100%}
 .topics-button{display:inline-flex;align-items:center;gap:6px;padding:10px 12px}
 .topics-button img{width:16px;height:16px}
+@media(max-width:599px){
+  .message-component:focus-within{position:fixed;left:16px;right:16px;bottom:calc(var(--keyboard-inset,0px) + 16px);z-index:30;box-shadow:0 -8px 24px -8px rgb(0 0 0 / 16%)}
+}
 .pathways{background:var(--neutral-50)}
 .pathway-card{min-height:82px;justify-content:flex-start;gap:16px}
 .pathway-card>span{flex:1;min-width:0}

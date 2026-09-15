@@ -17,6 +17,28 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   const initialFocusRef = useRef(true);
   const state = value.length > 0 ? "filed" : focused ? "focused" : "default";
 
+  // Acompanha o teclado virtual do celular: guarda a altura ocupada por ele numa
+  // variável CSS pra o campo de mensagem conseguir ficar colado acima dele.
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    function updateKeyboardInset() {
+      if (!viewport) return;
+      const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      document.documentElement.style.setProperty("--keyboard-inset", `${inset}px`);
+    }
+
+    updateKeyboardInset();
+    viewport.addEventListener("resize", updateKeyboardInset);
+    viewport.addEventListener("scroll", updateKeyboardInset);
+    return () => {
+      viewport.removeEventListener("resize", updateKeyboardInset);
+      viewport.removeEventListener("scroll", updateKeyboardInset);
+      document.documentElement.style.setProperty("--keyboard-inset", "0px");
+    };
+  }, []);
+
   // Autofocus real ao abrir a home. Marca o estado como focado no mesmo efeito:
   // o autoFocus do navegador pode focar o campo antes do React conectar o onFocus,
   // deixando o estado interno dessincronizado do foco real do DOM.
