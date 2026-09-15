@@ -17,6 +17,31 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   const initialFocusRef = useRef(true);
   const state = value.length > 0 ? "filed" : focused ? "focused" : "default";
 
+  // Acompanha o teclado virtual do celular de verdade (não o foco do campo, que pode
+  // acontecer sem teclado nenhum aparecer, ex: autofocus programático ao abrir a página).
+  // Só marca "teclado aberto" quando o viewport visível realmente encolheu de forma relevante.
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    function update() {
+      if (!viewport) return;
+      const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      document.documentElement.style.setProperty("--keyboard-inset", `${inset}px`);
+      document.documentElement.classList.toggle("keyboard-open", inset > 60);
+    }
+
+    update();
+    viewport.addEventListener("resize", update);
+    viewport.addEventListener("scroll", update);
+    return () => {
+      viewport.removeEventListener("resize", update);
+      viewport.removeEventListener("scroll", update);
+      document.documentElement.style.setProperty("--keyboard-inset", "0px");
+      document.documentElement.classList.remove("keyboard-open");
+    };
+  }, []);
+
   // Autofocus real ao abrir a home. Marca o estado como focado no mesmo efeito:
   // o autoFocus do navegador pode focar o campo antes do React conectar o onFocus,
   // deixando o estado interno dessincronizado do foco real do DOM.

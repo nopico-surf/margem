@@ -65,14 +65,16 @@ export default function AppPage() {
       </header>
 
       <section className="home-hero" aria-labelledby="home-title">
-        <div className="hero-input-group">
-          <div className="identity-badge"><img src={securityIcon} alt="" />Você não precisa se identificar</div>
-          <h1 id="home-title">Este é um espaço<br />seguro e acolhedor</h1>
+        <div className="hero-focus-track">
+          <div className="hero-input-group">
+            <div className="identity-badge"><img src={securityIcon} alt="" />Você não precisa se identificar</div>
+            <h1 id="home-title">Este é um espaço<br />seguro e acolhedor</h1>
+          </div>
+          <div className="hero-message-group">
+            <MessageInput value={text} onChange={setText} onSubmit={submit} />
+          </div>
         </div>
-        <div className="hero-message-group">
-          <MessageInput value={text} onChange={setText} onSubmit={submit} />
-          <button className="topics-button" type="button">Se preferir, veja os tópicos <img src={arrowIcon} alt="" /></button>
-        </div>
+        <button className="topics-button" type="button">Se preferir, veja os tópicos <img src={arrowIcon} alt="" /></button>
       </section>
       <section className="pathways" aria-labelledby="pathways-title">
         <h2 id="pathways-title">Você pode começar por aqui</h2>
