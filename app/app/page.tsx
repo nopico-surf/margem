@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageInput } from "@/components/MessageInput";
 
@@ -31,7 +31,6 @@ export default function AppPage() {
   const router = useRouter();
   const [checkingConsent, setCheckingConsent] = useState(true);
   const [text, setText] = useState("");
-  const heroInputGroupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -45,18 +44,6 @@ export default function AppPage() {
     }
     setCheckingConsent(false);
   }, [router]);
-
-  // Mede a altura do bloco badge+titulo pra empilhar corretamente os elementos
-  // "sticky" acima do campo de mensagem (header, depois esse bloco, depois o campo).
-  useEffect(() => {
-    const el = heroInputGroupRef.current;
-    if (!el) return;
-    const update = () => document.documentElement.style.setProperty("--hero-input-height", `${el.offsetHeight}px`);
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   function submit(event?: FormEvent) {
     event?.preventDefault();
@@ -78,7 +65,7 @@ export default function AppPage() {
       </header>
 
       <section className="home-hero" aria-labelledby="home-title">
-        <div className="hero-input-group" ref={heroInputGroupRef}>
+        <div className="hero-input-group">
           <div className="identity-badge"><img src={securityIcon} alt="" />Você não precisa se identificar</div>
           <h1 id="home-title">Este é um espaço<br />seguro e acolhedor</h1>
         </div>
