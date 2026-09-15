@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageInput } from "@/components/MessageInput";
+import { KeyboardDiagnostics } from "@/components/KeyboardDiagnostics";
 
 const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
 const menu = "https://www.figma.com/api/mcp/asset/2b2b0245-44e5-4dbe-a618-042679b2614d.svg";
@@ -59,6 +60,7 @@ export default function AppPage() {
 
   return (
     <main className="app-shell">
+      <KeyboardDiagnostics />
       <header className="app-header">
         <img className="app-logo" src={logo} alt="Margem" />
         <button className="menu-button" type="button" aria-label="Abrir menu"><img src={menu} alt="" /></button>
