@@ -43,7 +43,16 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
     update();
     viewport.addEventListener("resize", update);
     viewport.addEventListener("scroll", update);
+
+    // O track também muda de altura sem o teclado se mexer: o bloco "Conte do seu jeito"
+    // aparecendo e a textarea crescendo de linha. Sem remedir aqui, o deslocamento fica
+    // velho e a margem até o teclado encolhe (ou some).
+    const track = document.querySelector(".hero-focus-track");
+    const observer = new ResizeObserver(update);
+    if (track) observer.observe(track);
+
     return () => {
+      observer.disconnect();
       viewport.removeEventListener("resize", update);
       viewport.removeEventListener("scroll", update);
       document.documentElement.style.setProperty("--keyboard-inset", "0px");
@@ -105,7 +114,7 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   }, [value]);
 
   return (
-    <form className={`message-component message-component-${state}`} onSubmit={onSubmit} onClick={() => textareaRef.current?.focus()}>
+    <form className={`message-component message-component-${state}`} onSubmit={onSubmit} onClick={() => { setFocused(true); textareaRef.current?.focus(); }}>
       {state === "default" && (
         <div className="message-component-placeholder" aria-hidden="true">
           <span className="message-component-caret" />
