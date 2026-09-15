@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getOrCreateSessaoId } from "@/lib/sessao-client";
 
 const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
 const checkboxSelectedIcon = "https://www.figma.com/api/mcp/asset/ae8f8ca3-9062-4066-abfb-8dd5bed8e56b.svg";
@@ -18,6 +19,12 @@ export default function ProtecaoDeDadosPage() {
     try {
       window.localStorage.setItem("margem-consentimento", "true");
     } catch {}
+    const sessaoId = getOrCreateSessaoId();
+    fetch("/api/sessao", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessaoId }),
+    }).catch(() => {});
     router.push("/app");
   }
 

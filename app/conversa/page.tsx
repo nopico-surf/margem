@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ResultPage } from "@/components/figma-results/ResultPage";
+import { getOrCreateSessaoId } from "@/lib/sessao-client";
 
 type OrientationResult = {
   acolhimento: string;
@@ -40,7 +41,7 @@ export default function ConversaPage() {
         const response = await fetch("/api/orientacao", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ texto: value }),
+          body: JSON.stringify({ texto: value, sessaoId: getOrCreateSessaoId() }),
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || "Não foi possível preparar a orientação.");
