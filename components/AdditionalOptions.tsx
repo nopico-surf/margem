@@ -4,7 +4,7 @@ const arrow = "https://www.figma.com/api/mcp/asset/3412482e-3f94-45fa-8ac1-29e17
 
 const options = [
   "Profissionais que podem ajudar",
-  "Serviços publicos",
+  "Serviços públicos",
   "Espaços de apoio e escuta",
   "Passos reais, para fazer agora",
   "Para planejar",

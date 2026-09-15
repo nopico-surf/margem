@@ -9,6 +9,11 @@
 .hero-message-group .message-component{width:100%}
 .topics-button{display:inline-flex;align-items:center;gap:6px;padding:10px 12px}
 .topics-button img{width:16px;height:16px}
+@media(max-width:599px){
+  .app-header{position:sticky;top:0;z-index:22}
+  .hero-input-group{position:sticky;top:48px;z-index:21;background:var(--brand-100);padding-top:8px}
+  .hero-message-group .message-component{position:sticky;top:calc(48px + var(--hero-input-height,0px));z-index:20}
+}
 .pathways{background:var(--neutral-50)}
 .pathway-card{min-height:82px;justify-content:flex-start;gap:16px}
 .pathway-card>span{flex:1;min-width:0}
