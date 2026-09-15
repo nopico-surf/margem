@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(Start-Process \"C:\\\\Users\\\\vitor\\\\OneDrive\\\\Documents\\\\Margem\\\\index.html\")"
+      "PowerShell(Start-Process \"C:\\\\Users\\\\vitor\\\\OneDrive\\\\Documents\\\\Margem\\\\index.html\")",
+      "PowerShell(git config user.name \"Claude Haiku 4.5\")",
+      "PowerShell(git config user.email \"vitorgaudio@gmail.com\")",
+      "PowerShell(git add -A)",
+      "PowerShell(git add lib/normalizar.ts lib/risco.ts)",
+      "PowerShell(grep \"^lib/\")",
+      "PowerShell(git reset)",
+      "PowerShell(git show HEAD^:lib/normalizar.ts 2>$null; if \\($LASTEXITCODE -ne 0\\) { git log -1 --format=%H -- lib/normalizar.ts | ForEach-Object { git show \"$_`:lib/normalizar.ts\" } })"
     ]
   }
 }

@@ -26,9 +26,18 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
 
     function update() {
       if (!viewport) return;
+      const root = document.documentElement;
       const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-      document.documentElement.style.setProperty("--keyboard-inset", `${inset}px`);
-      document.documentElement.classList.toggle("keyboard-open", inset > 60);
+      const open = inset > 60;
+      root.style.setProperty("--keyboard-inset", `${inset}px`);
+      root.classList.toggle("keyboard-open", open);
+
+      const track = document.querySelector(".hero-focus-track");
+      if (!track) return;
+      // Zera o deslocamento antes de medir: getBoundingClientRect já devolve a posição com o transform aplicado.
+      root.style.setProperty("--hero-track-shift", "0px");
+      const folga = viewport.height + viewport.offsetTop - 16 - track.getBoundingClientRect().bottom;
+      root.style.setProperty("--hero-track-shift", open ? `${Math.min(0, folga)}px` : "0px");
     }
 
     update();
@@ -38,6 +47,7 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       viewport.removeEventListener("resize", update);
       viewport.removeEventListener("scroll", update);
       document.documentElement.style.setProperty("--keyboard-inset", "0px");
+      document.documentElement.style.setProperty("--hero-track-shift", "0px");
       document.documentElement.classList.remove("keyboard-open");
     };
   }, []);
