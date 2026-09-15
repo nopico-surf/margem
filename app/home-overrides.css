@@ -25,4 +25,7 @@
     width:100%;
     transform:translateY(var(--hero-track-shift,0px));
   }
+  /* Tela curta: nao cabe header + badge + titulo + campo acima do teclado. */
+  html.keyboard-cramped .hero-input-group{display:none}
+  html.keyboard-cramped .hero-message-group{margin-top:0}
 }

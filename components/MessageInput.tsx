@@ -34,9 +34,19 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
 
       const track = document.querySelector(".hero-focus-track");
       if (!track) return;
-      // Zera o deslocamento antes de medir: getBoundingClientRect já devolve a posição com o transform aplicado.
+
+      // Mede sempre no estado cheio: sem deslocamento (getBoundingClientRect já devolve a
+      // posição com o transform aplicado) e sem nada escondido, senão esconder o badge e o
+      // título mudaria a própria medida que gerou a decisão, e ela ficaria oscilando.
       root.style.setProperty("--hero-track-shift", "0px");
-      const folga = viewport.height + viewport.offsetTop - 16 - track.getBoundingClientRect().bottom;
+      root.classList.remove("keyboard-cramped");
+
+      const base = viewport.height + viewport.offsetTop - 16;
+      const header = document.querySelector(".app-header");
+      const teto = header ? header.getBoundingClientRect().bottom : 0;
+      root.classList.toggle("keyboard-cramped", open && track.getBoundingClientRect().height > base - teto);
+
+      const folga = base - track.getBoundingClientRect().bottom;
       root.style.setProperty("--hero-track-shift", open ? `${Math.min(0, folga)}px` : "0px");
     }
 
@@ -58,6 +68,7 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       document.documentElement.style.setProperty("--keyboard-inset", "0px");
       document.documentElement.style.setProperty("--hero-track-shift", "0px");
       document.documentElement.classList.remove("keyboard-open");
+      document.documentElement.classList.remove("keyboard-cramped");
     };
   }, []);
 
