@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
+import { DadosPrivacidadeModal } from "@/components/DadosPrivacidadeModal";
 
 const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
 const checkboxSelectedIcon = "https://www.figma.com/api/mcp/asset/ae8f8ca3-9062-4066-abfb-8dd5bed8e56b.svg";
@@ -14,6 +15,7 @@ function IntroHeader() {
 export default function ProtecaoDeDadosPage() {
   const router = useRouter();
   const [consent, setConsent] = useState(false);
+  const [showDadosModal, setShowDadosModal] = useState(false);
 
   function onContinue() {
     try {
@@ -37,7 +39,7 @@ export default function ProtecaoDeDadosPage() {
           <p>A gente não pede seu nome, seu e-mail nem seu documento. O que você compartilhar fica guardado sem estar ligado a você, nós armazenamos tudo de forma <strong>anônima, segura e sigilosa</strong>, pra te devolver uma orientação melhor e pra entender o que as pessoas mais precisam.</p>
           <p>Se você tem <strong>menos de 18 anos</strong>, conversas com seus responsáveis sobre o que você tá buscando aqui podem ser importantes.</p>
         </div>
-        <a className="privacy-link" href="/privacidade">Ver como a gente cuida dos seus dados</a>
+        <button className="privacy-link" type="button" onClick={() => setShowDadosModal(true)}>Ver como a gente cuida dos seus dados</button>
       </div>
       <div className="intro-actions">
         <label className="consent-card">
@@ -47,6 +49,7 @@ export default function ProtecaoDeDadosPage() {
         </label>
         <button className="intro-button" type="button" disabled={!consent} onClick={onContinue}>Continuar</button>
       </div>
+      {showDadosModal && <DadosPrivacidadeModal onClose={() => setShowDadosModal(false)} />}
     </main>
   );
 }
