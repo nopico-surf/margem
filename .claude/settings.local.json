@@ -8,7 +8,11 @@
       "PowerShell(git add lib/normalizar.ts lib/risco.ts)",
       "PowerShell(grep \"^lib/\")",
       "PowerShell(git reset)",
-      "PowerShell(git show HEAD^:lib/normalizar.ts 2>$null; if \\($LASTEXITCODE -ne 0\\) { git log -1 --format=%H -- lib/normalizar.ts | ForEach-Object { git show \"$_`:lib/normalizar.ts\" } })"
+      "PowerShell(git show HEAD^:lib/normalizar.ts 2>$null; if \\($LASTEXITCODE -ne 0\\) { git log -1 --format=%H -- lib/normalizar.ts | ForEach-Object { git show \"$_`:lib/normalizar.ts\" } })",
+      "PowerShell(git config user.name)",
+      "PowerShell(git config user.email)",
+      "PowerShell(git config user.name \"nopico-surf\"; Write-Host \"autor agora: $\\(git config user.name\\) <$\\(git config user.email\\)>\"; Write-Host \"--- diff ---\"; git --no-pager diff -- app/layout.tsx)",
+      "PowerShell(git add components/KeyboardDiagnostics.tsx app/app/page.tsx)"
     ]
   }
 }

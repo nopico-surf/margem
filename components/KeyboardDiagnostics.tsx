@@ -23,6 +23,7 @@ export function KeyboardDiagnostics() {
     function update() {
       const root = document.documentElement;
       const vv = window.visualViewport;
+      if (!vv) return;
       const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
 
       setData({
