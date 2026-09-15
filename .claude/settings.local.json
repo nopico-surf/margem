@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Start-Process \"C:\\\\Users\\\\vitor\\\\OneDrive\\\\Documents\\\\Margem\\\\index.html\")"
+    ]
+  }
+}
