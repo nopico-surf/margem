@@ -8,6 +8,12 @@ type MessageInputProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
+// REGRA: se um botão ou input está num container que muda de visibilidade/layout baseado em outro
+// elemento perder foco (ex: textarea.onBlur desativa state que esconde o botão), adicione
+// onMouseDown={(e) => e.preventDefault()} no botão. Sem isso, tocar no botão tira o foco do outro
+// elemento, o container desaparece no meio do clique, e o toque cai fora do alvo.
+// Ver: https://github.com/anthropics/claude-code/issues/... (não existe issue, é padrão local)
+
 const MIN_HEIGHT = 36; // 1 linha (20px de texto + 16px de padding vertical)
 const MAX_HEIGHT = 76; // 3 linhas (60px de texto + 16px de padding vertical)
 // Usados só quando o navegador não informa o teclado de jeito nenhum.
