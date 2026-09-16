@@ -12,7 +12,10 @@ const MIN_HEIGHT = 36; // 1 linha (20px de texto + 16px de padding vertical)
 const MAX_HEIGHT = 76; // 3 linhas (60px de texto + 16px de padding vertical)
 // Usados só quando o navegador não informa o teclado de jeito nenhum.
 const TEMPO_SEM_SINAL = 500;
-const ESTIMATIVA_TECLADO = 0.45; // fração da altura da tela
+// Fração da altura da tela. No Instagram (Android) o teclado mediu ~36%; a sobra cobre teclados um pouco mais altos.
+const ESTIMATIVA_TECLADO = 0.38;
+
+type VirtualKeyboardApi = EventTarget & { overlaysContent: boolean; boundingRect: DOMRect };
 
 export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   const [focused, setFocused] = useState(false);
@@ -31,6 +34,14 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
     let larguraAtual = window.innerWidth;
     let focoEm = 0;
     let timers: number[] = [];
+    // API que informa abertura e fechamento do teclado. Só é ligada quando nenhum outro sinal
+    // chega, porque ligada ela impede o Chrome de encolher o visualViewport.
+    const virtualKeyboard = (navigator as Navigator & { virtualKeyboard?: VirtualKeyboardApi }).virtualKeyboard;
+    let virtualKeyboardInformou = false;
+    const aoMudarVirtualKeyboard = () => {
+      if (virtualKeyboard && virtualKeyboard.boundingRect.height > 0) virtualKeyboardInformou = true;
+      update();
+    };
 
     const alturaVisivel = () => (viewport ? viewport.height : window.innerHeight);
     const campoFocado = () => {
@@ -52,11 +63,20 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       let modo: "fechado" | "real" | "estimado" = "fechado";
       let linhaDoTeclado = alturaVisivel() + (viewport ? viewport.offsetTop : 0);
 
+      const alturaVirtualKeyboard = virtualKeyboard?.overlaysContent ? virtualKeyboard.boundingRect.height : 0;
+
       if (focado && tecladoReal > 120) {
         modo = "real";
+      } else if (focado && alturaVirtualKeyboard > 0 && virtualKeyboard) {
+        modo = "real";
+        linhaDoTeclado = virtualKeyboard.boundingRect.top;
+      } else if (focado && virtualKeyboardInformou) {
+        // A API já provou que funciona e agora diz altura 0: o teclado foi fechado sem tirar o foco.
+        modo = "fechado";
       } else if (focado && touch && performance.now() - focoEm >= TEMPO_SEM_SINAL) {
         modo = "estimado";
         linhaDoTeclado = window.innerHeight - alturaSemTeclado * ESTIMATIVA_TECLADO;
+        if (virtualKeyboard && !virtualKeyboard.overlaysContent) virtualKeyboard.overlaysContent = true;
       }
 
       const aberto = modo !== "fechado";
@@ -99,6 +119,7 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
     window.addEventListener("resize", update);
     document.addEventListener("focusin", aoFocar);
     document.addEventListener("focusout", update);
+    virtualKeyboard?.addEventListener("geometrychange", aoMudarVirtualKeyboard);
 
     // O track também muda de altura sem o teclado se mexer: o bloco "Conte do seu jeito"
     // aparecendo e a textarea crescendo de linha. Sem remedir aqui, o deslocamento fica
@@ -115,6 +136,7 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       window.removeEventListener("resize", update);
       document.removeEventListener("focusin", aoFocar);
       document.removeEventListener("focusout", update);
+      virtualKeyboard?.removeEventListener("geometrychange", aoMudarVirtualKeyboard);
       root.style.setProperty("--hero-track-shift", "0px");
       root.classList.remove("keyboard-open", "keyboard-cramped", "keyboard-resized");
       delete root.dataset.keyboardMode;
@@ -188,7 +210,8 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       {(state === "focused" || state === "filed") && (
         <div className="message-component-meta">
           <span>Conte do seu jeito</span>
-          <button type="submit" disabled={!value.trim()}>Enviar</button>
+          {/* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */}
+          <button type="submit" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
         </div>
       )}
     </form>
