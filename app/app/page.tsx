@@ -52,8 +52,21 @@ export default function AppPage() {
     if (!value) return;
     try {
       window.sessionStorage.setItem("margem-mensagem", value);
+      window.sessionStorage.removeItem("margem-cardIndex");
     } catch {}
     router.push("/conversa");
+  }
+
+  function handleCardClick(index: number) {
+    try {
+      window.sessionStorage.setItem("margem-cardIndex", String(index));
+      window.sessionStorage.removeItem("margem-mensagem");
+    } catch {}
+    router.push("/conversa");
+  }
+
+  function showTopics() {
+    document.getElementById("pathways-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   if (checkingConsent) return null;
@@ -70,20 +83,20 @@ export default function AppPage() {
         <div className="hero-focus-track">
           <div className="hero-input-group">
             <div className="identity-badge"><img src={securityIcon} alt="" />Você não precisa se identificar</div>
-            <h1 id="home-title">Este é um espaço<br />seguro e acolhedor</h1>
+            <h1 id="home-title">Este é um espaço<br /> seguro e acolhedor</h1>
           </div>
           <div className="hero-message-group">
             <MessageInput value={text} onChange={setText} onSubmit={submit} />
           </div>
         </div>
-        <button className="topics-button" type="button">Se preferir, veja os tópicos <img src={arrowIcon} alt="" /></button>
+        <button className="topics-button" type="button" onClick={showTopics}>Se preferir, veja os tópicos <img src={arrowIcon} alt="" /></button>
       </section>
       <section className="pathways" aria-labelledby="pathways-title">
         <h2 id="pathways-title">Você pode começar por aqui</h2>
         <p>Não precisa escolher a opção perfeita. Apenas dê o primeiro passo</p>
         <div className="pathway-list">
           {cards.map(([title, description], index) => (
-            <a href="#orientacao" className="pathway-card" key={title}>
+            <a href="/conversa" className="pathway-card" key={title} onClick={(e) => { e.preventDefault(); handleCardClick(index); }}>
               <img className="pathway-icon" src={pathwayIcons[index]} alt="" />
               <span><strong>{title}</strong><small>{description}</small></span>
               <img className="pathway-arrow" src={cardArrowIcon} alt="" />

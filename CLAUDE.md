@@ -73,7 +73,7 @@ O consentimento grava em `localStorage` e em `sessoes.consentimento_lgpd`. Quem 
 
 ## 4. Contrato do Gemini
 
-O Gemini gera **três coisas e só três**: `acolhimento`, `orientacao`, `checklist_praticas`. Mais as perguntas de acompanhamento, que ficam desligadas no v0.
+O Gemini gera **seis coisas e só seis**: `acolhimento`, `orientacao`, `pilula_espiritual`, `checklist_agora`, `checklist_proximo`, `perguntas_aprofundamento`.
 
 Ele **nunca** gera telefone, endereço, nome de profissional, nome de instituição ou número de emergência. Se qualquer um desses aparecer no texto gerado, é bug: descarta e cai no fallback pré-escrito.
 
@@ -83,8 +83,10 @@ Saída esperada:
 {
   "acolhimento": "string",
   "orientacao": "string",
-  "checklist_praticas": ["string"],
-  "perguntas_acompanhamento": [
+  "pilula_espiritual": "string",
+  "checklist_agora": ["string"],
+  "checklist_proximo": ["string"],
+  "perguntas_aprofundamento": [
     { "pergunta": "string", "opcoes": ["string"] }
   ]
 }
@@ -120,7 +122,7 @@ No v0: normalizar o texto e comparar `chave_busca`. Sem embeddings, sem similari
 
 - `sessoes`: id (UUID anônimo), timestamp_criacao, localizacao_usuario (opcional), consentimento_lgpd, timestamp_encerramento
 - `historico_interacoes`: sessao_id, tipo (campo_aberto | card | pergunta_aprofundamento), texto_original, resposta_id, foi_cache_hit, timestamp
-- `respostas`: origem (gerada_gemini | escrita_manual), chave_busca (indexada), acolhimento, orientacao, checklist_praticas (JSON), revisado_por_clinica, criado_em
+- `respostas`: origem (gerada_gemini | escrita_manual), chave_busca (indexada), acolhimento, orientacao, pilula_espiritual, checklist_agora (JSON), checklist_proximo (JSON), perguntas_aprofundamento (JSON), revisado_por_clinica, criado_em
 - `cards_predefinidos`: titulo, resposta_id, ordem
 - `profissionais_cadastrados`: nome, especialidade, telefone, email, localizacao, status, categoria_resposta_relevante
 - `instituicoes_apoio`: nome, descricao, tipo, contatos (JSON), categoria_resposta_relevante
@@ -204,16 +206,16 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
 
 ## 11. Definição de pronto do v0
 
-- [ ] Boas-vindas em dois steps, com consentimento gravado e não repetido
-- [ ] Sete cards renderizando resposta do banco sem chamar IA
-- [ ] Campo livre funcionando com cache hit e cache miss
-- [ ] Uma chamada ao Gemini no miss, com resposta salva no banco
+- [x] Boas-vindas em dois steps, com consentimento gravado e não repetido
+- [x] Seis cards renderizando resposta do banco sem chamar IA (v0; 7º "para familiares" pode vir depois)
+- [x] Campo livre funcionando com cache hit e cache miss
+- [x] Uma chamada ao Gemini no miss, com resposta salva no banco
 - [ ] Detecção de termo de risco reordenando a resposta
-- [ ] Bloco de contatos montado a partir do nosso banco
+- [x] Bloco de contatos montado a partir do nosso banco (profissionais, serviços públicos, instituições dinâmicas)
 - [ ] Link de redirect pro Google Maps funcionando
 - [ ] `/privacidade` publicada
 - [ ] `/ui` com todos os componentes e estados
-- [ ] Nenhuma chave sensível no bundle do cliente
+- [x] Nenhuma chave sensível no bundle do cliente (Service Role Key roda server-side)
 - [ ] Fallback testado: Gemini fora do ar não quebra a tela
 
 <!-- BEGIN:nextjs-agent-rules -->

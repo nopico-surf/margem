@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ResultPage } from "@/components/figma-results/ResultPage";
+import { ResultPage, type CardResource } from "@/components/figma-results/ResultPage";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 type OrientationResult = {
   acolhimento: string;
@@ -14,7 +15,19 @@ type OrientationResult = {
   perguntas_aprofundamento: Array<{ pergunta: string; opcoes: string[] }>;
   risco?: unknown;
   foi_cache_hit?: boolean;
+  profissionais: ProfissionalCadastrado[];
+  servicos_publicos: CardResource[];
+  instituicoes: CardResource[];
 };
+
+const cardTitles = [
+  "Quero mudar o uso",
+  "Estou fisicamente mal",
+  "Estou emocionalmente mal",
+  "Quero ajudar alguém próximo",
+  "Fiz uso e quero ajuda",
+  "Estou com vontade de usar",
+];
 
 export default function ConversaPage() {
   const router = useRouter();
@@ -24,15 +37,21 @@ export default function ConversaPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let value: string | null = null;
+    let texto: string | null = null;
+    let cardIndex: string | null = null;
     try {
-      value = window.sessionStorage.getItem("margem-mensagem");
+      texto = window.sessionStorage.getItem("margem-mensagem");
+      cardIndex = window.sessionStorage.getItem("margem-cardIndex");
     } catch {}
-    if (!value) {
+
+    if (!texto && !cardIndex) {
       router.replace("/app");
       return;
     }
-    setMessage(value);
+
+    const cardTitle = cardIndex ? cardTitles[Number(cardIndex)] : null;
+    const displayText = cardTitle || texto;
+    setMessage(displayText || "");
 
     (async () => {
       setIsLoading(true);
@@ -41,7 +60,11 @@ export default function ConversaPage() {
         const response = await fetch("/api/orientacao", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ texto: value, sessaoId: getOrCreateSessaoId() }),
+          body: JSON.stringify({
+            texto: texto || "",
+            cardIndex: cardIndex ? parseInt(cardIndex) : undefined,
+            sessaoId: getOrCreateSessaoId(),
+          }),
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || "Não foi possível preparar a orientação.");

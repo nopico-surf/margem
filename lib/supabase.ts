@@ -12,6 +12,65 @@ function getServerClient() {
   return client;
 }
 
+export type AcaoContato = { kind: string; label: string; value: string | null };
+
+export type ProfissionalCadastrado = {
+  id: string;
+  nome: string;
+  especialidade: "psicologo" | "psiquiatra" | "assistente_social";
+  crp: string | null;
+  anos_experiencia: number | null;
+  foto_url: string | null;
+  bio: string | null;
+  tags: string[];
+  whatsapp_link: string | null;
+  telefone: string | null;
+  email: string | null;
+  localizacao: string | null;
+  status: "ativo" | "pago" | "gratuito";
+  categoria_resposta_relevante: string | null;
+};
+
+export type ServicoPublico = {
+  id: string;
+  nome: string;
+  descricao: string | null;
+  tipo: "UBS" | "CAPS" | "outro";
+  endereco: string | null;
+  categoria_resposta_relevante: string | null;
+  acoes: AcaoContato[];
+};
+
+export type InstituicaoApoio = {
+  id: string;
+  nome: string;
+  descricao: string | null;
+  tipo: "NA" | "AA" | "grupo_apoio" | "outro";
+  categoria_resposta_relevante: string | null;
+  contatos: AcaoContato[];
+};
+
+export async function buscarProfissionaisPorCategoria(categoria: string) {
+  const supabase = getServerClient();
+  if (!supabase) return [];
+  const { data } = await supabase.from("profissionais_cadastrados").select("*").eq("categoria_resposta_relevante", categoria);
+  return (data ?? []) as ProfissionalCadastrado[];
+}
+
+export async function buscarServicosPublicosPorCategoria(categoria: string) {
+  const supabase = getServerClient();
+  if (!supabase) return [];
+  const { data } = await supabase.from("servicos_publicos").select("*").eq("categoria_resposta_relevante", categoria);
+  return (data ?? []) as ServicoPublico[];
+}
+
+export async function buscarInstituicoesPorCategoria(categoria: string) {
+  const supabase = getServerClient();
+  if (!supabase) return [];
+  const { data } = await supabase.from("instituicoes_apoio").select("*").eq("categoria_resposta_relevante", categoria);
+  return (data ?? []) as InstituicaoApoio[];
+}
+
 export async function registrarConsentimento(sessaoId: string) {
   const supabase = getServerClient();
   if (!supabase) return;

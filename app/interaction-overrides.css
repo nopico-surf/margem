@@ -4,7 +4,7 @@ label:has(input[type="checkbox"]){cursor:pointer}
 .consent-card{gap:8px}
 .consent-card .consent-input{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .consent-checkbox-control{position:relative;display:grid;flex:0 0 24px;place-items:center;width:24px;height:24px}
-.consent-checkbox-box{position:relative;width:18px;height:18px;border:1px solid rgb(23 27 24 / 8%);border-radius:3px;background:transparent}
+.consent-checkbox-box{position:relative;width:18px;height:18px;border:var(--border-width-1) solid var(--colors-opacidade-opaca-16);border-radius:3px;background:transparent}
 .consent-checkbox-selected{position:absolute;inset:0;display:none;width:24px;height:24px}
 .consent-input:checked+.consent-checkbox-control .consent-checkbox-box{display:none}
 .consent-input:checked+.consent-checkbox-control .consent-checkbox-selected{display:block}
