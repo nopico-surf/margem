@@ -2,52 +2,92 @@
 
 import { useEffect, useState } from "react";
 
+type VirtualKeyboardLike = { overlaysContent: boolean; boundingRect: DOMRect };
+
+type Snapshot = {
+  navegador: string;
+  focado: boolean;
+  innerH: number;
+  innerHMin: number;
+  vvH: number;
+  vvHMin: number;
+  offsetTop: number;
+  eventosVV: number;
+  eventosWindow: number;
+  vkDisponivel: boolean;
+  vkAtivo: boolean;
+  vkAltura: number;
+  shift: string;
+  classActive: boolean;
+};
+
+function detectarNavegador(ua: string) {
+  if (/Instagram/i.test(ua)) return "Instagram";
+  if (/FBAN|FBAV/i.test(ua)) return "Facebook";
+  if (/TikTok|musical_ly|BytedanceWebview/i.test(ua)) return "TikTok";
+  if (/; wv\)/.test(ua)) return "WebView Android";
+  if (/CriOS/.test(ua)) return "Chrome iOS";
+  if (/Chrome/.test(ua)) return "Chrome";
+  if (/Safari/.test(ua)) return "Safari";
+  return "outro";
+}
+
 export function KeyboardDiagnostics() {
   const [visible, setVisible] = useState(false);
-  const [data, setData] = useState<{
-    innerH?: number;
-    vvH?: number;
-    offsetTop?: number;
-    inset?: string;
-    shift?: string;
-    classActive?: boolean;
-  }>({});
+  const [data, setData] = useState<Snapshot | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const show = params.has("kb") || params.get("kb") === "1";
-    setVisible(show);
+    if (!new URLSearchParams(window.location.search).has("kb")) return;
+    setVisible(true);
 
-    if (!show) return;
+    const vv = window.visualViewport;
+    const vk = (navigator as Navigator & { virtualKeyboard?: VirtualKeyboardLike }).virtualKeyboard;
+    let eventosVV = 0;
+    let eventosWindow = 0;
+    let innerHMin = window.innerHeight;
+    let vvHMin = vv ? vv.height : window.innerHeight;
 
-    function update() {
+    const contarVV = () => { eventosVV += 1; };
+    const contarWindow = () => { eventosWindow += 1; };
+    vv?.addEventListener("resize", contarVV);
+    window.addEventListener("resize", contarWindow);
+
+    // Lê por polling: se o navegador não dispara evento nenhum, o painel ainda mostra o valor atual.
+    const timer = window.setInterval(() => {
       const root = document.documentElement;
-      const vv = window.visualViewport;
-      if (!vv) return;
-      const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-
+      innerHMin = Math.min(innerHMin, window.innerHeight);
+      if (vv) vvHMin = Math.min(vvHMin, vv.height);
       setData({
+        navegador: detectarNavegador(navigator.userAgent),
+        focado: document.activeElement?.tagName === "TEXTAREA",
         innerH: window.innerHeight,
-        vvH: Math.round(vv.height),
-        offsetTop: Math.round(vv.offsetTop),
-        inset: root.style.getPropertyValue("--keyboard-inset").trim() || "0px",
+        innerHMin,
+        vvH: vv ? Math.round(vv.height) : -1,
+        vvHMin: Math.round(vvHMin),
+        offsetTop: vv ? Math.round(vv.offsetTop) : -1,
+        eventosVV,
+        eventosWindow,
+        vkDisponivel: Boolean(vk),
+        vkAtivo: Boolean(vk?.overlaysContent),
+        vkAltura: vk ? Math.round(vk.boundingRect.height) : -1,
         shift: root.style.getPropertyValue("--hero-track-shift").trim() || "0px",
         classActive: root.classList.contains("keyboard-open"),
       });
-    }
-
-    update();
-    const vv = window.visualViewport;
-    vv?.addEventListener("resize", update);
-    vv?.addEventListener("scroll", update);
+    }, 250);
 
     return () => {
-      vv?.removeEventListener("resize", update);
-      vv?.removeEventListener("scroll", update);
+      window.clearInterval(timer);
+      vv?.removeEventListener("resize", contarVV);
+      window.removeEventListener("resize", contarWindow);
     };
   }, []);
 
-  if (!visible) return null;
+  if (!visible || !data) return null;
+
+  function ativarVirtualKeyboard() {
+    const vk = (navigator as Navigator & { virtualKeyboard?: VirtualKeyboardLike }).virtualKeyboard;
+    if (vk) vk.overlaysContent = true;
+  }
 
   return (
     <div
@@ -58,18 +98,26 @@ export function KeyboardDiagnostics() {
         right: 0,
         background: "#000",
         color: "#0f0",
-        font: "11px monospace",
-        padding: "4px 8px",
+        font: "12px monospace",
+        padding: "6px 8px",
         zIndex: 9999,
-        lineHeight: "1.4",
+        lineHeight: "1.45",
       }}
     >
-      <div>innerHeight: {data.innerH}px</div>
-      <div>visualViewport.height: {data.vvH}px</div>
-      <div>visualViewport.offsetTop: {data.offsetTop}px</div>
-      <div>inset: {data.inset}</div>
-      <div>shift: {data.shift}</div>
-      <div>keyboard-open: {data.classActive ? "true" : "false"}</div>
+      <div>navegador: {data.navegador} | campo focado: {String(data.focado)}</div>
+      <div>innerHeight: {data.innerH} (min {data.innerHMin})</div>
+      <div>visualViewport.height: {data.vvH} (min {data.vvHMin})</div>
+      <div>offsetTop: {data.offsetTop}</div>
+      <div>eventos resize: visualViewport {data.eventosVV} | window {data.eventosWindow}</div>
+      <div>
+        virtualKeyboard: {data.vkDisponivel ? `sim, ativo ${data.vkAtivo}, altura ${data.vkAltura}` : "nao"}
+      </div>
+      <div>keyboard-open: {String(data.classActive)} | shift: {data.shift}</div>
+      {data.vkDisponivel && !data.vkAtivo && (
+        <button type="button" onClick={ativarVirtualKeyboard} style={{ marginTop: 4, font: "12px monospace", padding: "2px 6px" }}>
+          testar virtualKeyboard
+        </button>
+      )}
     </div>
   );
 }
