@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { track } from "@/lib/mixpanel";
 
 const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
 
@@ -27,7 +28,7 @@ export default function BemVindoPage() {
       </div>
       <div className="intro-actions">
         <EmergencyPanel />
-        <button className="intro-button" type="button" onClick={() => router.push("/protecao-de-dados")}>Continuar</button>
+        <button className="intro-button" type="button" onClick={() => { track("boas_vindas_continuar"); router.push("/protecao-de-dados"); }}>Continuar</button>
       </div>
     </main>
   );

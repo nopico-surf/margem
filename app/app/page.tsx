@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageInput } from "@/components/MessageInput";
 import { KeyboardDiagnostics } from "@/components/KeyboardDiagnostics";
+import { registrar, track } from "@/lib/mixpanel";
 
 const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
 const menu = "https://www.figma.com/api/mcp/asset/2b2b0245-44e5-4dbe-a618-042679b2614d.svg";
@@ -50,6 +51,8 @@ export default function AppPage() {
     event?.preventDefault();
     const value = text.trim();
     if (!value) return;
+    registrar({ origem_entrada: "texto", card_titulo: null });
+    track("texto_livre_enviado", { tamanho_texto: value.length });
     try {
       window.sessionStorage.setItem("margem-mensagem", value);
       window.sessionStorage.removeItem("margem-cardIndex");
@@ -58,6 +61,8 @@ export default function AppPage() {
   }
 
   function handleCardClick(index: number) {
+    registrar({ origem_entrada: "card", card_titulo: cards[index][0] });
+    track("card_selecionado", { card_indice: index, card_titulo: cards[index][0] });
     try {
       window.sessionStorage.setItem("margem-cardIndex", String(index));
       window.sessionStorage.removeItem("margem-mensagem");
@@ -66,6 +71,7 @@ export default function AppPage() {
   }
 
   function showTopics() {
+    track("topicos_clicado");
     document.getElementById("pathways-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -76,7 +82,7 @@ export default function AppPage() {
       <KeyboardDiagnostics />
       <header className="app-header">
         <img className="app-logo" src={logo} alt="Margem" />
-        <button className="menu-button" type="button" aria-label="Abrir menu"><img src={menu} alt="" /></button>
+        <button className="menu-button" type="button" aria-label="Abrir menu" onClick={() => track("menu_clicado", { rota: "/app" })}><img src={menu} alt="" /></button>
       </header>
 
       <section className="home-hero" aria-labelledby="home-title">

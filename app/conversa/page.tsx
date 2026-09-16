@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ResultPage, type CardResource } from "@/components/figma-results/ResultPage";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
+import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 type OrientationResult = {
@@ -13,7 +14,7 @@ type OrientationResult = {
   checklist_agora: string[];
   checklist_proximo: string[];
   perguntas_aprofundamento: Array<{ pergunta: string; opcoes: string[] }>;
-  risco?: unknown;
+  risco?: { emergency?: boolean };
   foi_cache_hit?: boolean;
   profissionais: ProfissionalCadastrado[];
   servicos_publicos: CardResource[];
@@ -56,6 +57,9 @@ export default function ConversaPage() {
     (async () => {
       setIsLoading(true);
       setError(null);
+      const origem = cardIndex ? "card" : "texto";
+      const inicio = performance.now();
+      let statusHttp: number | null = null;
       try {
         const response = await fetch("/api/orientacao", {
           method: "POST",
@@ -66,13 +70,24 @@ export default function ConversaPage() {
             sessaoId: getOrCreateSessaoId(),
           }),
         });
+        statusHttp = response.status;
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || "Não foi possível preparar a orientação.");
         if (typeof result.acolhimento !== "string" || typeof result.orientacao !== "string" || !Array.isArray(result.checklist_agora) || !Array.isArray(result.checklist_proximo)) {
           throw new Error("A resposta recebida não está completa.");
         }
         setOrientation(result);
+        track("orientacao_recebida", {
+          origem,
+          foi_cache_hit: Boolean(result.foi_cache_hit),
+          risco_detectado: Boolean(result.risco?.emergency),
+          tempo_resposta_ms: Math.round(performance.now() - inicio),
+          qtd_profissionais: result.profissionais?.length ?? 0,
+          qtd_servicos: result.servicos_publicos?.length ?? 0,
+          qtd_instituicoes: result.instituicoes?.length ?? 0,
+        });
       } catch (err) {
+        track("orientacao_falhou", { origem, tempo_resposta_ms: Math.round(performance.now() - inicio), status_http: statusHttp });
         setOrientation(null);
         setError(err instanceof Error ? err.message : "Não foi possível preparar a orientação.");
       } finally {

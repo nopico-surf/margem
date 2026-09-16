@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { GoogleTagManager } from "@/components/GoogleTagManager";
+import { MixpanelPageView } from "@/components/MixpanelPageView";
 
 export const metadata: Metadata = {
   title: "Margem",
@@ -13,7 +15,11 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <GoogleTagManager />
+        <MixpanelPageView />
+        {children}
+      </body>
     </html>
   );
 }

@@ -10,6 +10,9 @@ type MessageInputProps = {
 
 const MIN_HEIGHT = 36; // 1 linha (20px de texto + 16px de padding vertical)
 const MAX_HEIGHT = 76; // 3 linhas (60px de texto + 16px de padding vertical)
+// Usados só quando o navegador não informa o teclado de jeito nenhum.
+const TEMPO_SEM_SINAL = 500;
+const ESTIMATIVA_TECLADO = 0.45; // fração da altura da tela
 
 export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   const [focused, setFocused] = useState(false);
@@ -17,20 +20,51 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   const initialFocusRef = useRef(true);
   const state = value.length > 0 ? "filed" : focused ? "focused" : "default";
 
-  // Acompanha o teclado virtual do celular de verdade (não o foco do campo, que pode
-  // acontecer sem teclado nenhum aparecer, ex: autofocus programático ao abrir a página).
-  // Só marca "teclado aberto" quando o viewport visível realmente encolheu de forma relevante.
+  // Mantém título + campo logo acima do teclado virtual. Cada navegador informa o teclado de
+  // um jeito: o Chrome e o Safari encolhem o visualViewport, alguns webviews encolhem a janela
+  // inteira e outros (ex: navegador interno do Instagram) não informam nada.
   useEffect(() => {
+    const root = document.documentElement;
     const viewport = window.visualViewport;
-    if (!viewport) return;
+    const touch = window.matchMedia("(pointer: coarse)").matches;
+    let alturaSemTeclado = window.innerHeight;
+    let larguraAtual = window.innerWidth;
+    let focoEm = 0;
+    let timers: number[] = [];
+
+    const alturaVisivel = () => (viewport ? viewport.height : window.innerHeight);
+    const campoFocado = () => {
+      const el = document.activeElement;
+      return el instanceof HTMLTextAreaElement && el.closest(".hero-focus-track") !== null;
+    };
 
     function update() {
-      if (!viewport) return;
-      const root = document.documentElement;
-      const inset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-      const open = inset > 60;
-      root.style.setProperty("--keyboard-inset", `${inset}px`);
-      root.classList.toggle("keyboard-open", open);
+      if (window.innerWidth !== larguraAtual) {
+        larguraAtual = window.innerWidth;
+        alturaSemTeclado = window.innerHeight;
+      }
+      const focado = campoFocado();
+      // O teclado fechando ainda dispara resize depois do blur, por isso guarda o maior valor.
+      if (!focado) alturaSemTeclado = Math.max(alturaSemTeclado, window.innerHeight);
+
+      // Sem subtrair offsetTop: no iOS a página rola ao abrir o teclado e isso esconderia a altura dele.
+      const tecladoReal = alturaSemTeclado - alturaVisivel();
+      let modo: "fechado" | "real" | "estimado" = "fechado";
+      let linhaDoTeclado = alturaVisivel() + (viewport ? viewport.offsetTop : 0);
+
+      if (focado && tecladoReal > 120) {
+        modo = "real";
+      } else if (focado && touch && performance.now() - focoEm >= TEMPO_SEM_SINAL) {
+        modo = "estimado";
+        linhaDoTeclado = window.innerHeight - alturaSemTeclado * ESTIMATIVA_TECLADO;
+      }
+
+      const aberto = modo !== "fechado";
+      root.classList.toggle("keyboard-open", aberto);
+      root.dataset.keyboardMode = modo;
+      // Se a janela inteira encolheu, trava o hero na altura original pra ele não refluir.
+      root.style.setProperty("--viewport-sem-teclado", `${alturaSemTeclado}px`);
+      root.classList.toggle("keyboard-resized", aberto && window.innerHeight < alturaSemTeclado - 120);
 
       const track = document.querySelector(".hero-focus-track");
       if (!track) return;
@@ -41,52 +75,59 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       root.style.setProperty("--hero-track-shift", "0px");
       root.classList.remove("keyboard-cramped");
 
-      const base = viewport.height + viewport.offsetTop - 16;
+      const limite = linhaDoTeclado - 16;
       const header = document.querySelector(".app-header");
       const teto = header ? header.getBoundingClientRect().bottom : 0;
-      root.classList.toggle("keyboard-cramped", open && track.getBoundingClientRect().height > base - teto);
+      root.classList.toggle("keyboard-cramped", aberto && track.getBoundingClientRect().height > limite - teto);
 
-      const folga = base - track.getBoundingClientRect().bottom;
-      root.style.setProperty("--hero-track-shift", open ? `${Math.min(0, folga)}px` : "0px");
+      const folga = limite - track.getBoundingClientRect().bottom;
+      root.style.setProperty("--hero-track-shift", aberto ? `${Math.min(0, folga)}px` : "0px");
+    }
+
+    function aoFocar(event: FocusEvent) {
+      if (!(event.target instanceof HTMLTextAreaElement)) return;
+      focoEm = performance.now();
+      timers.forEach(window.clearTimeout);
+      // Se até aqui o navegador não informou teclado nenhum, entra a estimativa.
+      timers = [TEMPO_SEM_SINAL + 50, TEMPO_SEM_SINAL + 500].map((ms) => window.setTimeout(update, ms));
+      update();
     }
 
     update();
-    viewport.addEventListener("resize", update);
-    viewport.addEventListener("scroll", update);
+    viewport?.addEventListener("resize", update);
+    viewport?.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    document.addEventListener("focusin", aoFocar);
+    document.addEventListener("focusout", update);
 
     // O track também muda de altura sem o teclado se mexer: o bloco "Conte do seu jeito"
     // aparecendo e a textarea crescendo de linha. Sem remedir aqui, o deslocamento fica
     // velho e a margem até o teclado encolhe (ou some).
-    const track = document.querySelector(".hero-focus-track");
+    const trackObservado = document.querySelector(".hero-focus-track");
     const observer = new ResizeObserver(update);
-    if (track) observer.observe(track);
+    if (trackObservado) observer.observe(trackObservado);
 
     return () => {
       observer.disconnect();
-      viewport.removeEventListener("resize", update);
-      viewport.removeEventListener("scroll", update);
-      document.documentElement.style.setProperty("--keyboard-inset", "0px");
-      document.documentElement.style.setProperty("--hero-track-shift", "0px");
-      document.documentElement.classList.remove("keyboard-open");
-      document.documentElement.classList.remove("keyboard-cramped");
+      timers.forEach(window.clearTimeout);
+      viewport?.removeEventListener("resize", update);
+      viewport?.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      document.removeEventListener("focusin", aoFocar);
+      document.removeEventListener("focusout", update);
+      root.style.setProperty("--hero-track-shift", "0px");
+      root.classList.remove("keyboard-open", "keyboard-cramped", "keyboard-resized");
+      delete root.dataset.keyboardMode;
     };
   }, []);
 
-  // Autofocus real ao abrir a home. Marca o estado como focado no mesmo efeito:
-  // o autoFocus do navegador pode focar o campo antes do React conectar o onFocus,
-  // deixando o estado interno dessincronizado do foco real do DOM.
-  useLayoutEffect(() => {
-    const textarea = textareaRef.current;
-    textarea?.focus({ preventScroll: true });
-
-    const frame = requestAnimationFrame(() => {
-      initialFocusRef.current = false;
-    });
-
-    return () => cancelAnimationFrame(frame);
+  // Sem foco automático: no celular isso abriria o teclado sozinho ao entrar na tela.
+  useEffect(() => {
+    initialFocusRef.current = false;
   }, []);
 
-  // Fallback: se o foco real não pegou (ex: janela sem foco no load), qualquer tecla digitada é redirecionada para o campo.
+  // No desktop, dá pra digitar direto sem clicar no campo. O foco só acontece quando uma
+  // tecla de verdade é pressionada, então o teclado virtual do celular nunca abre sozinho.
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       const textarea = textareaRef.current;
@@ -134,7 +175,6 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       )}
       <textarea
         ref={textareaRef}
-        autoFocus
         value={value}
         onChange={(event) => onChange(event.target.value)}
         onFocus={() => {

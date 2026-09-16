@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Orientation } from "@/lib/gemini";
+import { instituicoesPadrao, profissionalDeTeste, servicosPublicosPadrao } from "./default-resources";
 
 let client: SupabaseClient | null = null;
 
@@ -52,21 +53,22 @@ export type InstituicaoApoio = {
 
 export async function buscarProfissionaisPorCategoria(categoria: string) {
   const supabase = getServerClient();
-  if (!supabase) return [];
+  if (!supabase) return categoria === "geral" ? [profissionalDeTeste] : [];
   const { data } = await supabase.from("profissionais_cadastrados").select("*").eq("categoria_resposta_relevante", categoria);
-  return (data ?? []) as ProfissionalCadastrado[];
+  if (data && data.length > 0) return data as ProfissionalCadastrado[];
+  return categoria === "geral" ? [profissionalDeTeste] : [];
 }
 
 export async function buscarServicosPublicosPorCategoria(categoria: string) {
   const supabase = getServerClient();
-  if (!supabase) return [];
+  if (!supabase) return servicosPublicosPadrao.filter((servico) => servico.categoria_resposta_relevante === categoria);
   const { data } = await supabase.from("servicos_publicos").select("*").eq("categoria_resposta_relevante", categoria);
   return (data ?? []) as ServicoPublico[];
 }
 
 export async function buscarInstituicoesPorCategoria(categoria: string) {
   const supabase = getServerClient();
-  if (!supabase) return [];
+  if (!supabase) return instituicoesPadrao.filter((instituicao) => instituicao.categoria_resposta_relevante === categoria);
   const { data } = await supabase.from("instituicoes_apoio").select("*").eq("categoria_resposta_relevante", categoria);
   return (data ?? []) as InstituicaoApoio[];
 }

@@ -180,6 +180,8 @@ NEXT_PUBLIC_MIXPANEL_TOKEN
 
 Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde o primeiro commit.
 
+**Cuidado com `vercel env pull`.** Variáveis marcadas como *Sensitive* no dashboard da Vercel (é o caso de `GEMINI_API_KEY` e `SUPABASE_SERVICE_ROLE_KEY`) não são baixadas com o valor real: o comando escreve o literal `"[SENSITIVE]"` no `.env.local`. Isso não dá erro visível na hora, só quebra depois em runtime (ex: clique num card cai no fallback do Gemini com chave inválida, ou a service role key retorna 401 do Supabase). Depois de rodar `vercel env pull`, sempre conferir se `GEMINI_API_KEY` e `SUPABASE_SERVICE_ROLE_KEY` não ficaram como `[SENSITIVE]`; se ficaram, colar o valor real manualmente (Supabase: Project Settings → API → `service_role`; Gemini: Google AI Studio → API keys).
+
 ---
 
 ## 10. Como trabalhar comigo

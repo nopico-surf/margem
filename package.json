@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "latest",
     "@supabase/supabase-js": "latest",
+    "mixpanel-browser": "^2.83.0",
+    "next": "latest",
     "react": "latest",
     "react-dom": "latest"
   },

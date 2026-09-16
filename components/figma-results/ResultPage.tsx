@@ -1,7 +1,8 @@
 "use client";
 
-import { PointerEvent, ReactNode, useRef } from "react";
+import { PointerEvent, ReactNode, useRef, useState } from "react";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
+import { track } from "@/lib/mixpanel";
 
 const assets = {
   logo: "https://www.figma.com/api/mcp/asset/789e43e1-39be-4b2b-9e0e-30064f2b0bc1.svg",
@@ -39,10 +40,19 @@ type OrientationResult = {
   instituicoes?: CardResource[];
 };
 
-function ActionButton({ label, icon, href }: CardAction) {
+// ícone da ação -> kind salvo no banco (inverso de ICONE_POR_KIND em app/api/orientacao/route.ts)
+const KIND_POR_ICONE: Partial<Record<ActionKind, string>> = { place: "nearby", link: "site" };
+
+type TipoRecurso = "servico_publico" | "instituicao";
+
+function ActionButton({ label, icon, href, onClick }: CardAction & { onClick?: () => void }) {
   const content = <>{icon && <img src={assets[icon]} alt="" />}{label}</>;
-  if (href) return <a className="figma-result-action" href={href} target="_blank" rel="noreferrer">{content}</a>;
-  return <button className="figma-result-action" type="button">{content}</button>;
+  if (href) return <a className="figma-result-action" href={href} target="_blank" rel="noreferrer" onClick={onClick}>{content}</a>;
+  return <button className="figma-result-action" type="button" onClick={onClick}>{content}</button>;
+}
+
+function ResourceActions({ resource, tipoRecurso }: { resource: CardResource; tipoRecurso: TipoRecurso }) {
+  return <ActionRow>{resource.actions.map((action, index) => <ActionButton key={`${resource.id}-${action.label}`} {...action} onClick={() => track("contato_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title, acao_tipo: action.icon ? KIND_POR_ICONE[action.icon] ?? action.icon : null, acao_label: action.label, posicao: index + 1 })} />)}<ActionButton label="Saiba mais" onClick={() => track("saiba_mais_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title })} /></ActionRow>;
 }
 
 function ActionRow({ children }: { children: ReactNode }) {
@@ -73,6 +83,7 @@ function ActionRow({ children }: { children: ReactNode }) {
 
 function SectionJump({ label, targetId }: { label: string; targetId: string }) {
   function scrollToSection() {
+    track("atalho_secao_clicado", { secao: label });
     const target = document.getElementById(targetId);
     if (!target) return;
     const start = window.scrollY;
@@ -101,7 +112,7 @@ function SectionJump({ label, targetId }: { label: string; targetId: string }) {
 }
 
 function Header() {
-  return <header className="figma-result-header"><a href="/app" aria-label="Ir para o início"><img className="figma-result-logo" src={assets.logo} alt="Margem" /></a><button className="figma-result-menu" type="button" aria-label="Abrir menu"><img src={assets.menu} alt="" /></button></header>;
+  return <header className="figma-result-header"><a href="/app" aria-label="Ir para o início" onClick={() => track("logo_clicado", { rota: "/conversa" })}><img className="figma-result-logo" src={assets.logo} alt="Margem" /></a><button className="figma-result-menu" type="button" aria-label="Abrir menu" onClick={() => track("menu_clicado", { rota: "/conversa" })}><img src={assets.menu} alt="" /></button></header>;
 }
 
 function MoreOptions() {
@@ -116,35 +127,40 @@ const especialidadeLabel: Record<ProfissionalCadastrado["especialidade"], string
 };
 
 function ProfessionalCard({ profissional }: { profissional: ProfissionalCadastrado }) {
-  return <article className="figma-professional-card"><div className="figma-professional-head"><img className="figma-professional-avatar" src={profissional.foto_url || assets.avatar} alt="" /><div><strong>{profissional.nome}</strong><span>{especialidadeLabel[profissional.especialidade]}</span><small>{profissional.crp && <>CRP: {profissional.crp}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} anos de experiência`}</small></div><img className="figma-info-icon" src={assets.info} alt="" /></div>{profissional.tags.length > 0 && <div className="figma-badges">{profissional.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}{profissional.bio && <p>{profissional.bio}</p>}<button className="figma-schedule-button" type="button"><img src={assets.whatsappSchedule} alt="" />Agendar por WhatsApp</button></article>;
+  const buttonLabel = profissional.id === "00000000-0000-0000-0000-000000000005" ? "Profissional teste" : "Agendar por WhatsApp";
+  return <article className="figma-professional-card"><div className="figma-professional-head"><img className="figma-professional-avatar" src={profissional.foto_url || assets.avatar} alt="" /><div className="figma-professional-copy"><div className="figma-professional-identity"><strong>{profissional.nome}</strong><span>{especialidadeLabel[profissional.especialidade]}</span></div><small>{profissional.crp && <>CRP: {profissional.crp}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} anos de experiência`}</small></div><img className="figma-info-icon" src={assets.info} alt="" /></div>{profissional.tags.length > 0 && <div className="figma-badges">{profissional.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}{profissional.bio && <p>{profissional.bio}</p>}<button className="figma-schedule-button" type="button" onClick={() => track("agendar_whatsapp_clicado", { profissional_id: profissional.id, especialidade: profissional.especialidade })}><img src={assets.whatsappSchedule} alt="" />{buttonLabel}</button></article>;
 }
 
 function Professionals({ profissionais }: { profissionais: ProfissionalCadastrado[] }) {
   if (profissionais.length === 0) return null;
-  return <section id="figma-section-professionals" className="figma-result-band"><div className="figma-section-inner"><SectionHeading title="Profissionais que podem ajudar" description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros." /><div className="figma-filter-row"><button className="is-selected" type="button">Psicologos</button><button type="button">Psiquiatras</button></div>{profissionais.map((profissional) => <ProfessionalCard profissional={profissional} key={profissional.id} />)}<button className="figma-public-link" type="button">Se preferir, veja os serviços públicos <img src={assets.arrow} alt="" /></button></div></section>;
+  const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<"psicologo" | "psiquiatra">("psicologo");
+  const profissionaisFiltrados = profissionais.filter((profissional) => profissional.especialidade === especialidadeSelecionada);
+  const profissionalFake = profissionais.find((profissional) => profissional.id === "00000000-0000-0000-0000-000000000005");
+  const profissionaisParaExibir = profissionaisFiltrados.length > 0 ? profissionaisFiltrados : profissionalFake && especialidadeSelecionada === "psiquiatra" ? [{ ...profissionalFake, especialidade: "psiquiatra" as const }] : [];
+  return <section id="figma-section-professionals" className="figma-result-band"><div className="figma-section-inner"><SectionHeading title="Profissionais que podem ajudar" description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros." /><div className="figma-filter-row"><button className={especialidadeSelecionada === "psicologo" ? "is-selected" : ""} type="button" onClick={() => { setEspecialidadeSelecionada("psicologo"); track("filtro_profissional_clicado", { filtro: "psicologos" }); }}>Psicologos</button><button className={especialidadeSelecionada === "psiquiatra" ? "is-selected" : ""} type="button" onClick={() => { setEspecialidadeSelecionada("psiquiatra"); track("filtro_profissional_clicado", { filtro: "psiquiatras" }); }}>Psiquiatras</button></div>{profissionaisParaExibir.map((profissional) => <ProfessionalCard profissional={profissional} key={profissional.id} />)}<button className="figma-public-link" type="button" onClick={() => track("ver_servicos_publicos_clicado")}>Se preferir, veja os serviços públicos <img src={assets.arrow} alt="" /></button></div></section>;
 }
 
 function SectionHeading({ title, description }: { title: string; description: string }) {
   return <header className="figma-section-heading"><h2>{title}</h2><p>{description}</p></header>;
 }
 
-function FigmaCheckbox({ selected }: { selected: boolean }) {
-  return <><input className="figma-checklist-input" type="checkbox" defaultChecked={selected} /><span className="figma-checkbox-control" aria-hidden="true"><span className="figma-checkbox-box" /><img className="figma-checkbox-selected" src={assets.checkboxSelected} alt="" /></span></>;
+function FigmaCheckbox({ selected, onChange }: { selected: boolean; onChange?: (checked: boolean) => void }) {
+  return <><input className="figma-checklist-input" type="checkbox" defaultChecked={selected} onChange={(event) => onChange?.(event.target.checked)} /><span className="figma-checkbox-control" aria-hidden="true"><span className="figma-checkbox-box" /><img className="figma-checkbox-selected" src={assets.checkboxSelected} alt="" /></span></>;
 }
 
 function PublicServices({ services }: { services: CardResource[] }) {
   if (services.length === 0) return null;
-  return <section id="figma-section-public-services" className="figma-result-band"><div className="figma-section-inner"><SectionHeading title="Serviços públicos" description="Acolhimento, saúde e assistência pública para cuidar e apoiar pessoas em uso de substâncias e familiares" /><div className="figma-resource-list">{services.map((service) => <article className="figma-resource-card" key={service.id}><div className="figma-resource-heading"><div><h3>{service.title}</h3><p>{service.description}</p></div><img src={assets.info} alt="" /></div><ActionRow>{service.actions.map((action) => <ActionButton key={`${service.id}-${action.label}`} {...action} />)}<ActionButton label="Saiba mais" /></ActionRow></article>)}</div></div></section>;
+  return <section id="figma-section-public-services" className="figma-result-band"><div className="figma-section-inner"><SectionHeading title="Serviços públicos" description="Acolhimento, saúde e assistência pública para cuidar e apoiar pessoas em uso de substâncias e familiares" /><div className="figma-resource-list">{services.map((service) => <article className="figma-resource-card" key={service.id}><div className="figma-resource-heading"><div><h3>{service.title}</h3><p>{service.description}</p></div><img src={assets.info} alt="" /></div><ResourceActions resource={service} tipoRecurso="servico_publico" /></article>)}</div></div></section>;
 }
 
 function SupportSpaces({ spaces }: { spaces: CardResource[] }) {
   if (spaces.length === 0) return null;
-  return <section id="figma-section-support-spaces" className="figma-result-band"><div className="figma-section-inner"><SectionHeading title="Espaços de apoio e escuta" description="Redes e instituições que oferecem acolhimento e trocas de experiências para pessoas em uso de substâncias e seus familiares" /><div className="figma-resource-list">{spaces.map((space) => <article className="figma-resource-card" key={space.id}><div className="figma-resource-heading"><div><h3>{space.title}</h3><p>{space.description}</p></div><img src={assets.info} alt="" /></div><ActionRow>{space.actions.map((action) => <ActionButton key={`${space.id}-${action.label}`} {...action} />)}<ActionButton label="Saiba mais" /></ActionRow></article>)}</div></div></section>;
+  return <section id="figma-section-support-spaces" className="figma-result-band"><div className="figma-section-inner"><SectionHeading title="Espaços de apoio e escuta" description="Redes e instituições que oferecem acolhimento e trocas de experiências para pessoas em uso de substâncias e seus familiares" /><div className="figma-resource-list">{spaces.map((space) => <article className="figma-resource-card" key={space.id}><div className="figma-resource-heading"><div><h3>{space.title}</h3><p>{space.description}</p></div><img src={assets.info} alt="" /></div><ResourceActions resource={space} tipoRecurso="instituicao" /></article>)}</div></div></section>;
 }
 
 function ChecklistSection({ title, description, items, selectedIndex }: { title: string; description: string; items: string[]; selectedIndex?: number }) {
   const sectionId = title === "Passos reais, para fazer agora" ? "figma-section-real-steps" : "figma-section-planning";
-  return <section id={sectionId} className="figma-result-band figma-checklist-band"><div className="figma-section-inner"><SectionHeading title={title} description={description} /><div className="figma-checklist">{items.map((item, index) => <label key={`${title}-${index}`}><FigmaCheckbox selected={selectedIndex === index} /><span className="figma-checklist-copy">{item}</span></label>)}</div></div></section>;
+  return <section id={sectionId} className="figma-result-band figma-checklist-band"><div className="figma-section-inner"><SectionHeading title={title} description={description} /><div className="figma-checklist">{items.map((item, index) => <label key={`${title}-${index}`}><FigmaCheckbox selected={selectedIndex === index} onChange={(marcado) => track("checklist_item_alterado", { secao: sectionId === "figma-section-real-steps" ? "agora" : "planejar", indice: index, marcado })} /><span className="figma-checklist-copy">{item}</span></label>)}</div></div></section>;
 }
 
 export function ResultPage({ message, orientation, isLoading, error }: { message: string; orientation: OrientationResult | null; isLoading: boolean; error: string | null }) {

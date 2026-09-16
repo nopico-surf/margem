@@ -19,6 +19,7 @@ type Snapshot = {
   vkAltura: number;
   shift: string;
   classActive: boolean;
+  modo: string;
 };
 
 function detectarNavegador(ua: string) {
@@ -72,6 +73,7 @@ export function KeyboardDiagnostics() {
         vkAltura: vk ? Math.round(vk.boundingRect.height) : -1,
         shift: root.style.getPropertyValue("--hero-track-shift").trim() || "0px",
         classActive: root.classList.contains("keyboard-open"),
+        modo: root.dataset.keyboardMode ?? "-",
       });
     }, 250);
 
@@ -112,7 +114,7 @@ export function KeyboardDiagnostics() {
       <div>
         virtualKeyboard: {data.vkDisponivel ? `sim, ativo ${data.vkAtivo}, altura ${data.vkAltura}` : "nao"}
       </div>
-      <div>keyboard-open: {String(data.classActive)} | shift: {data.shift}</div>
+      <div>keyboard-open: {String(data.classActive)} | modo: {data.modo} | shift: {data.shift}</div>
       {data.vkDisponivel && !data.vkAtivo && (
         <button type="button" onClick={ativarVirtualKeyboard} style={{ marginTop: 4, font: "12px monospace", padding: "2px 6px" }}>
           testar virtualKeyboard
