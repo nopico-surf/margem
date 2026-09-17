@@ -2,18 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ResultPage, type CardResource } from "@/components/figma-results/ResultPage";
+import { ResultPage } from "@/components/conversa/ResultPage";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
+import { TITULOS_CARDS_HOME } from "@/lib/cards-home";
 import { track } from "@/lib/mixpanel";
+import type { CardResource, OrientationResult } from "@/components/conversa/types";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
-type OrientationResult = {
-  acolhimento: string;
-  orientacao: string;
-  pilula_espiritual: string | null;
-  checklist_agora: string[];
-  checklist_proximo: string[];
-  perguntas_aprofundamento: Array<{ pergunta: string; opcoes: string[] }>;
+// Na tela, profissionais, serviços e instituições sempre chegam preenchidos pela API, mesmo que
+// como lista vazia, por isso aqui eles não são opcionais.
+type OrientacaoDaApi = OrientationResult & {
   risco?: { emergency?: boolean };
   foi_cache_hit?: boolean;
   profissionais: ProfissionalCadastrado[];
@@ -21,19 +19,10 @@ type OrientationResult = {
   instituicoes: CardResource[];
 };
 
-const cardTitles = [
-  "Quero mudar o uso",
-  "Estou fisicamente mal",
-  "Estou emocionalmente mal",
-  "Quero ajudar alguém próximo",
-  "Fiz uso e quero ajuda",
-  "Estou com vontade de usar",
-];
-
 export default function ConversaPage() {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
-  const [orientation, setOrientation] = useState<OrientationResult | null>(null);
+  const [orientation, setOrientation] = useState<OrientacaoDaApi | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,7 +39,7 @@ export default function ConversaPage() {
       return;
     }
 
-    const cardTitle = cardIndex ? cardTitles[Number(cardIndex)] : null;
+    const cardTitle = cardIndex ? TITULOS_CARDS_HOME[Number(cardIndex)] : null;
     const displayText = cardTitle || texto;
     setMessage(displayText || "");
 

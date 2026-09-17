@@ -2,34 +2,14 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { MessageInput } from "@/components/MessageInput";
-import { KeyboardDiagnostics } from "@/components/KeyboardDiagnostics";
-import { Footer } from "@/components/Footer";
-import { SideMenu } from "@/components/SideMenu";
+import { KeyboardDiagnostics } from "@/components/app/KeyboardDiagnostics";
+import { Footer } from "@/components/layout/Footer";
+import { SideMenu } from "@/components/layout/SideMenu";
+import { HeaderHome } from "@/components/layout/HeaderHome";
+import { HomeHero } from "@/components/app/HomeHero";
+import { CardHomeGroup } from "@/components/app/CardHomeGroup";
+import { CARDS_HOME } from "@/lib/cards-home";
 import { registrar, track } from "@/lib/mixpanel";
-
-const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
-const menu = "https://www.figma.com/api/mcp/asset/2b2b0245-44e5-4dbe-a618-042679b2614d.svg";
-const securityIcon = "https://www.figma.com/api/mcp/asset/36a4a0dd-9a1a-48b0-be2f-6f703907dcad.svg";
-const arrowIcon = "https://www.figma.com/api/mcp/asset/e1f68123-9587-49c9-9b52-a55d1f19db73.svg";
-const cardArrowIcon = "https://www.figma.com/api/mcp/asset/1a66caf4-8fb3-40b9-a268-f3224ac95eb4.svg";
-const pathwayIcons = [
-  "https://www.figma.com/api/mcp/asset/efbc6f65-16a9-41cf-a7bb-a5d0da541f2c.svg",
-  "https://www.figma.com/api/mcp/asset/93f9ed1f-bc1c-405d-ab87-381c623da872.svg",
-  "https://www.figma.com/api/mcp/asset/2bb6ae35-7cdf-4f33-9d30-4a4965295425.svg",
-  "https://www.figma.com/api/mcp/asset/3e940b99-3a7d-47e4-b868-8f1712b2a961.svg",
-  "https://www.figma.com/api/mcp/asset/aea480ed-8230-49de-9227-bd560f21b76c.svg",
-  "https://www.figma.com/api/mcp/asset/835d1770-27b1-452d-a3cd-ac7edfbf1a69.svg",
-];
-
-const cards = [
-  ["Quero mudar o uso", "Informações para reduzir ou parar e caminhos para buscar apoio"],
-  ["Estou fisicamente mal", "Orientações imediatas para o seu corpo e contatos de emergência"],
-  ["Estou emocionalmente mal", "Orientação para lidar com o momento e canais para falar sobre o que sente"],
-  ["Quero ajudar alguém próximo", "Formas de oferecer suporte a quem você ama e grupos de acolhimento"],
-  ["Fiz uso e quero ajuda", "Cuidados para você passar por isso agora e apoio acolhedor sem julgamento"],
-  ["Estou com vontade de usar", "Dicas práticas para atravessar a fissura e canais para conversar agora"],
-];
 
 export default function AppPage() {
   const router = useRouter();
@@ -64,8 +44,8 @@ export default function AppPage() {
   }
 
   function handleCardClick(index: number) {
-    registrar({ origem_entrada: "card", card_titulo: cards[index][0] });
-    track("card_selecionado", { card_indice: index, card_titulo: cards[index][0] });
+    registrar({ origem_entrada: "card", card_titulo: CARDS_HOME[index].titulo });
+    track("card_selecionado", { card_indice: index, card_titulo: CARDS_HOME[index].titulo });
     try {
       window.sessionStorage.setItem("margem-cardIndex", String(index));
       window.sessionStorage.removeItem("margem-mensagem");
@@ -78,42 +58,21 @@ export default function AppPage() {
     document.querySelector(".pathways")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  function openMenu() {
+    setMenuOpen(true);
+    track("menu_clicado", { rota: "/app" });
+  }
+
   if (checkingConsent) return null;
 
   return (
     <main className="app-shell">
       <KeyboardDiagnostics />
-      <header className="app-header">
-        <img className="app-logo" src={logo} alt="Margem" />
-        <button className="menu-button" type="button" aria-label="Abrir menu" onClick={() => { setMenuOpen(true); track("menu_clicado", { rota: "/app" }); }}><img src={menu} alt="" /></button>
-      </header>
+      <HeaderHome onOpenMenu={openMenu} />
       <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
-      <section className="home-hero" aria-labelledby="home-title">
-        <div className="hero-focus-track">
-          <div className="hero-input-group">
-            <div className="identity-badge"><img src={securityIcon} alt="" />Você não precisa se identificar</div>
-            <h1 id="home-title">Este é um espaço<br /> seguro e acolhedor</h1>
-          </div>
-          <div className="hero-message-group">
-            <MessageInput value={text} onChange={setText} onSubmit={submit} />
-          </div>
-        </div>
-        <button className="topics-button" type="button" onClick={showTopics}>Se preferir, veja os tópicos <img src={arrowIcon} alt="" /></button>
-      </section>
-      <section className="pathways" aria-labelledby="pathways-title">
-        <h2 id="pathways-title">Você pode começar por aqui</h2>
-        <p>Não precisa escolher a opção perfeita. Apenas dê o primeiro passo</p>
-        <div className="pathway-list">
-          {cards.map(([title, description], index) => (
-            <a href="/conversa" className="pathway-card" key={title} onClick={(e) => { e.preventDefault(); handleCardClick(index); }}>
-              <img className="pathway-icon" src={pathwayIcons[index]} alt="" />
-              <span><strong>{title}</strong><small>{description}</small></span>
-              <img className="pathway-arrow" src={cardArrowIcon} alt="" />
-            </a>
-          ))}
-        </div>
-      </section>
+      <HomeHero text={text} onChangeText={setText} onSubmit={submit} onShowTopics={showTopics} />
+      <CardHomeGroup onSelect={handleCardClick} />
       <Footer />
     </main>
   );

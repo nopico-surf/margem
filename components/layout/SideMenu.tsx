@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { track } from "@/lib/mixpanel";
-
-const closeIcon = "https://www.figma.com/api/mcp/asset/f020c9b3-25d1-40a6-b7fe-284f4f710035.svg";
-const whatsappIcon = "https://www.figma.com/api/mcp/asset/ccb114ae-13b9-45c7-bccb-094fdb68082a.svg";
-const instagramIcon = "https://www.figma.com/api/mcp/asset/3d25ba20-fb17-47f0-9f61-3a917bee0be5.svg";
-const emailIcon = "https://www.figma.com/api/mcp/asset/30e845f2-dbb7-4389-8a98-4555acde18a5.svg";
+import { BotaoFecharMenu } from "@/components/ui/BotaoFecharMenu";
+import { MenuContatos } from "./MenuContatos";
 
 type SideMenuProps = {
   open: boolean;
   onClose: () => void;
 };
+
+// A saída tem animação, então o painel continua montado por mais 350ms depois de fechar.
+const DURACAO_FECHAMENTO = 350;
 
 export function SideMenu({ open, onClose }: SideMenuProps) {
   const [mounted, setMounted] = useState(open);
@@ -29,7 +28,7 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
       timeoutId = setTimeout(() => {
         setMounted(false);
         setIsClosing(false);
-      }, 350);
+      }, DURACAO_FECHAMENTO);
     }
 
     return () => {
@@ -37,6 +36,7 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
     };
   }, [open, mounted]);
 
+  // Com o menu aberto a página atrás não rola, e Esc fecha.
   useEffect(() => {
     if (!mounted || !open) return;
 
@@ -70,44 +70,10 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
       aria-label="Contatos"
     >
       <div className="side-menu-backdrop" onClick={onClose} aria-hidden="true" />
-      <button
-        className="side-menu-close"
-        type="button"
-        aria-label="Fechar menu"
-        onClick={onClose}
-        ref={closeButtonRef}
-      >
-        <img src={closeIcon} alt="" />
-      </button>
+      <BotaoFecharMenu onClick={onClose} ref={closeButtonRef} />
       <aside className="side-menu-panel">
         <h2>Contatos</h2>
-        <div className="side-menu-contacts">
-          <a
-            href="https://wa.me/5511968996977"
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => track("contato_site_clicado", { origem: "menu", tipo_contato: "whatsapp" })}
-          >
-            <img src={whatsappIcon} alt="" />
-            <span>11 9 6899 6977</span>
-          </a>
-          <a
-            href="https://instagram.com/somos_margem_"
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => track("contato_site_clicado", { origem: "menu", tipo_contato: "instagram" })}
-          >
-            <img src={instagramIcon} alt="" />
-            <span>somos_margem_</span>
-          </a>
-          <a
-            href="mailto:vitor@somosmargem.com.br"
-            onClick={() => track("contato_site_clicado", { origem: "menu", tipo_contato: "email" })}
-          >
-            <img src={emailIcon} alt="" />
-            <span>vitor@somosmargem.com.br</span>
-          </a>
-        </div>
+        <MenuContatos />
       </aside>
     </div>
   );

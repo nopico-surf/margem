@@ -3,16 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
-import { DadosPrivacidadeModal } from "@/components/DadosPrivacidadeModal";
+import { DadosPrivacidadeModal } from "@/components/protecao-de-dados/DadosPrivacidadeModal";
 import { grantGoogleConsent } from "@/components/GoogleTagManager";
+import { IntroShell } from "@/components/intro/IntroShell";
+import { IntroHeader } from "@/components/intro/IntroHeader";
+import { IntroBubble } from "@/components/intro/IntroBubble";
+import { IntroCopy } from "@/components/intro/IntroCopy";
+import { ConsentCard } from "@/components/protecao-de-dados/ConsentCard";
+import { LinkPoliticaDados } from "@/components/protecao-de-dados/LinkPoliticaDados";
+import { BotaoContinuar } from "@/components/ui/BotaoContinuar";
 import { track } from "@/lib/mixpanel";
-
-const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
-const checkboxSelectedIcon = "https://www.figma.com/api/mcp/asset/ae8f8ca3-9062-4066-abfb-8dd5bed8e56b.svg";
-
-function IntroHeader() {
-  return <header className="intro-header"><img className="intro-logo" src={logo} alt="Margem" /></header>;
-}
 
 export default function ProtecaoDeDadosPage() {
   const router = useRouter();
@@ -34,26 +34,37 @@ export default function ProtecaoDeDadosPage() {
     router.push("/app");
   }
 
+  function abrirModal() {
+    track("politica_dados_aberta");
+    setShowDadosModal(true);
+  }
+
+  function fecharModal() {
+    track("politica_dados_fechada");
+    setShowDadosModal(false);
+  }
+
   return (
-    <main className="intro-page">
-      <div className="intro-content">
-        <IntroHeader />
-        <div className="intro-bubble">Antes de continuar, uma coisa importante</div>
-        <div className="intro-copy">
-          <p>A gente não pede seu nome, seu e-mail nem seu documento. O que você compartilhar fica guardado sem estar ligado a você, nós armazenamos tudo de forma <strong>anônima, segura e sigilosa</strong>, pra te devolver uma orientação melhor e pra entender o que as pessoas mais precisam.</p>
-          <p>Se você tem <strong>menos de 18 anos</strong>, conversas com seus responsáveis sobre o que você tá buscando aqui podem ser importantes.</p>
-        </div>
-        <button className="privacy-link" type="button" onClick={() => { track("politica_dados_aberta"); setShowDadosModal(true); }}>Ver como a gente cuida dos seus dados</button>
-      </div>
-      <div className="intro-actions">
-        <label className="consent-card">
-          <input className="consent-input" type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
-          <span className="consent-checkbox-control" aria-hidden="true"><span className="consent-checkbox-box" /><img className="consent-checkbox-selected" src={checkboxSelectedIcon} alt="" /></span>
-          <span className="consent-copy">Li e concordo que a Margem guarde e use o que eu escrever aqui, incluindo informações sobre meu uso ou sobre o uso de alguém</span>
-        </label>
-        <button className="intro-button" type="button" disabled={!consent} onClick={onContinue}>Continuar</button>
-      </div>
-      {showDadosModal && <DadosPrivacidadeModal onClose={() => { track("politica_dados_fechada"); setShowDadosModal(false); }} />}
-    </main>
+    <IntroShell
+      conteudo={
+        <>
+          <IntroHeader />
+          <IntroBubble>Antes de continuar, uma coisa importante</IntroBubble>
+          <IntroCopy>
+            <p>A gente não pede seu nome, seu e-mail nem seu documento. O que você compartilhar fica guardado sem estar ligado a você, nós armazenamos tudo de forma <strong>anônima, segura e sigilosa</strong>, pra te devolver uma orientação melhor e pra entender o que as pessoas mais precisam.</p>
+            <p>Se você tem <strong>menos de 18 anos</strong>, conversas com seus responsáveis sobre o que você tá buscando aqui podem ser importantes.</p>
+          </IntroCopy>
+          <LinkPoliticaDados onClick={abrirModal} />
+        </>
+      }
+      acoes={
+        <>
+          <ConsentCard checked={consent} onChange={setConsent} />
+          <BotaoContinuar onClick={onContinue} disabled={!consent} />
+        </>
+      }
+    >
+      {showDadosModal && <DadosPrivacidadeModal onClose={fecharModal} />}
+    </IntroShell>
   );
 }
