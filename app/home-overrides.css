@@ -17,7 +17,7 @@
 .hero-focus-track,.topics-button{max-width:1080px}
 .pathways{background:var(--neutral-50)}
 .pathway-card{min-height:82px;justify-content:flex-start;gap:16px}
-.pathway-card>span{flex:1;min-width:0}
+.pathway-card>span{flex:1;min-width:0;gap:4px}
 .pathway-icon{flex:0 0 20px;width:20px;height:20px}
 .pathway-emoji{display:grid;flex:0 0 20px;width:20px;height:20px;place-items:center;font-size:18px;line-height:20px}
 .pathway-card .pathway-arrow{flex:0 0 16px;width:16px;height:16px;margin-left:auto}
