@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { gerarOrientacao } from "@/lib/gemini";
+import { fallbackOrientation, gerarOrientacao } from "@/lib/gemini";
 import { normalizarTexto } from "@/lib/normalizar";
 import { detectarRisco } from "@/lib/risco";
 import {
@@ -114,7 +114,9 @@ export async function POST(request: Request) {
       const chave = normalizarTexto(texto);
       cached = await buscarRespostaPorChave(chave);
       orientation = cached ?? (await gerarOrientacao(texto));
-      respostaId = cached ? cached.id : await salvarRespostaGerada(chave, orientation);
+      // O texto genérico de falha não vai pro cache: a próxima mensagem igual tenta o Gemini de novo.
+      const falhou = orientation === fallbackOrientation;
+      respostaId = cached ? cached.id : falhou ? null : await salvarRespostaGerada(chave, orientation);
       foiCache = Boolean(cached);
     }
 

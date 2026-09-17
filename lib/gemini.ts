@@ -19,6 +19,8 @@ export const fallbackOrientation: Orientation = {
   perguntas_aprofundamento: [],
 };
 
+// Quem chama compara com `fallbackOrientation` (mesmo objeto) para saber que o Gemini falhou e não
+// salvar o texto genérico como se fosse a resposta daquela mensagem.
 export async function gerarOrientacao(texto: string): Promise<Orientation> {
   if (!process.env.GEMINI_API_KEY) return fallbackOrientation;
 

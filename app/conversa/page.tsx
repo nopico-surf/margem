@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ResultPage } from "@/components/conversa/ResultPage";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
@@ -54,8 +54,15 @@ export default function ConversaPage() {
   const [resources, setResources] = useState<RecursosDaApi | null>(null);
   const [isResourcesLoading, setIsResourcesLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Em desenvolvimento o React roda este efeito duas vezes (Strict Mode). Sem essa trava saíam dois
+  // pedidos por conversa: dois registros no histórico e os skeletons piscando quando a segunda
+  // resposta chegava depois da primeira.
+  const jaBuscou = useRef(false);
 
   useEffect(() => {
+    if (jaBuscou.current) return;
+    jaBuscou.current = true;
+
     let texto: string | null = null;
     let cardIndex: string | null = null;
     try {

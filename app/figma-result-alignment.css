@@ -31,7 +31,6 @@
 .figma-user-message{align-self:flex-end;width:fit-content;max-width:calc(100% - 32px)}
 .figma-section-heading p,.figma-resource-heading p,.figma-professional-card>p{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3}
 .figma-section-heading h2,.figma-resource-heading h3{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;-webkit-line-clamp:unset}
-.figma-response-loading{padding:24px 0;color:var(--figma-result-muted);font:400 14px/20px Inter,sans-serif}
 .figma-response-error{padding:24px 0;color:var(--figma-result-muted);font:400 14px/20px Inter,sans-serif}
 .figma-result-sections{gap:0}
 @media(max-width:1088px){
