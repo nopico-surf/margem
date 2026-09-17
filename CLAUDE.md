@@ -57,9 +57,7 @@ O consentimento grava em `localStorage` e em `sessoes.consentimento_lgpd`. Quem 
 
 **Se clicou num card.** A resposta já está no banco (`cards_predefinidos` → `respostas`). Zero chamada de IA, zero token. Renderiza direto.
 
-**Se escreveu no campo livre.** Normaliza o texto (minúsculas, sem acento, sem pontuação), gera a `chave_busca`, procura em `respostas.chave_busca`.
-- Achou equivalente: cache hit. Devolve a resposta salva. Zero token.
-- Não achou: uma chamada ao Gemini. Salva a resposta nova com `origem = gerada_gemini`. Devolve.
+**Se escreveu no campo livre.** Por enquanto, sempre uma chamada ao Gemini, mesmo que o texto seja igual a um já enviado. Salva a resposta nova com `origem = gerada_gemini` e `chave_busca` vazia, e devolve. Não existe reaproveitamento de resposta salva no campo livre hoje (ver seção 5).
 
 **Sempre, em paralelo.** Checagem dos `termos_risco` contra o texto original. Se bater, **não desvia o fluxo e não abre tela separada**: apenas reordena a resposta, subindo os contatos de emergência pro topo junto com a mensagem de escalação já escrita no banco. Essa detecção é nossa, hardcoded, e nunca é responsabilidade do Gemini.
 
@@ -75,7 +73,7 @@ O consentimento grava em `localStorage` e em `sessoes.consentimento_lgpd`. Quem 
 
 O Gemini gera **seis coisas e só seis**: `acolhimento`, `orientacao`, `pilula_espiritual`, `checklist_agora`, `checklist_proximo`, `perguntas_aprofundamento`.
 
-Ele **nunca** gera telefone, endereço, nome de profissional, nome de instituição ou número de emergência. Se qualquer um desses aparecer no texto gerado, é bug: descarta e cai no fallback pré-escrito.
+Ele **nunca** gera telefone, endereço, nome de profissional, nome de instituição ou número de emergência. Se qualquer um desses aparecer no texto gerado, é bug: descarta e trata como falha do Gemini (ver abaixo). Essa checagem ainda não está implementada.
 
 Saída esperada:
 
@@ -106,23 +104,32 @@ O que a plataforma acrescenta antes de renderizar:
 
 O system prompt vive em `/docs/prompt-gemini.md`, com o documento de Tom de Voz embutido por inteiro (não por URL, o ambiente não busca link externo). Ler de arquivo, nunca hardcodar dentro do route handler.
 
-Validar o JSON antes de renderizar. Resposta malformada ou timeout não pode quebrar a tela: cai numa resposta genérica pré-escrita, que já existe no banco.
+Validar o JSON antes de renderizar.
+
+**Quando o Gemini falha** (timeout de 30s, erro do Google, resposta vazia, JSON inválido ou campo fora do formato):
+- **Nunca** devolver uma resposta genérica pré-escrita. Uma resposta única gravada pra qualquer mensagem é pior do que não responder. Isso também vale pra não gravar nada em `respostas`.
+- O route handler devolve `503` com `error: "gemini_indisponivel"` e o `motivo`. A tela **continua no loading**. Isso é temporário: o fallback de "tentar novamente" ainda vai ser desenhado, e quando existir substitui o loading.
+- A falha precisa ser monitorável: `console.error` com o motivo (log da Vercel), evento `gemini_falhou` no Mixpanel (motivo, detalhe, tempo, origem, nunca o texto da pessoa) e a interação registrada em `historico_interacoes` com `resposta_id` vazio.
 
 ---
 
 ## 5. Cache
 
-Determinístico e nosso. A IA não decide nada sobre reuso.
+Nosso, não da IA. A IA não decide nada sobre reuso.
 
-No v0: normalizar o texto e comparar `chave_busca`. Sem embeddings, sem similaridade semântica, sem fuzzy matching. Se a correspondência ficar grosseira demais, refinamos depois com dado real de uso, não por antecipação.
+**Hoje:** só os cards usam resposta salva (busca por `chave_busca` em `respostas`). O campo livre **não** tem cache: toda mensagem gera resposta nova.
+
+**Por que o cache do campo livre foi desligado.** A versão anterior comparava o texto normalizado letra por letra. Isso só acertava mensagens idênticas, nunca mensagens parecidas, e ainda deixava presa pra sempre a resposta genérica de quando o Gemini falhava.
+
+**O que o cache deveria ser (próxima fase, ainda sem forma definida).** Reaproveitar a resposta quando duas pessoas dizem a mesma coisa com palavras diferentes. Exemplo: "vou usar cocaína amanhã" e "quero usar pó depois de amanhã" deveriam cair na mesma resposta salva. Isso exige algum tipo de similaridade, o que hoje está na lista do que não construir (seção 8). Decidir a abordagem antes de implementar, com dado real de uso. As respostas geradas continuam sendo gravadas justamente pra servir de base pra isso.
 
 ---
 
 ## 6. Banco (Supabase / Postgres)
 
 - `sessoes`: id (UUID anônimo), timestamp_criacao, localizacao_usuario (opcional), consentimento_lgpd, timestamp_encerramento
-- `historico_interacoes`: sessao_id, tipo (campo_aberto | card | pergunta_aprofundamento), texto_original, resposta_id, foi_cache_hit, timestamp
-- `respostas`: origem (gerada_gemini | escrita_manual), chave_busca (indexada), acolhimento, orientacao, pilula_espiritual, checklist_agora (JSON), checklist_proximo (JSON), perguntas_aprofundamento (JSON), revisado_por_clinica, criado_em
+- `historico_interacoes`: sessao_id, tipo (campo_aberto | card | pergunta_aprofundamento), texto_original, resposta_id (vazio quando o Gemini falhou), foi_cache_hit, timestamp. É aqui que se vê o que foi escrito e o que foi respondido.
+- `respostas`: origem (gerada_gemini | escrita_manual), chave_busca (índice único; preenchida só nas respostas dos cards, vazia nas geradas pelo Gemini), acolhimento, orientacao, pilula_espiritual, checklist_agora (JSON), checklist_proximo (JSON), perguntas_aprofundamento (JSON), revisado_por_clinica, criado_em
 - `cards_predefinidos`: titulo, resposta_id, ordem
 - `profissionais_cadastrados`: nome, especialidade, telefone, email, localizacao, status, categoria_resposta_relevante
 - `instituicoes_apoio`: nome, descricao, tipo, contatos (JSON), categoria_resposta_relevante
@@ -149,6 +156,7 @@ Não são preferência de estilo. São critério de aceite.
 - **Sem bloqueio por idade.** Quem usa e é adolescente é exatamente quem precisa de acesso.
 - **Pessoa antes da situação.** "Pessoas que fazem uso", nunca "usuários de drogas", nunca "viciado" ou "dependente" como rótulo.
 - **Nada que culpe** ("é só procurar ajuda", "basta se organizar") e nada que prometa o que não dá pra garantir.
+- **Nunca usar URL de asset do Figma no código.** Os links `https://www.figma.com/api/mcp/asset/...` que o MCP do Figma devolve expiram em 7 dias. Todo ícone, imagem ou SVG vindo do Figma é baixado e salvo no nosso servidor (`/public/icons` ou `/public/assets`) e referenciado pelo caminho local. Antes de salvar, checar se o mesmo arquivo já existe lá.
 
 ---
 
@@ -210,15 +218,16 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
 
 - [x] Boas-vindas em dois steps, com consentimento gravado e não repetido
 - [x] Seis cards renderizando resposta do banco sem chamar IA (v0; 7º "para familiares" pode vir depois)
-- [x] Campo livre funcionando com cache hit e cache miss
-- [x] Uma chamada ao Gemini no miss, com resposta salva no banco
+- [x] Campo livre sempre chamando o Gemini, com resposta salva no banco (cache do campo livre desligado, ver seção 5)
+- [ ] Cache do campo livre por mensagens parecidas (abordagem a definir)
 - [ ] Detecção de termo de risco reordenando a resposta
 - [x] Bloco de contatos montado a partir do nosso banco (profissionais, serviços públicos, instituições dinâmicas)
 - [ ] Link de redirect pro Google Maps funcionando
 - [ ] `/privacidade` publicada
 - [ ] `/ui` com todos os componentes e estados
 - [x] Nenhuma chave sensível no bundle do cliente (Service Role Key roda server-side)
-- [ ] Fallback testado: Gemini fora do ar não quebra a tela
+- [ ] Fallback de "tentar novamente" quando o Gemini falha (hoje a tela fica no loading, ver seção 4)
+- [x] Falha do Gemini monitorável (log da Vercel, evento `gemini_falhou` no Mixpanel, histórico sem resposta)
 
 <!-- BEGIN:nextjs-agent-rules -->
 

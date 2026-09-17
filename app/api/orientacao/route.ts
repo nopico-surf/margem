@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fallbackOrientation, gerarOrientacao } from "@/lib/gemini";
+import { gerarOrientacao } from "@/lib/gemini";
 import { normalizarTexto } from "@/lib/normalizar";
 import { detectarRisco } from "@/lib/risco";
 import {
@@ -110,14 +110,17 @@ export async function POST(request: Request) {
       }
     }
 
+    // Campo livre sempre chama o Gemini: reaproveitar resposta salva por texto parecido fica pra depois.
     if (!orientation) {
-      const chave = normalizarTexto(texto);
-      cached = await buscarRespostaPorChave(chave);
-      orientation = cached ?? (await gerarOrientacao(texto));
-      // O texto genérico de falha não vai pro cache: a próxima mensagem igual tenta o Gemini de novo.
-      const falhou = orientation === fallbackOrientation;
-      respostaId = cached ? cached.id : falhou ? null : await salvarRespostaGerada(chave, orientation);
-      foiCache = Boolean(cached);
+      const resultado = await gerarOrientacao(texto);
+      if (!resultado.ok) {
+        // Sem resposta genérica: a tela segue no loading até existir o "tentar novamente".
+        console.error(`[orientacao] Gemini falhou: ${resultado.motivo}${resultado.detalhe ? ` (${resultado.detalhe})` : ""}`);
+        await registrarInteracao({ sessaoId, texto: textoOriginal, respostaId: null, foiCacheHit: false, recebeuOrientacao: false });
+        return NextResponse.json({ error: "gemini_indisponivel", motivo: resultado.motivo, detalhe: resultado.detalhe ?? null }, { status: 503 });
+      }
+      orientation = resultado.orientation;
+      respostaId = await salvarRespostaGerada(orientation);
     }
 
     const risco = detectarRisco(textoOriginal);

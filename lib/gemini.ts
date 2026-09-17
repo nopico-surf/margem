@@ -10,19 +10,33 @@ export type Orientation = {
   perguntas_aprofundamento: Array<{ pergunta: string; opcoes: string[] }>;
 };
 
-export const fallbackOrientation: Orientation = {
-  acolhimento: "Você não precisa resolver tudo agora. O que você está vivendo merece cuidado, e procurar um caminho possível já é um movimento importante.",
-  orientacao: "Pode ajudar começar por uma coisa pequena e segura hoje, como beber água, descansar em um lugar protegido e falar com alguém de confiança. Se quiser acompanhamento, serviços públicos e grupos de apoio podem caminhar com você.",
-  pilula_espiritual: null,
-  checklist_agora: ["Ir para um lugar onde você se sinta mais seguro", "Beber água e tentar descansar", "Mandar uma mensagem para alguém de confiança"],
-  checklist_proximo: ["Observar como você está se sentindo ao longo da semana", "Conversar com alguém de confiança sobre o que está vivendo", "Buscar um serviço ou grupo de apoio que faça sentido para você"],
-  perguntas_aprofundamento: [],
-};
+// Não existe resposta genérica de reserva: quando o Gemini falha, quem chama recebe o motivo e decide
+// o que fazer. O motivo vai pro log do servidor e pro Mixpanel, pra dar pra acompanhar as falhas.
+export type MotivoFalhaGemini = "sem_chave" | "tempo_esgotado" | "erro_google" | "resposta_vazia" | "json_invalido" | "formato_invalido" | "erro_inesperado";
 
-// Quem chama compara com `fallbackOrientation` (mesmo objeto) para saber que o Gemini falhou e não
-// salvar o texto genérico como se fosse a resposta daquela mensagem.
-export async function gerarOrientacao(texto: string): Promise<Orientation> {
-  if (!process.env.GEMINI_API_KEY) return fallbackOrientation;
+export type ResultadoGemini =
+  | { ok: true; orientation: Orientation }
+  | { ok: false; motivo: MotivoFalhaGemini; detalhe?: string };
+
+const TIMEOUT_MS = 30000;
+
+function campoInvalido(parsed: Record<string, unknown>) {
+  if (typeof parsed.acolhimento !== "string") return "acolhimento";
+  if (typeof parsed.orientacao !== "string") return "orientacao";
+  if (parsed.pilula_espiritual !== null && typeof parsed.pilula_espiritual !== "string") return "pilula_espiritual";
+  if (!Array.isArray(parsed.checklist_agora)) return "checklist_agora";
+  if (!Array.isArray(parsed.checklist_proximo)) return "checklist_proximo";
+  if (!Array.isArray(parsed.perguntas_aprofundamento)) return "perguntas_aprofundamento";
+  const perguntaInvalida = parsed.perguntas_aprofundamento.some((item: unknown) => {
+    if (!item || typeof item !== "object") return true;
+    const question = item as { pergunta?: unknown; opcoes?: unknown };
+    return typeof question.pergunta !== "string" || !Array.isArray(question.opcoes) || question.opcoes.some((option) => typeof option !== "string");
+  });
+  return perguntaInvalida ? "perguntas_aprofundamento" : null;
+}
+
+export async function gerarOrientacao(texto: string): Promise<ResultadoGemini> {
+  if (!process.env.GEMINI_API_KEY) return { ok: false, motivo: "sem_chave" };
 
   try {
     const prompt = await readFile(path.join(process.cwd(), "docs", "prompt-gemini.md"), "utf8");
@@ -36,37 +50,38 @@ export async function gerarOrientacao(texto: string): Promise<Orientation> {
           maxOutputTokens: 4096,
         },
       }),
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
     });
 
-    if (!response.ok) return fallbackOrientation;
+    if (!response.ok) return { ok: false, motivo: "erro_google", detalhe: `http ${response.status}` };
     const data = await response.json();
-    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!raw) return fallbackOrientation;
+    const candidato = data?.candidates?.[0];
+    const raw = candidato?.content?.parts?.[0]?.text;
+    if (!raw) return { ok: false, motivo: "resposta_vazia", detalhe: `finishReason ${candidato?.finishReason ?? "nenhum"}` };
 
-    const parsed = JSON.parse(raw.replace(/^```json\s*|\s*```$/g, ""));
-    if (
-      typeof parsed.acolhimento !== "string" ||
-      typeof parsed.orientacao !== "string" ||
-      (parsed.pilula_espiritual !== null && typeof parsed.pilula_espiritual !== "string") ||
-      !Array.isArray(parsed.checklist_agora) ||
-      !Array.isArray(parsed.checklist_proximo) ||
-      !Array.isArray(parsed.perguntas_aprofundamento) ||
-      parsed.perguntas_aprofundamento.some((item: unknown) => {
-        if (!item || typeof item !== "object") return true;
-        const question = item as { pergunta?: unknown; opcoes?: unknown };
-        return typeof question.pergunta !== "string" || !Array.isArray(question.opcoes) || question.opcoes.some((option) => typeof option !== "string");
-      })
-    ) return fallbackOrientation;
+    let parsed: Record<string, unknown>;
+    try {
+      parsed = JSON.parse(raw.replace(/^```json\s*|\s*```$/g, ""));
+    } catch {
+      return { ok: false, motivo: "json_invalido", detalhe: `finishReason ${candidato?.finishReason ?? "nenhum"}` };
+    }
+
+    const campo = campoInvalido(parsed);
+    if (campo) return { ok: false, motivo: "formato_invalido", detalhe: campo };
+
     return {
-      acolhimento: parsed.acolhimento,
-      orientacao: parsed.orientacao,
-      pilula_espiritual: parsed.pilula_espiritual,
-      checklist_agora: parsed.checklist_agora.filter((item: unknown): item is string => typeof item === "string"),
-      checklist_proximo: parsed.checklist_proximo.filter((item: unknown): item is string => typeof item === "string"),
-      perguntas_aprofundamento: parsed.perguntas_aprofundamento,
+      ok: true,
+      orientation: {
+        acolhimento: parsed.acolhimento as string,
+        orientacao: parsed.orientacao as string,
+        pilula_espiritual: parsed.pilula_espiritual as string | null,
+        checklist_agora: (parsed.checklist_agora as unknown[]).filter((item): item is string => typeof item === "string"),
+        checklist_proximo: (parsed.checklist_proximo as unknown[]).filter((item): item is string => typeof item === "string"),
+        perguntas_aprofundamento: parsed.perguntas_aprofundamento as Orientation["perguntas_aprofundamento"],
+      },
     };
-  } catch {
-    return fallbackOrientation;
+  } catch (err) {
+    if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")) return { ok: false, motivo: "tempo_esgotado" };
+    return { ok: false, motivo: "erro_inesperado", detalhe: err instanceof Error ? err.message : undefined };
   }
 }

@@ -87,6 +87,8 @@ export default function ConversaPage() {
       const origem = cardIndex ? "card" : "texto";
       const inicio = performance.now();
       let statusHttp: number | null = null;
+      // Gemini fora do ar: por enquanto a tela fica no loading (o "tentar novamente" ainda vai ser desenhado).
+      let manterCarregando = false;
       try {
         const response = await fetch("/api/orientacao", {
           method: "POST",
@@ -99,6 +101,11 @@ export default function ConversaPage() {
         });
         statusHttp = response.status;
         const result = await response.json();
+        if (result.error === "gemini_indisponivel") {
+          track("gemini_falhou", { origem, motivo: result.motivo ?? null, detalhe: result.detalhe ?? null, tempo_resposta_ms: Math.round(performance.now() - inicio) });
+          manterCarregando = true;
+          return;
+        }
         if (!response.ok) throw new Error(result.error || "Não foi possível preparar a orientação.");
         if (typeof result.acolhimento !== "string" || typeof result.orientacao !== "string" || !Array.isArray(result.checklist_agora) || !Array.isArray(result.checklist_proximo)) {
           throw new Error("A resposta recebida não está completa.");
@@ -135,7 +142,7 @@ export default function ConversaPage() {
         setOrientation(null);
         setError(err instanceof Error ? err.message : "Não foi possível preparar a orientação.");
       } finally {
-        setIsLoading(false);
+        if (!manterCarregando) setIsLoading(false);
       }
     })();
   }, [router]);

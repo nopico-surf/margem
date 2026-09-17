@@ -87,14 +87,16 @@ export async function buscarRespostaPorChave(chaveBusca: string) {
   return data as (Orientation & { id: string }) | null;
 }
 
-export async function salvarRespostaGerada(chaveBusca: string, orientation: Orientation) {
+// Resposta do Gemini é gravada sem chave_busca: o campo livre não reaproveita resposta salva (a chave é
+// única e só os cards buscam por ela). O texto que gerou a resposta fica em historico_interacoes.
+export async function salvarRespostaGerada(orientation: Orientation) {
   const supabase = getServerClient();
   if (!supabase) return null;
   const { data } = await supabase
     .from("respostas")
     .insert({
       origem: "gerada_gemini",
-      chave_busca: chaveBusca,
+      chave_busca: null,
       acolhimento: orientation.acolhimento,
       orientacao: orientation.orientacao,
       pilula_espiritual: orientation.pilula_espiritual,
@@ -107,7 +109,8 @@ export async function salvarRespostaGerada(chaveBusca: string, orientation: Orie
   return data?.id as string | undefined;
 }
 
-export async function registrarInteracao(params: { sessaoId: string; texto: string; respostaId?: string | null; foiCacheHit: boolean }) {
+// Quando o Gemini falha, a interação é registrada com resposta_id vazio e sem "recebeu_orientacao" na auditoria.
+export async function registrarInteracao(params: { sessaoId: string; texto: string; respostaId?: string | null; foiCacheHit: boolean; recebeuOrientacao?: boolean }) {
   const supabase = getServerClient();
   if (!supabase) return;
   // garante que a sessão existe mesmo se o consentimento não tiver sido gravado antes (ex: localStorage antigo)
@@ -120,7 +123,7 @@ export async function registrarInteracao(params: { sessaoId: string; texto: stri
       resposta_id: params.respostaId ?? null,
       foi_cache_hit: params.foiCacheHit,
     }),
-    supabase.from("auditoria_sessoes").insert({ sessao_id: params.sessaoId, acao: "recebeu_orientacao" }),
+    params.recebeuOrientacao === false ? null : supabase.from("auditoria_sessoes").insert({ sessao_id: params.sessaoId, acao: "recebeu_orientacao" }),
   ]);
 }
 
