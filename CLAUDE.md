@@ -157,6 +157,7 @@ Não são preferência de estilo. São critério de aceite.
 - **Pessoa antes da situação.** "Pessoas que fazem uso", nunca "usuários de drogas", nunca "viciado" ou "dependente" como rótulo.
 - **Nada que culpe** ("é só procurar ajuda", "basta se organizar") e nada que prometa o que não dá pra garantir.
 - **Nunca usar URL de asset do Figma no código.** Os links `https://www.figma.com/api/mcp/asset/...` que o MCP do Figma devolve expiram em 7 dias. Todo ícone, imagem ou SVG vindo do Figma é baixado e salvo no nosso servidor (`/public/icons` ou `/public/assets`) e referenciado pelo caminho local. Antes de salvar, checar se o mesmo arquivo já existe lá.
+- **Avatar fallback de profissional.** O arquivo `/public/assets/professional-avatar-fallback.svg` deve manter o desenho do Figma sem o retângulo técnico externo `fill="#1E1E1E"`, que cria bordas pretas nos cantos arredondados. Ao substituir esse SVG, remover esse retângulo antes de validar ou subir.
 
 ---
 
