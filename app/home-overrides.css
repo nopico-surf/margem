@@ -2,7 +2,8 @@
 .app-shell{min-height:100svh;background:var(--neutral-50)}
 .home-hero{min-height:580px;justify-content:center;gap:0;padding:32px 16px 24px;background:var(--brand-100);border-bottom-right-radius:32px}
 .hero-focus-track{display:flex;flex-direction:column;align-items:center}
-.app-header,.hero-focus-track,.pathways>h2,.pathways>p,.pathway-list{width:100%;max-width:600px;margin-left:auto;margin-right:auto}
+.app-header,.hero-focus-track{width:100%;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-focus-track{padding:0;box-sizing:border-box}
 .hero-input-group{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%}
 .identity-badge{display:flex;align-items:center;gap:4px;padding:4px 12px}
 .identity-badge img{width:16px;height:16px}
@@ -13,7 +14,7 @@
 .topics-button img{width:16px;height:16px}
 .topics-button{max-width:600px}
 .app-header{width:100%;max-width:none}
-.hero-focus-track,.pathways>h2,.pathways>p,.pathway-list,.topics-button{max-width:1080px}
+.hero-focus-track,.topics-button{max-width:1080px}
 .pathways{background:var(--neutral-50)}
 .pathway-card{min-height:82px;justify-content:flex-start;gap:16px}
 .pathway-card>span{flex:1;min-width:0}

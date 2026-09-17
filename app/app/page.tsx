@@ -4,6 +4,8 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageInput } from "@/components/MessageInput";
 import { KeyboardDiagnostics } from "@/components/KeyboardDiagnostics";
+import { Footer } from "@/components/Footer";
+import { SideMenu } from "@/components/SideMenu";
 import { registrar, track } from "@/lib/mixpanel";
 
 const logo = "https://www.figma.com/api/mcp/asset/3d60e40c-e0dd-4dce-b476-6b678a353bfd.svg";
@@ -33,6 +35,7 @@ export default function AppPage() {
   const router = useRouter();
   const [checkingConsent, setCheckingConsent] = useState(true);
   const [text, setText] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -72,7 +75,7 @@ export default function AppPage() {
 
   function showTopics() {
     track("topicos_clicado");
-    document.getElementById("pathways-title")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.querySelector(".pathways")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   if (checkingConsent) return null;
@@ -82,8 +85,9 @@ export default function AppPage() {
       <KeyboardDiagnostics />
       <header className="app-header">
         <img className="app-logo" src={logo} alt="Margem" />
-        <button className="menu-button" type="button" aria-label="Abrir menu" onClick={() => track("menu_clicado", { rota: "/app" })}><img src={menu} alt="" /></button>
+        <button className="menu-button" type="button" aria-label="Abrir menu" onClick={() => { setMenuOpen(true); track("menu_clicado", { rota: "/app" }); }}><img src={menu} alt="" /></button>
       </header>
+      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <section className="home-hero" aria-labelledby="home-title">
         <div className="hero-focus-track">
@@ -110,6 +114,7 @@ export default function AppPage() {
           ))}
         </div>
       </section>
+      <Footer />
     </main>
   );
 }

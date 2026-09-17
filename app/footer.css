@@ -1,0 +1,8 @@
+.app-footer{display:flex;flex-direction:column;align-items:center;gap:6px;padding:24px 0}
+.app-footer-title,.app-footer-list{width:100%;max-width:1080px;padding:0 16px;box-sizing:border-box;margin-left:auto;margin-right:auto}
+.app-footer-title{margin:0 auto;font-family:Inter,sans-serif;font-weight:500;font-size:10px;line-height:12px;color:var(--neutral-950)}
+.app-footer-list{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.app-footer-item{display:flex;align-items:flex-start;gap:4px;color:inherit;text-decoration:none}
+.app-footer-item img{width:16px;height:16px;display:block}
+.app-footer-item span{font-family:Inter,sans-serif;font-weight:500;font-size:12px;line-height:16px;color:var(--neutral-950-88)}
+.figma-result-page .app-footer{background:var(--figma-result-soft)}

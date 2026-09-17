@@ -2,6 +2,7 @@
 
 import { PointerEvent, ReactNode, useRef, useState } from "react";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
+import { Footer } from "@/components/Footer";
 import { track } from "@/lib/mixpanel";
 
 const assets = {
@@ -52,7 +53,7 @@ function ActionButton({ label, icon, href, onClick }: CardAction & { onClick?: (
 }
 
 function ResourceActions({ resource, tipoRecurso }: { resource: CardResource; tipoRecurso: TipoRecurso }) {
-  return <ActionRow>{resource.actions.map((action, index) => <ActionButton key={`${resource.id}-${action.label}`} {...action} onClick={() => track("contato_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title, acao_tipo: action.icon ? KIND_POR_ICONE[action.icon] ?? action.icon : null, acao_label: action.label, posicao: index + 1 })} />)}<ActionButton label="Saiba mais" onClick={() => track("saiba_mais_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title })} /></ActionRow>;
+  return <ActionRow>{resource.actions.map((action, index) => <ActionButton key={`${resource.id}-${index}`} {...action} onClick={() => track("contato_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title, acao_tipo: action.icon ? KIND_POR_ICONE[action.icon] ?? action.icon : null, acao_label: action.label, posicao: index + 1 })} />)}<ActionButton label="Saiba mais" onClick={() => track("saiba_mais_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title })} /></ActionRow>;
 }
 
 function ActionRow({ children }: { children: ReactNode }) {
@@ -169,5 +170,5 @@ export function ResultPage({ message, orientation, isLoading, error }: { message
   const profissionais = orientation?.profissionais ?? [];
   const servicosPublicos = orientation?.servicos_publicos ?? [];
   const instituicoes = orientation?.instituicoes ?? [];
-  return <main className="figma-result-page"><Header /><div className="figma-result-main"><section className="figma-result-messages"><div className="figma-user-message">{message}</div>{isLoading ? <div className="figma-response-loading" aria-live="polite">Preparando uma orientação para você...</div> : error ? <div className="figma-response-error" role="alert">{error}</div> : orientation ? <div className="figma-response-copy"><p>{orientation.acolhimento}</p><p>{orientation.orientacao}</p>{orientation.pilula_espiritual && <p>{orientation.pilula_espiritual}</p>}</div> : null}</section>{!isLoading && orientation && <MoreOptions />}</div>{!isLoading && orientation && <div className="figma-result-sections"><Professionals profissionais={profissionais} /><PublicServices services={servicosPublicos} /><SupportSpaces spaces={instituicoes} /><ChecklistSection title="Passos reais, para fazer agora" description="Escolha um ou dois passos para fazer hoje ou amanhã" items={realSteps} /><ChecklistSection title="Para planejar" description="Escolha o que faz sentido para você nas próximas semanas" items={planningSteps} /></div>}</main>;
+  return <main className="figma-result-page"><Header /><div className="figma-result-main"><section className="figma-result-messages"><div className="figma-user-message">{message}</div>{isLoading ? <div className="figma-response-loading" aria-live="polite">Preparando uma orientação para você...</div> : error ? <div className="figma-response-error" role="alert">{error}</div> : orientation ? <div className="figma-response-copy"><p>{orientation.acolhimento}</p><p>{orientation.orientacao}</p>{orientation.pilula_espiritual && <p>{orientation.pilula_espiritual}</p>}</div> : null}</section>{!isLoading && orientation && <MoreOptions />}</div>{!isLoading && orientation && <div className="figma-result-sections"><Professionals profissionais={profissionais} /><PublicServices services={servicosPublicos} /><SupportSpaces spaces={instituicoes} /><ChecklistSection title="Passos reais, para fazer agora" description="Escolha um ou dois passos para fazer hoje ou amanhã" items={realSteps} /><ChecklistSection title="Para planejar" description="Escolha o que faz sentido para você nas próximas semanas" items={planningSteps} /></div>}<Footer /></main>;
 }
