@@ -17,7 +17,7 @@ export function HeaderResultado() {
   return (
     <>
       <header className="figma-result-header">
-        <a href="/app" aria-label="Ir para o início" onClick={() => track("logo_clicado", { rota: "/conversa" })}>
+        <a href="/inicio" aria-label="Ir para o início" onClick={() => track("logo_clicado", { rota: "/conversa" })}>
           <LogoMargemResultado className="figma-result-logo" />
         </a>
         <BotaoMenu variante="resultado" onClick={abrirMenu} />

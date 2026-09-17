@@ -31,7 +31,7 @@ export default function ProtecaoDeDadosPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessaoId }),
     }).catch(() => {});
-    router.push("/app");
+    router.push("/inicio");
   }
 
   function abrirModal() {

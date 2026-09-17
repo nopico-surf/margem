@@ -8,7 +8,7 @@ export default function RootGate() {
 
   useEffect(() => {
     try {
-      router.replace(window.localStorage.getItem("margem-consentimento") === "true" ? "/app" : "/bem-vindo");
+      router.replace(window.localStorage.getItem("margem-consentimento") === "true" ? "/inicio" : "/bem-vindo");
     } catch {
       router.replace("/bem-vindo");
     }

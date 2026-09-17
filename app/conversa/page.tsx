@@ -190,7 +190,7 @@ export default function ConversaPage() {
     } catch {}
 
     if (!texto && !cardIndex) {
-      router.replace("/app");
+      router.replace("/inicio");
       return;
     }
 
