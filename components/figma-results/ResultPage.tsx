@@ -1,8 +1,9 @@
 "use client";
 
-import { PointerEvent, ReactNode, useRef, useState } from "react";
+import { PointerEvent, ReactNode, useRef, useState, useEffect } from "react";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { Footer } from "@/components/Footer";
+import { SideMenu } from "@/components/SideMenu";
 import { track } from "@/lib/mixpanel";
 
 const assets = {
@@ -113,7 +114,28 @@ function SectionJump({ label, targetId }: { label: string; targetId: string }) {
 }
 
 function Header() {
-  return <header className="figma-result-header"><a href="/app" aria-label="Ir para o início" onClick={() => track("logo_clicado", { rota: "/conversa" })}><img className="figma-result-logo" src={assets.logo} alt="Margem" /></a><button className="figma-result-menu" type="button" aria-label="Abrir menu" onClick={() => track("menu_clicado", { rota: "/conversa" })}><img src={assets.menu} alt="" /></button></header>;
+  const [menuOpen, setMenuOpen] = useState(false);
+  return (
+    <>
+      <header className="figma-result-header">
+        <a href="/app" aria-label="Ir para o início" onClick={() => track("logo_clicado", { rota: "/conversa" })}>
+          <img className="figma-result-logo" src={assets.logo} alt="Margem" />
+        </a>
+        <button
+          className="figma-result-menu"
+          type="button"
+          aria-label="Abrir menu"
+          onClick={() => {
+            setMenuOpen(true);
+            track("menu_clicado", { rota: "/conversa" });
+          }}
+        >
+          <img src={assets.menu} alt="" />
+        </button>
+      </header>
+      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </>
+  );
 }
 
 function MoreOptions() {
@@ -164,11 +186,115 @@ function ChecklistSection({ title, description, items, selectedIndex }: { title:
   return <section id={sectionId} className="figma-result-band figma-checklist-band"><div className="figma-section-inner"><SectionHeading title={title} description={description} /><div className="figma-checklist">{items.map((item, index) => <label key={`${title}-${index}`}><FigmaCheckbox selected={selectedIndex === index} onChange={(marcado) => track("checklist_item_alterado", { secao: sectionId === "figma-section-real-steps" ? "agora" : "planejar", indice: index, marcado })} /><span className="figma-checklist-copy">{item}</span></label>)}</div></div></section>;
 }
 
+function TypewriterResponse({ orientation }: { orientation: OrientationResult }) {
+  const paragraphs = [
+    orientation.acolhimento,
+    orientation.orientacao,
+    orientation.pilula_espiritual
+  ].filter(Boolean) as string[];
+
+  const fullText = paragraphs.join("\n\n");
+  const [renderedLength, setRenderedLength] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setRenderedLength(fullText.length);
+      return;
+    }
+
+    setRenderedLength(0);
+
+    const startedAt = performance.now();
+    const charactersPerSecond = 90;
+    const paragraphGapMs = 100;
+    let frameId = 0;
+
+    function animate(now: number) {
+      const elapsed = now - startedAt;
+      let nextLength = 0;
+      let timelinePosition = 0;
+
+      for (let index = 0; index < paragraphs.length; index += 1) {
+        const paragraph = paragraphs[index];
+        const paragraphDuration = (paragraph.length / charactersPerSecond) * 1000;
+        const paragraphElapsed = elapsed - timelinePosition;
+        const revealedInParagraph = Math.min(Math.max(Math.floor((paragraphElapsed / 1000) * charactersPerSecond), 0), paragraph.length);
+
+        nextLength += revealedInParagraph;
+        if (revealedInParagraph < paragraph.length || index === paragraphs.length - 1) break;
+
+        const nextParagraphStart = timelinePosition + paragraphDuration + paragraphGapMs;
+        if (elapsed < nextParagraphStart) break;
+
+        nextLength += 2;
+        timelinePosition = nextParagraphStart;
+      }
+
+      setRenderedLength((previousLength) => Math.max(previousLength, nextLength));
+      if (nextLength < fullText.length) frameId = window.requestAnimationFrame(animate);
+    }
+
+    frameId = window.requestAnimationFrame(animate);
+    return () => window.cancelAnimationFrame(frameId);
+  }, [fullText]);
+
+  const displayedText = fullText.slice(0, renderedLength);
+  const displayedParagraphs = displayedText.split("\n\n");
+
+  return (
+    <div className="figma-response-copy">
+      {displayedParagraphs.map((p, i) => (
+        <p key={i}>{p}</p>
+      ))}
+    </div>
+  );
+}
+
 export function ResultPage({ message, orientation, isLoading, error }: { message: string; orientation: OrientationResult | null; isLoading: boolean; error: string | null }) {
   const realSteps = orientation?.checklist_agora ?? [];
   const planningSteps = orientation?.checklist_proximo ?? [];
   const profissionais = orientation?.profissionais ?? [];
   const servicosPublicos = orientation?.servicos_publicos ?? [];
   const instituicoes = orientation?.instituicoes ?? [];
-  return <main className="figma-result-page"><Header /><div className="figma-result-main"><section className="figma-result-messages"><div className="figma-user-message">{message}</div>{isLoading ? <div className="figma-response-loading" aria-live="polite">Preparando uma orientação para você...</div> : error ? <div className="figma-response-error" role="alert">{error}</div> : orientation ? <div className="figma-response-copy"><p>{orientation.acolhimento}</p><p>{orientation.orientacao}</p>{orientation.pilula_espiritual && <p>{orientation.pilula_espiritual}</p>}</div> : null}</section>{!isLoading && orientation && <MoreOptions />}</div>{!isLoading && orientation && <div className="figma-result-sections"><Professionals profissionais={profissionais} /><PublicServices services={servicosPublicos} /><SupportSpaces spaces={instituicoes} /><ChecklistSection title="Passos reais, para fazer agora" description="Escolha um ou dois passos para fazer hoje ou amanhã" items={realSteps} /><ChecklistSection title="Para planejar" description="Escolha o que faz sentido para você nas próximas semanas" items={planningSteps} /></div>}<Footer /></main>;
+
+  return (
+    <main className="figma-result-page">
+      <Header />
+      <div className="figma-result-main">
+        <section className="figma-result-messages">
+          <div className="figma-user-message">{message}</div>
+          {isLoading ? (
+            <div className="figma-response-loading" aria-live="polite">
+              Preparando uma orientação para você...
+            </div>
+          ) : error ? (
+            <div className="figma-response-error" role="alert">
+              {error}
+            </div>
+          ) : orientation ? (
+            <TypewriterResponse orientation={orientation} />
+          ) : null}
+        </section>
+        {!isLoading && orientation && <MoreOptions />}
+      </div>
+      {!isLoading && orientation && (
+        <div className="figma-result-sections">
+          <Professionals profissionais={profissionais} />
+          <PublicServices services={servicosPublicos} />
+          <SupportSpaces spaces={instituicoes} />
+          <ChecklistSection
+            title="Passos reais, para fazer agora"
+            description="Escolha um ou dois passos para fazer hoje ou amanhã"
+            items={realSteps}
+          />
+          <ChecklistSection
+            title="Para planejar"
+            description="Escolha o que faz sentido para você nas próximas semanas"
+            items={planningSteps}
+          />
+        </div>
+      )}
+      <Footer />
+    </main>
+  );
 }

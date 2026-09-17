@@ -27,7 +27,13 @@ export async function gerarOrientacao(texto: string): Promise<Orientation> {
     const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=" + process.env.GEMINI_API_KEY, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: `${prompt}\n\nMensagem da pessoa:\n${texto}` }] }] }),
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: `${prompt}\n\nMensagem da pessoa:\n${texto}` }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          maxOutputTokens: 4096,
+        },
+      }),
       signal: AbortSignal.timeout(30000),
     });
 
