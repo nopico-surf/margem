@@ -15,7 +15,7 @@ select
   'psicologo',
   'TESTE',
   5,
-  'Perfil temporário usado para validar a exibição dos profissionais parceiros.',
+  'Perfil temporário usado para validar a exibição dos profissionais parceiros. Todas as outras funcionalidades desta plataforma funcionam normalmente.',
   '["Redução de danos", "Recaídas", "Abstinência"]'::jsonb,
   'gratuito',
   'geral'

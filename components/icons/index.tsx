@@ -66,10 +66,10 @@ export function IconeLoader({ className }: IconProps) {
 export const IconeInfo = icone("/icons/info.svg");
 export const IconeAgendarWhatsapp = icone("/icons/agendar-whatsapp.svg");
 // Avatar do profissional: o cadastro pode trazer foto própria, e aí a padrão não é usada.
-export const URL_AVATAR_PADRAO = "/assets/professional-avatar.png";
+export const URL_AVATAR_PADRAO = "/assets/professional-avatar-fallback.svg";
 
 export function AvatarProfissional({ src, className }: { src?: string | null; className?: string }) {
-  return <img className={className} src={src || URL_AVATAR_PADRAO} alt="" />;
+  return <img className={className} src={src || URL_AVATAR_PADRAO} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = URL_AVATAR_PADRAO; }} alt="" />;
 }
 export const IconeCheckboxSelecionado = icone("/icons/checkbox-selecionado.svg");
 
@@ -100,7 +100,7 @@ export const ICONES_ACAO = {
   logo: "/icons/logo-margem-resultado.svg",
   menu: "/icons/menu-resultado.svg",
   arrow: "/icons/seta-resultado.svg",
-  avatar: "/assets/professional-avatar.png",
+  avatar: URL_AVATAR_PADRAO,
   checkbox: "/icons/checkbox.svg",
   checkboxSelected: "/icons/checkbox-selecionado.svg",
 } as const;

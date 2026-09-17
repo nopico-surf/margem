@@ -7,7 +7,7 @@ export const profissionalDeTeste: ProfissionalCadastrado = {
   crp: "TESTE",
   anos_experiencia: 5,
   foto_url: null,
-  bio: "Perfil temporário usado para validar a exibição dos profissionais parceiros.",
+  bio: "Perfil temporário usado para validar a exibição dos profissionais parceiros. Todas as outras funcionalidades desta plataforma funcionam normalmente.",
   tags: ["Redução de danos", "Recaídas", "Abstinência"],
   whatsapp_link: null,
   telefone: null,
