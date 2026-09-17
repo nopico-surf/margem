@@ -4,9 +4,9 @@
 .dados-modal-close{width:24px;height:24px;padding:0;border:0;background:transparent}
 .dados-modal-close img{width:24px;height:24px;display:block}
 .dados-modal-body{display:flex;flex-direction:column;gap:20px;padding:16px}
-.dados-modal-body h2{margin:0;font-family:Urbanist,sans-serif;font-size:20px;font-weight:600;line-height:28px;color:var(--neutral-950)}
+.dados-modal-body h2{margin:0;font-family:var(--font-urbanist),sans-serif;font-size:20px;font-weight:600;line-height:28px;color:var(--neutral-950)}
 .dados-modal-section{display:flex;flex-direction:column;gap:10px}
-.dados-modal-section h3{margin:0;font-family:Urbanist,sans-serif;font-size:18px;font-weight:600;line-height:24px;color:var(--neutral-950)}
+.dados-modal-section h3{margin:0;font-family:var(--font-urbanist),sans-serif;font-size:18px;font-weight:600;line-height:24px;color:var(--neutral-950)}
 .dados-modal-section p{margin:0;font-size:14px;line-height:20px;color:var(--neutral-950-88)}
 .dados-modal-section ul{margin:0;padding-left:21px;font-size:14px;line-height:20px;color:var(--neutral-950-88)}
 .dados-modal-button{width:100%;padding:14px 16px;border:0;border-radius:12px;background:var(--brand-800);color:#fff;font-weight:500;font-size:16px;line-height:20px}
