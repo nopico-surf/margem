@@ -60,7 +60,7 @@ export default function AppPage() {
 
   function openMenu() {
     setMenuOpen(true);
-    track("menu_clicado", { rota: "/app" });
+    track("menu_clicado", { rota: "/inicio" });
   }
 
   if (checkingConsent) return null;
