@@ -13,11 +13,7 @@ const especialidadeLabel: Record<ProfissionalCadastrado["especialidade"], string
   assistente_social: "Assistência Social",
 };
 
-const ID_PROFISSIONAL_TESTE = "00000000-0000-0000-0000-000000000005";
-
 export function CardProfissionaisCompleto({ profissional }: { profissional: ProfissionalCadastrado }) {
-  const buttonLabel = profissional.id === ID_PROFISSIONAL_TESTE ? "Profissional teste" : "Agendar por WhatsApp";
-
   return (
     <article className="figma-professional-card">
       <div className="figma-professional-head">
@@ -40,7 +36,7 @@ export function CardProfissionaisCompleto({ profissional }: { profissional: Prof
       )}
       {profissional.bio && <p>{profissional.bio}</p>}
       <BotaoAgendar
-        label={buttonLabel}
+        label="Agendar por WhatsApp"
         onClick={() =>
           track("agendar_whatsapp_clicado", {
             profissional_id: profissional.id,
