@@ -205,7 +205,7 @@ function TypewriterResponse({ orientation }: { orientation: OrientationResult })
     setRenderedLength(0);
 
     const startedAt = performance.now();
-    const charactersPerSecond = 90;
+    const charactersPerSecond = 140;
     const paragraphGapMs = 100;
     let frameId = 0;
 
