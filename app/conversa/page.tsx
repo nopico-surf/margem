@@ -102,7 +102,14 @@ export default function ConversaPage() {
         statusHttp = response.status;
         const result = await response.json();
         if (result.error === "gemini_indisponivel") {
-          track("gemini_falhou", { origem, motivo: result.motivo ?? null, detalhe: result.detalhe ?? null, tempo_resposta_ms: Math.round(performance.now() - inicio) });
+          track("gemini_falhou", {
+            origem,
+            gemini_falhou: true,
+            motivo: result.motivo ?? null,
+            detalhe: result.detalhe ?? null,
+            tempo_gemini_ms: result.tempo_gemini_ms ?? null,
+            tempo_resposta_ms: Math.round(performance.now() - inicio),
+          });
           manterCarregando = true;
           return;
         }
@@ -130,8 +137,10 @@ export default function ConversaPage() {
           });
         track("orientacao_recebida", {
           origem,
+          gemini_falhou: false,
           foi_cache_hit: Boolean(result.foi_cache_hit),
           risco_detectado: Boolean(result.risco?.emergency),
+          tempo_gemini_ms: result.tempo_gemini_ms ?? null,
           tempo_resposta_ms: Math.round(performance.now() - inicio),
           qtd_profissionais: result.profissionais?.length ?? 0,
           qtd_servicos: result.servicos_publicos?.length ?? 0,

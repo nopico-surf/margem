@@ -110,26 +110,49 @@ export async function POST(request: Request) {
       }
     }
 
+    // Preenchido só quando o Gemini é chamado (card e cache não chamam), pra medir o tempo real da API do Google.
+    let tempoGeminiMs: number | null = null;
+
     // Campo livre sempre chama o Gemini: reaproveitar resposta salva por texto parecido fica pra depois.
     if (!orientation) {
       const resultado = await gerarOrientacao(texto);
+      tempoGeminiMs = resultado.tempoMs;
       if (!resultado.ok) {
         // Sem resposta genérica: a tela segue no loading até existir o "tentar novamente".
-        console.error(`[orientacao] Gemini falhou: ${resultado.motivo}${resultado.detalhe ? ` (${resultado.detalhe})` : ""}`);
-        await registrarInteracao({ sessaoId, texto: textoOriginal, respostaId: null, foiCacheHit: false, recebeuOrientacao: false });
-        return NextResponse.json({ error: "gemini_indisponivel", motivo: resultado.motivo, detalhe: resultado.detalhe ?? null }, { status: 503 });
+        console.error(`[orientacao] Gemini falhou: ${resultado.motivo}${resultado.detalhe ? ` (${resultado.detalhe})` : ""} (${resultado.tempoMs}ms)`);
+        await registrarInteracao({
+          sessaoId,
+          texto: textoOriginal,
+          respostaId: null,
+          foiCacheHit: false,
+          recebeuOrientacao: false,
+          tempoGeminiMs: resultado.tempoMs,
+          geminiFalhou: true,
+          motivoFalha: resultado.motivo,
+        });
+        return NextResponse.json({ error: "gemini_indisponivel", motivo: resultado.motivo, detalhe: resultado.detalhe ?? null, tempo_gemini_ms: resultado.tempoMs }, { status: 503 });
       }
       orientation = resultado.orientation;
       respostaId = await salvarRespostaGerada(orientation);
     }
 
     const risco = detectarRisco(textoOriginal);
-    if (sessaoId) await registrarInteracao({ sessaoId, texto: textoOriginal, respostaId, foiCacheHit: foiCache });
+    if (sessaoId) {
+      await registrarInteracao({
+        sessaoId,
+        texto: textoOriginal,
+        respostaId,
+        foiCacheHit: foiCache,
+        tempoGeminiMs,
+        geminiFalhou: tempoGeminiMs !== null ? false : null,
+      });
+    }
 
     return NextResponse.json({
       ...orientation,
       risco,
       foi_cache_hit: foiCache,
+      tempo_gemini_ms: tempoGeminiMs,
     });
   } catch {
     return NextResponse.json({ error: "Não foi possível preparar a orientação." }, { status: 500 });

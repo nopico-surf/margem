@@ -14,9 +14,10 @@ export type Orientation = {
 // o que fazer. O motivo vai pro log do servidor e pro Mixpanel, pra dar pra acompanhar as falhas.
 export type MotivoFalhaGemini = "sem_chave" | "tempo_esgotado" | "erro_google" | "resposta_vazia" | "json_invalido" | "formato_invalido" | "erro_inesperado";
 
+// tempoMs mede só a chamada ao Google (não inclui ler o prompt do disco nem a gravação no banco depois).
 export type ResultadoGemini =
-  | { ok: true; orientation: Orientation }
-  | { ok: false; motivo: MotivoFalhaGemini; detalhe?: string };
+  | { ok: true; orientation: Orientation; tempoMs: number }
+  | { ok: false; motivo: MotivoFalhaGemini; detalhe?: string; tempoMs: number };
 
 const TIMEOUT_MS = 30000;
 
@@ -36,8 +37,10 @@ function campoInvalido(parsed: Record<string, unknown>) {
 }
 
 export async function gerarOrientacao(texto: string): Promise<ResultadoGemini> {
-  if (!process.env.GEMINI_API_KEY) return { ok: false, motivo: "sem_chave" };
+  if (!process.env.GEMINI_API_KEY) return { ok: false, motivo: "sem_chave", tempoMs: 0 };
 
+  const inicio = performance.now();
+  const tempoMs = () => Math.round(performance.now() - inicio);
   try {
     const prompt = await readFile(path.join(process.cwd(), "docs", "prompt-gemini.md"), "utf8");
     const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=" + process.env.GEMINI_API_KEY, {
@@ -53,24 +56,25 @@ export async function gerarOrientacao(texto: string): Promise<ResultadoGemini> {
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
 
-    if (!response.ok) return { ok: false, motivo: "erro_google", detalhe: `http ${response.status}` };
+    if (!response.ok) return { ok: false, motivo: "erro_google", detalhe: `http ${response.status}`, tempoMs: tempoMs() };
     const data = await response.json();
     const candidato = data?.candidates?.[0];
     const raw = candidato?.content?.parts?.[0]?.text;
-    if (!raw) return { ok: false, motivo: "resposta_vazia", detalhe: `finishReason ${candidato?.finishReason ?? "nenhum"}` };
+    if (!raw) return { ok: false, motivo: "resposta_vazia", detalhe: `finishReason ${candidato?.finishReason ?? "nenhum"}`, tempoMs: tempoMs() };
 
     let parsed: Record<string, unknown>;
     try {
       parsed = JSON.parse(raw.replace(/^```json\s*|\s*```$/g, ""));
     } catch {
-      return { ok: false, motivo: "json_invalido", detalhe: `finishReason ${candidato?.finishReason ?? "nenhum"}` };
+      return { ok: false, motivo: "json_invalido", detalhe: `finishReason ${candidato?.finishReason ?? "nenhum"}`, tempoMs: tempoMs() };
     }
 
     const campo = campoInvalido(parsed);
-    if (campo) return { ok: false, motivo: "formato_invalido", detalhe: campo };
+    if (campo) return { ok: false, motivo: "formato_invalido", detalhe: campo, tempoMs: tempoMs() };
 
     return {
       ok: true,
+      tempoMs: tempoMs(),
       orientation: {
         acolhimento: parsed.acolhimento as string,
         orientacao: parsed.orientacao as string,
@@ -81,7 +85,7 @@ export async function gerarOrientacao(texto: string): Promise<ResultadoGemini> {
       },
     };
   } catch (err) {
-    if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")) return { ok: false, motivo: "tempo_esgotado" };
-    return { ok: false, motivo: "erro_inesperado", detalhe: err instanceof Error ? err.message : undefined };
+    if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")) return { ok: false, motivo: "tempo_esgotado", tempoMs: tempoMs() };
+    return { ok: false, motivo: "erro_inesperado", detalhe: err instanceof Error ? err.message : undefined, tempoMs: tempoMs() };
   }
 }

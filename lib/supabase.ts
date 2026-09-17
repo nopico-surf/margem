@@ -110,7 +110,17 @@ export async function salvarRespostaGerada(orientation: Orientation) {
 }
 
 // Quando o Gemini falha, a interação é registrada com resposta_id vazio e sem "recebeu_orientacao" na auditoria.
-export async function registrarInteracao(params: { sessaoId: string; texto: string; respostaId?: string | null; foiCacheHit: boolean; recebeuOrientacao?: boolean }) {
+// tempoGeminiMs/geminiFalhou/motivoFalha ficam vazios quando a interação veio de card ou de cache (não chamou o Gemini).
+export async function registrarInteracao(params: {
+  sessaoId: string;
+  texto: string;
+  respostaId?: string | null;
+  foiCacheHit: boolean;
+  recebeuOrientacao?: boolean;
+  tempoGeminiMs?: number | null;
+  geminiFalhou?: boolean | null;
+  motivoFalha?: string | null;
+}) {
   const supabase = getServerClient();
   if (!supabase) return;
   // garante que a sessão existe mesmo se o consentimento não tiver sido gravado antes (ex: localStorage antigo)
@@ -122,6 +132,9 @@ export async function registrarInteracao(params: { sessaoId: string; texto: stri
       texto_original: params.texto,
       resposta_id: params.respostaId ?? null,
       foi_cache_hit: params.foiCacheHit,
+      tempo_gemini_ms: params.tempoGeminiMs ?? null,
+      gemini_falhou: params.geminiFalhou ?? null,
+      motivo_falha: params.motivoFalha ?? null,
     }),
     params.recebeuOrientacao === false ? null : supabase.from("auditoria_sessoes").insert({ sessao_id: params.sessaoId, acao: "recebeu_orientacao" }),
   ]);
