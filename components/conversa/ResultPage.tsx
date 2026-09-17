@@ -31,9 +31,10 @@ export function ResultPage({ message, orientation, isLoading, isResourcesLoading
   const servicosPublicos = resources?.servicos_publicos ?? [];
   const instituicoes = resources?.instituicoes ?? [];
   const mostrarSecoes = Boolean(orientation);
+  const carregamentoInicial = isLoading && !orientation;
 
   return (
-    <main className="figma-result-page">
+    <main className={`figma-result-page${carregamentoInicial ? " figma-result-page-initial-loading" : ""}`}>
       <HeaderResultado />
       <div className="figma-result-main">
         <ResultMessages message={message} orientation={orientation} isLoading={isLoading} error={error} />

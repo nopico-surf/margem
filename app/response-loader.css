@@ -2,6 +2,22 @@
    Cada propriedade tem a própria trilha de keyframes no Figma, com tempos e curvas diferentes,
    então cada uma vira uma animação separada (opacity, rotate, scale, translate). */
 
+.figma-response-loading{
+	font-size:16px;
+	font-weight:400;
+	gap:8px;
+	line-height:24px;
+}
+
+.figma-result-page-initial-loading{
+	display:flex;
+	flex-direction:column;
+}
+
+.figma-result-page-initial-loading .figma-result-main{
+	flex:1;
+}
+
 .figma-response-loader-icon{
 	animation-duration:9.752s;
 	animation-timing-function:linear;
