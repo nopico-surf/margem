@@ -11,7 +11,16 @@ const OPCOES: Array<[string, string]> = [
   ["Para planejar", "figma-section-planning"],
 ];
 
-export function MoreOptions() {
+export function MoreOptions({ isLoading = false }: { isLoading?: boolean }) {
+  if (isLoading) {
+    return (
+      <section className="figma-result-more figma-skeleton-more" aria-hidden="true">
+        <span className="figma-skeleton figma-skeleton-more-title" />
+        <div>{[165, 165, 225, 247, 134].map((width, index) => <span key={index} className="figma-skeleton figma-skeleton-more-option" style={{ width }} />)}</div>
+      </section>
+    );
+  }
+
   return (
     <section className="figma-result-more">
       <h2>Além disso, você pode ver</h2>

@@ -8,44 +8,53 @@ import { CardProfissionais } from "./CardProfissionais";
 import { CardsServicosPublicos } from "./CardsServicosPublicos";
 import { CardsInstituicoes } from "./CardsInstituicoes";
 import { ChecklistSection } from "./ChecklistSection";
-import type { OrientationResult } from "./types";
+import type { CardResource, OrientationResult } from "./types";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 type ResultPageProps = {
   message: string;
   orientation: OrientationResult | null;
   isLoading: boolean;
+  isResourcesLoading: boolean;
+  resources: {
+    profissionais: ProfissionalCadastrado[];
+    servicos_publicos: CardResource[];
+    instituicoes: CardResource[];
+  } | null;
   error: string | null;
 };
 
-export function ResultPage({ message, orientation, isLoading, error }: ResultPageProps) {
+export function ResultPage({ message, orientation, isLoading, isResourcesLoading, resources, error }: ResultPageProps) {
   const realSteps = orientation?.checklist_agora ?? [];
   const planningSteps = orientation?.checklist_proximo ?? [];
-  const profissionais = orientation?.profissionais ?? [];
-  const servicosPublicos = orientation?.servicos_publicos ?? [];
-  const instituicoes = orientation?.instituicoes ?? [];
-  const mostrarSecoes = !isLoading && orientation;
+  const profissionais = resources?.profissionais ?? [];
+  const servicosPublicos = resources?.servicos_publicos ?? [];
+  const instituicoes = resources?.instituicoes ?? [];
+  const mostrarSecoes = Boolean(orientation);
 
   return (
     <main className="figma-result-page">
       <HeaderResultado />
       <div className="figma-result-main">
         <ResultMessages message={message} orientation={orientation} isLoading={isLoading} error={error} />
-        {mostrarSecoes && <MoreOptions />}
+        {mostrarSecoes && <MoreOptions isLoading={isResourcesLoading} />}
       </div>
       {mostrarSecoes && (
         <div className="figma-result-sections">
-          <CardProfissionais profissionais={profissionais} />
-          <CardsServicosPublicos services={servicosPublicos} />
-          <CardsInstituicoes spaces={instituicoes} />
+          <CardProfissionais profissionais={profissionais} isLoading={isResourcesLoading} />
+          <CardsServicosPublicos services={servicosPublicos} isLoading={isResourcesLoading} />
+          <CardsInstituicoes spaces={instituicoes} isLoading={isResourcesLoading} />
           <ChecklistSection
             title="Passos reais, para fazer agora"
             description="Escolha um ou dois passos para fazer hoje ou amanhã"
             items={realSteps}
+            isLoading={isResourcesLoading}
           />
           <ChecklistSection
             title="Para planejar"
             description="Escolha o que faz sentido para você nas próximas semanas"
             items={planningSteps}
+            isLoading={isResourcesLoading}
           />
         </div>
       )}

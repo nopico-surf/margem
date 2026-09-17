@@ -7,6 +7,7 @@ import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import { TITULOS_CARDS_HOME } from "@/lib/cards-home";
 import { track } from "@/lib/mixpanel";
 import type { CardResource, OrientationResult } from "@/components/conversa/types";
+import { ICONES_ACAO, URL_AVATAR_PADRAO } from "@/components/icons";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Na tela, profissionais, serviços e instituições sempre chegam preenchidos pela API, mesmo que
@@ -14,16 +15,44 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 type OrientacaoDaApi = OrientationResult & {
   risco?: { emergency?: boolean };
   foi_cache_hit?: boolean;
+};
+
+type RecursosDaApi = {
   profissionais: ProfissionalCadastrado[];
   servicos_publicos: CardResource[];
   instituicoes: CardResource[];
 };
+
+function carregarImagem(url: string) {
+  return new Promise<void>((resolve) => {
+    let concluida = false;
+    const concluir = () => {
+      if (concluida) return;
+      concluida = true;
+      window.clearTimeout(timeout);
+      resolve();
+    };
+    const timeout = window.setTimeout(concluir, 2000);
+    const imagem = new Image();
+    imagem.onload = imagem.onerror = concluir;
+    imagem.src = url;
+  });
+}
+
+function midiasDosRecursos(recursos: RecursosDaApi) {
+  return [...new Set([
+    ...Object.values(ICONES_ACAO),
+    ...recursos.profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO),
+  ])];
+}
 
 export default function ConversaPage() {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
   const [orientation, setOrientation] = useState<OrientacaoDaApi | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [resources, setResources] = useState<RecursosDaApi | null>(null);
+  const [isResourcesLoading, setIsResourcesLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -45,6 +74,8 @@ export default function ConversaPage() {
 
     (async () => {
       setIsLoading(true);
+      setResources(null);
+      setIsResourcesLoading(false);
       setError(null);
       const origem = cardIndex ? "card" : "texto";
       const inicio = performance.now();
@@ -66,6 +97,23 @@ export default function ConversaPage() {
           throw new Error("A resposta recebida não está completa.");
         }
         setOrientation(result);
+        setIsResourcesLoading(true);
+        fetch("/api/orientacao", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ buscarRecursos: true }),
+        })
+          .then(async (resourcesResponse) => {
+            const resourcesResult = await resourcesResponse.json();
+            if (!resourcesResponse.ok) throw new Error();
+            return resourcesResult;
+          })
+          .catch(() => ({ profissionais: [], servicos_publicos: [], instituicoes: [] }))
+          .then(async (resourcesResult) => {
+            await Promise.all(midiasDosRecursos(resourcesResult).map(carregarImagem));
+            setResources(resourcesResult);
+            setIsResourcesLoading(false);
+          });
         track("orientacao_recebida", {
           origem,
           foi_cache_hit: Boolean(result.foi_cache_hit),
@@ -87,5 +135,5 @@ export default function ConversaPage() {
 
   if (!message) return null;
 
-  return <ResultPage message={message} orientation={orientation} isLoading={isLoading} error={error} />;
+  return <ResultPage message={message} orientation={orientation} isLoading={isLoading} isResourcesLoading={isResourcesLoading} resources={resources} error={error} />;
 }

@@ -74,6 +74,21 @@ export async function POST(request: Request) {
     const texto = typeof body.texto === "string" ? body.texto.trim() : "";
     const cardIndex = typeof body.cardIndex === "number" ? body.cardIndex : undefined;
     const sessaoId = typeof body.sessaoId === "string" ? body.sessaoId : "";
+    const buscarRecursos = body.buscarRecursos === true;
+
+    if (buscarRecursos) {
+      const [profissionais, servicosPublicos, instituicoes] = await Promise.all([
+        buscarProfissionaisPorCategoria(CATEGORIA_PADRAO),
+        buscarServicosPublicosPorCategoria(CATEGORIA_PADRAO),
+        buscarInstituicoesPorCategoria(CATEGORIA_PADRAO),
+      ]);
+
+      return NextResponse.json({
+        profissionais,
+        servicos_publicos: ordenarServicosPublicos(servicosPublicos).map((servico) => paraCardResource(servico.id, servico.nome, servico.descricao, servico.acoes)),
+        instituicoes: instituicoes.map((instituicao) => paraCardResource(instituicao.id, instituicao.nome, instituicao.descricao, instituicao.contatos)),
+      });
+    }
 
     if (!texto && cardIndex === undefined) return NextResponse.json({ error: "Texto ou cardIndex obrigatório" }, { status: 400 });
     if (!sessaoId) return NextResponse.json({ error: "sessaoId obrigatório" }, { status: 400 });
@@ -106,19 +121,10 @@ export async function POST(request: Request) {
     const risco = detectarRisco(textoOriginal);
     if (sessaoId) await registrarInteracao({ sessaoId, texto: textoOriginal, respostaId, foiCacheHit: foiCache });
 
-    const [profissionais, servicosPublicos, instituicoes] = await Promise.all([
-      buscarProfissionaisPorCategoria(CATEGORIA_PADRAO),
-      buscarServicosPublicosPorCategoria(CATEGORIA_PADRAO),
-      buscarInstituicoesPorCategoria(CATEGORIA_PADRAO),
-    ]);
-
     return NextResponse.json({
       ...orientation,
       risco,
       foi_cache_hit: foiCache,
-      profissionais,
-      servicos_publicos: ordenarServicosPublicos(servicosPublicos).map((servico) => paraCardResource(servico.id, servico.nome, servico.descricao, servico.acoes)),
-      instituicoes: instituicoes.map((instituicao) => paraCardResource(instituicao.id, instituicao.nome, instituicao.descricao, instituicao.contatos)),
     });
   } catch {
     return NextResponse.json({ error: "Não foi possível preparar a orientação." }, { status: 500 });
