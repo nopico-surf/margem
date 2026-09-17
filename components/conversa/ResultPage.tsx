@@ -15,7 +15,11 @@ type ResultPageProps = {
   message: string;
   orientation: OrientationResult | null;
   isLoading: boolean;
-  isResourcesLoading: boolean;
+  isResourcesLoading: {
+    profissionais: boolean;
+    servicosPublicos: boolean;
+    instituicoes: boolean;
+  };
   resources: {
     profissionais: ProfissionalCadastrado[];
     servicos_publicos: CardResource[];
@@ -39,24 +43,22 @@ export function ResultPage({ message, orientation, isLoading, isResourcesLoading
       <HeaderResultado />
       <div className="figma-result-main">
         <ResultMessages message={message} orientation={orientation} isLoading={isLoading} error={error} onRetry={onRetry} />
-        {mostrarSecoes && <MoreOptions isLoading={isResourcesLoading} />}
+        {mostrarSecoes && <MoreOptions isLoading={Object.values(isResourcesLoading).some(Boolean)} />}
       </div>
       {mostrarSecoes && (
         <div className="figma-result-sections">
-          <CardProfissionais profissionais={profissionais} isLoading={isResourcesLoading} />
-          <CardsServicosPublicos services={servicosPublicos} isLoading={isResourcesLoading} />
-          <CardsInstituicoes spaces={instituicoes} isLoading={isResourcesLoading} />
+          <CardProfissionais profissionais={profissionais} isLoading={isResourcesLoading.profissionais} />
+          <CardsServicosPublicos services={servicosPublicos} isLoading={isResourcesLoading.servicosPublicos} />
+          <CardsInstituicoes spaces={instituicoes} isLoading={isResourcesLoading.instituicoes} />
           <ChecklistSection
             title="Passos reais, para fazer agora"
             description="Escolha um ou dois passos para fazer hoje ou amanhã"
             items={realSteps}
-            isLoading={isResourcesLoading}
           />
           <ChecklistSection
             title="Para planejar"
             description="Escolha o que faz sentido para você nas próximas semanas"
             items={planningSteps}
-            isLoading={isResourcesLoading}
           />
         </div>
       )}

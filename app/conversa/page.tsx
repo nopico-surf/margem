@@ -43,10 +43,14 @@ function carregarImagem(url: string) {
 }
 
 function midiasDosRecursos(recursos: RecursosDaApi) {
-  return [...new Set([
-    ...Object.values(ICONES_ACAO),
-    ...recursos.profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO),
-  ])];
+  return {
+    profissionais: [...new Set([
+      ...Object.values(ICONES_ACAO),
+      ...recursos.profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO),
+    ])],
+    servicosPublicos: Object.values(ICONES_ACAO),
+    instituicoes: Object.values(ICONES_ACAO),
+  };
 }
 
 export default function ConversaPage() {
@@ -55,7 +59,11 @@ export default function ConversaPage() {
   const [orientation, setOrientation] = useState<OrientacaoDaApi | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [resources, setResources] = useState<RecursosDaApi | null>(null);
-  const [isResourcesLoading, setIsResourcesLoading] = useState(false);
+  const [isResourcesLoading, setIsResourcesLoading] = useState({
+    profissionais: false,
+    servicosPublicos: false,
+    instituicoes: false,
+  });
   const [error, setError] = useState<string | null>(null);
   // Em desenvolvimento o React roda este efeito duas vezes (Strict Mode). Sem essa trava saíam dois
   // pedidos por conversa: dois registros no histórico e os skeletons piscando quando a segunda
@@ -75,7 +83,7 @@ export default function ConversaPage() {
     setError(null);
     if (!ehRetry) {
       setResources(null);
-      setIsResourcesLoading(false);
+      setIsResourcesLoading({ profissionais: false, servicosPublicos: false, instituicoes: false });
     }
 
     const inicio = performance.now();
@@ -113,7 +121,7 @@ export default function ConversaPage() {
         throw new Error("A resposta recebida não está completa.");
       }
       setOrientation(result);
-      setIsResourcesLoading(true);
+      setIsResourcesLoading({ profissionais: true, servicosPublicos: true, instituicoes: true });
       fetch("/api/orientacao", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -125,10 +133,19 @@ export default function ConversaPage() {
           return resourcesResult;
         })
         .catch(() => ({ profissionais: [], servicos_publicos: [], instituicoes: [] }))
-        .then(async (resourcesResult) => {
-          await Promise.all(midiasDosRecursos(resourcesResult).map(carregarImagem));
+        .then((resourcesResult) => {
           setResources(resourcesResult);
-          setIsResourcesLoading(false);
+          const midias = midiasDosRecursos(resourcesResult);
+
+          Promise.all(midias.profissionais.map(carregarImagem)).then(() => {
+            setIsResourcesLoading((carregamento) => ({ ...carregamento, profissionais: false }));
+          });
+          Promise.all(midias.servicosPublicos.map(carregarImagem)).then(() => {
+            setIsResourcesLoading((carregamento) => ({ ...carregamento, servicosPublicos: false }));
+          });
+          Promise.all(midias.instituicoes.map(carregarImagem)).then(() => {
+            setIsResourcesLoading((carregamento) => ({ ...carregamento, instituicoes: false }));
+          });
         });
       track("orientacao_recebida", {
         origem,
