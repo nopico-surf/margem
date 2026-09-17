@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ResultPage } from "@/components/conversa/ResultPage";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
@@ -9,6 +9,9 @@ import { track } from "@/lib/mixpanel";
 import type { CardResource, OrientationResult } from "@/components/conversa/types";
 import { ICONES_ACAO, URL_AVATAR_PADRAO } from "@/components/icons";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
+
+// Copy fixa do Figma (1205:16250) para quando o Gemini falha: não varia por motivo de falha.
+const MENSAGEM_ERRO_GEMINI = "Desculpe, houve um erro ao carregar suas informações";
 
 // Na tela, profissionais, serviços e instituições sempre chegam preenchidos pela API, mesmo que
 // como lista vazia, por isso aqui eles não são opcionais.
@@ -58,6 +61,105 @@ export default function ConversaPage() {
   // pedidos por conversa: dois registros no histórico e os skeletons piscando quando a segunda
   // resposta chegava depois da primeira.
   const jaBuscou = useRef(false);
+  // Guarda a entrada original (texto/card) pra "tentar novamente" reenviar exatamente a mesma mensagem.
+  const entradaRef = useRef<{ texto: string; cardIndex: string | null; origem: "card" | "texto" } | null>(null);
+  const numeroTentativaRef = useRef(1);
+
+  const buscarOrientacao = useCallback(async (ehRetry: boolean) => {
+    const entrada = entradaRef.current;
+    if (!entrada) return;
+    const { texto, cardIndex, origem } = entrada;
+    const tentativa = numeroTentativaRef.current;
+
+    setIsLoading(true);
+    setError(null);
+    if (!ehRetry) {
+      setResources(null);
+      setIsResourcesLoading(false);
+    }
+
+    const inicio = performance.now();
+    let statusHttp: number | null = null;
+    try {
+      const response = await fetch("/api/orientacao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          texto: texto || "",
+          cardIndex: cardIndex ? parseInt(cardIndex) : undefined,
+          sessaoId: getOrCreateSessaoId(),
+        }),
+      });
+      statusHttp = response.status;
+      const result = await response.json();
+      if (result.error === "gemini_indisponivel") {
+        track("gemini_falhou", {
+          origem,
+          eh_retry: ehRetry,
+          numero_tentativa: tentativa,
+          gemini_falhou: true,
+          motivo: result.motivo ?? null,
+          detalhe: result.detalhe ?? null,
+          tempo_gemini_ms: result.tempo_gemini_ms ?? null,
+          tempo_resposta_ms: Math.round(performance.now() - inicio),
+        });
+        numeroTentativaRef.current = tentativa + 1;
+        setOrientation(null);
+        setError(MENSAGEM_ERRO_GEMINI);
+        return;
+      }
+      if (!response.ok) throw new Error(result.error || "Não foi possível preparar a orientação.");
+      if (typeof result.acolhimento !== "string" || typeof result.orientacao !== "string" || !Array.isArray(result.checklist_agora) || !Array.isArray(result.checklist_proximo)) {
+        throw new Error("A resposta recebida não está completa.");
+      }
+      setOrientation(result);
+      setIsResourcesLoading(true);
+      fetch("/api/orientacao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ buscarRecursos: true }),
+      })
+        .then(async (resourcesResponse) => {
+          const resourcesResult = await resourcesResponse.json();
+          if (!resourcesResponse.ok) throw new Error();
+          return resourcesResult;
+        })
+        .catch(() => ({ profissionais: [], servicos_publicos: [], instituicoes: [] }))
+        .then(async (resourcesResult) => {
+          await Promise.all(midiasDosRecursos(resourcesResult).map(carregarImagem));
+          setResources(resourcesResult);
+          setIsResourcesLoading(false);
+        });
+      track("orientacao_recebida", {
+        origem,
+        eh_retry: ehRetry,
+        numero_tentativa: tentativa,
+        gemini_falhou: false,
+        foi_cache_hit: Boolean(result.foi_cache_hit),
+        risco_detectado: Boolean(result.risco?.emergency),
+        tempo_gemini_ms: result.tempo_gemini_ms ?? null,
+        tempo_resposta_ms: Math.round(performance.now() - inicio),
+        qtd_profissionais: result.profissionais?.length ?? 0,
+        qtd_servicos: result.servicos_publicos?.length ?? 0,
+        qtd_instituicoes: result.instituicoes?.length ?? 0,
+      });
+    } catch (err) {
+      track("orientacao_falhou", {
+        origem,
+        eh_retry: ehRetry,
+        numero_tentativa: tentativa,
+        tempo_resposta_ms: Math.round(performance.now() - inicio),
+        status_http: statusHttp,
+        detalhe: err instanceof Error ? err.message : null,
+      });
+      numeroTentativaRef.current = tentativa + 1;
+      setOrientation(null);
+      // Tela sempre mostra a copy fixa do Figma; o motivo técnico só vai pro tracking, nunca pra pessoa.
+      setError(MENSAGEM_ERRO_GEMINI);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (jaBuscou.current) return;
@@ -78,85 +180,29 @@ export default function ConversaPage() {
     const cardTitle = cardIndex ? TITULOS_CARDS_HOME[Number(cardIndex)] : null;
     const displayText = cardTitle || texto;
     setMessage(displayText || "");
+    entradaRef.current = { texto: texto || "", cardIndex, origem: cardIndex ? "card" : "texto" };
+    buscarOrientacao(false);
+  }, [router, buscarOrientacao]);
 
-    (async () => {
-      setIsLoading(true);
-      setResources(null);
-      setIsResourcesLoading(false);
-      setError(null);
-      const origem = cardIndex ? "card" : "texto";
-      const inicio = performance.now();
-      let statusHttp: number | null = null;
-      // Gemini fora do ar: por enquanto a tela fica no loading (o "tentar novamente" ainda vai ser desenhado).
-      let manterCarregando = false;
-      try {
-        const response = await fetch("/api/orientacao", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            texto: texto || "",
-            cardIndex: cardIndex ? parseInt(cardIndex) : undefined,
-            sessaoId: getOrCreateSessaoId(),
-          }),
-        });
-        statusHttp = response.status;
-        const result = await response.json();
-        if (result.error === "gemini_indisponivel") {
-          track("gemini_falhou", {
-            origem,
-            gemini_falhou: true,
-            motivo: result.motivo ?? null,
-            detalhe: result.detalhe ?? null,
-            tempo_gemini_ms: result.tempo_gemini_ms ?? null,
-            tempo_resposta_ms: Math.round(performance.now() - inicio),
-          });
-          manterCarregando = true;
-          return;
-        }
-        if (!response.ok) throw new Error(result.error || "Não foi possível preparar a orientação.");
-        if (typeof result.acolhimento !== "string" || typeof result.orientacao !== "string" || !Array.isArray(result.checklist_agora) || !Array.isArray(result.checklist_proximo)) {
-          throw new Error("A resposta recebida não está completa.");
-        }
-        setOrientation(result);
-        setIsResourcesLoading(true);
-        fetch("/api/orientacao", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ buscarRecursos: true }),
-        })
-          .then(async (resourcesResponse) => {
-            const resourcesResult = await resourcesResponse.json();
-            if (!resourcesResponse.ok) throw new Error();
-            return resourcesResult;
-          })
-          .catch(() => ({ profissionais: [], servicos_publicos: [], instituicoes: [] }))
-          .then(async (resourcesResult) => {
-            await Promise.all(midiasDosRecursos(resourcesResult).map(carregarImagem));
-            setResources(resourcesResult);
-            setIsResourcesLoading(false);
-          });
-        track("orientacao_recebida", {
-          origem,
-          gemini_falhou: false,
-          foi_cache_hit: Boolean(result.foi_cache_hit),
-          risco_detectado: Boolean(result.risco?.emergency),
-          tempo_gemini_ms: result.tempo_gemini_ms ?? null,
-          tempo_resposta_ms: Math.round(performance.now() - inicio),
-          qtd_profissionais: result.profissionais?.length ?? 0,
-          qtd_servicos: result.servicos_publicos?.length ?? 0,
-          qtd_instituicoes: result.instituicoes?.length ?? 0,
-        });
-      } catch (err) {
-        track("orientacao_falhou", { origem, tempo_resposta_ms: Math.round(performance.now() - inicio), status_http: statusHttp });
-        setOrientation(null);
-        setError(err instanceof Error ? err.message : "Não foi possível preparar a orientação.");
-      } finally {
-        if (!manterCarregando) setIsLoading(false);
-      }
-    })();
-  }, [router]);
+  function tentarNovamente() {
+    track("retry_gemini_clicado", {
+      origem: entradaRef.current?.origem ?? null,
+      numero_tentativa: numeroTentativaRef.current,
+    });
+    buscarOrientacao(true);
+  }
 
   if (!message) return null;
 
-  return <ResultPage message={message} orientation={orientation} isLoading={isLoading} isResourcesLoading={isResourcesLoading} resources={resources} error={error} />;
+  return (
+    <ResultPage
+      message={message}
+      orientation={orientation}
+      isLoading={isLoading}
+      isResourcesLoading={isResourcesLoading}
+      resources={resources}
+      error={error}
+      onRetry={tentarNovamente}
+    />
+  );
 }

@@ -11,16 +11,17 @@ type ResultMessagesProps = {
   orientation: OrientationResult | null;
   isLoading: boolean;
   error: string | null;
+  onRetry: () => void;
 };
 
-export function ResultMessages({ message, orientation, isLoading, error }: ResultMessagesProps) {
+export function ResultMessages({ message, orientation, isLoading, error, onRetry }: ResultMessagesProps) {
   return (
     <section className="figma-result-messages">
       <UserMessage message={message} />
       {isLoading ? (
         <ResponseLoading />
       ) : error ? (
-        <ResponseError error={error} />
+        <ResponseError error={error} onRetry={onRetry} />
       ) : orientation ? (
         <ResponseCopy orientation={orientation} />
       ) : null}

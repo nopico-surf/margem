@@ -22,22 +22,23 @@ type ResultPageProps = {
     instituicoes: CardResource[];
   } | null;
   error: string | null;
+  onRetry: () => void;
 };
 
-export function ResultPage({ message, orientation, isLoading, isResourcesLoading, resources, error }: ResultPageProps) {
+export function ResultPage({ message, orientation, isLoading, isResourcesLoading, resources, error, onRetry }: ResultPageProps) {
   const realSteps = orientation?.checklist_agora ?? [];
   const planningSteps = orientation?.checklist_proximo ?? [];
   const profissionais = resources?.profissionais ?? [];
   const servicosPublicos = resources?.servicos_publicos ?? [];
   const instituicoes = resources?.instituicoes ?? [];
   const mostrarSecoes = Boolean(orientation);
-  const carregamentoInicial = isLoading && !orientation;
+  const carregamentoInicial = (isLoading || Boolean(error)) && !orientation;
 
   return (
     <main className={`figma-result-page${carregamentoInicial ? " figma-result-page-initial-loading" : ""}`}>
       <HeaderResultado />
       <div className="figma-result-main">
-        <ResultMessages message={message} orientation={orientation} isLoading={isLoading} error={error} />
+        <ResultMessages message={message} orientation={orientation} isLoading={isLoading} error={error} onRetry={onRetry} />
         {mostrarSecoes && <MoreOptions isLoading={isResourcesLoading} />}
       </div>
       {mostrarSecoes && (
