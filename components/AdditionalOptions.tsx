@@ -1,6 +1,6 @@
 "use client";
 
-const arrow = "https://www.figma.com/api/mcp/asset/3412482e-3f94-45fa-8ac1-29e172cecb2d.svg";
+const arrow = "/icons/seta-opcoes-adicionais.svg";
 
 const options = [
   "Profissionais que podem ajudar",

@@ -3,8 +3,8 @@
 import { SystemBadge } from "./SystemBadge";
 import { SystemButton } from "./SystemButton";
 const professionalPhoto = "/assets/professional-avatar.png";
-const whatsappIcon = "https://www.figma.com/api/mcp/asset/a0a5e917-ceb2-40ce-a666-1048fbfb1969.svg";
-const infoIcon = "https://www.figma.com/api/mcp/asset/887d6274-aea6-4407-85b7-18f4362d34d1.svg";
+const whatsappIcon = "/icons/whatsapp-card-profissional.svg";
+const infoIcon = "/icons/info-card-profissional.svg";
 
 type ProfessionalCardProps = {
   state?: "complete" | "loading";

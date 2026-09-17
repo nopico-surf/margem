@@ -1,9 +1,9 @@
 "use client";
 
 const loaderAssets = [
-  "https://www.figma.com/api/mcp/asset/dde60aad-3041-4f06-beaa-c34af1d616f2.svg",
-  "https://www.figma.com/api/mcp/asset/89620696-44c2-4a0c-a562-ac76a7dcf3a8.svg",
-  "https://www.figma.com/api/mcp/asset/fec7abaf-7753-48fa-94a3-c8a266ef33ad.svg",
+  "/icons/loader-1.svg",
+  "/icons/loader-2.svg",
+  "/icons/loader-3.svg",
 ];
 
 const paragraphs = [
