@@ -1,0 +1,156 @@
+/* Estilo da galeria /ui. Só dev, importado só por app/ui/page.tsx.
+
+   Aqui não entra valor cru: a galeria que mostra os tokens seria o pior lugar para não usá-los.
+   O palco de cada estado é branco, o mesmo fundo das telas, para as cores alpha e a variante
+   transparent lerem como leem em uso. A borda tracejada marca onde o palco começa. */
+
+.galeria {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-48);
+  /* Mais largo do que qualquer tela do produto porque a fileira de 6 estados precisa caber inteira
+     lado a lado. Em janela estreita ela quebra em duas linhas, e o botão de largura total quebra o
+     texto em duas linhas dentro da própria célula. */
+  max-width: var(--layout-content-max-width-xl);
+  margin: 0 auto;
+  padding: var(--spacing-24) var(--layout-page-padding-mobile) var(--spacing-96);
+  background: var(--colors-neutral-0);
+  color: var(--colors-neutral-950);
+}
+
+.galeria :where(h1, h2, h3, p, ul) {
+  margin: 0;
+}
+
+.galeria-topo,
+.galeria-secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.galeria-topo {
+  gap: var(--spacing-8);
+}
+
+.galeria-nota {
+  color: var(--colors-alpha-56);
+}
+
+.galeria-nome {
+  color: var(--colors-neutral-700);
+}
+
+/* Button */
+
+.galeria-combinacao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-16);
+  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  border-radius: var(--radius-lg);
+}
+
+.galeria-estados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+}
+
+.galeria-estado {
+  display: flex;
+  flex: 1 1 var(--size-96);
+  flex-direction: column;
+  gap: var(--spacing-6);
+  min-width: 0;
+}
+
+.galeria-palco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height-xl);
+  padding: var(--spacing-8);
+  border: var(--border-width-thin) dashed var(--colors-alpha-8);
+  border-radius: var(--radius-md);
+  background: var(--colors-neutral-0);
+}
+
+.galeria-palco-checkbox {
+  cursor: pointer;
+}
+
+/* Estilos de texto */
+
+.galeria-estilo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-8);
+  padding-bottom: var(--spacing-8);
+  border-bottom: var(--border-width-thin) solid var(--colors-alpha-8);
+}
+
+.galeria-declaracoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+  padding: 0;
+  list-style: none;
+}
+
+/* Cor */
+
+.galeria-rampa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.galeria-amostras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+}
+
+.galeria-amostra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  width: var(--size-80);
+}
+
+.galeria-cor {
+  display: block;
+  height: var(--size-40);
+  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  border-radius: var(--radius-sm);
+}
+
+/* Espaço */
+
+.galeria-espacos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.galeria-espaco {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.galeria-espaco .galeria-nome {
+  flex: 0 0 var(--size-40);
+  text-align: right;
+}
+
+.galeria-barra {
+  flex: 0 0 auto;
+  height: var(--size-8);
+  border-radius: var(--radius-full);
+  background: var(--colors-brand-primary-500);
+}

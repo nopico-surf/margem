@@ -546,7 +546,10 @@
   display:block;
 }
 
-.figma-checklist-input:focus-visible+.figma-checkbox-control .figma-checkbox-box {
+/* O seletor forçado é o mesmo combinado no botao.css: serve só para a galeria /ui mostrar o
+   foco parado. Nenhuma tela usa. */
+.figma-checklist-input:focus-visible+.figma-checkbox-control .figma-checkbox-box,
+[data-estado-forcado="focus"] .figma-checklist-input+.figma-checkbox-control .figma-checkbox-box {
   outline:3px solid var(--figma-result-brand);
   outline-offset:3px;
 }

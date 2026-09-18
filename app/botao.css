@@ -7,6 +7,12 @@
    Entre os estados muda só cor. O único que acrescenta alguma coisa é o focus, que ganha um stroke
    de 2px por dentro, para não empurrar o layout. */
 
+/* [data-estado-forcado] existe para a galeria /ui poder mostrar hover, pressed e focus parados,
+   lado a lado, sem depender do ponteiro. É um seletor a mais em cada regra de estado que já
+   existe, nunca uma regra nova: a cor continua declarada num lugar só. Nenhuma tela usa.
+   O forçado de hover mora dentro do @media (hover: hover), junto com o de verdade, então no
+   touch aquela célula da galeria mostra o default. */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -72,11 +78,13 @@
   color: var(--colors-neutral-0);
 }
 
-.btn[data-variante="primary"]:active:not(:disabled):not([data-carregando="true"]) {
+.btn[data-variante="primary"]:active:not(:disabled):not([data-carregando="true"]),
+[data-estado-forcado="pressed"] .btn[data-variante="primary"] {
   background: var(--colors-neutral-950);
 }
 
-.btn[data-variante="primary"]:focus-visible {
+.btn[data-variante="primary"]:focus-visible,
+[data-estado-forcado="focus"] .btn[data-variante="primary"] {
   background: var(--colors-neutral-950);
 }
 
@@ -85,7 +93,8 @@
   color: var(--colors-brand-primary-800);
 }
 
-.btn[data-variante="secondary"]:active:not(:disabled):not([data-carregando="true"]) {
+.btn[data-variante="secondary"]:active:not(:disabled):not([data-carregando="true"]),
+[data-estado-forcado="pressed"] .btn[data-variante="secondary"] {
   background: var(--colors-alpha-24);
 }
 
@@ -94,7 +103,8 @@
   color: var(--colors-brand-primary-800);
 }
 
-.btn[data-variante="transparent"]:active:not(:disabled):not([data-carregando="true"]) {
+.btn[data-variante="transparent"]:active:not(:disabled):not([data-carregando="true"]),
+[data-estado-forcado="pressed"] .btn[data-variante="transparent"] {
   background: var(--colors-alpha-16);
   color: var(--colors-brand-primary-950);
 }
@@ -103,15 +113,18 @@
    elemento depois do toque, porque o dedo não tem como sair de cima. */
 
 @media (hover: hover) {
-  .btn[data-variante="primary"]:hover:not(:disabled):not([data-carregando="true"]) {
+  .btn[data-variante="primary"]:hover:not(:disabled):not([data-carregando="true"]),
+  [data-estado-forcado="hover"] .btn[data-variante="primary"] {
     background: var(--colors-brand-primary-900);
   }
 
-  .btn[data-variante="secondary"]:hover:not(:disabled):not([data-carregando="true"]) {
+  .btn[data-variante="secondary"]:hover:not(:disabled):not([data-carregando="true"]),
+  [data-estado-forcado="hover"] .btn[data-variante="secondary"] {
     background: var(--colors-alpha-16);
   }
 
-  .btn[data-variante="transparent"]:hover:not(:disabled):not([data-carregando="true"]) {
+  .btn[data-variante="transparent"]:hover:not(:disabled):not([data-carregando="true"]),
+  [data-estado-forcado="hover"] .btn[data-variante="transparent"] {
     background: var(--colors-alpha-8);
     color: var(--colors-brand-primary-900);
   }
@@ -119,7 +132,8 @@
 
 /* Foco: stroke por fora. `outline` não ocupa espaço, então não empurra o que está ao lado. */
 
-.btn:focus-visible {
+.btn:focus-visible,
+[data-estado-forcado="focus"] .btn {
   outline: var(--border-width-medium) solid var(--colors-brand-secondary-400);
   outline-offset: 0;
 }
