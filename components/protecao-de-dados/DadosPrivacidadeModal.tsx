@@ -60,7 +60,7 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         </ModalSection>
 
         <ModalSection titulo="Falar com a gente">
-          <p>E-mail: vitor@somosmargem</p>
+          <p>E-mail: vitor@somosmargem.com.br</p>
           <p>Responsável pelos dados na Margem: Vitor Gaudio</p>
         </ModalSection>
 

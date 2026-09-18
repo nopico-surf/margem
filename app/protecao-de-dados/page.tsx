@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
-import { DadosPrivacidadeModal } from "@/components/protecao-de-dados/DadosPrivacidadeModal";
 import { grantGoogleConsent } from "@/components/GoogleTagManager";
 import { IntroShell } from "@/components/intro/IntroShell";
 import { IntroHeader } from "@/components/intro/IntroHeader";
@@ -17,7 +16,6 @@ import { track } from "@/lib/mixpanel";
 export default function ProtecaoDeDadosPage() {
   const router = useRouter();
   const [consent, setConsent] = useState(false);
-  const [showDadosModal, setShowDadosModal] = useState(false);
 
   function onContinue() {
     try {
@@ -36,12 +34,7 @@ export default function ProtecaoDeDadosPage() {
 
   function abrirModal() {
     track("politica_dados_aberta");
-    setShowDadosModal(true);
-  }
-
-  function fecharModal() {
-    track("politica_dados_fechada");
-    setShowDadosModal(false);
+    router.push("/privacidade");
   }
 
   return (
@@ -63,8 +56,6 @@ export default function ProtecaoDeDadosPage() {
           <BotaoContinuar onClick={onContinue} disabled={!consent} />
         </>
       }
-    >
-      {showDadosModal && <DadosPrivacidadeModal onClose={fecharModal} />}
-    </IntroShell>
+    />
   );
 }
