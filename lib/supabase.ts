@@ -19,7 +19,7 @@ export type ProfissionalCadastrado = {
   id: string;
   nome: string;
   especialidade: "psicologo" | "psiquiatra" | "assistente_social";
-  crp: string | null;
+  registro_profissional: string | null;
   anos_experiencia: number | null;
   foto_url: string | null;
   bio: string | null;

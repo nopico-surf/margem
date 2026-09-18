@@ -13,6 +13,12 @@ const especialidadeLabel: Record<ProfissionalCadastrado["especialidade"], string
   assistente_social: "Assistência Social",
 };
 
+const registroLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
+  psicologo: "CRP",
+  psiquiatra: "CRM",
+  assistente_social: "CRESS",
+};
+
 export function CardProfissionaisCompleto({ profissional }: { profissional: ProfissionalCadastrado }) {
   return (
     <article className="figma-professional-card">
@@ -23,7 +29,7 @@ export function CardProfissionaisCompleto({ profissional }: { profissional: Prof
             <strong>{profissional.nome}</strong>
             <span>{especialidadeLabel[profissional.especialidade]}</span>
           </div>
-          <small>{profissional.crp && <>CRP: {profissional.crp}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} anos de experiência`}</small>
+          <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} anos de experiência`}</small>
         </div>
         <IconeInfo className="figma-info-icon" />
       </div>
