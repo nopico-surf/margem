@@ -63,6 +63,10 @@ O consentimento grava em `localStorage` e em `sessoes.consentimento_lgpd`. Quem 
 
 **Montagem da resposta.** A plataforma junta o que veio do Gemini (ou do cache) com profissionais, instituições, serviços públicos e telefones buscados no nosso banco por `categoria_resposta_relevante`. Quem decide o que exibir e em que ordem somos nós, não a IA.
 
+**Ordem dos serviços públicos.** Vem do banco, nunca de heurística sobre o texto do serviço. A coluna `natureza` diz o que o serviço é, e a ordem de exibição é a ordem de declaração do enum: `saude_drogas`, `saude_mental`, `saude_geral`, `assistencia_social`, `seguranca`. Dentro de cada natureza, a coluna `ordem` (int) é prioridade manual, preenchida no dashboard do Supabase, provisória até existir uma regra baseada no relato da pessoa. Na rede de apoio (`instituicoes_apoio`) existe só a `ordem`. Cadastrar serviço novo sem definir a `natureza` não é possível: a coluna é `not null`.
+
+Toda query que lista serviço ou instituição ordena explicitamente. Sem `order by`, o Postgres devolve as linhas em ordem indeterminada e a tela muda de ordem a cada carregamento.
+
 **Registro.** Grava `historico_interacoes` (com `foi_cache_hit`) e `auditoria_sessoes`. Tudo anônimo, por UUID de sessão, sem login.
 
 **Perguntas de acompanhamento.** O Gemini já devolve três perguntas com opções multiselect. Construir o campo no contrato e o componente, mas deixar **desligado por feature flag** no v0.
@@ -132,8 +136,8 @@ Nosso, não da IA. A IA não decide nada sobre reuso.
 - `respostas`: origem (gerada_gemini | escrita_manual), chave_busca (índice único; preenchida só nas respostas dos cards, vazia nas geradas pelo Gemini), acolhimento, orientacao, pilula_espiritual, checklist_agora (JSON), checklist_proximo (JSON), perguntas_aprofundamento (JSON), revisado_por_clinica, criado_em
 - `cards_predefinidos`: titulo, resposta_id, ordem
 - `profissionais_cadastrados`: nome, especialidade, telefone, email, localizacao, status, categoria_resposta_relevante
-- `instituicoes_apoio`: nome, descricao, tipo, contatos (JSON), categoria_resposta_relevante
-- `servicos_publicos`: nome, descricao, tipo, endereco, telefone, google_maps_link, categoria_resposta_relevante
+- `instituicoes_apoio`: nome, descricao, tipo, contatos (JSON), categoria_resposta_relevante, ativo, ordem
+- `servicos_publicos`: nome, descricao, natureza (saude_drogas | saude_mental | saude_geral | assistencia_social | seguranca), endereco, acoes (JSON), categoria_resposta_relevante, ativo, ordem
 - `telefones_uteis`: tipo, numero, descricao, categoria_resposta_relevante
 - `termos_risco`: termo, tipo_emergencia, numero_contato, mensagem_escalacao
 - `auditoria_sessoes`: sessao_id, acao, timestamp

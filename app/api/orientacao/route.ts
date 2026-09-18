@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { gerarOrientacao } from "@/lib/gemini";
-import { normalizarTexto } from "@/lib/normalizar";
 import { detectarRisco } from "@/lib/risco";
 import {
   buscarInstituicoesPorCategoria,
@@ -43,22 +42,6 @@ function paraCardResource(id: string, nome: string, descricao: string | null, ac
   };
 }
 
-function prioridadeServico(nome: string, descricao: string | null) {
-  const texto = normalizarTexto(`${nome} ${descricao ?? ""}`);
-  if (/(drogas|substancias|alcool|caps ad|orientacao sobre drogas)/.test(texto)) return 0;
-  if (/(samu|ubs|saude|sus|cvv|emergencia medica)/.test(texto)) return 1;
-  if (/(cras|assistencia social|direitos humanos|disque 100)/.test(texto)) return 2;
-  if (/(policia|policia militar|policia civil|190|181)/.test(texto)) return 3;
-  return 4;
-}
-
-function ordenarServicosPublicos<T extends { nome: string; descricao: string | null }>(servicos: T[]) {
-  return servicos
-    .map((servico, indice) => ({ servico, indice, prioridade: prioridadeServico(servico.nome, servico.descricao) }))
-    .sort((a, b) => a.prioridade - b.prioridade || a.indice - b.indice)
-    .map(({ servico }) => servico);
-}
-
 const CARDS_CHAVES = [
   "quero mudar uso",
   "estou fisicamente mal",
@@ -85,7 +68,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         profissionais,
-        servicos_publicos: ordenarServicosPublicos(servicosPublicos).map((servico) => paraCardResource(servico.id, servico.nome, servico.descricao, servico.acoes)),
+        servicos_publicos: servicosPublicos.map((servico) => paraCardResource(servico.id, servico.nome, servico.descricao, servico.acoes)),
         instituicoes: instituicoes.map((instituicao) => paraCardResource(instituicao.id, instituicao.nome, instituicao.descricao, instituicao.contatos)),
       });
     }

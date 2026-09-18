@@ -32,11 +32,13 @@ export type ProfissionalCadastrado = {
   categoria_resposta_relevante: string | null;
 };
 
+export type NaturezaServico = "saude_drogas" | "saude_mental" | "saude_geral" | "assistencia_social" | "seguranca";
+
 export type ServicoPublico = {
   id: string;
   nome: string;
   descricao: string | null;
-  tipo: "UBS" | "CAPS" | "outro";
+  natureza: NaturezaServico;
   endereco: string | null;
   categoria_resposta_relevante: string | null;
   acoes: AcaoContato[];
@@ -67,6 +69,9 @@ export async function buscarServicosPublicosPorCategoria(categoria: string) {
     .select("*")
     .eq("categoria_resposta_relevante", categoria)
     .eq("ativo", true)
+    // natureza é enum: o Postgres ordena pela ordem de declaração dos valores, que é a ordem de exibição.
+    .order("natureza")
+    .order("ordem")
     .order("id");
   return (data ?? []) as ServicoPublico[];
 }
@@ -78,7 +83,9 @@ export async function buscarInstituicoesPorCategoria(categoria: string) {
     .from("instituicoes_apoio")
     .select("*")
     .eq("categoria_resposta_relevante", categoria)
-    .eq("ativo", true);
+    .eq("ativo", true)
+    .order("ordem")
+    .order("id");
   return (data ?? []) as InstituicaoApoio[];
 }
 
