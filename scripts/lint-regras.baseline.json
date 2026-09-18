@@ -1,0 +1,27 @@
+{
+  "px-cru": {
+    "app/botao.css": 1,
+    "app/dados-privacidade-modal.css": 26,
+    "app/footer.css": 12,
+    "app/globals.css": 20,
+    "app/home.css": 92,
+    "app/message-input.css": 30,
+    "app/onboarding.css": 51,
+    "app/response-loader.css": 7,
+    "app/resultado.css": 151,
+    "app/side-menu.css": 25,
+    "components/app/KeyboardDiagnostics.tsx": 7,
+    "components/app/MessageInput.tsx": 7,
+    "components/icons/index.tsx": 1,
+    "components/ui/BotaoMenu.tsx": 1
+  },
+  "hex-cru": {
+    "app/dados-privacidade-modal.css": 3,
+    "app/home.css": 4,
+    "app/message-input.css": 7,
+    "app/onboarding.css": 1,
+    "app/resultado.css": 2,
+    "components/app/KeyboardDiagnostics.tsx": 2,
+    "components/icons/index.tsx": 10
+  }
+}

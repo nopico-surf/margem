@@ -1,0 +1,188 @@
+/* Gerado a partir dos estilos de texto do Figma (Margem System, biblioteca Estilos, estilos de tipo TEXT).
+   Não editar valor à mão: mudou no Figma, gera de novo.
+
+   Os 21 estilos ainda usam o padrão antigo no Figma, com maiúscula e barra (`Label/Small-medium`),
+   diferente do padrão `grupo-variante` das variáveis. Renomear o estilo no Figma reescreve o estilo
+   aplicado em cada nó que o usa, então isso ficou pendente (ver /docs/spec-visual.md §7 e §10). Aqui
+   o nome só é convertido para o padrão de classe CSS, minúsculo com hífen: `Label/Small-medium` vira
+   `.label-small-medium`.
+
+   Cada classe compõe só tokens que já existem em tokens.css (font-size, line-height, font-weight,
+   letter-spacing) e a variável de fonte carregada em layout.tsx (--font-inter, --font-urbanist).
+   Nenhum valor cru. Letter-spacing é 0 nos 21 estilos hoje. */
+
+/* Label/ (Inter) */
+
+.label-xx-small {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-xs);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.label-x-small {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.label-small-regular {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-md);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.label-small-medium {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.label-medium-regular {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.label-medium-medium {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.label-medium-bold {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.label-large-medium {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-2xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+/* Header/ (Urbanist) */
+
+.header-x-small {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.header-small {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-2xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.header-medium {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-3xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.header-large {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-4xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+/* Header/X-Large está registrado no Figma com peso Medium, não Semi Bold como os outros quatro
+   estilos de Header. Não foi corrigido aqui: é o valor configurado no estilo, não um erro de leitura. */
+.header-x-large {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-5xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+/* Text/ (Inter) */
+
+.text-note {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-3xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-2xs);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.text-x-small {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-sm);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.text-small-regular {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-lg);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.text-small-bold {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-lg);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.text-medium-regular {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.text-medium-semibold {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.text-medium-bold {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-xl);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.text-large {
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-2xl);
+  letter-spacing: var(--letter-spacing-0);
+}

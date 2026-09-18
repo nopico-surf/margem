@@ -1,6 +1,9 @@
 /* tokens.css primeiro: é a fonte única, gerada do Figma. Tudo depois dele consome. */
 @import url('./tokens.css');
 
+/* Os 21 estilos de texto do Figma, gerados como classes. Ver /docs/spec-visual.md §7. */
+@import url('./estilos-de-texto.css');
+
 /* Um arquivo por tela. Nenhum existe para corrigir outro: quando um arquivo corrigia o anterior,
    os dois foram juntados na mesma ordem em que eram importados, e o de dentro ficou marcado. */
 @import url('./home.css');
