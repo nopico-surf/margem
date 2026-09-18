@@ -41,8 +41,8 @@ export const LogoMargemModal = icone("/icons/logo-margem.svg", "Margem");
 
 // As cores abaixo são as que já estavam dentro de cada SVG. Ficam explícitas aqui porque agora o
 // desenho é um só e quem define a cor é o lugar que usa.
-export const IconeMenu = (p: IconProps) => <GlifoMenu {...p} color="#012A1C" />;
-export const IconeMenuResultado = (p: IconProps) => <GlifoMenu {...p} color="#171B18" />;
+// Uma cor só nas duas telas. Era #012A1C na home e #171B18 no resultado, para o mesmo ícone.
+export const IconeMenu = (p: IconProps) => <GlifoMenu {...p} color="#171B18" />;
 // Branco porque fica sobre o overlay escuro do menu.
 export const IconeFecharMenu = (p: IconProps) => <GlifoClose {...p} size={32} color="var(--neutral-0)" />;
 export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="#012A1C" />;

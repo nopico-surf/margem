@@ -1,21 +1,15 @@
 "use client";
 
-import { IconeMenu, IconeMenuResultado } from "@/components/icons";
+import { IconeMenu } from "@/components/icons";
 
-// Uma classe só. Antes eram duas, `.menu-button` e `.figma-result-menu`, e só uma delas zerava o
-// padding que o navegador dá a todo <button>: por isso o ícone da home vazava 6px para a direita.
-//
-// `variante` hoje escolhe apenas a cor do ícone, que é diferente nas duas telas. Isso é herança e
-// vale rever: o mesmo desenho, no mesmo lugar, em duas cores.
-type BotaoMenuProps = {
-  onClick: () => void;
-  variante?: "home" | "resultado";
-};
-
-export function BotaoMenu({ onClick, variante = "home" }: BotaoMenuProps) {
+// Uma classe só e uma cor só. Antes eram duas classes, `.menu-button` e `.figma-result-menu`, e só
+// uma delas zerava o padding que o navegador dá a todo <button>: por isso o ícone da home vazava
+// 6px para a direita. E o ícone tinha duas cores, uma por tela, para o mesmo desenho no mesmo
+// lugar.
+export function BotaoMenu({ onClick }: { onClick: () => void }) {
   return (
     <button className="menu-button" type="button" aria-label="Abrir menu" onClick={onClick}>
-      {variante === "home" ? <IconeMenu /> : <IconeMenuResultado />}
+      <IconeMenu />
     </button>
   );
 }

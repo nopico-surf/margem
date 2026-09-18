@@ -163,7 +163,7 @@ Viraram um `Header` só, com `padding: 12px 12px 12px 16px`, ou seja 16 na esque
 
 O menu lateral, que era do `HeaderResultado`, passou para a página, igual já era na `/inicio`.
 
-**Fica pendente:** o ícone do hambúrguer ainda tem duas cores, `#012A1C` na home e `#171B18` na conversa. É o mesmo desenho no mesmo lugar, e continua variando por `variante` no `BotaoMenu`. Não foi unificado porque mudaria o visual.
+O ícone do hambúrguer também tinha duas cores para o mesmo desenho, `#012A1C` na home e `#171B18` na conversa. Ficou `#171B18` nas duas, e o `BotaoMenu` perdeu a prop `variante`, que existia só para isso. `IconeMenuResultado` deixou de existir.
 
 ### O caso mais grave: botões
 

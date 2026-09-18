@@ -14,14 +14,12 @@ import { BotaoMenu } from "@/components/ui/BotaoMenu";
 
 type HeaderProps = {
   onOpenMenu: () => void;
-  // Só muda a cor do ícone: sobre o hero ele é mais escuro.
-  sobreHero?: boolean;
   // Quando vem, o logo vira link. Na home ele não vem, porque a pessoa já está no início.
   hrefDoLogo?: string;
   onLogoClick?: () => void;
 };
 
-export function Header({ onOpenMenu, sobreHero = false, hrefDoLogo, onLogoClick }: HeaderProps) {
+export function Header({ onOpenMenu, hrefDoLogo, onLogoClick }: HeaderProps) {
   const logo = <LogoMargem className="app-logo" />;
 
   return (
@@ -33,7 +31,7 @@ export function Header({ onOpenMenu, sobreHero = false, hrefDoLogo, onLogoClick 
       ) : (
         logo
       )}
-      <BotaoMenu onClick={onOpenMenu} variante={sobreHero ? "home" : "resultado"} />
+      <BotaoMenu onClick={onOpenMenu} />
     </header>
   );
 }
