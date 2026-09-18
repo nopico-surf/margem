@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { KeyboardDiagnostics } from "@/components/app/KeyboardDiagnostics";
 import { Footer } from "@/components/layout/Footer";
 import { SideMenu } from "@/components/layout/SideMenu";
-import { HeaderHome } from "@/components/layout/HeaderHome";
+import { Header } from "@/components/layout/Header";
 import { HomeHero } from "@/components/app/HomeHero";
 import { CardHomeGroup } from "@/components/app/CardHomeGroup";
 import { CARDS_HOME } from "@/lib/cards-home";
@@ -68,7 +68,7 @@ export default function AppPage() {
   return (
     <main className="app-shell">
       <KeyboardDiagnostics />
-      <HeaderHome onOpenMenu={openMenu} />
+      <Header onOpenMenu={openMenu} sobreHero />
       <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <HomeHero text={text} onChangeText={setText} onSubmit={submit} onShowTopics={showTopics} />

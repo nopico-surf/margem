@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Footer } from "@/components/layout/Footer";
-import { HeaderResultado } from "@/components/layout/HeaderResultado";
+import { Header } from "@/components/layout/Header";
+import { SideMenu } from "@/components/layout/SideMenu";
+import { track } from "@/lib/mixpanel";
 import { ResultMessages } from "./ResultMessages";
 import { MoreOptions } from "./MoreOptions";
 import { CardProfissionais } from "./CardProfissionais";
@@ -37,10 +40,23 @@ export function ResultPage({ message, orientation, isLoading, isResourcesLoading
   const instituicoes = resources?.instituicoes ?? [];
   const mostrarSecoes = Boolean(orientation);
   const carregamentoInicial = (isLoading || Boolean(error)) && !orientation;
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // O menu era do HeaderResultado. Com um header só para as duas telas, quem abre o menu é a
+  // página, igual já acontecia na /inicio.
+  function abrirMenu() {
+    setMenuOpen(true);
+    track("menu_clicado", { rota: "/conversa" });
+  }
 
   return (
     <main className={`figma-result-page${carregamentoInicial ? " figma-result-page-initial-loading" : ""}`}>
-      <HeaderResultado />
+      <Header
+        onOpenMenu={abrirMenu}
+        hrefDoLogo="/inicio"
+        onLogoClick={() => track("logo_clicado", { rota: "/conversa" })}
+      />
+      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
       <div className="figma-result-main">
         <ResultMessages message={message} orientation={orientation} isLoading={isLoading} error={error} onRetry={onRetry} />
         {mostrarSecoes && <MoreOptions isLoading={Object.values(isResourcesLoading).some(Boolean)} />}

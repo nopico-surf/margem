@@ -78,11 +78,13 @@ textarea {
   background: var(--neutral-0);
 }
 
+/* Um header para as duas telas. 16 na esquerda e 12 na direita, por decisão de 18/09/2026: o
+   Figma trazia 16 dos dois lados, mas a direita passa a ser 12. */
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 12px 12px 12px 16px;
   background: var(--neutral-0);
 }
 
@@ -91,16 +93,24 @@ textarea {
   display: block;
 }
 
+.app-header a {
+  display: flex;
+}
+
 .app-logo {
   width: 86.756px;
   height: 12px;
 }
 
+/* O `padding: 0` é o que faltava aqui. Sem ele o botão herda o padding padrão do navegador
+   (1px 6px), e como o ícone tem os mesmos 24px do botão, ele vazava 6px para fora. */
 .menu-button {
   width: 24px;
   height: 24px;
+  padding: 0;
   border: 0;
   background: transparent;
+  cursor: pointer;
 }
 
 .menu-button img,

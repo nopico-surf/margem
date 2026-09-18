@@ -22,26 +22,14 @@
   --figma-result-space-40: var(--spacing-40);
 }
 
-.figma-result-header,
+/* Eram dois blocos: o primeiro dizia 600px e o segundo, logo abaixo, dizia 1080px. O 600px nunca
+   valeu nada. Sobrou um só porque o `.figma-result-header` que dividia o seletor virou `.app-header`. */
 .figma-result-main,
 .figma-section-inner {
   width:100%;
-  max-width:600px;
+  max-width:1080px;
   margin-left:auto;
   margin-right:auto;
-}
-
-.figma-result-header a {
-  display:flex;
-}
-
-.figma-result-header {
-  max-width:none;
-}
-
-.figma-result-main,
-.figma-section-inner {
-  max-width:1080px;
 }
 
 .figma-result-page {
@@ -50,33 +38,6 @@
   background:var(--figma-result-white);
   color:var(--figma-result-ink);
   font-family:var(--font-inter),sans-serif;
-}
-
-.figma-result-header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px 16px;
-}
-
-.figma-result-logo {
-  width:86.756px;
-  height:12px;
-}
-
-.figma-result-menu {
-  width:24px;
-  height:24px;
-  padding:0;
-  border:0;
-  background:transparent;
-  cursor:pointer;
-}
-
-.figma-result-menu img,
-.figma-result-menu svg {
-  width:24px;
-  height:24px;
 }
 
 .figma-result-main {

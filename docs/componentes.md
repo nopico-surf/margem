@@ -148,10 +148,22 @@ Convenção do código: `PascalCase.tsx`, mistura de português e inglês sem cr
 | `bloco-mais-opcoes` | `conversa/MoreOptions` | Nome não corresponde |
 | `messages` | `conversa/ResultMessages` | Nome não corresponde |
 | `loader`, `skeleton-bone`, `screen-loading`, `loader-content` | `conversa/ResponseLoading` | Quatro no Figma, um no código |
-| `header` | `layout/HeaderHome`, `HeaderResultado` | Um no Figma, dois no código |
+| `header` | `layout/Header` | Corresponde. Eram dois no código até 18/09/2026, ver abaixo |
 | `menu-contatos` | `layout/MenuContatos` | Corresponde |
 | `card-home`, `card-home-group`, `header-home` | `app/CardHome`, `CardHomeGroup`, `CardHomeHeader` | Corresponde |
 | `input-text`, `text-area` | `app/MessageInput` | Dois no Figma, um no código |
+
+### O header: o que acontece quando um componente vira dois
+
+Serve de exemplo do custo de duplicar. O Figma tem um `header`. O código tinha `HeaderHome` e `HeaderResultado`, com classes de CSS separadas. Resultado: a distância entre o hambúrguer e a borda direita da tela era **10px na home e 16px na conversa**, e ninguém tinha mexido nisso de propósito.
+
+A causa: `.menu-button`, usada só na home, nunca zerou o `padding` que o navegador dá a todo `<button>`. Como o ícone tem os mesmos 24px do botão, ele vazava 6px para fora. O header da home ficava torto, 16 de um lado e 10 do outro, e ao trocar de tela tudo deslizava.
+
+Viraram um `Header` só, com `padding: 12px 12px 12px 16px`, ou seja 16 na esquerda e 12 na direita, e o `padding: 0` que faltava no botão. O que varia entre as telas é o fundo, que na home vem de `.app-shell > .app-header` porque lá o header fica sobre o hero, e o logo, que na tela de resultado é link para o início.
+
+O menu lateral, que era do `HeaderResultado`, passou para a página, igual já era na `/inicio`.
+
+**Fica pendente:** o ícone do hambúrguer ainda tem duas cores, `#012A1C` na home e `#171B18` na conversa. É o mesmo desenho no mesmo lugar, e continua variando por `variante` no `BotaoMenu`. Não foi unificado porque mudaria o visual.
 
 ### O caso mais grave: botões
 
