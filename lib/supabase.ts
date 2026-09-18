@@ -62,14 +62,22 @@ export async function buscarProfissionaisPorCategoria(categoria: string) {
 export async function buscarServicosPublicosPorCategoria(categoria: string) {
   const supabase = getServerClient();
   if (!supabase) return servicosPublicosPadrao.filter((servico) => servico.categoria_resposta_relevante === categoria);
-  const { data } = await supabase.from("servicos_publicos").select("*").eq("categoria_resposta_relevante", categoria);
+  const { data } = await supabase
+    .from("servicos_publicos")
+    .select("*")
+    .eq("categoria_resposta_relevante", categoria)
+    .eq("ativo", true);
   return (data ?? []) as ServicoPublico[];
 }
 
 export async function buscarInstituicoesPorCategoria(categoria: string) {
   const supabase = getServerClient();
   if (!supabase) return instituicoesPadrao.filter((instituicao) => instituicao.categoria_resposta_relevante === categoria);
-  const { data } = await supabase.from("instituicoes_apoio").select("*").eq("categoria_resposta_relevante", categoria);
+  const { data } = await supabase
+    .from("instituicoes_apoio")
+    .select("*")
+    .eq("categoria_resposta_relevante", categoria)
+    .eq("ativo", true);
   return (data ?? []) as InstituicaoApoio[];
 }
 
