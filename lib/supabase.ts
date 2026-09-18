@@ -66,7 +66,8 @@ export async function buscarServicosPublicosPorCategoria(categoria: string) {
     .from("servicos_publicos")
     .select("*")
     .eq("categoria_resposta_relevante", categoria)
-    .eq("ativo", true);
+    .eq("ativo", true)
+    .order("id");
   return (data ?? []) as ServicoPublico[];
 }
 
