@@ -347,10 +347,9 @@ Registrado para ninguém apagar por engano:
 
 ## 9. Pendências
 
-O trabalho de ícone e de taxonomia está fechado. O que sobra aqui é de componente.
+Em 18/09/2026, o trabalho de ícone, taxonomia e reconciliação de botão está fechado. O que sobra aqui é o resto do mapeamento Figma/código.
 
-- [ ] **Reconciliar os 7 componentes de botão do código com o set único do Figma.** O Figma tem um `button` com 246 variantes; o código tem `ActionButton`, `BotaoAgendar`, `BotaoContinuar`, `BotaoFecharMenu`, `BotaoMenu`, `BotaoServicosPublicos` e `BotaoTopicos`. Sem alterar o visual. Combinado para depois.
-- [ ] **O que existe no Figma e não no código, e vice-versa.** Ver as duas listas no fim da seção 5. Todo o onboarding e toda a proteção de dados existem só no código, sem componente desenhado.
+- [ ] **O que existe no Figma e não no código, e vice-versa.** Ver as duas listas no fim da seção 5. Todo o onboarding e toda a proteção de dados existem só no código, sem componente desenhado (estado em 18/09/2026).
 - [ ] `filter`: set mal modelado, 4 valores de `state` cruzados com 2 de `mode` em só 4 variantes. **Ignorado: o componente não está em uso.**
 
-Resolvidos em 18/09/2026: cores do `badge` confirmadas; `card-bg` renomeado para `container-conteudo`; variantes do `avatar` nomeadas `photo` e `fallback`; seção `Cards pro dor` virou `Cards home`; `zap` virou `whatsapp`; unificação dos SVGs concluída, de 41 arquivos para 7.
+Resolvidos em 18/09/2026: cores do `badge` confirmadas; `card-bg` renomeado para `container-conteudo`; variantes do `avatar` nomeadas `photo` e `fallback`; seção `Cards pro dor` virou `Cards home`; `zap` virou `whatsapp`; unificação dos SVGs concluída, de 41 arquivos para 7; os 7 componentes de botão do código reconciliados com o set `button` do Figma, sem alterar o visual (ver seção 5).

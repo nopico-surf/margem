@@ -131,10 +131,10 @@ Nunca nomear pelo lugar onde a coisa aparece. `whatsapp.svg`, não `whatsapp-men
 
 Coisas que custaram tempo antes e vão custar de novo.
 
-1. **`numbers/scale-16` vale 16 no Mobile e 24 no Desktop.** Toda a escala de 16 a 96 diverge por modo. Ver a tabela na seção 2 do `spec-visual.md`.
-2. **O código tem 7 componentes de botão; o Figma tem 1 com 246 variantes.** Antes de criar o oitavo, ler a seção 5 do `componentes.md`.
-3. **A rampa `colors/alpha/*` tem cor base diferente nos dois lados.** O Figma usa `#012a1c`, o código usa `#171b18`. Ainda não resolvido.
-4. **Urbanist está no Figma como fonte de título e não existe no projeto.** O código carrega só Inter.
-5. **O `:root` do código tem 20 variáveis contra 260 no Figma**, minificado em uma linha de `app/globals.css`, mais 13 arquivos de override. Não existe fonte única de token no código ainda.
+1. **Em 18/09/2026, `numbers/scale-16` valia 16 no Mobile e 24 no Desktop, e continua assim.** Toda a escala de 16 a 96 diverge por modo: só o nome foi corrigido, o valor não. Ver a tabela na seção 2 do `spec-visual.md`.
+2. **Em 18/09/2026, o código tinha 7 componentes de botão contra o `button` único do Figma, com 246 variantes.** Reconciliado nesse mesmo dia: `ActionButton`, `BotaoAgendar`, `BotaoContinuar`, `BotaoServicosPublicos` e `BotaoTopicos` agora são atalhos finos para `components/ui/Button.tsx`; `BotaoFecharMenu` e `BotaoMenu` continuam à parte porque no Figma são o componente `icon-button`, outro componente. Antes de criar um botão novo, ler a seção 5 do `componentes.md`.
+3. **A rampa `colors/alpha/*` tinha cor base diferente nos dois lados até 18/09/2026** (o Figma usava `#012a1c` colado no modo Desktop; o código sempre usou `#171b18`). Resolvido nesse dia: os dois modos do Figma passaram a seguir `neutral-950`, que é `#171b18`, alinhando com o código.
+4. **Urbanist não era pendência real.** Em 18/09/2026 confirmou-se que a fonte sempre esteve no projeto, carregada em `app/layout.tsx` junto com Inter. A dúvida anterior foi erro de leitura na primeira varredura.
+5. **Até 18/09/2026, havia um único `:root` de 20 variáveis contra 260 no Figma**, minificado em uma linha de `app/globals.css`, mais 13 arquivos de override, sem fonte única de token. Resolvido nesse mesmo dia: `app/tokens.css` gera as 259 variáveis do Figma como fonte única, e os 13 arquivos de override viraram 10, um por tela. Ver `spec-visual.md` seção 10.
 6. **Na API do Figma, o estilo da Inter é `"Semi Bold"` com espaço**, não `"SemiBold"`.
-7. **Todo onboarding e toda a parte de proteção de dados existem só no código**, sem componente no Figma.
+7. **Em 18/09/2026, todo onboarding e toda a parte de proteção de dados existiam só no código**, sem componente no Figma.

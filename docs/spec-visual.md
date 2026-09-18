@@ -285,7 +285,7 @@ Regra: **não inventar nome curto no CSS**. `--brand-500` parece mais limpo e é
 
 ## 9. Divergências conhecidas entre Figma e código
 
-Levantadas em 18/09/2026 contra o `:root` de `app/globals.css`. Nenhuma foi corrigida ainda: corrigir mexe em runtime e é trabalho separado.
+Levantadas em 18/09/2026 contra o `:root` de `app/globals.css`. Os apelidos curtos da tabela abaixo não foram renomeados: renomear mexe em runtime e é trabalho separado. Já o problema descrito depois da tabela, falta de fonte única de token, foi resolvido nesse mesmo dia (ver seção 10).
 
 | Figma | Código hoje | Situação |
 |---|---|---|
@@ -299,7 +299,7 @@ Levantadas em 18/09/2026 contra o `:root` de `app/globals.css`. Nenhuma foi corr
 | `border/border-width-thin` (1) | `--border-width-1` | Valor bate. Nome usa o número em vez do degrau. |
 | `font-family/font-family-title` = urbanist | `--font-urbanist` | Bate. Carregada em `app/layout.tsx`. |
 
-Fora isso: o `:root` do código tem **20 variáveis**, contra 260 no Figma, e vive minificado em uma única linha de `app/globals.css`, acompanhado de 13 arquivos CSS de override (`home-overrides.css`, `figma-result-alignment.css`, `interaction-overrides.css` e outros). Não existe fonte única de token no código.
+Isso descreve o estado até 18/09/2026: o `:root` do código tinha **20 variáveis**, contra 260 no Figma, e vivia minificado em uma única linha de `app/globals.css`, acompanhado de 13 arquivos CSS de override (`home-overrides.css`, `figma-result-alignment.css`, `interaction-overrides.css` e outros), sem fonte única de token. **Resolvido em 18/09/2026** (seção 10): `app/tokens.css` passou a gerar as 259 variáveis do Figma como fonte única, e os 13 arquivos de override viraram 10, um por tela.
 
 ---
 
