@@ -128,9 +128,13 @@ Cada escala tem os 11 degraus completos: 50, 100, 200, 300, 400, 500, 600, 700, 
 
 ### Alpha
 
-Grupo antes chamado `colors/opacidade/opaca-*`, agora `colors/alpha/alpha-*`. É uma rampa de transparência sobre **`#012a1c`** (que é `brand-primary-950`), em 12 degraus: 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88.
+Grupo antes chamado `colors/opacidade/opaca-*`, agora `colors/alpha/alpha-*`. É uma rampa de transparência sobre **`colors/neutral/neutral-950`**, que é `#171b18`, em 12 degraus: 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88.
 
-**Pendente de conferência.** O modo Mobile desse grupo não devolveu valor legível pela API, só o Desktop. Antes de usar alpha numa tela nova, conferir o valor no Figma. E ver a divergência da seção 9: o código aplica essa rampa sobre `#171b18`, não sobre `#012a1c`.
+Cada variável é um alias para a cor base mais uma opacidade, e não um hex colado. É o jeito certo: mudar `neutral-950` reflete na rampa inteira.
+
+**Corrigido em 18/09/2026.** O modo Desktop tinha `#012a1c` (que é `brand-primary-950`) colado à mão, com a opacidade assada dentro do valor, enquanto o Mobile já usava o alias correto. Os dois modos agora seguem `neutral-950`, o que também alinha com o código, que sempre usou `rgb(23 27 24 / N%)`.
+
+**Uma coisa fora do padrão:** `alpha-0` não segue a rampa. Ele aponta para `colors/neutral/neutral-0` (branco) com 80% de opacidade, quando o nome sugere 0% sobre a mesma base dos outros. Não foi alterado, porque mexer no valor mexe em tela. Vale conferir para que ele serve.
 
 ---
 
@@ -198,7 +202,9 @@ O número no nome é o valor em px, e nessas duas escalas ele é verdade nos doi
 | `font-family/font-family-title` | urbanist |
 | `font-family/font-family-text` | inter |
 
-**Divergência aberta:** o código carrega só Inter. Urbanist não existe em lugar nenhum do projeto. Ver seção 9.
+As duas existem no código. São carregadas em [`app/layout.tsx`](../app/layout.tsx) via `next/font/google` e expostas como `--font-inter` e `--font-urbanist`.
+
+Urbanist é a fonte de título e aparece no h1 da home, nos títulos dos cards de caminho, nos h2 e h3 do modal de dados, nos títulos das seções do resultado e no menu lateral. Inter é o texto.
 
 ### Pesos
 
@@ -286,12 +292,12 @@ Levantadas em 18/09/2026 contra o `:root` de `app/globals.css`. Nenhuma foi corr
 | `colors/neutral/neutral-0, 50, 100, 950` | `--neutral-0, --neutral-50, --neutral-100, --neutral-950` | Valores batem. Só o nome é curto demais. |
 | `colors/brand-primary/brand-primary-50, 100, 300, 800` | `--brand-50, --brand-100, --brand-300, --brand-800` | Valores batem. Falta `primary` no nome. |
 | `colors/status-success/status-success-200` | `--success-200` | Valor bate. Falta `status` no nome. |
-| `colors/alpha/alpha-16` sobre `#012a1c` | `--colors-opacidade-opaca-16: rgb(23 27 24 / 16%)` | **Cor base diferente.** O código usa `#171b18` (neutral-950), o Figma usa `#012a1c` (brand-primary-950). Um dos dois está errado. |
-| `colors/alpha/alpha-88` | `--neutral-950-88` | Mesmo problema, mais um nome inventado. |
+| `colors/alpha/alpha-16` | `--colors-opacidade-opaca-16: rgb(23 27 24 / 16%)` | Base bate: os dois são `neutral-950`. Só o nome do CSS é que ficou em português. |
+| `colors/alpha/alpha-88` | `--neutral-950-88` | Base bate. Nome inventado no CSS. |
 | `spacing/spacing-4, 8, 12, 16, 24` | `--space-4, --space-8, --space-12, --space-16, --space-24` | Valores batem. Prefixo `space` contra `spacing`. |
 | `radius/radius-lg` (12), `radius-xl` (16) | `--radius-lg`, `--radius-xl` | Batem, nome e valor. |
 | `border/border-width-thin` (1) | `--border-width-1` | Valor bate. Nome usa o número em vez do degrau. |
-| `font-family/font-family-title` = urbanist | não existe | **Urbanist não está no projeto.** O código usa só Inter, via `var(--font-inter)`. Ou a fonte de título entra, ou o token sai. |
+| `font-family/font-family-title` = urbanist | `--font-urbanist` | Bate. Carregada em `app/layout.tsx`. |
 
 Fora isso: o `:root` do código tem **20 variáveis**, contra 260 no Figma, e vive minificado em uma única linha de `app/globals.css`, acompanhado de 13 arquivos CSS de override (`home-overrides.css`, `figma-result-alignment.css`, `interaction-overrides.css` e outros). Não existe fonte única de token no código.
 
@@ -299,12 +305,41 @@ Fora isso: o `:root` do código tem **20 variáveis**, contra 260 no Figma, e vi
 
 ## 10. Pendências desta spec
 
-- [ ] Decidir o que fazer com os valores dos primitivos `numbers/*` que divergem por modo.
-- [ ] Conferir os valores Mobile do grupo `colors/alpha/*`.
-- [ ] Resolver a cor base da rampa alpha: `#012a1c` ou `#171b18`.
-- [ ] Decidir se Urbanist entra no projeto ou se o token sai do Figma.
-- [ ] Confirmar `radius/radius-button` valendo 0.
-- [ ] Decidir se `opacity-muted` e `opacity-overlay` são a mesma coisa.
-- [ ] Confirmar `letter-spacing-1` valendo 0 no Desktop.
-- [ ] Renomear os 21 estilos de texto para o padrão das variáveis, com plano de migração.
-- [ ] Consolidar os 13 CSS de override em uma fonte única de token.
+### Resolvidas em 18/09/2026
+
+- A rampa `colors/alpha/*` agora segue `neutral-950` nos dois modos. O Desktop tinha `#012a1c` colado à mão.
+- `letter-spacing-1` valia 0 no Desktop e voltou a valer 1.
+- Urbanist não era pendência: a fonte sempre esteve no projeto. Foi erro de leitura na primeira varredura.
+
+### Em aberto
+
+**`numbers/*` mentem o valor no Desktop.** `numbers/scale-16` vale 16 no Mobile e 24 no Desktop. Só o nome foi corrigido; o valor não foi tocado, porque mexer nele muda tamanho de fonte e espaçamento em toda tela Desktop. Ver a tabela da seção 2.
+
+**`radius/radius-button` vale 0.** Esse token existe para dizer qual é o raio do canto de um botão. Valendo 0, ele diz "botão tem canto reto", e os botões da Margem são arredondados. Então ou alguém criou e esqueceu de preencher, ou ele deveria apontar para `radius-full` (999) ou `radius-md` (8). Quem usar esse token hoje vai desenhar um botão quadrado. Precisa de uma decisão de design: qual é o raio do botão?
+
+**`opacity-muted` e `opacity-overlay` valem os dois 0.64.** São dois nomes para o mesmo número, e servem a coisas diferentes: `muted` é texto apagado, `overlay` é o véu escuro atrás de um modal. Como o valor é igual, ninguém sabe qual usar, e no dia em que o véu precisar ficar mais escuro alguém vai mudar o token errado e apagar texto pela tela toda. Precisa de decisão: ou são a mesma coisa e um dos dois sai, ou são diferentes e um dos valores muda.
+
+**Os 21 estilos de texto** ainda usam o padrão antigo (`Label/Small-medium`, com maiúscula e barra), diferente do das variáveis. Renomear reescreve o estilo aplicado em cada nó que o usa, então é um trabalho com risco próprio e pede plano de migração.
+
+**Os 13 arquivos de CSS de override.** Hoje o estilo do projeto está espalhado assim:
+
+```
+app/globals.css              as ~20 variaveis de token, minificadas em uma linha
+app/flow.css                 home, campo de mensagem, cards de caminho
+app/home-overrides.css       correcoes em cima do flow.css
+app/figma-result-page.css    a tela de resultado inteira, minificada
+app/figma-result-alignment.css  correcoes em cima da anterior
+app/interaction-overrides.css   correcoes em cima das anteriores
+app/viewport-overrides.css
+app/hero-radius.css
+app/onboarding.css
+app/message-input.css
+app/side-menu.css
+app/footer.css
+app/response-loader.css
+app/dados-privacidade-modal.css
+```
+
+O problema não é ter vários arquivos, é o nome deles: `-overrides` e `-alignment` são arquivos que existem para corrigir o arquivo anterior. Quando alguém muda um valor no `flow.css`, não tem como saber se o `home-overrides.css` vai sobrescrever. E as 20 variáveis do `globals.css` são um pedaço arbitrário das 260 do Figma, copiadas à mão, sem nenhum processo que garanta que continuam iguais.
+
+Consolidar quer dizer: uma fonte única de token gerada a partir do Figma, e os arquivos de tela organizados por tela, sem camada de correção em cima de correção.
