@@ -17,6 +17,9 @@
   font-weight: var(--font-weight-medium);
   text-decoration: none;
   cursor: pointer;
+  /* O retângulo azul que o Chrome do Android pinta no toque. Ele existe para cobrir a falta de
+     hover no touch, e aqui o :active já faz esse papel, com a cor do Figma. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* O conteúdo vive num span próprio para o estado de carregando poder escondê-lo sem tirar o botão
@@ -69,10 +72,6 @@
   color: var(--colors-neutral-0);
 }
 
-.btn[data-variante="primary"]:hover:not(:disabled):not([data-carregando="true"]) {
-  background: var(--colors-brand-primary-900);
-}
-
 .btn[data-variante="primary"]:active:not(:disabled):not([data-carregando="true"]) {
   background: var(--colors-neutral-950);
 }
@@ -86,10 +85,6 @@
   color: var(--colors-brand-primary-800);
 }
 
-.btn[data-variante="secondary"]:hover:not(:disabled):not([data-carregando="true"]) {
-  background: var(--colors-alpha-16);
-}
-
 .btn[data-variante="secondary"]:active:not(:disabled):not([data-carregando="true"]) {
   background: var(--colors-alpha-24);
 }
@@ -99,14 +94,27 @@
   color: var(--colors-brand-primary-800);
 }
 
-.btn[data-variante="transparent"]:hover:not(:disabled):not([data-carregando="true"]) {
-  background: var(--colors-alpha-8);
-  color: var(--colors-brand-primary-900);
-}
-
 .btn[data-variante="transparent"]:active:not(:disabled):not([data-carregando="true"]) {
   background: var(--colors-alpha-16);
   color: var(--colors-brand-primary-950);
+}
+
+/* Hover só onde existe ponteiro de verdade. No touch, sem isto, o estado de hover gruda no
+   elemento depois do toque, porque o dedo não tem como sair de cima. */
+
+@media (hover: hover) {
+  .btn[data-variante="primary"]:hover:not(:disabled):not([data-carregando="true"]) {
+    background: var(--colors-brand-primary-900);
+  }
+
+  .btn[data-variante="secondary"]:hover:not(:disabled):not([data-carregando="true"]) {
+    background: var(--colors-alpha-16);
+  }
+
+  .btn[data-variante="transparent"]:hover:not(:disabled):not([data-carregando="true"]) {
+    background: var(--colors-alpha-8);
+    color: var(--colors-brand-primary-900);
+  }
 }
 
 /* Foco: stroke por fora. `outline` não ocupa espaço, então não empurra o que está ao lado. */

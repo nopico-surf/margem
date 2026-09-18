@@ -199,6 +199,12 @@ Fora isso, medido antes e depois em cada tela: padding, raio, cor, fonte e taman
 
 Sumiram do CSS as classes `.figma-result-action`, `.figma-result-jump`, `.figma-public-link`, `.figma-schedule-button`, `.intro-button` e as regras de `.figma-filter-row button`.
 
+**Toque no mobile.** O Chrome do Android pinta um retângulo azul por cima do elemento tocado, o `-webkit-tap-highlight-color`. Ele existe para cobrir a falta de hover no touch; com o `:active` vindo do Figma, virou redundante e ainda ignorava o raio do canto. Foi desligado no `.btn`.
+
+Junto veio o irmão do mesmo problema: no touch o `:hover` gruda no elemento depois do toque, porque o dedo não tem como sair de cima. As três regras de hover ficaram dentro de `@media (hover: hover)`, então no touch o botão vai direto do default para o pressionado. Conferido no emulador Android: `(hover: hover)` retorna false lá e true no desktop.
+
+Onde ainda não existe estado, como o `BotaoMenu` e os cards da home, o retângulo azul continua, porque ali ele ainda é a única resposta ao toque.
+
 **Fora do Button:** `BotaoMenu` e `BotaoFecharMenu`, que são só ícone e no Figma são o componente `icon-button`, outro componente.
 
 ### Existe no Figma e não no código
