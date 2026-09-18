@@ -11,17 +11,6 @@
 
    Saíram por não ter uso: --figma-result-space-8, -12, -16, -24, --figma-result-radius-12, -16
    e --figma-result-radius-full. */
-:root {
-  --figma-result-white: var(--colors-neutral-0);
-  --figma-result-ink: var(--colors-neutral-950);
-  --figma-result-muted: var(--colors-alpha-88);
-  --figma-result-soft: var(--colors-neutral-50);
-  --figma-result-border: var(--colors-neutral-100);
-  --figma-result-brand: var(--colors-brand-primary-800);
-  --figma-result-success: var(--colors-status-success-100);
-  --figma-result-space-40: var(--spacing-40);
-}
-
 /* Eram dois blocos: o primeiro dizia 600px e o segundo, logo abaixo, dizia 1080px. O 600px nunca
    valeu nada. Sobrou um só porque o `.figma-result-header` que dividia o seletor virou `.app-header`. */
 .figma-result-main,
@@ -35,43 +24,43 @@
 .figma-result-page {
   width:100%;
   min-height:100svh;
-  background:var(--figma-result-white);
-  color:var(--figma-result-ink);
+  background:var(--colors-neutral-0);
+  color:var(--colors-neutral-950);
   font-family:var(--font-inter),sans-serif;
 }
 
 .figma-result-main {
   display:flex;
   flex-direction:column;
-  gap:var(--figma-result-space-40);
-  padding:20px 16px 24px;
+  gap:var(--spacing-40);
+  padding:var(--spacing-20) var(--spacing-16) var(--spacing-24);
 }
 
 .figma-result-messages {
   display:flex;
   flex-direction:column;
-  gap:24px;
+  gap:var(--spacing-24);
 }
 
 .figma-user-message {
-  margin-left:32px;
-  padding:12px 16px;
-  border-radius:16px 4px 16px 16px;
-  background:var(--figma-result-success);
-  font-size:14px;
-  line-height:20px;
+  margin-left:var(--spacing-32);
+  padding:var(--spacing-12) var(--spacing-16);
+  border-radius:var(--radius-xl) var(--radius-sm) var(--radius-xl) var(--radius-xl);
+  background:var(--colors-status-success-100);
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-xl);
   overflow-wrap:anywhere;
 }
 
 .figma-response-copy {
-  font-size:16px;
-  line-height:24px;
-  color:var(--figma-result-muted);
+  font-size:var(--font-size-md);
+  line-height:var(--line-height-2xl);
+  color:var(--colors-alpha-88);
   white-space:pre-line;
 }
 
 .figma-response-copy p {
-  margin:0 0 16px;
+  margin:0 0 var(--spacing-16);
 }
 
 .figma-response-copy p:last-child {
@@ -84,15 +73,15 @@
 }
 
 .figma-result-more h2 {
-  margin:0 0 20px;
-  font:600 18px/24px var(--font-urbanist),sans-serif;
+  margin:0 0 var(--spacing-20);
+  font:600 var(--font-size-lg)/var(--line-height-2xl) var(--font-urbanist),sans-serif;
   text-align:center;
 }
 
 .figma-result-more>div {
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:var(--spacing-14);
 }
 
 .figma-result-sections {
@@ -109,124 +98,124 @@
 .figma-section-inner {
   display:flex;
   flex-direction:column;
-  gap:16px;
-  padding:0 16px;
+  gap:var(--spacing-16);
+  padding:0 var(--spacing-16);
 }
 
 .figma-section-heading h2 {
   margin:0;
-  font:600 18px/24px var(--font-urbanist),sans-serif;
+  font:600 var(--font-size-lg)/var(--line-height-2xl) var(--font-urbanist),sans-serif;
 }
 
 .figma-section-heading p {
-  margin:10px 0 0;
-  font-size:14px;
-  line-height:20px;
-  color:var(--figma-result-muted);
+  margin:var(--spacing-10) 0 0;
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-xl);
+  color:var(--colors-alpha-88);
 }
 
 .figma-filter-row,
 .figma-action-row {
   display:flex;
   flex-wrap:wrap;
-  gap:6px;
+  gap:var(--spacing-6);
 }
 
 .figma-professional-card {
   display:flex;
   flex-direction:column;
-  gap:12px;
-  padding:16px;
-  border:2px solid var(--figma-result-border);
-  border-radius:16px;
-  background:var(--figma-result-white);
+  gap:var(--spacing-12);
+  padding:var(--spacing-16);
+  border:var(--border-width-medium) solid var(--colors-neutral-100);
+  border-radius:var(--radius-xl);
+  background:var(--colors-neutral-0);
 }
 
 .figma-professional-head {
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:var(--spacing-12);
 }
 
 .figma-professional-avatar {
   width:92px;
   height:92px;
   object-fit:cover;
-  border-radius:4px;
+  border-radius:var(--radius-sm);
 }
 
 .figma-professional-head>div {
   display:flex;
   flex:1;
   flex-direction:column;
-  gap:6px;
+  gap:var(--spacing-6);
   min-width:0;
 }
 
 .figma-professional-head strong {
-  font-size:14px;
-  line-height:16px;
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-md);
 }
 
 .figma-professional-head span {
-  font-size:12px;
-  line-height:16px;
-  color:rgb(23 27 24 / 56%);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-md);
+  color:var(--colors-alpha-56);
 }
 
 .figma-professional-head small {
-  font-size:10px;
-  line-height:14px;
-  color:rgb(23 27 24 / 80%);
+  font-size:var(--font-size-2xs);
+  line-height:var(--line-height-sm);
+  color:var(--colors-alpha-80);
 }
 
 .figma-info-icon,
 .figma-resource-heading>img,
 .figma-resource-heading>svg {
-  width:16px;
-  height:16px;
+  width:var(--size-16);
+  height:var(--size-16);
 }
 
 .figma-badges {
   display:flex;
   flex-wrap:wrap;
-  gap:6px;
+  gap:var(--spacing-6);
 }
 
 .figma-badges span {
-  padding:4px 8px;
-  border-radius:999px;
-  background:rgb(23 27 24 / 8%);
-  font-size:12px;
-  line-height:16px;
+  padding:var(--spacing-4) var(--spacing-8);
+  border-radius:var(--radius-full);
+  background:var(--colors-alpha-8);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-md);
 }
 
 .figma-professional-card>p {
   margin:0;
-  font-size:12px;
-  line-height:18px;
-  color:rgb(23 27 24 / 80%);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-lg);
+  color:var(--colors-alpha-80);
 }
 
 .figma-resource-list {
   display:flex;
   flex-direction:column;
-  gap:1px;
-  margin:0 -16px;
+  gap:var(--size-1);
+  margin:0 calc(-1 * var(--spacing-16));
 }
 
 .figma-resource-card {
   display:flex;
   flex-direction:column;
-  gap:24px;
-  padding:24px 16px;
-  background:var(--figma-result-white);
+  gap:var(--spacing-24);
+  padding:var(--spacing-24) var(--spacing-16);
+  background:var(--colors-neutral-0);
 }
 
 .figma-resource-heading {
   display:flex;
   align-items:flex-start;
-  gap:8px;
+  gap:var(--spacing-8);
 }
 
 .figma-resource-heading>div {
@@ -236,69 +225,69 @@
 
 .figma-resource-heading h3 {
   margin:0;
-  font:600 16px/20px var(--font-urbanist),sans-serif;
+  font:600 var(--font-size-md)/var(--line-height-xl) var(--font-urbanist),sans-serif;
 }
 
 .figma-resource-heading p {
-  margin:8px 0 0;
-  font-size:12px;
-  line-height:18px;
-  color:var(--figma-result-muted);
+  margin:var(--spacing-8) 0 0;
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-lg);
+  color:var(--colors-alpha-88);
 }
 
 .figma-checklist-band {
-  padding:24px 16px;
+  padding:var(--spacing-24) var(--spacing-16);
 }
 
 .figma-checklist {
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:var(--spacing-8);
 }
 
 .figma-checklist label {
   display:flex;
   align-items:center;
-  gap:8px;
-  padding:12px 10px;
-  border:.5px solid var(--figma-result-ink);
-  border-radius:12px;
-  font-size:12px;
-  line-height:18px;
+  gap:var(--spacing-8);
+  padding:var(--spacing-12) var(--spacing-10);
+  border:var(--border-width-hairline) solid var(--colors-neutral-950);
+  border-radius:var(--radius-lg);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-lg);
 }
 
 .figma-checklist input {
-  width:24px;
-  height:24px;
-  flex:0 0 24px;
-  accent-color:var(--figma-result-brand);
+  width:var(--size-24);
+  height:var(--size-24);
+  flex:0 0 var(--size-24);
+  accent-color:var(--colors-brand-primary-800);
 }
 
 .figma-response-loading {
   display:flex;
   flex-direction:column;
-  gap:4px;
-  font-size:12px;
-  line-height:18px;
+  gap:var(--spacing-4);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-lg);
   color:rgb(23 27 24 / 60%);
 }
 
 .figma-response-loader {
   display:flex;
-  gap:12px;
-  height:12px;
+  gap:var(--spacing-12);
+  height:var(--size-12);
 }
 
 .figma-response-loader-icon {
-  width:12px;
-  height:12px;
+  width:var(--size-12);
+  height:var(--size-12);
   opacity:.3;
 }
 
 .figma-skeleton {
   display:block;
-  border-radius:4px;
-  background:linear-gradient(90deg,var(--figma-result-border) 25%,#f4f6f4 50%,var(--figma-result-border) 75%);
+  border-radius:var(--radius-sm);
+  background:linear-gradient(90deg,var(--colors-neutral-100) 25%,var(--colors-neutral-50) 50%,var(--colors-neutral-100) 75%);
   background-size:200% 100%;
   animation:figma-skeleton-shimmer 1.5s ease-in-out infinite;
 }
@@ -312,7 +301,7 @@
 .figma-skeleton-description {
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:var(--spacing-8);
   width:100%;
   overflow:hidden;
 }
@@ -329,18 +318,18 @@
 .figma-skeleton-filter,
 .figma-skeleton-actions {
   display:flex;
-  gap:6px;
+  gap:var(--spacing-6);
   width:100%;
   height:28px;
 }
 
 .figma-skeleton-filter .figma-skeleton {
   width:84px;
-  border-radius:999px;
+  border-radius:var(--radius-full);
 }
 
 .figma-skeleton-professional {
-  gap:12px;
+  gap:var(--spacing-12);
 }
 
 .figma-skeleton-avatar {
@@ -350,7 +339,7 @@
 }
 
 .figma-skeleton-professional .figma-professional-head>div {
-  gap:6px;
+  gap:var(--spacing-6);
 }
 
 .figma-skeleton-name {
@@ -374,34 +363,34 @@
 
 .figma-skeleton-tags {
   display:flex;
-  gap:6px;
+  gap:var(--spacing-6);
 }
 
 .figma-skeleton-tags .figma-skeleton {
-  height:24px;
+  height:var(--size-24);
   flex:1;
-  border-radius:999px;
+  border-radius:var(--radius-full);
 }
 
 .figma-skeleton-button,
 .figma-skeleton-public-link {
   width:100%;
   height:36px;
-  border-radius:12px;
+  border-radius:var(--radius-lg);
 }
 
 .figma-skeleton-resource-list .figma-resource-card {
-  gap:24px;
+  gap:var(--spacing-24);
 }
 
 .figma-skeleton-actions {
   height:36px;
-  gap:8px;
+  gap:var(--spacing-8);
 }
 
 .figma-skeleton-actions .figma-skeleton {
   flex:1;
-  border-radius:999px;
+  border-radius:var(--radius-full);
 }
 
 .figma-skeleton-checklist .figma-skeleton {
@@ -412,7 +401,7 @@
   display:flex;
   flex-direction:column;
   align-self:stretch;
-  gap:14px;
+  gap:var(--spacing-14);
   width:100%;
 }
 
@@ -428,7 +417,7 @@
 
 .figma-skeleton-more-option {
   height:37px;
-  border-radius:999px;
+  border-radius:var(--radius-full);
 }
 
 @media (prefers-reduced-motion:reduce) {
@@ -452,34 +441,34 @@
 }
 
 .figma-result-band.figma-checklist-band {
-  padding:16px 0;
+  padding:var(--spacing-16) 0;
 }
 
 .figma-result-sections {
-  background:var(--figma-result-soft,#f4f6f4);
-  padding:16px 0;
+  background:var(--colors-neutral-50);
+  padding:var(--spacing-16) 0;
 }
 
 .figma-section-inner {
-  gap:var(--space-16);
+  gap:var(--spacing-16);
 }
 
 .figma-section-heading p {
-  margin-top:var(--space-4);
+  margin-top:var(--spacing-4);
 }
 
 .figma-resource-heading p {
-  margin-top:var(--space-4);
+  margin-top:var(--spacing-4);
 }
 
 .figma-professional-copy {
-  gap:var(--space-10,10px)!important;
+  gap:var(--spacing-10)!important;
 }
 
 .figma-professional-identity {
   display:flex;
   flex-direction:column;
-  gap:var(--space-4);
+  gap:var(--spacing-4);
 }
 
 .figma-professional-head strong,
@@ -493,18 +482,18 @@
 }
 
 .figma-checklist label {
-  border:var(--border-width-1) solid var(--colors-opacidade-opaca-16);
+  border:var(--border-width-thin) solid var(--colors-alpha-16);
   cursor:pointer;
 }
 
 .figma-checklist label:has(.figma-checklist-input:checked) {
-  background:var(--figma-result-white);
+  background:var(--colors-neutral-0);
 }
 
 .figma-checklist-input {
   position:absolute;
-  width:1px;
-  height:1px;
+  width:var(--size-1);
+  height:var(--size-1);
   margin:-1px;
   overflow:hidden;
   clip:rect(0 0 0 0);
@@ -515,17 +504,17 @@
 .figma-checkbox-control {
   position:relative;
   display:grid;
-  flex:0 0 24px;
+  flex:0 0 var(--size-24);
   place-items:center;
-  width:24px;
-  height:24px;
+  width:var(--size-24);
+  height:var(--size-24);
 }
 
 .figma-checkbox-box {
   position:relative;
   width:18px;
   height:18px;
-  border:var(--border-width-1) solid var(--colors-opacidade-opaca-16);
+  border:var(--border-width-thin) solid var(--colors-alpha-16);
   border-radius:3px;
   background:transparent;
 }
@@ -534,8 +523,8 @@
   position:absolute;
   inset:0;
   display:none;
-  width:24px;
-  height:24px;
+  width:var(--size-24);
+  height:var(--size-24);
 }
 
 .figma-checklist-input:checked+.figma-checkbox-control .figma-checkbox-box {
@@ -550,8 +539,8 @@
    foco parado. Nenhuma tela usa. */
 .figma-checklist-input:focus-visible+.figma-checkbox-control .figma-checkbox-box,
 [data-estado-forcado="focus"] .figma-checklist-input+.figma-checkbox-control .figma-checkbox-box {
-  outline:3px solid var(--figma-result-brand);
-  outline-offset:3px;
+  outline:var(--border-width-large) solid var(--colors-brand-primary-800);
+  outline-offset:var(--border-width-large);
 }
 
 .figma-checklist-copy {
@@ -562,11 +551,11 @@
 /* O padding e a margem verticais de 2px se cancelam: nada muda de lugar, mas o stroke de foco do
    botão, que é desenhado por fora, deixa de ser cortado por este overflow-y: hidden. */
 .figma-action-row {
-  width:calc(100% + 32px);
-  margin-left:-16px;
+  width:calc(100% + var(--spacing-32));
+  margin-left:calc(-1 * var(--spacing-16));
   margin-top:-2px;
   margin-bottom:-2px;
-  padding:2px 16px;
+  padding:2px var(--spacing-16);
   flex-wrap:nowrap;
   overflow-x:auto;
   overflow-y:hidden;
@@ -589,13 +578,13 @@
 }
 
 .figma-result-band {
-  scroll-margin-top:16px;
+  scroll-margin-top:var(--spacing-16);
 }
 
 .figma-user-message {
   align-self:flex-end;
   width:fit-content;
-  max-width:calc(100% - 32px);
+  max-width:calc(100% - var(--spacing-32));
 }
 
 .figma-section-heading p,
@@ -620,8 +609,8 @@
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:14px;
-  font:400 16px/24px var(--font-inter),sans-serif;
+  gap:var(--spacing-14);
+  font:400 var(--font-size-md)/var(--line-height-2xl) var(--font-inter),sans-serif;
 }
 
 .figma-response-error p {
@@ -638,9 +627,9 @@
     width:auto;
   }
   .figma-result-band .figma-resource-list {
-    width:calc(100% + 32px);
-    margin-left:-16px;
-    margin-right:-16px;
+    width:calc(100% + var(--spacing-32));
+    margin-left:calc(-1 * var(--spacing-16));
+    margin-right:calc(-1 * var(--spacing-16));
   }
 }
 

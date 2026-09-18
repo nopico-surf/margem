@@ -16,27 +16,8 @@
 @import url('./side-menu.css');
 @import url('./response-loader.css');
 
-/* Nomes antigos, mantidos como apelido do token do Figma enquanto as telas não são migradas.
-   Nenhum deles tem valor próprio: quem manda é o tokens.css. Ao mexer numa tela, trocar o apelido
-   pelo token e apagar a linha daqui.
-
-   Saíram por não ter nenhum uso: --neutral-100, --space-8, --space-12, --space-24 e --radius-lg.
-   --radius-xl e --radius-lg agora vêm do tokens.css, com o mesmo valor de antes. */
-:root {
-  --neutral-0: var(--colors-neutral-0);
-  --neutral-50: var(--colors-neutral-50);
-  --neutral-950: var(--colors-neutral-950);
-  --neutral-950-88: var(--colors-alpha-88);
-  --colors-opacidade-opaca-16: var(--colors-alpha-16);
-  --border-width-1: var(--border-width-thin);
-  --brand-50: var(--colors-brand-primary-50);
-  --brand-100: var(--colors-brand-primary-100);
-  --brand-300: var(--colors-brand-primary-300);
-  --brand-800: var(--colors-brand-primary-800);
-  --success-200: var(--colors-status-success-200);
-  --space-4: var(--spacing-4);
-  --space-16: var(--spacing-16);
-}
+/* Tokens da tela migrados para seu valor real do tokens.css em 18/09/2026.
+   Apelidos removidos após cada tela: footer (19/09), side-menu, message-input, onboarding, home, resultado. */
 
 * {
   box-sizing: border-box;

@@ -9,7 +9,7 @@
 .side-menu-backdrop {
   position: absolute;
   inset: 0;
-  background: rgb(23 27 24 / 64%);
+  background: var(--colors-alpha-64);
   cursor: pointer;
 }
 
@@ -25,12 +25,12 @@
   position: relative;
   z-index: 1;
   display: flex;
-  flex: 0 0 48px;
+  flex: 0 0 var(--size-48);
   align-items: flex-start;
   justify-content: center;
-  width: 48px;
+  width: var(--size-48);
   min-height: 100svh;
-  padding: 14px 8px;
+  padding: var(--spacing-14) var(--spacing-8);
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -49,18 +49,18 @@
 .side-menu-close img,
 .side-menu-close svg {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: var(--size-32);
+  height: var(--size-32);
 }
 
 .side-menu-panel {
   position: relative;
   z-index: 1;
-  width: min(360px, calc(100vw - 48px));
+  width: min(360px, calc(100vw - var(--size-48)));
   min-height: 100svh;
-  padding: 20px 24px;
+  padding: var(--spacing-20) var(--spacing-24);
   overflow: hidden;
-  background: var(--brand-100);
+  background: var(--colors-brand-primary-100);
   will-change: transform;
 }
 
@@ -73,36 +73,36 @@
 }
 
 .side-menu-panel h2 {
-  margin: 0 0 16px;
+  margin: 0 0 var(--spacing-16);
   font-family: var(--font-urbanist), sans-serif;
-  font-size: 16px;
+  font-size: var(--font-size-md);
   font-weight: 600;
-  line-height: 20px;
-  color: var(--neutral-950-88);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-88);
 }
 
 .side-menu-contacts {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-12);
 }
 
 .side-menu-contacts a {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: var(--neutral-950-88);
-  font-size: 16px;
-  line-height: 20px;
+  gap: var(--spacing-4);
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
   text-decoration: none;
 }
 
 .side-menu-contacts img,
 .side-menu-contacts svg {
   display: block;
-  flex: 0 0 20px;
-  width: 20px;
-  height: 20px;
+  flex: 0 0 var(--size-20);
+  width: var(--size-20);
+  height: var(--size-20);
 }
 
 @keyframes sideMenuFadeIn {
@@ -144,7 +144,7 @@
 @keyframes sideMenuCloseIn {
   from {
     opacity: 0;
-    transform: translateX(16px);
+    transform: translateX(var(--spacing-16));
   }
   to {
     opacity: 1;
@@ -159,13 +159,13 @@
   }
   to {
     opacity: 0;
-    transform: translateX(16px);
+    transform: translateX(var(--spacing-16));
   }
 }
 
 @media (max-width: 420px) {
   .side-menu-panel {
-    padding: 20px 16px;
+    padding: var(--spacing-20) var(--spacing-16);
   }
 }
 

@@ -3,18 +3,18 @@
   display:flex;
   flex-direction:column;
   width:100%;
-  padding:8px;
-  border:.5px solid var(--success-200);
-  border-radius:16px;
-  background:var(--brand-50);
-  box-shadow:0 0 37px rgb(23 27 24 / 16%);
+  padding:var(--spacing-8);
+  border:var(--border-width-hairline) solid var(--colors-status-success-200);
+  border-radius:var(--radius-xl);
+  background:var(--colors-brand-primary-50);
+  box-shadow:0 0 37px var(--colors-alpha-16);
   cursor:text;
 }
 
 .message-component-focused,
 .message-component-filed {
-  gap:10px;
-  padding:4px 4px 4px 8px;
+  gap:var(--spacing-10);
+  padding:var(--spacing-4) var(--spacing-4) var(--spacing-4) var(--spacing-8);
 }
 
 .message-component textarea {
@@ -23,16 +23,16 @@
   display:block;
   width:100%;
   height:36px;
-  padding:8px;
+  padding:var(--spacing-8);
   border:0;
   outline:0;
   resize:none;
   overflow-y:hidden;
   background:transparent;
   box-sizing:border-box;
-  color:#242925;
-  font:400 14px/20px var(--font-inter),sans-serif;
-  caret-color:#055c40;
+  color:var(--colors-neutral-900);
+  font:400 var(--font-size-sm)/var(--line-height-xl) var(--font-inter),sans-serif;
+  caret-color:var(--colors-brand-primary-800);
 }
 
 .message-component-focused textarea {
@@ -41,13 +41,13 @@
 
 .message-component-placeholder {
   position:absolute;
-  inset:8px;
-  padding:8px;
+  inset:var(--spacing-8);
+  padding:var(--spacing-8);
   display:flex;
   align-items:center;
   gap:0;
-  color:#6c746f;
-  font:400 14px/20px var(--font-inter),sans-serif;
+  color:var(--colors-neutral-600);
+  font:400 var(--font-size-sm)/var(--line-height-xl) var(--font-inter),sans-serif;
   pointer-events:none;
   white-space:nowrap;
 }
@@ -57,8 +57,8 @@
   flex:0 0 auto;
   width:1.5px;
   height:18px;
-  border-radius:999px;
-  background:#055c40;
+  border-radius:var(--radius-full);
+  background:var(--colors-brand-primary-800);
   animation:message-caret-blink 1s step-end infinite;
 }
 
@@ -66,24 +66,24 @@
   display:flex;
   align-items:center;
   justify-content:space-between;
-  min-height:20px;
-  padding:0 8px 8px;
-  color:#6c746f;
-  font:500 12px/16px var(--font-inter),sans-serif;
+  min-height:var(--size-20);
+  padding:0 var(--spacing-8) var(--spacing-8);
+  color:var(--colors-neutral-600);
+  font:500 var(--font-size-xs)/var(--line-height-md) var(--font-inter),sans-serif;
 }
 
 .message-component-meta button {
-  padding:10px 12px;
+  padding:var(--spacing-10) var(--spacing-12);
   border:0;
-  border-radius:12px;
-  background:#055c40;
-  color:#fff;
-  font:500 14px/16px var(--font-inter),sans-serif;
+  border-radius:var(--radius-lg);
+  background:var(--colors-brand-primary-800);
+  color:var(--colors-neutral-0);
+  font:500 var(--font-size-sm)/var(--line-height-md) var(--font-inter),sans-serif;
 }
 
 .message-component-meta button:disabled {
-  background:rgb(23 27 24 / 8%);
-  color:rgb(23 27 24 / 24%);
+  background:var(--colors-alpha-8);
+  color:var(--colors-alpha-24);
   cursor:not-allowed;
 }
 

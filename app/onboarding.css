@@ -7,16 +7,16 @@
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  gap:20px;
+  gap:var(--spacing-20);
   min-height:100svh;
-  padding:16px;
-  background:#fff;
+  padding:var(--spacing-16);
+  background:var(--colors-neutral-0);
 }
 
 .intro-content {
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:var(--spacing-16);
   width:100%;
   max-width:1080px;
   min-height:0;
@@ -25,30 +25,30 @@
 }
 
 .intro-header {
-  height:16px;
+  height:var(--size-16);
 }
 
 .intro-logo {
   width:115.675px;
-  height:16px;
+  height:var(--size-16);
 }
 
 .intro-bubble {
   align-self:flex-start;
-  padding:12px 16px;
-  border-radius:4px 16px 16px 16px;
-  background:var(--neutral-50);
-  font-size:12px;
-  line-height:18px;
+  padding:var(--spacing-12) var(--spacing-16);
+  border-radius:var(--radius-sm) var(--radius-xl) var(--radius-xl) var(--radius-xl);
+  background:var(--colors-neutral-50);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-lg);
 }
 
 .intro-copy {
-  font-size:14px;
-  line-height:20px;
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-xl);
 }
 
 .intro-copy p {
-  margin:0 0 20px;
+  margin:0 0 var(--spacing-20);
 }
 
 .intro-copy strong {
@@ -58,7 +58,7 @@
 .intro-actions {
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:var(--spacing-12);
   width:100%;
   max-width:1080px;
   flex:0 0 auto;
@@ -68,20 +68,20 @@
 .emergency-panel {
   display:flex;
   flex-direction:column;
-  gap:8px;
-  padding:12px;
-  border-radius:8px;
-  background:var(--neutral-50);
-  color:rgb(23 27 24 / 72%);
-  font-size:12px;
+  gap:var(--spacing-8);
+  padding:var(--spacing-12);
+  border-radius:var(--radius-md);
+  background:var(--colors-neutral-50);
+  color:var(--colors-alpha-72);
+  font-size:var(--font-size-xs);
   font-weight:500;
-  line-height:16px;
+  line-height:var(--line-height-md);
 }
 
 .emergency-panel strong {
-  font-size:10px;
-  line-height:12px;
-  color:var(--neutral-950-88);
+  font-size:var(--font-size-2xs);
+  line-height:var(--line-height-xs);
+  color:var(--colors-alpha-88);
 }
 
 .privacy-link {
@@ -89,10 +89,10 @@
   padding:0;
   border:0;
   background:transparent;
-  color:var(--brand-800);
-  font-size:12px;
+  color:var(--colors-brand-primary-800);
+  font-size:var(--font-size-xs);
   font-weight:500;
-  line-height:16px;
+  line-height:var(--line-height-md);
   text-decoration:none;
   cursor:pointer;
 }
@@ -100,33 +100,33 @@
 .consent-card {
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:12px 10px;
-  border:.5px solid rgb(23 27 24 / 8%);
-  border-radius:12px;
-  font-size:12px;
-  line-height:16px;
+  gap:var(--spacing-12);
+  padding:var(--spacing-12) var(--spacing-10);
+  border:var(--border-width-hairline) solid var(--colors-alpha-8);
+  border-radius:var(--radius-lg);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-md);
 }
 
 .consent-card input {
   width:18px;
   height:18px;
-  accent-color:var(--brand-800);
+  accent-color:var(--colors-brand-primary-800);
 }
 
 .consent-card {
-  border:var(--border-width-1) solid var(--colors-opacidade-opaca-16);
+  border:var(--border-width-thin) solid var(--colors-alpha-16);
 }
 
 /* ===== vinha de interaction-overrides.css | corrigia as regras acima ===== */
 .consent-card {
-  gap:8px;
+  gap:var(--spacing-8);
 }
 
 .consent-card .consent-input {
   position:absolute;
-  width:1px;
-  height:1px;
+  width:var(--size-1);
+  height:var(--size-1);
   margin:-1px;
   overflow:hidden;
   clip:rect(0 0 0 0);
@@ -137,17 +137,17 @@
 .consent-checkbox-control {
   position:relative;
   display:grid;
-  flex:0 0 24px;
+  flex:0 0 var(--size-24);
   place-items:center;
-  width:24px;
-  height:24px;
+  width:var(--size-24);
+  height:var(--size-24);
 }
 
 .consent-checkbox-box {
   position:relative;
   width:18px;
   height:18px;
-  border:var(--border-width-1) solid var(--colors-opacidade-opaca-16);
+  border:var(--border-width-thin) solid var(--colors-alpha-16);
   border-radius:3px;
   background:transparent;
 }
@@ -156,8 +156,8 @@
   position:absolute;
   inset:0;
   display:none;
-  width:24px;
-  height:24px;
+  width:var(--size-24);
+  height:var(--size-24);
 }
 
 .consent-input:checked+.consent-checkbox-control .consent-checkbox-box {
@@ -169,8 +169,8 @@
 }
 
 .consent-input:focus-visible+.consent-checkbox-control .consent-checkbox-box {
-  outline:3px solid var(--brand-800);
-  outline-offset:3px;
+  outline:var(--border-width-large) solid var(--colors-brand-primary-800);
+  outline-offset:var(--border-width-large);
 }
 
 .consent-copy {

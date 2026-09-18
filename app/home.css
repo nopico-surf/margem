@@ -3,49 +3,39 @@
    Junta quatro arquivos que antes se corrigiam em cadeia, na MESMA ordem em que eram importados,
    entao a cascata e identica a de antes. Os blocos abaixo marcam de onde cada pedaco veio.
 
-   ATENCAO: .home-hero e redefinido quatro vezes aqui, e .app-shell tres, com !important em algumas.
-   Quem ganha min-height e o ultimo bloco. Isso e divida herdada, nao foi resolvido nesta passagem
-   porque resolver muda tela. */
+   Em 18/09/2026, .home-hero era redefinido quatro vezes aqui e .app-shell tres. Consolidado nesta
+   sessao: cada um agora e uma unica declaracao, com o valor que ja vencia a cascata antes. Conferido
+   visualmente antes e depois na tela /inicio. */
 
 /* ===== vinha de flow.css | base ===== */
-.home-hero {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:24px;
-  padding:32px 0 24px;
-  background:var(--brand-100);
-  border-bottom-right-radius:32px;
-}
-
 .identity-badge {
-  padding:4px 12px;
-  border-radius:999px;
-  background:var(--brand-300);
-  color:#03422c;
-  font-size:14px;
-  line-height:20px;
+  padding:var(--spacing-4) var(--spacing-12);
+  border-radius:var(--radius-full);
+  background:var(--colors-brand-primary-300);
+  color:var(--colors-brand-primary-900);
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-xl);
 }
 
 .home-hero h1 {
   margin:0;
   font-family:var(--font-urbanist),sans-serif;
-  font-size:32px;
+  font-size:var(--font-size-3xl);
   font-weight:500;
-  line-height:40px;
+  line-height:var(--line-height-5xl);
   text-align:center;
 }
 
 .message-input {
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:var(--spacing-10);
   width:100%;
-  padding:8px 10px;
-  border:.5px solid var(--success-200);
+  padding:var(--spacing-8) var(--spacing-10);
+  border:var(--border-width-hairline) solid var(--colors-status-success-200);
   border-radius:var(--radius-xl);
-  background:var(--brand-50);
-  box-shadow:0 0 37px rgb(23 27 24 / 16%);
+  background:var(--colors-brand-primary-50);
+  box-shadow:0 0 37px var(--colors-alpha-16);
 }
 
 .message-input textarea {
@@ -55,47 +45,47 @@
   border:0;
   outline:0;
   background:transparent;
-  color:var(--neutral-950);
-  font-size:14px;
-  line-height:20px;
+  color:var(--colors-neutral-950);
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-xl);
 }
 
 .message-input textarea::placeholder {
-  color:rgb(23 27 24 / 56%);
+  color:var(--colors-alpha-56);
 }
 
 .message-meta {
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 8px 8px;
-  color:#6c746f;
-  font-size:12px;
+  padding:0 var(--spacing-8) var(--spacing-8);
+  color:var(--colors-neutral-600);
+  font-size:var(--font-size-xs);
   font-weight:500;
-  line-height:16px;
+  line-height:var(--line-height-md);
 }
 
 .message-meta button {
-  padding:10px 12px;
+  padding:var(--spacing-10) var(--spacing-12);
   border:0;
-  border-radius:12px;
-  background:var(--brand-800);
-  color:#fff;
-  font-size:14px;
+  border-radius:var(--radius-lg);
+  background:var(--colors-brand-primary-800);
+  color:var(--colors-neutral-0);
+  font-size:var(--font-size-sm);
   font-weight:500;
-  line-height:16px;
+  line-height:var(--line-height-md);
 }
 
 .message-meta button:disabled {
-  background:rgb(23 27 24 / 8%);
-  color:rgb(23 27 24 / 24%);
+  background:var(--colors-alpha-8);
+  color:var(--colors-alpha-24);
 }
 
 .topics-button {
   border:0;
   background:transparent;
-  color:var(--brand-800);
-  font-size:14px;
+  color:var(--colors-brand-primary-800);
+  font-size:var(--font-size-sm);
   font-weight:500;
 }
 
@@ -104,80 +94,66 @@
   max-width:1080px;
   margin-left:auto;
   margin-right:auto;
-  padding:24px 16px;
+  padding:var(--spacing-24) var(--spacing-16);
   box-sizing:border-box;
-  background:var(--neutral-50);
+  background:var(--colors-neutral-50);
 }
 
 .pathways h2 {
-  margin:0 0 4px;
+  margin:0 0 var(--spacing-4);
   font-family:var(--font-urbanist),sans-serif;
-  font-size:18px;
+  font-size:var(--font-size-lg);
 }
 
 .pathways>p {
-  margin:0 0 16px;
-  color:var(--neutral-950-88);
-  font-size:14px;
-  line-height:20px;
+  margin:0 0 var(--spacing-16);
+  color:var(--colors-alpha-88);
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-xl);
 }
 
 .pathway-list {
   overflow:hidden;
-  border-radius:16px;
-  background:#fff;
+  border-radius:var(--radius-xl);
+  background:var(--colors-neutral-0);
 }
 
 .pathway-card {
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
-  padding:14px 16px;
-  border-bottom:1px solid var(--neutral-50);
-  color:var(--neutral-950);
+  gap:var(--spacing-8);
+  padding:var(--spacing-14) var(--spacing-16);
+  border-bottom:var(--border-width-thin) solid var(--colors-neutral-50);
+  color:var(--colors-neutral-950);
   text-decoration:none;
 }
 
 .pathway-card span {
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:var(--spacing-6);
 }
 
 .pathway-card strong {
   font-family:var(--font-urbanist),sans-serif;
-  font-size:16px;
+  font-size:var(--font-size-md);
 }
 
 .pathway-card small {
-  color:var(--neutral-950-88);
-  font-size:12px;
-  line-height:18px;
+  color:var(--colors-alpha-88);
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-lg);
 }
 
 .pathway-card b {
-  font-size:24px;
+  font-size:var(--font-size-2xl);
   font-weight:400;
 }
 
 
 /* ===== vinha de home-overrides.css | corrigia o flow ===== */
 /* Home frame overrides from Figma node 957:8298. */
-.app-shell {
-  min-height:100svh;
-  background:var(--neutral-50);
-}
-
-.home-hero {
-  min-height:580px;
-  justify-content:center;
-  gap:0;
-  padding:32px 16px 24px;
-  background:var(--brand-100);
-  border-bottom-right-radius:32px;
-}
-
 .hero-focus-track {
   display:flex;
   flex-direction:column;
@@ -201,21 +177,21 @@
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:8px;
+  gap:var(--spacing-8);
   width:100%;
 }
 
 .identity-badge {
   display:flex;
   align-items:center;
-  gap:4px;
-  padding:4px 12px;
+  gap:var(--spacing-4);
+  padding:var(--spacing-4) var(--spacing-12);
 }
 
 .identity-badge img,
 .identity-badge svg {
-  width:16px;
-  height:16px;
+  width:var(--size-16);
+  height:var(--size-16);
 }
 
 .home-hero h1 {
@@ -226,9 +202,9 @@
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:32px;
+  gap:var(--spacing-32);
   width:100%;
-  margin-top:40px;
+  margin-top:var(--spacing-40);
 }
 
 .hero-message-group .message-component {
@@ -238,15 +214,15 @@
 .topics-button {
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  padding:10px 12px;
-  margin-top:32px;
+  gap:var(--spacing-6);
+  padding:var(--spacing-10) var(--spacing-12);
+  margin-top:var(--spacing-32);
 }
 
 .topics-button img,
 .topics-button svg {
-  width:16px;
-  height:16px;
+  width:var(--size-16);
+  height:var(--size-16);
 }
 
 .topics-button {
@@ -264,41 +240,41 @@
 }
 
 .pathways {
-  background:var(--neutral-50);
+  background:var(--colors-neutral-50);
 }
 
 .pathway-card {
   min-height:82px;
   justify-content:flex-start;
-  gap:16px;
+  gap:var(--spacing-16);
 }
 
 .pathway-card>span {
   flex:1;
   min-width:0;
-  gap:4px;
+  gap:var(--spacing-4);
 }
 
 .pathway-icon {
-  flex:0 0 20px;
-  width:20px;
-  height:20px;
+  flex:0 0 var(--size-20);
+  width:var(--size-20);
+  height:var(--size-20);
 }
 
 .pathway-emoji {
   display:grid;
-  flex:0 0 20px;
-  width:20px;
-  height:20px;
+  flex:0 0 var(--size-20);
+  width:var(--size-20);
+  height:var(--size-20);
   place-items:center;
-  font-size:18px;
-  line-height:20px;
+  font-size:var(--font-size-lg);
+  line-height:var(--line-height-xl);
 }
 
 .pathway-card .pathway-arrow {
-  flex:0 0 16px;
-  width:16px;
-  height:16px;
+  flex:0 0 var(--size-16);
+  width:var(--size-16);
+  height:var(--size-16);
   margin-left:auto;
 }
 
@@ -309,7 +285,7 @@
     align-items:center;
     /* .home-hero centraliza os filhos, então o track encolheria pro conteúdo ao virar flex item. */
     width:100%;
-    transform:translateY(var(--hero-track-shift,0px));
+    transform:translateY(var(--hero-track-shift,var(--spacing-0)));
   }
   /* Webview que encolhe a janela inteira: sem isso o hero (em svh) encolhe e tudo sobe junto. */
   html.keyboard-resized .home-hero {
@@ -342,32 +318,34 @@ body {
   max-width:none!important;
   margin:0!important;
   min-height:100svh;
-  background:var(--neutral-50)!important;
+  background:var(--colors-neutral-50)!important;
 }
 
 .app-shell>.app-header {
-  background:var(--brand-100);
+  background:var(--colors-brand-primary-100);
 }
 
+/* .home-hero era redefinido 4x nesta cascata (flow, home-overrides, viewport-overrides,
+   hero-radius), com um `border-bottom` que nunca chegava a aparecer porque o bloco seguinte
+   sempre resetava com `border:0!important`. Consolidado aqui na sessão de 18/09/2026, conferido
+   visualmente antes e depois: mesmo resultado, sem a declaração morta. */
 .home-hero {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  padding:var(--spacing-32) var(--spacing-16) var(--spacing-24);
   width:100%!important;
   max-width:none!important;
-  margin:0;
-  min-height:calc(100svh - 48px);
-  border-bottom:24px solid var(--neutral-50);
+  margin:0 0 var(--spacing-24)!important;
+  border:0!important;
+  border-bottom-right-radius:var(--radius-3xl);
+  background:var(--colors-brand-primary-100)!important;
   background-clip:padding-box;
-}
-
-
-/* ===== vinha de hero-radius.css | corrigia os tres acima ===== */
-.home-hero {
+  min-height:calc(100svh - 72px)!important;
   position:relative;
   isolation:auto;
-  min-height:calc(100svh - 72px)!important;
-  margin:0 0 24px!important;
-  border:0!important;
-  border-bottom-right-radius:32px;
-  background:var(--brand-100)!important;
 }
 
 .home-hero::before {
