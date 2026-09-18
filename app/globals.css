@@ -4,6 +4,7 @@
 /* Um arquivo por tela. Nenhum existe para corrigir outro: quando um arquivo corrigia o anterior,
    os dois foram juntados na mesma ordem em que eram importados, e o de dentro ficou marcado. */
 @import url('./home.css');
+@import url('./botao.css');
 @import url('./onboarding.css');
 @import url('./message-input.css');
 @import url('./resultado.css');

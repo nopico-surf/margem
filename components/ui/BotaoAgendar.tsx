@@ -1,12 +1,14 @@
 "use client";
 
 import { IconeAgendarWhatsapp } from "@/components/icons";
+import { Button } from "@/components/ui/Button";
 
+// Desabilitado de propósito enquanto o agendamento não existe.
 export function BotaoAgendar({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button className="figma-schedule-button" type="button" onClick={onClick} disabled>
+    <Button larguraTotal disabled onClick={onClick}>
       <IconeAgendarWhatsapp />
       {label}
-    </button>
+    </Button>
   );
 }

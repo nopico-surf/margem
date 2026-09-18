@@ -1,6 +1,7 @@
 "use client";
 
 import { IconeSetaResultado } from "@/components/icons";
+import { Button } from "@/components/ui/Button";
 import { track } from "@/lib/mixpanel";
 
 // Rola até a seção com uma animação própria, porque o scroll nativo não tem controle de duração.
@@ -32,9 +33,9 @@ export function SectionJump({ label, targetId }: { label: string; targetId: stri
   }
 
   return (
-    <button className="figma-result-jump" type="button" onClick={scrollToSection}>
+    <Button variante="secondary" redondo onClick={scrollToSection}>
       {label}
       <IconeSetaResultado />
-    </button>
+    </Button>
   );
 }

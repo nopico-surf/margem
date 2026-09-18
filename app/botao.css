@@ -1,0 +1,134 @@
+/* Botão. Figma: página Button core, componente `button`.
+
+   O set do Figma tem 246 variantes. Só 8 combinações estão em uso, e elas se resolvem em três
+   eixos: tamanho, variante e se o canto é redondo. Os outros eixos do Figma (`mode`, `padding`,
+   `function=danger`) não aparecem em tela nenhuma e por isso não existem aqui.
+
+   Entre os estados muda só cor. O único que acrescenta alguma coisa é o focus, que ganha um stroke
+   de 2px por dentro, para não empurrar o layout. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-inter), sans-serif;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* O conteúdo vive num span próprio para o estado de carregando poder escondê-lo sem tirar o botão
+   do lugar. É ele que carrega o espaço entre o ícone e o texto. */
+.btn-conteudo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-6);
+}
+
+.btn[data-redondo="true"] {
+  border-radius: var(--radius-full);
+}
+
+.btn[data-largura="total"] {
+  width: 100%;
+}
+
+.btn img,
+.btn svg {
+  flex: 0 0 auto;
+  width: var(--control-icon-sm);
+  height: var(--control-icon-sm);
+}
+
+/* Tamanho: o que muda é padding e tipografia. */
+
+.btn[data-tamanho="x-small"] {
+  padding: var(--spacing-6) var(--spacing-10);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-md);
+}
+
+.btn[data-tamanho="small"] {
+  padding: var(--spacing-10) var(--spacing-12);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-md);
+}
+
+.btn[data-tamanho="medium"] {
+  padding: var(--spacing-14) var(--spacing-16);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
+}
+
+/* Variante: cor de fundo e de texto, por estado. */
+
+.btn[data-variante="primary"] {
+  background: var(--colors-brand-primary-800);
+  color: var(--colors-neutral-0);
+}
+
+.btn[data-variante="primary"]:hover:not(:disabled):not([data-carregando="true"]) {
+  background: var(--colors-brand-primary-900);
+}
+
+.btn[data-variante="primary"]:active:not(:disabled):not([data-carregando="true"]) {
+  background: var(--colors-neutral-950);
+}
+
+.btn[data-variante="primary"]:focus-visible {
+  background: var(--colors-neutral-950);
+}
+
+.btn[data-variante="secondary"] {
+  background: var(--colors-alpha-8);
+  color: var(--colors-brand-primary-800);
+}
+
+.btn[data-variante="secondary"]:hover:not(:disabled):not([data-carregando="true"]) {
+  background: var(--colors-alpha-16);
+}
+
+.btn[data-variante="secondary"]:active:not(:disabled):not([data-carregando="true"]) {
+  background: var(--colors-alpha-24);
+}
+
+.btn[data-variante="transparent"] {
+  background: transparent;
+  color: var(--colors-brand-primary-800);
+}
+
+.btn[data-variante="transparent"]:hover:not(:disabled):not([data-carregando="true"]) {
+  background: var(--colors-alpha-8);
+  color: var(--colors-brand-primary-900);
+}
+
+.btn[data-variante="transparent"]:active:not(:disabled):not([data-carregando="true"]) {
+  background: var(--colors-alpha-16);
+  color: var(--colors-brand-primary-950);
+}
+
+/* Foco: stroke por fora. `outline` não ocupa espaço, então não empurra o que está ao lado. */
+
+.btn:focus-visible {
+  outline: var(--border-width-medium) solid var(--colors-brand-secondary-400);
+  outline-offset: 0;
+}
+
+/* Desabilitado e carregando: o mesmo par de cor nas três variantes. */
+
+.btn:disabled,
+.btn[data-carregando="true"] {
+  background: var(--colors-alpha-8);
+  color: var(--colors-alpha-24);
+  cursor: not-allowed;
+}
+
+.btn[data-carregando="true"] {
+  pointer-events: none;
+}
+
+.btn[data-carregando="true"] .btn-conteudo {
+  visibility: hidden;
+}

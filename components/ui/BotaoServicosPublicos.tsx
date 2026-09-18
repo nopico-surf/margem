@@ -1,11 +1,12 @@
 "use client";
 
 import { IconeSetaResultado } from "@/components/icons";
+import { Button } from "@/components/ui/Button";
 
 export function BotaoServicosPublicos({ onClick }: { onClick: () => void }) {
   return (
-    <button className="figma-public-link" type="button" onClick={onClick}>
+    <Button variante="transparent" redondo larguraTotal onClick={onClick}>
       Se preferir, veja os serviços públicos <IconeSetaResultado />
-    </button>
+    </Button>
   );
 }

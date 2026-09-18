@@ -84,27 +84,6 @@
   color:var(--neutral-950-88);
 }
 
-.intro-button {
-  width:100%;
-  padding:14px 16px;
-  border:0;
-  border-radius:12px;
-  background:var(--brand-800);
-  color:#fff;
-  font-weight:500;
-  font-size:16px;
-  line-height:20px;
-}
-
-.intro-button-auto {
-  width:auto;
-}
-
-.intro-button:disabled {
-  background:var(--neutral-50);
-  color:rgb(23 27 24 / 32%);
-}
-
 .privacy-link {
   align-self:flex-start;
   padding:0;

@@ -50,7 +50,8 @@ export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="#012
 /* Setas */
 
 // seta.svg e seta-resultado.svg eram o mesmo traçado na mesma cor, exportados duas vezes.
-export const IconeSeta = (p: IconProps) => <GlifoDoubleArrowDown {...p} color="#055C40" />;
+// Segue a cor do botão onde está, para acompanhar o hover.
+export const IconeSeta = (p: IconProps) => <GlifoDoubleArrowDown {...p} />;
 export const IconeSetaResultado = IconeSeta;
 export const IconeSetaCard = (p: IconProps) => <GlifoArrowForwardIos {...p} {...SUAVE} />;
 
@@ -88,8 +89,8 @@ export function IconeLoader({ className }: IconProps) {
 }
 
 export const IconeInfo = (p: IconProps) => <GlifoInfo {...p} {...SUAVE} />;
-// Mesmo desenho do WhatsApp, em branco, porque fica sobre o fundo escuro do botão de agendar.
-export const IconeAgendarWhatsapp = (p: IconProps) => <GlifoWhatsapp {...p} color="white" />;
+// Segue a cor do botão: branco quando ativo, apagado quando desabilitado.
+export const IconeAgendarWhatsapp = (p: IconProps) => <GlifoWhatsapp {...p} />;
 // Avatar do profissional: o cadastro pode trazer foto própria, e aí a padrão não é usada.
 export const URL_AVATAR_PADRAO = "/assets/professional-avatar-fallback.svg";
 

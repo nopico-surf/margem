@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
+
 type BotaoContinuarProps = {
   onClick: () => void;
   disabled?: boolean;
@@ -9,8 +11,8 @@ type BotaoContinuarProps = {
 
 export function BotaoContinuar({ onClick, disabled, label = "Continuar", fullWidth = true }: BotaoContinuarProps) {
   return (
-    <button className={`intro-button${fullWidth ? "" : " intro-button-auto"}`} type="button" disabled={disabled} onClick={onClick}>
+    <Button tamanho="medium" larguraTotal={fullWidth} disabled={disabled} onClick={onClick}>
       {label}
-    </button>
+    </Button>
   );
 }

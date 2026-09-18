@@ -123,9 +123,9 @@ Componentes: `card-home`, `card-home-group`, `header-home`, `_card-profissionais
 | `components/bem-vindo` | EmergencyPanel |
 | `components/conversa` | ActionRow, CardBackground, CardHeader, CardProfissionais, CardProfissionaisCompleto, CardRecurso, CardsInstituicoes, CardsServicosPublicos, CheckBoxGroup, ChecklistSection, FiltroEspecialidade, MoreOptions, ResourceActions, ResponseCopy, ResponseError, ResponseLoading, ResultMessages, ResultPage, UserMessage |
 | `components/intro` | IntroBubble, IntroCopy, IntroHeader, IntroShell |
-| `components/layout` | Footer, HeaderHome, HeaderResultado, MenuContatos, SideMenu |
+| `components/layout` | Footer, Header, MenuContatos, SideMenu |
 | `components/protecao-de-dados` | ConsentCard, DadosPrivacidadeModal, LinkPoliticaDados, ModalFooter, ModalHeader, ModalSection |
-| `components/ui` | ActionButton, BotaoAgendar, BotaoContinuar, BotaoFecharMenu, BotaoMenu, BotaoServicosPublicos, BotaoTopicos, Checkbox, ContatoLink, SectionJump |
+| `components/ui` | **Button** (o botão), e os que hoje são só um atalho para ele: ActionButton, BotaoAgendar, BotaoContinuar, BotaoFecharMenu, BotaoMenu, BotaoServicosPublicos, BotaoTopicos, Checkbox, ContatoLink, SectionJump |
 | raiz | GoogleTagManager, MixpanelPageView |
 
 Convenção do código: `PascalCase.tsx`, mistura de português e inglês sem critério (`CardProfissionais` ao lado de `ResponseLoading`, `BotaoMenu` ao lado de `ActionButton`).
@@ -165,13 +165,41 @@ O menu lateral, que era do `HeaderResultado`, passou para a página, igual já e
 
 O ícone do hambúrguer também tinha duas cores para o mesmo desenho, `#012A1C` na home e `#171B18` na conversa. Ficou `#171B18` nas duas, e o `BotaoMenu` perdeu a prop `variante`, que existia só para isso. `IconeMenuResultado` deixou de existir.
 
-### O caso mais grave: botões
+### Botões, reconciliados em 18/09/2026
 
-O Figma tem **um** componente `button`, com 246 variantes cobrindo `function`, `size`, `state`, `variant`, `mode`, `radius-full` e `padding`.
+O Figma tem um `button` com 246 variantes. O código tinha sete componentes, cada um com o estilo escrito num CSS diferente, e nenhum com hover, foco, pressionado ou carregando.
 
-O código tem **sete** componentes separados: `ActionButton`, `BotaoAgendar`, `BotaoContinuar`, `BotaoFecharMenu`, `BotaoMenu`, `BotaoServicosPublicos`, `BotaoTopicos`.
+**Não foram implementadas as 246 variantes.** Varrendo os dois arquivos do Figma, só **8 combinações** aparecem em tela, e todas são `mode=light` e `padding=true`. O `components/ui/Button.tsx` tem só os eixos que aparecem:
 
-Cada um desses sete é, no Figma, uma combinação de propriedades do mesmo componente. Enquanto isso não for reconciliado, mudar o botão no design não chega no código, e cada botão novo vira um arquivo novo.
+| eixo | valores em uso |
+|---|---|
+| `variante` | primary, secondary, transparent |
+| `tamanho` | x-small (6/10, 12px), small (10/12, 14px), medium (14/16, 16px) |
+| `redondo` | canto 999 ou 12 |
+| `larguraTotal` | ocupa a linha inteira |
+
+`function=danger` e `mode=dark` existem no Figma e não aparecem em tela nenhuma, então não existem no código. Quando aparecerem, acrescenta.
+
+**Os estados vieram do Figma**, e confirmam que entre eles muda só cor, com o foco acrescentando um stroke:
+
+| estado | primary | secondary | transparent |
+|---|---|---|---|
+| default | brand-800 / branco | alpha-8 / brand-800 | sem fundo / brand-800 |
+| hover | brand-900 / branco | alpha-16 / brand-800 | alpha-8 / brand-900 |
+| pressed | neutral-950 / branco | alpha-24 / brand-800 | alpha-16 / brand-950 |
+| focus | neutral-950 / branco | alpha-8 / brand-800 | sem fundo / brand-800 |
+| disabled | alpha-8 / alpha-24 | alpha-8 / alpha-24 | alpha-8 / alpha-24 |
+| loading | alpha-8, conteúdo oculto | idem | idem |
+
+O foco ganha 2px de `brand-secondary-400` **por fora**. `outline` não ocupa espaço em CSS, ao contrário de `border`, então não empurra nada. O único lugar onde isso importava era a fileira de ações, que rola na horizontal com `overflow-y: hidden` e cortaria o stroke: ela ganhou 2px de padding vertical e a mesma margem negativa, que se cancelam.
+
+**Uma mudança visual, deliberada.** O desabilitado do botão de onboarding era `neutral-50 / alpha-32` e o do agendar era `alpha-8 / alpha-24`: dois tratamentos para a mesma coisa. Ficou o do Figma, `alpha-8 / alpha-24`, nos dois.
+
+Fora isso, medido antes e depois em cada tela: padding, raio, cor, fonte e tamanho idênticos. A única diferença é o botão de tópicos, 1px mais baixo, porque ele não tinha `line-height` declarado e agora usa o da escala.
+
+Sumiram do CSS as classes `.figma-result-action`, `.figma-result-jump`, `.figma-public-link`, `.figma-schedule-button`, `.intro-button` e as regras de `.figma-filter-row button`.
+
+**Fora do Button:** `BotaoMenu` e `BotaoFecharMenu`, que são só ícone e no Figma são o componente `icon-button`, outro componente.
 
 ### Existe no Figma e não no código
 
