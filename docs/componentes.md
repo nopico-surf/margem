@@ -253,9 +253,9 @@ Os 17 arquivos viraram **7 componentes** em `components/icons/glifos.tsx`, com c
 
 Ao mexer em ícone, conferir se existe regra de CSS mirando `img` naquele componente.
 
-### Nomes: uma exceção deliberada
+### O WhatsApp
 
-No Figma o componente do WhatsApp se chama `zap`. No código ele é `GlifoWhatsapp`, porque `zap` não diz a ninguém que aquilo é o WhatsApp. É a única divergência proposital entre os dois lados, e está registrada no cabeçalho de `glifos.tsx`. Se incomodar, o certo é renomear no Figma, não no código.
+O componente se chamava `zap` no arquivo Ícones, o que não dizia a ninguém que aquilo era o WhatsApp. Foi renomeado no Figma para `whatsapp`, categoria Social. Código e Figma batem, sem exceção.
 
 ### Estado final
 
@@ -301,8 +301,10 @@ Registrado para ninguém apagar por engano:
 
 ## 9. Pendências
 
-- [ ] `badge`: as cores foram nomeadas `secondary`, `primary` e `neutral` lendo o desenho. Falta confirmar.
-- [ ] `card-bg` e `card-background`: os dois continuam, porque não dá para aninhar um componente dentro dele mesmo no Figma. `card-background` é o fundo de um card. `card-bg` é o container que envolve cards e textos, e é ele que tem o slot. Os nomes são sinônimos e não dizem qual é qual. Proposta em aberto: renomear `card-bg` para `container-conteudo`, já que ele não é fundo de card nenhum.
-- [ ] **Reconciliar os 7 componentes de botão do código com o set único do Figma.** Sem alterar o visual. Trabalho separado, combinado para depois.
-- [ ] **Unificar os SVGs que são o mesmo glifo em cor ou tamanho diferente.** Exige mover a cor para `currentColor`. Ver o fim da seção 6. A parte sem risco visual já foi feita: 41 arquivos viraram 33.
-- [ ] `filter`: set mal modelado, 4 valores de `state` cruzados com 2 de `mode` em só 4 variantes. **Ignorado por enquanto: o componente não está em uso.**
+O trabalho de ícone e de taxonomia está fechado. O que sobra aqui é de componente.
+
+- [ ] **Reconciliar os 7 componentes de botão do código com o set único do Figma.** O Figma tem um `button` com 246 variantes; o código tem `ActionButton`, `BotaoAgendar`, `BotaoContinuar`, `BotaoFecharMenu`, `BotaoMenu`, `BotaoServicosPublicos` e `BotaoTopicos`. Sem alterar o visual. Combinado para depois.
+- [ ] **O que existe no Figma e não no código, e vice-versa.** Ver as duas listas no fim da seção 5. Todo o onboarding e toda a proteção de dados existem só no código, sem componente desenhado.
+- [ ] `filter`: set mal modelado, 4 valores de `state` cruzados com 2 de `mode` em só 4 variantes. **Ignorado: o componente não está em uso.**
+
+Resolvidos em 18/09/2026: cores do `badge` confirmadas; `card-bg` renomeado para `container-conteudo`; variantes do `avatar` nomeadas `photo` e `fallback`; seção `Cards pro dor` virou `Cards home`; `zap` virou `whatsapp`; unificação dos SVGs concluída, de 41 arquivos para 7.

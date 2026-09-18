@@ -7,7 +7,7 @@
 //
 //   GlifoEmail            email               (Communication)
 //   GlifoPhone            phone               (Communication)
-//   GlifoWhatsapp         zap                 (Social)   ver a nota abaixo
+//   GlifoWhatsapp         whatsapp            (Social)
 //   GlifoInstagram        instagram           (Social)
 //   GlifoMenu             menu                (Navigation)
 //   GlifoClose            close               (Navigation)
@@ -22,9 +22,7 @@
 //   GlifoMessageFlye      message_flye        (AV)
 //   GlifoSecurity         security            (Hardware)
 //
-// A única divergência proposital: no Figma o componente do WhatsApp se chama `zap`, e aqui ele é
-// GlifoWhatsapp, porque `zap` não diz a ninguém que aquilo é o WhatsApp. Se for para alinhar, o
-// certo é renomear no Figma.
+// Não há divergência entre os dois lados: todo componente aqui tem o nome do componente no Figma.
 //
 // PARA TROCAR UM DESENHO: exportar o componente do Figma como SVG e substituir aqui só o conteúdo
 // do `d`, mantendo o viewBox. Não colar o SVG inteiro: `fill` precisa continuar sendo `{color}` e
