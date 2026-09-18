@@ -2,7 +2,7 @@
 .dados-modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;flex:0 0 auto}
 .dados-modal-logo{width:86.756px;height:12px}
 .dados-modal-close{width:24px;height:24px;padding:0;border:0;background:transparent}
-.dados-modal-close img{width:24px;height:24px;display:block}
+.dados-modal-close img,.dados-modal-close svg{width:24px;height:24px;display:block}
 .dados-modal-body{display:flex;flex-direction:column;gap:20px;padding:16px}
 .dados-modal-body h2{margin:0;font-family:var(--font-urbanist),sans-serif;font-size:20px;font-weight:600;line-height:28px;color:var(--neutral-950)}
 .dados-modal-section{display:flex;flex-direction:column;gap:10px}

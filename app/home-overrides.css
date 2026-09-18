@@ -11,7 +11,7 @@
 .hero-message-group{display:flex;flex-direction:column;align-items:center;gap:32px;width:100%;margin-top:40px}
 .hero-message-group .message-component{width:100%}
 .topics-button{display:inline-flex;align-items:center;gap:6px;padding:10px 12px;margin-top:32px}
-.topics-button img{width:16px;height:16px}
+.topics-button img,.topics-button svg{width:16px;height:16px}
 .topics-button{max-width:600px}
 .app-header{width:100%;max-width:none}
 .hero-focus-track,.topics-button{max-width:1080px}

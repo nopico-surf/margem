@@ -9,6 +9,10 @@
 // diferentes, e unificar exige mover a cor do arquivo para o CSS com currentColor. Enquanto isso não
 // for feito, unificar aqui mudaria o visual da tela.
 
+import {
+  GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoSetaBaixo, GlifoCheckBox,
+} from "./glifos";
+
 type IconProps = { className?: string };
 
 function icone(src: string, alt = "") {
@@ -26,16 +30,20 @@ export const LogoMargemModal = icone("/icons/logo-margem.svg", "Margem");
 
 /* Menu e fechar */
 
-export const IconeMenu = icone("/icons/menu.svg");
-export const IconeMenuResultado = icone("/icons/menu-resultado.svg");
-export const IconeFecharMenu = icone("/icons/fechar-menu.svg");
-export const IconeFecharModal = icone("/icons/fechar-modal.svg");
+// As cores abaixo são as que já estavam dentro de cada SVG. Ficam explícitas aqui porque agora o
+// desenho é um só e quem define a cor é o lugar que usa.
+export const IconeMenu = (p: IconProps) => <GlifoMenu {...p} color="#012A1C" />;
+export const IconeMenuResultado = (p: IconProps) => <GlifoMenu {...p} color="#171B18" />;
+// Branco porque fica sobre o overlay escuro do menu.
+export const IconeFecharMenu = (p: IconProps) => <GlifoClose {...p} size={32} color="var(--neutral-0)" />;
+export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="#012A1C" />;
 
 /* Setas */
 
-export const IconeSeta = icone("/icons/seta.svg");
+// seta.svg e seta-resultado.svg eram o mesmo traçado na mesma cor, exportados duas vezes.
+export const IconeSeta = (p: IconProps) => <GlifoSetaBaixo {...p} color="#055C40" />;
+export const IconeSetaResultado = IconeSeta;
 export const IconeSetaCard = icone("/icons/seta-card.svg");
-export const IconeSetaResultado = icone("/icons/seta-resultado.svg");
 
 /* Home */
 
@@ -71,49 +79,71 @@ export function IconeLoader({ className }: IconProps) {
 }
 
 export const IconeInfo = icone("/icons/info.svg");
-export const IconeAgendarWhatsapp = icone("/icons/agendar-whatsapp.svg");
+// Mesmo desenho do WhatsApp, em branco, porque fica sobre o fundo escuro do botão de agendar.
+export const IconeAgendarWhatsapp = (p: IconProps) => <GlifoWhatsapp {...p} color="white" />;
 // Avatar do profissional: o cadastro pode trazer foto própria, e aí a padrão não é usada.
 export const URL_AVATAR_PADRAO = "/assets/professional-avatar-fallback.svg";
 
 export function AvatarProfissional({ src, className }: { src?: string | null; className?: string }) {
   return <img className={className} src={src || URL_AVATAR_PADRAO} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = URL_AVATAR_PADRAO; }} alt="" />;
 }
-export const IconeCheckboxSelecionado = icone("/icons/checkbox-selecionado.svg");
+export const IconeCheckboxSelecionado = (p: IconProps) => <GlifoCheckBox {...p} color="#055C40" />;
 
-/* Contatos */
+/* Contatos
+   Menu e rodapé usam o mesmo desenho na mesma cor, mudando só o tamanho: 20 no menu, 16 no rodapé.
+   Eram seis arquivos para três desenhos. */
 
-export const IconeWhatsappMenu = icone("/icons/whatsapp-menu.svg");
-export const IconeInstagramMenu = icone("/icons/instagram-menu.svg");
-export const IconeEmailMenu = icone("/icons/email-menu.svg");
+const CONTATO = { color: "#171B18", opacity: 0.88 } as const;
 
-export const IconeWhatsappRodape = icone("/icons/whatsapp-rodape.svg");
-export const IconeInstagramRodape = icone("/icons/instagram-rodape.svg");
-export const IconeEmailRodape = icone("/icons/email-rodape.svg");
+export const IconeWhatsappMenu = (p: IconProps) => <GlifoWhatsapp {...p} {...CONTATO} size={20} />;
+export const IconeInstagramMenu = (p: IconProps) => <GlifoInstagram {...p} {...CONTATO} size={20} />;
+export const IconeEmailMenu = (p: IconProps) => <GlifoEmail {...p} {...CONTATO} size={20} />;
+
+export const IconeWhatsappRodape = (p: IconProps) => <GlifoWhatsapp {...p} {...CONTATO} size={16} />;
+export const IconeInstagramRodape = (p: IconProps) => <GlifoInstagram {...p} {...CONTATO} size={16} />;
+export const IconeEmailRodape = (p: IconProps) => <GlifoEmail {...p} {...CONTATO} size={16} />;
 
 /* Ações de recurso
    A chave vem do banco (campo `icon` de cada ação), então a busca é por nome, não por componente. */
 
+// Os que ainda são arquivo continuam sendo arquivo. Os que tinham cópia viraram glifo com a cor do
+// lugar. A chave não mudou, porque ela vem do banco.
 export const ICONES_ACAO = {
-  info: "/icons/info.svg",
-  phone: "/icons/acao-telefone.svg",
-  chat: "/icons/acao-chat.svg",
-  whatsapp: "/icons/acao-whatsapp.svg",
-  whatsappSchedule: "/icons/agendar-whatsapp.svg",
-  telegram: "/icons/acao-telegram.svg",
-  libras: "/icons/acao-libras.svg",
-  place: "/icons/acao-local.svg",
-  email: "/icons/acao-email.svg",
-  link: "/icons/acao-link.svg",
-  logo: "/icons/logo-margem.svg",
-  menu: "/icons/menu-resultado.svg",
-  arrow: "/icons/seta-resultado.svg",
-  avatar: URL_AVATAR_PADRAO,
-  checkbox: "/icons/checkbox.svg",
-  checkboxSelected: "/icons/checkbox-selecionado.svg",
+  info: icone("/icons/info.svg"),
+  phone: icone("/icons/acao-telefone.svg"),
+  chat: icone("/icons/acao-chat.svg"),
+  telegram: icone("/icons/acao-telegram.svg"),
+  libras: icone("/icons/acao-libras.svg"),
+  place: icone("/icons/acao-local.svg"),
+  link: icone("/icons/acao-link.svg"),
+  logo: icone("/icons/logo-margem.svg", "Margem"),
+  avatar: icone(URL_AVATAR_PADRAO),
+  email: (p: IconProps) => <GlifoEmail {...p} color="#055C40" />,
+  whatsapp: (p: IconProps) => <GlifoWhatsapp {...p} color="#055C40" />,
+  whatsappSchedule: (p: IconProps) => <GlifoWhatsapp {...p} color="white" />,
+  menu: (p: IconProps) => <GlifoMenu {...p} color="#171B18" />,
+  arrow: (p: IconProps) => <GlifoSetaBaixo {...p} color="#055C40" />,
+  checkboxSelected: (p: IconProps) => <GlifoCheckBox {...p} color="#055C40" />,
 } as const;
+
+// A tela de resultado espera as imagens carregarem antes de aparecer. Glifo inline já vem no HTML e
+// não tem o que esperar, então só as URLs que sobraram entram nessa lista.
+export const URLS_DE_ICONE = [
+  "/icons/info.svg",
+  "/icons/acao-telefone.svg",
+  "/icons/acao-chat.svg",
+  "/icons/acao-telegram.svg",
+  "/icons/acao-libras.svg",
+  "/icons/acao-local.svg",
+  "/icons/acao-link.svg",
+  "/icons/logo-margem.svg",
+  "/icons/seta-card.svg",
+  URL_AVATAR_PADRAO,
+];
 
 export type IconeAcao = keyof typeof ICONES_ACAO;
 
 export function IconeDeAcao({ nome }: { nome: IconeAcao }) {
-  return <img src={ICONES_ACAO[nome]} alt="" />;
+  const Icone = ICONES_ACAO[nome];
+  return <Icone />;
 }

@@ -241,9 +241,25 @@ Apagados por não ter uso nenhum no código: `loader-1.svg`, `loader-2.svg`, `lo
 
 Apagados por serem cópia byte a byte: `logo-margem-modal.svg` e `logo-margem-resultado.svg`. `LogoMargem`, `LogoMargemResultado` e `LogoMargemModal` agora apontam para o mesmo arquivo.
 
+### A unificação, feita em 18/09/2026
+
+Os arquivos duplicados eram literalmente o mesmo desenho. `acao-email` e `email-rodape` têm path idêntico e diferem só em `fill`. `email-menu` é o mesmo desenho reescrito na escala 20/16: `14.6667` vira `18.3333`, `8` vira `10`. O mesmo padrão em WhatsApp, Instagram, menu, close, seta e checkbox.
+
+Os 17 arquivos viraram **7 componentes** em `components/icons/glifos.tsx`, com cor, opacidade e tamanho como parâmetro. `/public/icons` foi de 33 para 16 arquivos.
+
+**Por que inline e não `currentColor` num arquivo.** SVG carregado em `<img src>` é documento isolado: CSS da página não entra, então `currentColor` não funciona. Para a cor virar parâmetro, o SVG tem que estar no HTML.
+
+**A armadilha que isso abriu.** Trocar `<img>` por `<svg>` derruba toda regra de CSS escrita como `.alguma-coisa img`. Eram 13 regras em 7 arquivos, e a mais séria era `.side-menu-close img { filter: brightness(0) invert(1) }`, o truque que deixava o X do menu branco. Sem ela, o X voltou a preto. Todas as regras foram estendidas para cobrir `svg`, e o branco do X agora vem de `var(--neutral-0)` via prop, sem filtro.
+
+Ao mexer em ícone, conferir se existe regra de CSS mirando `img` naquele componente.
+
+### Nomes: uma exceção deliberada
+
+No Figma o componente do WhatsApp se chama `zap`. No código ele é `GlifoWhatsapp`, porque `zap` não diz a ninguém que aquilo é o WhatsApp. É a única divergência proposital entre os dois lados, e está registrada no cabeçalho de `glifos.tsx`. Se incomodar, o certo é renomear no Figma, não no código.
+
 ### O que falta
 
-Unificar os grupos da tabela de glifo que hoje são vários arquivos do mesmo desenho. Só é seguro quando a diferença é tamanho, porque SVG escala. Quando a diferença é cor, a cor precisa sair do arquivo e virar `currentColor` no CSS, e aí é mudança de implementação que pede conferência tela a tela. Isso vale para `email`, `zap`, `instagram`, `menu`, `close`, `double_arrow_down` e `what_sapp`.
+Os 8 ícones que sobraram como arquivo (`acao-chat`, `acao-libras`, `acao-link`, `acao-local`, `acao-telefone`, `acao-telegram`, `seguranca`, `seta-card`, `info`) não têm duplicata, então não entraram nessa leva. Quando forem renomeados para o nome do glifo do Figma, vale converter junto.
 
 ---
 

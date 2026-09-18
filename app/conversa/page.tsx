@@ -7,7 +7,7 @@ import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import { TITULOS_CARDS_HOME } from "@/lib/cards-home";
 import { track } from "@/lib/mixpanel";
 import type { CardResource, OrientationResult } from "@/components/conversa/types";
-import { ICONES_ACAO, URL_AVATAR_PADRAO } from "@/components/icons";
+import { URLS_DE_ICONE, URL_AVATAR_PADRAO } from "@/components/icons";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Copy fixa do Figma (1205:16250) para quando o Gemini falha: não varia por motivo de falha.
@@ -45,11 +45,11 @@ function carregarImagem(url: string) {
 function midiasDosRecursos(recursos: RecursosDaApi) {
   return {
     profissionais: [...new Set([
-      ...Object.values(ICONES_ACAO),
+      ...URLS_DE_ICONE,
       ...recursos.profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO),
     ])],
-    servicosPublicos: Object.values(ICONES_ACAO),
-    instituicoes: Object.values(ICONES_ACAO),
+    servicosPublicos: URLS_DE_ICONE,
+    instituicoes: URLS_DE_ICONE,
   };
 }
 
