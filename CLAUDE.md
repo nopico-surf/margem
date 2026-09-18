@@ -40,8 +40,10 @@ Estrutura esperada:
   risco.ts
   normalizar.ts
 /docs
+  instrucoes-design.md        ponto de entrada para criar tela nova
   tom-de-voz.md
   spec-visual.md
+  componentes.md
   prompt-gemini.md
 ```
 
@@ -213,7 +215,8 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
   4. **Relatar a varredura.** O plano de até 10 linhas do item anterior inclui o resultado disso: quais componentes do Figma serão reaproveitados, quais serão criados e por que não havia equivalente lá. Se a varredura no Figma não foi feita, o plano está incompleto.
   5. Só depois de mapear o Figma é que vale olhar o código existente, e só pra ver o que já foi implementado daquilo que o Figma mostra, nunca como fonte primária de "o que existe".
 - **Componentes primeiro, telas depois.** Todo componente aparece em `/ui` com todos os estados (hover, focus, disabled, carregando, erro) antes de ser usado numa tela.
-- A spec visual é `/docs/spec-visual.md`. O Figma é a fonte de verdade sobre o que existe e como se estrutura; o código é a fonte de verdade sobre como está implementado hoje.
+- **Antes de desenhar ou implementar qualquer tela, ler `/docs/instrucoes-design.md`.** Ele é o ponto de entrada e aponta para os outros três: tom de voz, spec visual e inventário de componentes. As regras de nomenclatura de token, componente, variante e ícone estão lá, e valem para quem mexer no Figma também.
+- A spec visual é `/docs/spec-visual.md`. O Figma é a fonte de verdade sobre o que existe e como se estrutura; o código é a fonte de verdade sobre como está implementado hoje. Os quatro arquivos do Figma: Margem System `9YYcL4yrp6oB65cJFbLPRf`, Experiência do produto `h1TYaQfUXC8FdbWkY6tkLd`, Ícones `PPrJDgaNCTx52XSQSVcopK`, Emojis `biLPoOkfG2vQJTP4DqdaX9`.
 - Um arquivo por vez, diff pequeno, sem refatoração não pedida.
 - Se algo que eu pedir contradisser este documento, apontar a contradição antes de implementar.
 - Não criar abstração pra caso que ainda não apareceu.
