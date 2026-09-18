@@ -10,8 +10,6 @@ import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
-const ID_PROFISSIONAL_TESTE = "00000000-0000-0000-0000-000000000005";
-
 export function CardProfissionais({ profissionais, isLoading = false }: { profissionais: ProfissionalCadastrado[]; isLoading?: boolean }) {
   const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>("psicologo");
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
@@ -50,18 +48,9 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
     );
   }
 
-  if (profissionais.length === 0) return null;
-
   const profissionaisFiltrados = profissionais.filter(
     (profissional) => profissional.especialidade === especialidadeSelecionada,
   );
-  const profissionalFake = profissionais.find((profissional) => profissional.id === ID_PROFISSIONAL_TESTE);
-  const profissionaisParaExibir =
-    profissionaisFiltrados.length > 0
-      ? profissionaisFiltrados
-      : profissionalFake && especialidadeSelecionada === "psiquiatra"
-        ? [{ ...profissionalFake, especialidade: "psiquiatra" as const }]
-        : [];
 
   function selecionarEspecialidade(especialidade: Especialidade) {
     setEspecialidadeSelecionada(especialidade);
@@ -77,9 +66,13 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
         description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros."
       />
       <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
-      {profissionaisParaExibir.map((profissional) => (
-        <CardProfissionaisCompleto profissional={profissional} key={profissional.id} />
-      ))}
+      {profissionais.length === 0 ? (
+        <CardProfissionaisCompleto estado="in-construction" />
+      ) : (
+        profissionaisFiltrados.map((profissional) => (
+          <CardProfissionaisCompleto profissional={profissional} key={profissional.id} />
+        ))
+      )}
       <BotaoServicosPublicos onClick={() => track("ver_servicos_publicos_clicado")} />
     </ContainerConteudo>
   );

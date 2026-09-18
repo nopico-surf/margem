@@ -20,7 +20,28 @@ const registroLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
   assistente_social: "CRESS",
 };
 
-export function CardProfissionaisCompleto({ profissional }: { profissional: ProfissionalCadastrado }) {
+type CardProfissionaisCompletoProps = {
+  profissional?: ProfissionalCadastrado;
+  estado?: "default" | "in-construction";
+};
+
+export function CardProfissionaisCompleto({ profissional, estado = "default" }: CardProfissionaisCompletoProps) {
+  if (estado === "in-construction") {
+    return (
+      <article className="figma-professional-card figma-professional-card-construction">
+        <div className="figma-professional-construction">
+          <Avatar className="figma-professional-construction-avatar" />
+          <div className="figma-professional-construction-copy">
+            <h3 className="header-small">Estamos construindo a nossa rede de profissionais</h3>
+            <p className="text-medium-regular">Por enquanto, você pode acessar os serviços públicos gratuitos</p>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  if (!profissional) return null;
+
   return (
     <article className="figma-professional-card">
       <div className="figma-professional-head">

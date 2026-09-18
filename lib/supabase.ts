@@ -1,6 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Orientation } from "@/lib/gemini";
-import { instituicoesPadrao, profissionalDeTeste, servicosPublicosPadrao } from "./default-resources";
+import { instituicoesPadrao, servicosPublicosPadrao } from "./default-resources";
 
 let client: SupabaseClient | null = null;
 
@@ -55,10 +55,9 @@ export type InstituicaoApoio = {
 
 export async function buscarProfissionaisPorCategoria(categoria: string) {
   const supabase = getServerClient();
-  if (!supabase) return categoria === "geral" ? [profissionalDeTeste] : [];
+  if (!supabase) return [];
   const { data } = await supabase.from("profissionais_cadastrados").select("*").eq("categoria_resposta_relevante", categoria);
-  if (data && data.length > 0) return data as ProfissionalCadastrado[];
-  return categoria === "geral" ? [profissionalDeTeste] : [];
+  return (data ?? []) as ProfissionalCadastrado[];
 }
 
 export async function buscarServicosPublicosPorCategoria(categoria: string) {

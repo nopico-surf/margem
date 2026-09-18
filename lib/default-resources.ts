@@ -1,21 +1,4 @@
-import type { AcaoContato, InstituicaoApoio, ProfissionalCadastrado, ServicoPublico } from "./supabase";
-
-export const profissionalDeTeste: ProfissionalCadastrado = {
-  id: "00000000-0000-0000-0000-000000000005",
-  nome: "Profissional de teste",
-  especialidade: "psicologo",
-  registro_profissional: "TESTE",
-  anos_experiencia: 5,
-  foto_url: null,
-  bio: "Perfil para teste. Todas as outras funcionalidade funcionam normalmente.",
-  tags: ["Redução de danos", "Recaídas", "Abstinência"],
-  whatsapp_link: null,
-  telefone: null,
-  email: null,
-  localizacao: null,
-  status: "gratuito",
-  categoria_resposta_relevante: "geral",
-};
+import type { AcaoContato, InstituicaoApoio, ServicoPublico } from "./supabase";
 
 const acoes = (items: AcaoContato[]): AcaoContato[] => items;
 
