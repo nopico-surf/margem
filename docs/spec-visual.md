@@ -170,13 +170,13 @@ O número no nome é o valor em px, e nessas duas escalas ele é verdade nos doi
 | `radius/*` | none 0, xs 2, sm 4, md 8, lg 12, xl 16, 2xl 24, 3xl 32, full 999 |
 |---|---|
 | `border/border-width-*` | none 0, hairline 0.5, thin 1, medium 2, large 3, strong 4 |
-| `opacity/opacity-*` | invisible 0, hover 0.08, pressed 0.16, disabled 0.5, muted 0.64, overlay 0.64, visible 1 |
+| `opacity/opacity-*` | invisible 0, hover 0.08, pressed 0.16, disabled 0.5, muted 0.64, visible 1 |
 
 `border-width-hairline` se chamava `border-width-none 2` e valia 0.5, ou seja, um "nenhum" que não era nenhum.
 
-`radius/radius-button` existe e **vale 0**. É token semântico no meio dos primitivos e o valor contradiz o desenho dos botões. Pendente: confirmar se deve valer `radius-full` ou se deve ser apagado.
+`radius/radius-button` existe e **vale 0**, o que contradiz o desenho dos botões, que são arredondados. Fica assim por enquanto, por decisão. Quem for usar esse token precisa saber que ele desenha canto reto.
 
-`opacity-muted` e `opacity-overlay` têm o mesmo valor, 0.64. Pendente: são a mesma coisa com dois nomes, ou um dos dois está errado?
+`opacity-overlay` foi removido em 18/09/2026: tinha o mesmo valor de `opacity-muted`, 0.64, e nenhum uso no arquivo. Ficou um padrão só, `opacity-muted`.
 
 ---
 
@@ -310,6 +310,14 @@ Fora isso: o `:root` do código tem **20 variáveis**, contra 260 no Figma, e vi
 - A rampa `colors/alpha/*` agora segue `neutral-950` nos dois modos. O Desktop tinha `#012a1c` colado à mão.
 - `letter-spacing-1` valia 0 no Desktop e voltou a valer 1.
 - Urbanist não era pendência: a fonte sempre esteve no projeto. Foi erro de leitura na primeira varredura.
+- `opacity-overlay` removido: mesmo valor de `opacity-muted` e nenhum uso. Ficou um padrão só.
+- `radius-button` fica valendo 0 por enquanto, por decisão.
+
+### Publicação da biblioteca
+
+`Margem System`, `Ícones` e `Emojis` são bibliotecas publicadas, e o arquivo `Experiência do produto` assina as três. Toda renomeação feita nelas fica como **edição local até alguém publicar a biblioteca** pela interface do Figma, em Assets. Enquanto isso não acontece, os outros arquivos continuam enxergando os nomes antigos.
+
+Isso não é coisa que o MCP faça: publicar biblioteca é ação manual.
 
 ### Em aberto
 
