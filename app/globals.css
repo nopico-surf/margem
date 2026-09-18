@@ -54,7 +54,7 @@ a,
 label,
 summary,
 [role="button"] {
-  -webkit-tap-highlight-color: var(--colors-alpha-56);
+  -webkit-tap-highlight-color: var(--colors-alpha-32);
 }
 
 button:disabled {
