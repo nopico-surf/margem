@@ -1,6 +1,7 @@
 "use client";
 
-import { AvatarProfissional, IconeInfo } from "@/components/icons";
+import { IconeInfo } from "@/components/icons";
+import { Avatar } from "@/components/ui/Avatar";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -23,7 +24,7 @@ export function CardProfissionaisCompleto({ profissional }: { profissional: Prof
   return (
     <article className="figma-professional-card">
       <div className="figma-professional-head">
-        <AvatarProfissional className="figma-professional-avatar" src={profissional.foto_url} />
+        <Avatar className="figma-professional-avatar" src={profissional.foto_url} />
         <div className="figma-professional-copy">
           <div className="figma-professional-identity">
             <strong>{profissional.nome}</strong>

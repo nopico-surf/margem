@@ -11,7 +11,7 @@ const OPCOES: Array<[string, string]> = [
   ["Para planejar", "figma-section-planning"],
 ];
 
-export function MoreOptions({ isLoading = false }: { isLoading?: boolean }) {
+export function BlocoMaisOpcoes({ isLoading = false }: { isLoading?: boolean }) {
   if (isLoading) {
     return (
       <section className="figma-result-more figma-skeleton-more" aria-hidden="true">

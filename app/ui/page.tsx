@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
+import { Avatar } from "@/components/ui/Avatar";
 import { IconeAgendarWhatsapp, IconeSeta, IconeSetaResultado } from "@/components/icons";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
 import "./galeria.css";
@@ -100,6 +101,17 @@ function forcado(estado: Estado) {
 
 const ESTADOS_DE_CHECKBOX = ["default", "checked", "focus"] as const;
 
+// As duas variantes do `avatar` no Figma, e só elas.
+//
+// Não há um terceiro palco para "foto que não carrega". O componente tem um onError que troca para
+// o fallback, mas ele só pega enquanto a página está viva: se a imagem falha antes do React
+// hidratar, o handler ainda não está no elemento e o navegador fica com o ícone de imagem quebrada.
+// Um palco que mostrasse isso como estado do componente estaria mentindo.
+const ESTADOS_DE_AVATAR: Array<{ nome: string; src?: string; nota: string }> = [
+  { nome: "photo", src: "/assets/professional-avatar.png", nota: "foto do cadastro" },
+  { nome: "fallback", nota: "sem foto cadastrada, e para onde o onError leva" },
+];
+
 export default async function GaleriaDeComponentes() {
   if (process.env.NODE_ENV === "production") notFound();
 
@@ -165,6 +177,24 @@ export default async function GaleriaDeComponentes() {
                 <Checkbox selected={estado === "checked"} />
               </label>
               <span className="label-xx-small galeria-nome">{estado}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Avatar</h2>
+        <p className="text-small-regular galeria-nota">
+          As duas variantes do Figma. Quem escolhe entre elas é o dado, não quem chama o componente.
+        </p>
+        <div className="galeria-estados">
+          {ESTADOS_DE_AVATAR.map((estado) => (
+            <div className="galeria-estado" key={estado.nome}>
+              <div className="galeria-palco">
+                <Avatar className="galeria-avatar" src={estado.src} />
+              </div>
+              <span className="label-xx-small galeria-nome">{estado.nome}</span>
+              <span className="label-xx-small galeria-nota">{estado.nota}</span>
             </div>
           ))}
         </div>

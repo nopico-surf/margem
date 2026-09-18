@@ -7,7 +7,8 @@ import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import { TITULOS_CARDS_HOME } from "@/lib/cards-home";
 import { track } from "@/lib/mixpanel";
 import type { CardResource, OrientationResult } from "@/components/conversa/types";
-import { URLS_DE_ICONE, URL_AVATAR_PADRAO } from "@/components/icons";
+import { URLS_DE_ICONE } from "@/components/icons";
+import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Copy fixa do Figma (1205:16250) para quando o Gemini falha: não varia por motivo de falha.

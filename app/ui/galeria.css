@@ -81,6 +81,19 @@
   cursor: pointer;
 }
 
+/* Avatar
+
+   As medidas repetem `.figma-professional-avatar` do resultado.css porque a galeria não importa
+   aquele arquivo: puxá-lo inteiro traria junto todo o estilo da tela de resultado. Ao mexer lá,
+   mexer aqui. */
+
+.galeria-avatar {
+  width: var(--size-96);
+  height: var(--size-96);
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
 /* Estilos de texto */
 
 .galeria-estilo {

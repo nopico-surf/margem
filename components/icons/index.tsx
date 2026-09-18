@@ -17,6 +17,9 @@ import {
   GlifoQuestionAnswer, GlifoPanTool, GlifoLink, GlifoPlace, GlifoPhone, GlifoMessageFlye,
   GlifoSecurity, GlifoArrowForwardIos, GlifoInfo,
 } from "./glifos";
+// O caminho da foto padrão mora no `avatar`, em components/ui. Aqui ele serve só à chave `avatar`
+// de ICONES_ACAO, que vem do banco, e ao preload de URLS_DE_ICONE.
+import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 
 // Cores que se repetem entre ícones. São as que já estavam dentro de cada SVG.
 const ACAO = { color: "var(--colors-brand-primary-800)" } as const;
@@ -91,12 +94,6 @@ export function IconeLoader({ className }: IconProps) {
 export const IconeInfo = (p: IconProps) => <GlifoInfo {...p} {...SUAVE} />;
 // Segue a cor do botão: branco quando ativo, apagado quando desabilitado.
 export const IconeAgendarWhatsapp = (p: IconProps) => <GlifoWhatsapp {...p} />;
-// Avatar do profissional: o cadastro pode trazer foto própria, e aí a padrão não é usada.
-export const URL_AVATAR_PADRAO = "/assets/professional-avatar-fallback.svg";
-
-export function AvatarProfissional({ src, className }: { src?: string | null; className?: string }) {
-  return <img className={className} src={src || URL_AVATAR_PADRAO} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = URL_AVATAR_PADRAO; }} alt="" />;
-}
 export const IconeCheckboxSelecionado = (p: IconProps) => <GlifoCheckBox {...p} color="var(--colors-brand-primary-800)" />;
 
 /* Contatos

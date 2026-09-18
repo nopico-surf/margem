@@ -6,7 +6,7 @@ import { ResponseError } from "./ResponseError";
 import { ResponseCopy } from "./ResponseCopy";
 import type { OrientationResult } from "./types";
 
-type ResultMessagesProps = {
+type MessagesProps = {
   message: string;
   orientation: OrientationResult | null;
   isLoading: boolean;
@@ -14,7 +14,7 @@ type ResultMessagesProps = {
   onRetry: () => void;
 };
 
-export function ResultMessages({ message, orientation, isLoading, error, onRetry }: ResultMessagesProps) {
+export function Messages({ message, orientation, isLoading, error, onRetry }: MessagesProps) {
   return (
     <section className="figma-result-messages">
       <UserMessage message={message} />

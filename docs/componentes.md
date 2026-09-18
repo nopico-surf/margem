@@ -137,17 +137,18 @@ Convenção do código: `PascalCase.tsx`, mistura de português e inglês sem cr
 | Figma | Código | Situação |
 |---|---|---|
 | `card-header` | `conversa/CardHeader` | Corresponde |
-| `card-background`, `card-bg` | `conversa/CardBackground` | Dois sets no Figma, um componente no código |
+| `container-conteudo` (era `card-bg`), `card-background` | `conversa/ContainerConteudo` | Dois sets no Figma, um componente no código. Nome alinhado em 18/09/2026 |
 | `card-profissionais`, `_card-profissional` | `conversa/CardProfissionais`, `CardProfissionaisCompleto` | Quatro nomes no Figma, dois no código, nenhum par óbvio |
 | `cards-instituicoes-completo` | `conversa/CardsInstituicoes` | Corresponde |
 | `cards-servicos-publicos` | `conversa/CardsServicosPublicos` | Corresponde |
 | `checkbox` | `ui/Checkbox` | Corresponde |
+| `avatar` | `ui/Avatar` | Corresponde desde 18/09/2026. Morava dentro de `icons/index.tsx`, que é arquivo de glifo, e saiu de lá: tem estado de erro, então é componente |
 | `checkbox-group` | `conversa/CheckBoxGroup` | Corresponde. O código escreve `CheckBox`, o Figma escreve `checkbox` |
-| `passos-reais`, `proximos-passos` | `conversa/ChecklistSection` | Dois no Figma, um no código |
+| `passos-reais`, `proximos-passos` | `conversa/SecaoPassos` | Dois no Figma, um no código, por decisão: o desenho é o mesmo e só o conteúdo muda. Qual dos dois é vem da prop `passo`, não mais de comparar o título com uma string |
 | `filter` | `conversa/FiltroEspecialidade` | Nome não corresponde |
-| `bloco-mais-opcoes` | `conversa/MoreOptions` | Nome não corresponde |
-| `messages` | `conversa/ResultMessages` | Nome não corresponde |
-| `loader`, `skeleton-bone`, `screen-loading`, `loader-content` | `conversa/ResponseLoading` | Quatro no Figma, um no código |
+| `bloco-mais-opcoes` | `conversa/BlocoMaisOpcoes` | Corresponde desde 18/09/2026 |
+| `messages` | `conversa/Messages` | Corresponde desde 18/09/2026 |
+| `loader`, `skeleton-bone`, `screen-loading`, `loader-content` | `conversa/ResponseLoading`, mais os `span.figma-skeleton` soltos em 5 componentes | Quatro no Figma, e no código um componente mais um punhado de spans sem dono. Não são a mesma coisa: o `loader` das três estrelas é só a espera do primeiro texto do Gemini, e os `skeleton-bone` desenham os outros blocos da mesma página. **Pendente**, ver a seção 9 |
 | `header` | `layout/Header` | Corresponde. Eram dois no código até 18/09/2026, ver abaixo |
 | `menu-contatos` | `layout/MenuContatos` | Corresponde |
 | `card-home`, `card-home-group`, `header-home` | `app/CardHome`, `CardHomeGroup`, `CardHomeHeader` | Corresponde |
@@ -209,7 +210,7 @@ Onde ainda não existe estado, como o `BotaoMenu` e os cards da home, o realce c
 
 ### Existe no Figma e não no código
 
-`alert`, `avatar`, `badge`, `divider`, `logo`, `scroll-bar`, `icon-button`, `icon-button-group`, `button-group`, `button-select`, `contato-email`, `message`, `template-resultados`, `card-base`, `card-cvv-danger`, `_card-samu`, `_card-policia-militar`, `_card-policia-civil`, `feedback-utilidade-pergunta`, `feedback-utilidade-agradecimento`, `feedback-utilidade-comentario`, e os 12 botões de `Specific buttons`.
+`alert`, `badge`, `divider`, `logo`, `scroll-bar`, `icon-button`, `icon-button-group`, `button-group`, `button-select`, `contato-email`, `message`, `template-resultados`, `card-base`, `card-cvv-danger`, `_card-samu`, `_card-policia-militar`, `_card-policia-civil`, `feedback-utilidade-pergunta`, `feedback-utilidade-agradecimento`, `feedback-utilidade-comentario`, e os 12 botões de `Specific buttons`.
 
 ### Existe no código e não no Figma
 
@@ -345,11 +346,54 @@ Registrado para ninguém apagar por engano:
 
 ---
 
+### Card profissional, o mapeamento pedido
+
+Levantado sem mexer no código. O Figma tem quatro nomes, o código tem dois, e o par não é óbvio
+porque o código pegou emprestado o nome errado.
+
+| Figma | Onde | O que é | Código |
+|---|---|---|---|
+| `card-profissionais` | Margem System, página Card profissional | A seção inteira: título, filtro, lista de cards e o link para os serviços públicos | `conversa/CardProfissionais` |
+| `_card-profissional` | Margem System, mesma página | O card de uma pessoa só. O `_` marca base, feito para ser composto | `conversa/CardProfissionaisCompleto` |
+| `_card-profissionais` | Margem System, mesma página | Base da seção | sem par |
+| `_card-profissionais-completo` | Experiência do produto, página Componentes | A seção montada | sem par |
+
+**De onde veio a confusão.** O único "completo" do Figma é `_card-profissionais-completo`, que é a
+**seção**. O código chamou de `CardProfissionaisCompleto` o **card de uma pessoa**, que no Figma é
+`_card-profissional`, no singular e sem "completo". Os dois componentes do código estão, portanto,
+com os nomes trocados de nível: um é a seção chamada pelo nome da seção, o outro é o card chamado
+pelo nome da seção.
+
+**Mais uma diferença.** No Figma o `state` = default, loading vive nos dois. No código só a seção
+tem `isLoading`: o esqueleto do card é escrito solto dentro de `CardProfissionais`, e
+`CardProfissionaisCompleto` não tem estado de carregando nenhum.
+
+Nada disso foi mexido nesta sessão, como combinado.
+
+---
+
 ## 9. Pendências
 
 Em 18/09/2026, o trabalho de ícone, taxonomia e reconciliação de botão está fechado. O que sobra aqui é o resto do mapeamento Figma/código.
 
 - [ ] **O que existe no Figma e não no código, e vice-versa.** Ver as duas listas no fim da seção 5. Todo o onboarding e toda a proteção de dados existem só no código, sem componente desenhado (estado em 18/09/2026).
+- [ ] **`icon-button`.** `BotaoMenu` e `BotaoFecharMenu` continuam dois componentes com CSS próprio.
+  A unificação ficou parada porque o `icon-button` do Figma é componente solto, não component set:
+  não tem eixo de variante para dar nome aos dois visuais, e inventar um seria nomear pelo lugar.
+- [ ] **Loader e skeleton.** Quatro nomes no Figma para o que no código é `ResponseLoading` mais
+  spans `.figma-skeleton` soltos em `CardProfissionais`, `SecaoPassos`, `BlocoMaisOpcoes`,
+  `CardsInstituicoes` e `CardsServicosPublicos`. Cada componente tem o esqueleto dele, então não é
+  um componente só: é um mapeamento a fazer com o Figma aberto, componente por componente.
+- [ ] **`onError` do avatar não pega antes da hidratação.** Se a foto cadastrada falha enquanto o
+  React ainda não assumiu a página, o handler não está no elemento e o navegador mostra o ícone de
+  imagem quebrada em vez do fallback. Comportamento antigo, preservado nesta sessão.
+- [ ] **`/public/assets/professional-avatar.png` não é referenciado por nenhuma tela.** Só a galeria
+  `/ui` usa, para mostrar a variante `photo`.
 - [ ] `filter`: set mal modelado, 4 valores de `state` cruzados com 2 de `mode` em só 4 variantes. **Ignorado: o componente não está em uso.**
+
+**O avatar foi de 92px para `--size-96`.** Era o único valor fora da escala, que vai de 80 para 96
+sem parar em 92, e estava cru em três declarações de `resultado.css`. Mudança visual de 4px,
+deliberada: o card do profissional ficou 4px mais alto. O esqueleto (`.figma-skeleton-avatar`) foi
+junto, senão a tela saltaria ao terminar de carregar. O Figma será ajustado para 96 também.
 
 Resolvidos em 18/09/2026: cores do `badge` confirmadas; `card-bg` renomeado para `container-conteudo`; variantes do `avatar` nomeadas `photo` e `fallback`; seção `Cards pro dor` virou `Cards home`; `zap` virou `whatsapp`; unificação dos SVGs concluída, de 41 arquivos para 7; os 7 componentes de botão do código reconciliados com o set `button` do Figma, sem alterar o visual (ver seção 5).

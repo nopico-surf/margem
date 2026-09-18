@@ -138,8 +138,8 @@
 }
 
 .figma-professional-avatar {
-  width:92px;
-  height:92px;
+  width:var(--size-96);
+  height:var(--size-96);
   object-fit:cover;
   border-radius:var(--radius-sm);
 }
@@ -333,9 +333,9 @@
 }
 
 .figma-skeleton-avatar {
-  width:92px;
-  height:92px;
-  flex:0 0 92px;
+  width:var(--size-96);
+  height:var(--size-96);
+  flex:0 0 var(--size-96);
 }
 
 .figma-skeleton-professional .figma-professional-head>div {
