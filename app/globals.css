@@ -53,12 +53,10 @@ label:has(input[type="checkbox"]) {
   cursor: pointer;
 }
 
-/* Reserva o espaço da barra de rolagem sempre. Sem isso, ir da /inicio para a /conversa desloca
-   todo o conteúdo centrado uns 7px para a direita enquanto a resposta não carrega, porque a barra
-   some, a viewport ganha a largura dela, e o `margin: auto` recentraliza. */
-html {
-  scrollbar-gutter: stable;
-}
+/* Pendente: ir da /inicio para a /conversa desloca todo o conteúdo centrado uns 7px para a direita
+   enquanto a resposta não carrega, porque a barra de rolagem some, a viewport ganha a largura dela,
+   e o `margin: auto` recentraliza. Um `scrollbar-gutter: stable` aqui resolve, mas reserva 15px em
+   toda tela curta, então fica para decidir depois. */
 
 html,
 body {
