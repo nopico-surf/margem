@@ -203,7 +203,7 @@ Sumiram do CSS as classes `.figma-result-action`, `.figma-result-jump`, `.figma-
 
 Junto veio o irmão do mesmo problema: no touch o `:hover` gruda no elemento depois do toque, porque o dedo não tem como sair de cima. As três regras de hover ficaram dentro de `@media (hover: hover)`, então no touch o botão vai direto do default para o pressionado. Conferido no emulador Android: `(hover: hover)` retorna false lá e true no desktop.
 
-Onde ainda não existe estado, como o `BotaoMenu` e os cards da home, o retângulo azul continua, porque ali ele ainda é a única resposta ao toque.
+Onde ainda não existe estado, como o `BotaoMenu` e os cards da home, o realce continua, porque ali ele é a única resposta ao toque. Mas deixou de ser o azul do navegador: passou a usar `--colors-alpha-56`, aplicado em `button`, `a`, `label`, `summary` e `[role="button"]` no `globals.css`. O `.btn` sobrepõe com transparente, porque tem os estados dele.
 
 **Fora do Button:** `BotaoMenu` e `BotaoFecharMenu`, que são só ícone e no Figma são o componente `icon-button`, outro componente.
 
