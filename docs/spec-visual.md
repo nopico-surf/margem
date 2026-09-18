@@ -329,7 +329,7 @@ Isso não é coisa que o MCP faça: publicar biblioteca é ação manual.
 
 **Os 21 estilos de texto** ainda usam o padrão antigo (`Label/Small-medium`, com maiúscula e barra), diferente do das variáveis. Renomear reescreve o estilo aplicado em cada nó que o usa, então é um trabalho com risco próprio e pede plano de migração.
 
-**Os 13 arquivos de CSS de override.** Hoje o estilo do projeto está espalhado assim:
+**Os 13 arquivos de CSS de override: resolvido em 18/09/2026.** Viraram 10, e nenhum existe mais para corrigir outro. O que havia antes:
 
 ```
 app/globals.css              as ~20 variaveis de token, minificadas em uma linha
@@ -348,6 +348,34 @@ app/response-loader.css
 app/dados-privacidade-modal.css
 ```
 
-O problema não é ter vários arquivos, é o nome deles: `-overrides` e `-alignment` são arquivos que existem para corrigir o arquivo anterior. Quando alguém muda um valor no `flow.css`, não tem como saber se o `home-overrides.css` vai sobrescrever. E as 20 variáveis do `globals.css` são um pedaço arbitrário das 260 do Figma, copiadas à mão, sem nenhum processo que garanta que continuam iguais.
+O problema não era ter vários arquivos, era o nome deles: `-overrides` e `-alignment` existiam para corrigir o arquivo anterior. E havia **dois conjuntos de token paralelos**: o `:root` do `globals.css`, com 20 variáveis, e o `:root` do `figma-result-page.css`, com 15 `--figma-result-*`, repetindo os mesmos valores com outro nome.
 
-Consolidar quer dizer: uma fonte única de token gerada a partir do Figma, e os arquivos de tela organizados por tela, sem camada de correção em cima de correção.
+### Como ficou
+
+```
+app/tokens.css      as 259 variaveis do Figma, geradas, fonte unica
+app/globals.css     imports, apelidos dos nomes antigos, base
+app/home.css        flow + home-overrides + viewport-overrides + hero-radius
+app/onboarding.css  onboarding + a parte de consentimento do interaction-overrides
+app/message-input.css
+app/resultado.css   figma-result-page + figma-result-alignment
+app/dados-privacidade-modal.css
+app/footer.css
+app/side-menu.css
+app/response-loader.css
+```
+
+Os arquivos que se corrigiam foram juntados **na mesma ordem em que eram importados**, então a cascata é idêntica. Cada pedaço ficou marcado com um comentário dizendo de onde veio.
+
+Os nomes antigos (`--brand-800`, `--space-4`, `--figma-result-brand`) continuam existindo, mas sem valor próprio: agora são apelido do token do Figma. Ao mexer numa tela, troque o apelido pelo token e apague a linha do apelido.
+
+### O que isso não resolveu
+
+`.home-hero` é redefinido **quatro vezes** dentro do `home.css`, e `.app-shell` três, com `!important` em algumas. Antes estava espalhado em quatro arquivos, agora está num só, na ordem, com aviso no cabeçalho. Resolver de verdade é escolher qual declaração vale e apagar as outras, e isso muda tela, então fica para uma passagem com olho em cima.
+
+### Como isso foi conferido
+
+Sem abrir o navegador, por duas checagens automáticas:
+
+1. **Colisão de seletor.** `onboarding.css` e `message-input.css` mudaram de posição na cascata. Cruzando os 32 seletores deles com os 30 do grupo da home, a interseção é vazia, então a mudança de ordem não altera nada.
+2. **Declaração a declaração.** Concatenando o CSS antigo e o novo e comparando as declarações uma a uma: 1181 antes, nenhuma sumiu. O que aparece a mais são os tokens novos.

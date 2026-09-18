@@ -1,0 +1,299 @@
+/* Gerado a partir das variáveis do Figma (Margem System, coleção Estilos, modo Mobile).
+   Não editar valor à mão: mudou no Figma, gera de novo.
+
+   O nome aqui é o nome de lá, trocando barra por hífen e sem repetir o grupo quando a variável
+   já o carrega: `spacing/spacing-16` vira `--spacing-16`, e `colors/brand-primary/brand-primary-500`
+   vira `--colors-brand-primary-500`. Isso é o que permite procurar o mesmo token nos dois lados
+   com a mesma string.
+
+   Só o modo Mobile está aqui. O Figma tem também o modo Desktop, onde a escala primitiva muda de
+   valor, mas nenhuma tela consome isso hoje e ligar agora mudaria layout sem pedido. Ver a seção 2
+   de /docs/spec-visual.md.
+
+   Primitivo não vai para tela. `--numbers-*` existe para os outros tokens apontarem para ele.
+   A tela usa spacing, size, radius, font-size, colors. */
+
+:root {
+  /* Escala primitiva. Não usar direto. */
+  --numbers-scale-01: -4px;
+  --numbers-scale-02: -2px;
+  --numbers-scale-03: -1px;
+  --numbers-scale-04: -0.5px;
+  --numbers-scale-05: 0px;
+  --numbers-scale-06: 0.5px;
+  --numbers-scale-07: 1px;
+  --numbers-scale-08: 1.5px;
+  --numbers-scale-09: 2px;
+  --numbers-scale-10: 4px;
+  --numbers-scale-11: 6px;
+  --numbers-scale-12: 8px;
+  --numbers-scale-13: 10px;
+  --numbers-scale-14: 12px;
+  --numbers-scale-15: 14px;
+  --numbers-scale-16: 16px;
+  --numbers-scale-17: 18px;
+  --numbers-scale-18: 20px;
+  --numbers-scale-19: 24px;
+  --numbers-scale-20: 28px;
+  --numbers-scale-21: 32px;
+  --numbers-scale-22: 40px;
+  --numbers-scale-23: 48px;
+  --numbers-scale-24: 56px;
+  --numbers-scale-25: 64px;
+  --numbers-scale-26: 80px;
+  --numbers-scale-27: 96px;
+  --numbers-scale-28: 104px;
+  --numbers-scale-29: 128px;
+
+  /* Cor: marca */
+  --colors-brand-primary-50: #eefdf5;
+  --colors-brand-primary-100: #d3f8e4;
+  --colors-brand-primary-200: #a7f0cc;
+  --colors-brand-primary-300: #7ce5b0;
+  --colors-brand-primary-400: #4dd497;
+  --colors-brand-primary-500: #1fb87c;
+  --colors-brand-primary-600: #089162;
+  --colors-brand-primary-700: #067550;
+  --colors-brand-primary-800: #055c40;
+  --colors-brand-primary-900: #03422c;
+  --colors-brand-primary-950: #012a1c;
+  --colors-brand-secondary-50: #f9ffe8;
+  --colors-brand-secondary-100: #f1ffc9;
+  --colors-brand-secondary-200: #e2ff97;
+  --colors-brand-secondary-300: #cdff66;
+  --colors-brand-secondary-400: #afff46;
+  --colors-brand-secondary-500: #93e62e;
+  --colors-brand-secondary-600: #74c01c;
+  --colors-brand-secondary-700: #589712;
+  --colors-brand-secondary-800: #40720d;
+  --colors-brand-secondary-900: #2c4e09;
+  --colors-brand-secondary-950: #1a3005;
+
+  /* Cor: neutro */
+  --colors-neutral-0: #ffffff;
+  --colors-neutral-50: #f4f6f4;
+  --colors-neutral-100: #e9ecea;
+  --colors-neutral-200: #dee3e0;
+  --colors-neutral-300: #d3dad6;
+  --colors-neutral-400: #aeb4b0;
+  --colors-neutral-500: #89908b;
+  --colors-neutral-600: #6c746f;
+  --colors-neutral-700: #515854;
+  --colors-neutral-800: #373d39;
+  --colors-neutral-900: #242925;
+  --colors-neutral-950: #171b18;
+
+  /* Cor: estado */
+  --colors-status-success-50: #e8f7f0;
+  --colors-status-success-100: #cdefdf;
+  --colors-status-success-200: #a8e4c9;
+  --colors-status-success-300: #8ed5b7;
+  --colors-status-success-400: #5cc298;
+  --colors-status-success-500: #2ea87d;
+  --colors-status-success-600: #087f5b;
+  --colors-status-success-700: #066a4c;
+  --colors-status-success-800: #05563e;
+  --colors-status-success-900: #03422c;
+  --colors-status-success-950: #022a1c;
+  --colors-status-warning-50: #fff7e6;
+  --colors-status-warning-100: #ffedc7;
+  --colors-status-warning-200: #f9dd9c;
+  --colors-status-warning-300: #e6c27f;
+  --colors-status-warning-400: #d9a655;
+  --colors-status-warning-500: #c3872f;
+  --colors-status-warning-600: #a96819;
+  --colors-status-warning-700: #8a5415;
+  --colors-status-warning-800: #70450f;
+  --colors-status-warning-900: #56340c;
+  --colors-status-warning-950: #382208;
+  --colors-status-error-50: #fff1f0;
+  --colors-status-error-100: #ffe0dc;
+  --colors-status-error-200: #ffc4bd;
+  --colors-status-error-300: #e5a39e;
+  --colors-status-error-400: #ef8177;
+  --colors-status-error-500: #d65c50;
+  --colors-status-error-600: #b42318;
+  --colors-status-error-700: #96201a;
+  --colors-status-error-800: #7a1b14;
+  --colors-status-error-900: #5c1510;
+  --colors-status-error-950: #3d0e0a;
+  --colors-status-info-50: #eaf7f7;
+  --colors-status-info-100: #d3eeee;
+  --colors-status-info-200: #b0e0df;
+  --colors-status-info-300: #9ad4d1;
+  --colors-status-info-400: #5fb8b6;
+  --colors-status-info-500: #349396;
+  --colors-status-info-600: #176b78;
+  --colors-status-info-700: #135762;
+  --colors-status-info-800: #104b55;
+  --colors-status-info-900: #0c3940;
+  --colors-status-info-950: #08262b;
+
+  /* Cor: transparência sobre neutral-950. alpha-0 é o único fora do padrão: é branco a 80%. */
+  --colors-alpha-0: rgb(255 255 255 / 80%);
+  --colors-alpha-8: rgb(23 27 24 / 8%);
+  --colors-alpha-16: rgb(23 27 24 / 16%);
+  --colors-alpha-24: rgb(23 27 24 / 24%);
+  --colors-alpha-32: rgb(23 27 24 / 32%);
+  --colors-alpha-40: rgb(23 27 24 / 40%);
+  --colors-alpha-48: rgb(23 27 24 / 48%);
+  --colors-alpha-56: rgb(23 27 24 / 56%);
+  --colors-alpha-64: rgb(23 27 24 / 64%);
+  --colors-alpha-72: rgb(23 27 24 / 72%);
+  --colors-alpha-80: rgb(23 27 24 / 80%);
+  --colors-alpha-88: rgb(23 27 24 / 88%);
+
+  /* Tipografia */
+  --font-family-title: urbanist;
+  --font-family-text: inter;
+  --font-weight-thin: 100;
+  --font-weight-extra-light: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semi-bold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extra-bold: 800;
+  --font-weight-black: 900;
+  --font-size-3xs: 8px;
+  --font-size-2xs: 10px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  --font-size-4xl: 48px;
+  --font-size-5xl: 56px;
+  --font-size-6xl: 64px;
+  --font-size-7xl: 80px;
+  --font-size-8xl: 96px;
+  --font-size-9xl: 104px;
+  --line-height-3xs: 8px;
+  --line-height-2xs: 10px;
+  --line-height-xs: 12px;
+  --line-height-sm: 14px;
+  --line-height-md: 16px;
+  --line-height-lg: 18px;
+  --line-height-xl: 20px;
+  --line-height-2xl: 24px;
+  --line-height-3xl: 28px;
+  --line-height-4xl: 32px;
+  --line-height-5xl: 40px;
+  --line-height-6xl: 48px;
+  --line-height-7xl: 56px;
+  --line-height-8xl: 64px;
+  --line-height-9xl: 80px;
+  --line-height-10xl: 96px;
+  --letter-spacing-minus-4: -4px;
+  --letter-spacing-minus-2: -2px;
+  --letter-spacing-0: 0px;
+  --letter-spacing-0-25: 0.25px;
+  --letter-spacing-0-5: 0.5px;
+  --letter-spacing-1: 1px;
+  --letter-spacing-2: 2px;
+  --letter-spacing-4: 4px;
+
+  /* Espaço entre elementos */
+  --spacing-0: 0px;
+  --spacing-1: 1px;
+  --spacing-2: 2px;
+  --spacing-4: 4px;
+  --spacing-6: 6px;
+  --spacing-8: 8px;
+  --spacing-10: 10px;
+  --spacing-12: 12px;
+  --spacing-14: 14px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-80: 80px;
+  --spacing-96: 96px;
+  --spacing-128: 128px;
+
+  /* Largura e altura */
+  --size-0: 0px;
+  --size-1: 1px;
+  --size-2: 2px;
+  --size-4: 4px;
+  --size-6: 6px;
+  --size-8: 8px;
+  --size-12: 12px;
+  --size-16: 16px;
+  --size-20: 20px;
+  --size-24: 24px;
+  --size-32: 32px;
+  --size-40: 40px;
+  --size-48: 48px;
+  --size-56: 56px;
+  --size-64: 64px;
+  --size-80: 80px;
+  --size-96: 96px;
+
+  /* Controles */
+  --control-icon-xs: 12px;
+  --control-icon-sm: 16px;
+  --control-icon-md: 20px;
+  --control-icon-lg: 24px;
+  --control-icon-xl: 32px;
+  --control-icon-2xl: 40px;
+  --control-icon-3xl: 56px;
+  --control-icon-4xl: 72px;
+  --control-icon-5xl: 86px;
+  --control-avatar-xs: 24px;
+  --control-avatar-sm: 32px;
+  --control-avatar-md: 40px;
+  --control-avatar-lg: 48px;
+  --control-avatar-xl: 64px;
+  --control-height-sm: 32px;
+  --control-height-md: 40px;
+  --control-height-lg: 48px;
+  --control-height-xl: 56px;
+
+  /* Borda e raio. radius-button vale 0 no Figma, ver /docs/spec-visual.md. */
+  --border-width-none: 0px;
+  --border-width-hairline: 0.5px;
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-large: 3px;
+  --border-width-strong: 4px;
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-full: 999px;
+  --radius-button: 0px;
+
+  /* Opacidade */
+  --opacity-invisible: 0;
+  --opacity-hover: 0.08;
+  --opacity-pressed: 0.16;
+  --opacity-disabled: 0.5;
+  --opacity-muted: 0.64;
+  --opacity-visible: 1;
+
+  /* Layout */
+  --layout-page-padding-mobile: 16px;
+  --layout-page-padding-tablet: 24px;
+  --layout-page-padding-desktop: 32px;
+  --layout-grid-gutter-mobile: 16px;
+  --layout-grid-gutter-tablet: 24px;
+  --layout-grid-gutter-desktop: 32px;
+  --layout-content-max-width-sm: 640px;
+  --layout-content-max-width-md: 768px;
+  --layout-content-max-width-lg: 1024px;
+  --layout-content-max-width-xl: 1280px;
+  --layout-content-max-width-2xl: 1440px;
+  --layout-content-max-width-3xl: 1920px;
+  --layout-page-background: #ffffff;
+}
