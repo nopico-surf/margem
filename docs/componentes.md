@@ -257,9 +257,18 @@ Ao mexer em ícone, conferir se existe regra de CSS mirando `img` naquele compon
 
 No Figma o componente do WhatsApp se chama `zap`. No código ele é `GlifoWhatsapp`, porque `zap` não diz a ninguém que aquilo é o WhatsApp. É a única divergência proposital entre os dois lados, e está registrada no cabeçalho de `glifos.tsx`. Se incomodar, o certo é renomear no Figma, não no código.
 
-### O que falta
+### Estado final
 
-Os 8 ícones que sobraram como arquivo (`acao-chat`, `acao-libras`, `acao-link`, `acao-local`, `acao-telefone`, `acao-telegram`, `seguranca`, `seta-card`, `info`) não têm duplicata, então não entraram nessa leva. Quando forem renomeados para o nome do glifo do Figma, vale converter junto.
+`/public/icons` tem **7 arquivos**, contra 41 no começo:
+
+- `logo-margem.svg`, que é marca e não ícone
+- os 6 emojis dos cards da home, que são ilustração colorida e não dá para recolorir
+
+**Todo o resto é glifo inline**: 16 componentes em `components/icons/glifos.tsx`, com o nome do componente do Figma em PascalCase, e cor, opacidade e tamanho como parâmetro.
+
+`components/icons/index.tsx` é a ponte: `glifos.tsx` tem o desenho sem cor, e cada export do index diz onde o ícone aparece e com que cor e tamanho.
+
+`ICONES_ACAO` passou a mapear componente em vez de URL, mantendo as chaves, que vêm do banco. `URLS_DE_ICONE`, usada no preload da tela de resultado, ficou com dois itens: o logo e o avatar padrão. Glifo inline já vem no HTML e não tem o que pré-carregar.
 
 ---
 

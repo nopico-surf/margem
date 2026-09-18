@@ -1,16 +1,30 @@
 // Um componente por glifo. A cor, a opacidade e o tamanho são parâmetro, e é por isso que o mesmo
-// desenho serve a todos os lugares onde ele aparece: antes eram 17 arquivos para estes 7 desenhos,
-// diferindo só em cor e em escala.
+// desenho serve a todos os lugares onde ele aparece. Estes 16 desenhos estavam espalhados em 26
+// arquivos, que diferiam só em cor e em escala.
 //
-// De onde cada um veio, todos do arquivo Ícones do Figma (PPrJDgaNCTx52XSQSVcopK, página Icons):
+// O nome do componente é o nome do glifo no Figma, em PascalCase. Todos vêm do arquivo Ícones
+// (PPrJDgaNCTx52XSQSVcopK, página Icons):
 //
-//   GlifoEmail      email              (Communication)
-//   GlifoWhatsapp   zap                (Social)   no Figma o componente se chama `zap`
-//   GlifoInstagram  instagram          (Social)
-//   GlifoMenu       menu               (Navigation)
-//   GlifoClose      close              (Navigation)
-//   GlifoSetaBaixo  double_arrow_down  (Navigation)
-//   GlifoCheckBox   check_box          (Toggle)
+//   GlifoEmail            email               (Communication)
+//   GlifoPhone            phone               (Communication)
+//   GlifoWhatsapp         zap                 (Social)   ver a nota abaixo
+//   GlifoInstagram        instagram           (Social)
+//   GlifoMenu             menu                (Navigation)
+//   GlifoClose            close               (Navigation)
+//   GlifoDoubleArrowDown  double_arrow_down   (Navigation)
+//   GlifoArrowForwardIos  arrow_forward_ios   (Navigation)
+//   GlifoCheckBox         check_box           (Toggle)
+//   GlifoQuestionAnswer   question_answer     (Action)
+//   GlifoPanTool          pan_tool            (Action)
+//   GlifoInfo             info                (Action)
+//   GlifoLink             link                (Content)
+//   GlifoPlace            place               (Maps)
+//   GlifoMessageFlye      message_flye        (AV)
+//   GlifoSecurity         security            (Hardware)
+//
+// A única divergência proposital: no Figma o componente do WhatsApp se chama `zap`, e aqui ele é
+// GlifoWhatsapp, porque `zap` não diz a ninguém que aquilo é o WhatsApp. Se for para alinhar, o
+// certo é renomear no Figma.
 //
 // PARA TROCAR UM DESENHO: exportar o componente do Figma como SVG e substituir aqui só o conteúdo
 // do `d`, mantendo o viewBox. Não colar o SVG inteiro: `fill` precisa continuar sendo `{color}` e
@@ -109,7 +123,7 @@ export function GlifoClose({ className, color = "currentColor", opacity = 1, siz
   );
 }
 
-export function GlifoSetaBaixo({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+export function GlifoDoubleArrowDown({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
   return (
     <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <g id="SetaBaixo-double_arrow_down" clipPath="url(#SetaBaixo-clip0_0_118)">
@@ -137,6 +151,152 @@ export function GlifoCheckBox({ className, color = "currentColor", opacity = 1, 
       <defs>
       <clipPath id="CheckBox-clip0_0_9">
       <rect width="24" height="24" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoQuestionAnswer({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="QuestionAnswer-question_answer" clipPath="url(#QuestionAnswer-clip0_0_7264)">
+      <g id="QuestionAnswer-Vector">
+      </g>
+      <path id="QuestionAnswer-Vector_2" d="M10 2.66667V7.33333H3.44667L3.05333 7.72667L2.66667 8.11333V2.66667H10ZM10.6667 1.33333H2C1.63333 1.33333 1.33333 1.63333 1.33333 2V11.3333L4 8.66667H10.6667C11.0333 8.66667 11.3333 8.36667 11.3333 8V2C11.3333 1.63333 11.0333 1.33333 10.6667 1.33333ZM14 4H12.6667V10H4V11.3333C4 11.7 4.3 12 4.66667 12H12L14.6667 14.6667V4.66667C14.6667 4.3 14.3667 4 14 4Z" fill={color} fillOpacity={opacity}/>
+      </g>
+      <defs>
+      <clipPath id="QuestionAnswer-clip0_0_7264">
+      <rect width="16" height="16" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoPanTool({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="PanTool-pan_tool" clipPath="url(#PanTool-clip0_0_7120)">
+      <g id="PanTool-Vector">
+      </g>
+      <path id="PanTool-Vector_2" d="M12 16H7.63333C6.91333 16 6.20667 15.7 5.70667 15.18L0.84 10.1067L2.22 8.88667C2.63333 8.52 3.24 8.44667 3.72667 8.70667L5.33333 9.56V3.19333C5.33333 2.27333 6.08 1.52667 7 1.52667C7.11333 1.52667 7.22667 1.54 7.34 1.56C7.4 0.693333 8.12 0.00666667 9 0.00666667C9.57333 0.00666667 10.0733 0.293333 10.3733 0.733333C10.5667 0.653333 10.78 0.613333 11 0.613333C11.92 0.613333 12.6667 1.36 12.6667 2.28V2.46667C12.7733 2.44667 12.8867 2.43333 13 2.43333C13.92 2.43333 14.6667 3.18 14.6667 4.1V13.3333C14.6667 14.8067 13.4733 16 12 16ZM2.76 10.1867L6.66667 14.2533C6.92 14.5133 7.26667 14.6667 7.62667 14.6667H12C12.7333 14.6667 13.3333 14.0667 13.3333 13.3333V4.1C13.3333 3.91333 13.1867 3.76667 13 3.76667C12.8133 3.76667 12.6667 3.91333 12.6667 4.1V8H11.3333V2.28C11.3333 2.09333 11.1867 1.94667 11 1.94667C10.8133 1.94667 10.6667 2.09333 10.6667 2.28V8H9.33333V1.67333C9.33333 1.48667 9.18667 1.34 9 1.34C8.81333 1.34 8.66667 1.48667 8.66667 1.67333V8H7.33333V3.19333C7.33333 3.00667 7.18667 2.86 7 2.86C6.81333 2.86 6.66667 3.01333 6.66667 3.19333V11.7733L3.1 9.88667L2.76 10.1867V10.1867Z" fill={color} fillOpacity={opacity}/>
+      </g>
+      <defs>
+      <clipPath id="PanTool-clip0_0_7120">
+      <rect width="16" height="16" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoLink({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="Link-link" clipPath="url(#Link-clip0_0_7324)">
+      <g id="Link-Vector">
+      </g>
+      <path id="Link-Vector_2" d="M11.3333 4.66667H9.33333C8.96667 4.66667 8.66667 4.96667 8.66667 5.33333C8.66667 5.7 8.96667 6 9.33333 6H11.3333C12.4333 6 13.3333 6.9 13.3333 8C13.3333 9.1 12.4333 10 11.3333 10H9.33333C8.96667 10 8.66667 10.3 8.66667 10.6667C8.66667 11.0333 8.96667 11.3333 9.33333 11.3333H11.3333C13.1733 11.3333 14.6667 9.84 14.6667 8C14.6667 6.16 13.1733 4.66667 11.3333 4.66667ZM5.33333 8C5.33333 8.36667 5.63333 8.66667 6 8.66667H10C10.3667 8.66667 10.6667 8.36667 10.6667 8C10.6667 7.63333 10.3667 7.33333 10 7.33333H6C5.63333 7.33333 5.33333 7.63333 5.33333 8ZM6.66667 10H4.66667C3.56667 10 2.66667 9.1 2.66667 8C2.66667 6.9 3.56667 6 4.66667 6H6.66667C7.03333 6 7.33333 5.7 7.33333 5.33333C7.33333 4.96667 7.03333 4.66667 6.66667 4.66667H4.66667C2.82667 4.66667 1.33333 6.16 1.33333 8C1.33333 9.84 2.82667 11.3333 4.66667 11.3333H6.66667C7.03333 11.3333 7.33333 11.0333 7.33333 10.6667C7.33333 10.3 7.03333 10 6.66667 10Z" fill={color} fillOpacity={opacity}/>
+      </g>
+      <defs>
+      <clipPath id="Link-clip0_0_7324">
+      <rect width="16" height="16" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoPlace({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="Place-place" clipPath="url(#Place-clip0_0_7108)">
+      <g id="Place-Vector">
+      </g>
+      <path id="Place-Vector_2" d="M8 8C7.175 8 6.5 7.34 6.5 6.53333C6.5 5.72667 7.175 5.06667 8 5.06667C8.825 5.06667 9.5 5.72667 9.5 6.53333C9.5 7.34 8.825 8 8 8ZM12.5 6.68C12.5 4.018 10.5125 2.13333 8 2.13333C5.4875 2.13333 3.5 4.018 3.5 6.68C3.5 8.396 4.9625 10.6693 8 13.3827C11.0375 10.6693 12.5 8.396 12.5 6.68ZM8 0.666667C11.15 0.666667 14 3.028 14 6.68C14 9.11467 11.9975 11.9967 8 15.3333C4.0025 11.9967 2 9.11467 2 6.68C2 3.028 4.85 0.666667 8 0.666667Z" fill={color} fillOpacity={opacity}/>
+      </g>
+      <defs>
+      <clipPath id="Place-clip0_0_7108">
+      <rect width="16" height="16" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoPhone({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="Phone-phone" clipPath="url(#Phone-clip0_0_7080)">
+      <g id="Phone-Vector">
+      </g>
+      <path id="Phone-Vector_2" d="M4.36 3.33333C4.4 3.92667 4.5 4.50667 4.66 5.06L3.86 5.86C3.58667 5.06 3.41333 4.21333 3.35333 3.33333H4.36V3.33333ZM10.9333 11.3467C11.5 11.5067 12.08 11.6067 12.6667 11.6467V12.64C11.7867 12.58 10.94 12.4067 10.1333 12.14L10.9333 11.3467V11.3467ZM5 2H2.66667C2.3 2 2 2.3 2 2.66667C2 8.92667 7.07333 14 13.3333 14C13.7 14 14 13.7 14 13.3333V11.0067C14 10.64 13.7 10.34 13.3333 10.34C12.5067 10.34 11.7 10.2067 10.9533 9.96C10.8867 9.93333 10.8133 9.92667 10.7467 9.92667C10.5733 9.92667 10.4067 9.99333 10.2733 10.12L8.80667 11.5867C6.92 10.62 5.37333 9.08 4.41333 7.19333L5.88 5.72667C6.06667 5.54 6.12 5.28 6.04667 5.04667C5.8 4.3 5.66667 3.5 5.66667 2.66667C5.66667 2.3 5.36667 2 5 2Z" fill={color} fillOpacity={opacity}/>
+      </g>
+      <defs>
+      <clipPath id="Phone-clip0_0_7080">
+      <rect width="16" height="16" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoMessageFlye({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="MessageFlye-message_flye">
+      <path id="MessageFlye-Vector" d="M13.657 1.45424C13.7502 1.52025 13.8171 1.58528 13.8777 1.68199C13.8884 1.69814 13.899 1.71428 13.91 1.73092C14.0409 1.96828 14.0093 2.24463 13.9395 2.49544C13.8855 2.6746 13.8259 2.85187 13.7657 3.029C13.7352 3.11889 13.7055 3.20902 13.6758 3.29914C13.6335 3.42732 13.5909 3.55545 13.5481 3.68348C13.4568 3.95687 13.3687 4.23127 13.2815 4.50601C13.2401 4.63631 13.1985 4.76651 13.1568 4.89671C13.1482 4.92359 13.1396 4.95046 13.1307 4.97815C13.002 5.37993 12.8717 5.78123 12.7417 6.1826C12.5824 6.67411 12.4237 7.16577 12.2666 7.65796C12.0972 8.18862 11.9259 8.71864 11.7542 9.24856C11.5867 9.76538 11.42 10.2824 11.2548 10.8C11.1471 11.1374 11.0387 11.4745 10.9295 11.8115C10.9234 11.8305 10.9172 11.8495 10.9109 11.8691C10.8545 12.0433 10.798 12.2174 10.7415 12.3915C10.5676 12.9271 10.5676 12.9271 10.3983 13.4641C10.391 13.4876 10.3837 13.5112 10.3762 13.5354C10.3441 13.6388 10.3122 13.7422 10.2809 13.8459C10.1814 14.1712 10.07 14.4099 9.77721 14.5995C9.59043 14.688 9.31689 14.6813 9.12197 14.6244C8.85213 14.4992 8.72025 14.3005 8.61765 14.0306C8.60611 13.9967 8.59472 13.9628 8.58348 13.9289C8.57709 13.91 8.5707 13.8911 8.56412 13.8717C8.54299 13.8091 8.52208 13.7465 8.50116 13.6839C8.48597 13.6388 8.47077 13.5936 8.45555 13.5485C8.41444 13.4264 8.37353 13.3043 8.33269 13.1821C8.30716 13.1058 8.28159 13.0295 8.25601 12.9532C8.16676 12.6869 8.0777 12.4206 7.98879 12.1542C7.90589 11.9058 7.82256 11.6577 7.73902 11.4095C7.66728 11.1964 7.59587 10.9831 7.52471 10.7697C7.48222 10.6423 7.43959 10.515 7.39662 10.3878C7.35627 10.2683 7.31633 10.1487 7.27671 10.0289C7.26209 9.98497 7.24732 9.94107 7.23239 9.89722C7.21207 9.83744 7.19227 9.77751 7.17261 9.71751C7.16656 9.70014 7.16052 9.68276 7.15429 9.66486C7.12857 9.58456 7.11902 9.53692 7.14234 9.45488C7.17073 9.40348 7.19948 9.35534 7.23383 9.30774C7.24584 9.29092 7.25786 9.27411 7.27024 9.25678C7.2898 9.22981 7.2898 9.22981 7.30975 9.20229C7.33819 9.16255 7.36661 9.12279 7.39502 9.08303C7.40986 9.06234 7.4247 9.04164 7.43999 9.02032C7.51423 8.91638 7.58739 8.81169 7.66057 8.707C7.67561 8.68549 7.69066 8.66399 7.70617 8.64183C7.84104 8.44901 7.97538 8.25582 8.1097 8.06262C8.26728 7.83603 8.4255 7.6099 8.58391 7.38389C8.65946 7.27607 8.73495 7.16821 8.81045 7.06036C8.84076 7.01706 8.87108 6.97375 8.9014 6.93045C8.92391 6.8983 8.92391 6.8983 8.94687 6.86549C9.0833 6.67062 9.0833 6.67062 9.12878 6.60566C9.15908 6.56238 9.18938 6.5191 9.21967 6.47581C9.29571 6.36717 9.3718 6.25858 9.44802 6.15006C9.65347 5.85738 9.85654 5.56316 10.0578 5.26757C9.84365 5.40769 9.63373 5.55333 9.42432 5.70037C9.29109 5.79389 9.15751 5.88685 9.02321 5.97884C8.77806 6.14684 8.53429 6.31682 8.29041 6.48665C8.1402 6.59124 7.98993 6.69572 7.83966 6.80022C7.71284 6.88842 7.58604 6.97665 7.45927 7.06493C7.22526 7.22786 6.99116 7.39062 6.75586 7.5517C6.66038 7.61718 6.56538 7.68329 6.47069 7.74991C6.44795 7.7659 6.42521 7.78189 6.40178 7.79836C6.35803 7.82917 6.31432 7.86002 6.27065 7.89095C6.2305 7.91922 6.19002 7.94703 6.14918 7.97429C6.0814 8.02015 6.0814 8.02015 6.0231 8.07424C5.91402 8.16263 5.83897 8.20703 5.69606 8.19556C5.57347 8.16783 5.45585 8.12551 5.33754 8.0836C5.29178 8.06842 5.246 8.05334 5.20017 8.03837C5.07619 7.99749 4.95277 7.95509 4.82941 7.91237C4.70001 7.86783 4.57017 7.82465 4.44037 7.7813C4.22245 7.7083 4.00487 7.63438 3.78749 7.55982C3.50886 7.46426 3.22975 7.37022 2.95045 7.27665C2.70987 7.19605 2.46952 7.11478 2.22921 7.03339C2.15218 7.00733 2.07513 6.98136 1.99808 6.95539C1.87677 6.91447 1.75561 6.87313 1.63456 6.83148C1.59023 6.81628 1.54586 6.80122 1.50144 6.7863C1.16949 6.67462 0.878773 6.55012 0.712043 6.22304C0.671006 6.12288 0.6648 6.02609 0.667075 5.91876C0.667395 5.9004 0.667716 5.88204 0.668046 5.86313C0.676118 5.61278 0.751341 5.4925 0.912318 5.30381C1.14669 5.11278 1.47073 5.04445 1.75469 4.95543C1.86859 4.91972 1.98236 4.88361 2.09614 4.84752C2.15775 4.82799 2.21936 4.80847 2.28097 4.78897C2.62451 4.68016 2.96734 4.56918 3.31017 4.45817C3.49113 4.39957 3.67211 4.34106 3.8531 4.28257C3.87077 4.27686 3.88844 4.27115 3.90664 4.26527C4.2401 4.15753 4.57383 4.05065 4.90767 3.94409C5.44002 3.77417 5.97173 3.60232 6.50335 3.43013C6.99492 3.27092 7.48664 3.11223 7.97889 2.95513C8.48712 2.79294 8.99479 2.62906 9.50232 2.46472C10.372 2.18314 10.372 2.18314 10.7917 2.04798C10.8385 2.03289 10.8385 2.03289 10.8864 2.01749C11.0377 1.96878 11.1891 1.92019 11.3405 1.87181C11.3986 1.85327 11.4566 1.83472 11.5146 1.81617C11.5427 1.80718 11.5709 1.79819 11.5998 1.78893C11.7668 1.7354 11.9333 1.68079 12.0996 1.62519C12.2043 1.59023 12.3091 1.55572 12.4139 1.52126C12.4619 1.50535 12.5098 1.48923 12.5576 1.47286C12.928 1.34617 13.2945 1.24401 13.657 1.45424Z" fill={color} fillOpacity={opacity}/>
+      </g>
+    </svg>
+  );
+}
+
+export function GlifoSecurity({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="Security-security" clipPath="url(#Security-clip0_0_100)">
+      <g id="Security-Vector">
+      </g>
+      <path id="Security-Vector_2" d="M8 0.666667L2 3.33333V7.33333C2 11.0333 4.56 14.4933 8 15.3333C11.44 14.4933 14 11.0333 14 7.33333V3.33333L8 0.666667ZM8 7.99333H12.6667C12.3133 10.74 10.48 13.1867 8 13.9533V8H3.33333V4.2L8 2.12667V7.99333Z" fill={color} fillOpacity={opacity}/>
+      </g>
+      <defs>
+      <clipPath id="Security-clip0_0_100">
+      <rect width="16" height="16" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoArrowForwardIos({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="ArrowForwardIos-arrow_forward_ios" clipPath="url(#ArrowForwardIos-clip0_0_42)">
+      <g id="ArrowForwardIos-Vector" opacity="0.87">
+      </g>
+      <path id="ArrowForwardIos-Vector_2" d="M4.92 14.0067C5.24667 14.3333 5.77333 14.3333 6.1 14.0067L11.64 8.46667C11.9 8.20667 11.9 7.78667 11.64 7.52667L6.1 1.98667C5.77333 1.66 5.24667 1.66 4.92 1.98667C4.59333 2.31333 4.59333 2.84 4.92 3.16667L9.74667 8L4.91333 12.8333C4.59333 13.1533 4.59333 13.6867 4.92 14.0067V14.0067Z" fill={color} fillOpacity={opacity} />
+      </g>
+      <defs>
+      <clipPath id="ArrowForwardIos-clip0_0_42">
+      <rect width="16" height="16" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoInfo({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="Info-info" clipPath="url(#Info-clip0_0_7208)">
+      <g id="Info-Vector">
+      </g>
+      <path id="Info-Vector_2" d="M7.33333 4.66667H8.66667V6H7.33333V4.66667ZM7.33333 7.33333H8.66667V11.3333H7.33333V7.33333ZM8 1.33333C4.32 1.33333 1.33333 4.32 1.33333 8C1.33333 11.68 4.32 14.6667 8 14.6667C11.68 14.6667 14.6667 11.68 14.6667 8C14.6667 4.32 11.68 1.33333 8 1.33333ZM8 13.3333C5.06 13.3333 2.66667 10.94 2.66667 8C2.66667 5.06 5.06 2.66667 8 2.66667C10.94 2.66667 13.3333 5.06 13.3333 8C13.3333 10.94 10.94 13.3333 8 13.3333Z" fill={color} fillOpacity={opacity} />
+      </g>
+      <defs>
+      <clipPath id="Info-clip0_0_7208">
+      <rect width="16" height="16" fill="white"/>
       </clipPath>
       </defs>
     </svg>

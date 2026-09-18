@@ -1,17 +1,26 @@
-// Cada ícone é um asset exportado do Figma e salvo em /public/icons. Um componente por ícone: as URLs
-// não se repetem mais dentro das telas.
+// Este arquivo é a ponte entre o desenho e a tela: `glifos.tsx` tem o desenho, sem cor; aqui cada
+// export diz onde o ícone aparece e com que cor e tamanho.
 //
-// O nome do arquivo é o nome do glifo no Figma, nunca o lugar onde ele aparece. Ícone da biblioteca
-// Material vem em inglês (`question_answer`, `place`); emoji nosso vem em português
-// (`cerebro-emocional`). Regra completa em /docs/componentes.md, seção 6.
+// Todo ícone é glifo inline. Continuam sendo arquivo em /public/icons só o logo, que é marca, e os
+// seis emojis dos cards da home, que são ilustração colorida e não dá para recolorir.
 //
-// Ainda sobram nomes com sufixo (Menu, Rodape, Resultado): são o mesmo glifo em cores ou tamanhos
-// diferentes, e unificar exige mover a cor do arquivo para o CSS com currentColor. Enquanto isso não
-// for feito, unificar aqui mudaria o visual da tela.
+// O nome do glifo é o nome do componente no Figma, nunca o lugar onde ele aparece. Foi nomear por
+// lugar que gerou `whatsapp-menu`, `whatsapp-rodape` e `whatsapp-card-profissional` para um desenho
+// só. Regra completa em /docs/componentes.md, seção 6.
+//
+// CUIDADO AO MEXER: como estes ícones são <svg> e não <img>, qualquer regra de CSS escrita como
+// `.alguma-coisa img` não pega neles. Ao acrescentar um ícone, conferir se o componente tem regra
+// assim e estender para `svg`.
 
 import {
-  GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoSetaBaixo, GlifoCheckBox,
+  GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoDoubleArrowDown, GlifoCheckBox,
+  GlifoQuestionAnswer, GlifoPanTool, GlifoLink, GlifoPlace, GlifoPhone, GlifoMessageFlye,
+  GlifoSecurity, GlifoArrowForwardIos, GlifoInfo,
 } from "./glifos";
+
+// Cores que se repetem entre ícones. São as que já estavam dentro de cada SVG.
+const ACAO = { color: "#055C40" } as const;
+const SUAVE = { color: "#171B18", opacity: 0.64 } as const;
 
 type IconProps = { className?: string };
 
@@ -41,13 +50,13 @@ export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="#012
 /* Setas */
 
 // seta.svg e seta-resultado.svg eram o mesmo traçado na mesma cor, exportados duas vezes.
-export const IconeSeta = (p: IconProps) => <GlifoSetaBaixo {...p} color="#055C40" />;
+export const IconeSeta = (p: IconProps) => <GlifoDoubleArrowDown {...p} color="#055C40" />;
 export const IconeSetaResultado = IconeSeta;
-export const IconeSetaCard = icone("/icons/seta-card.svg");
+export const IconeSetaCard = (p: IconProps) => <GlifoArrowForwardIos {...p} {...SUAVE} />;
 
 /* Home */
 
-export const IconeSeguranca = icone("/icons/seguranca.svg");
+export const IconeSeguranca = (p: IconProps) => <GlifoSecurity {...p} {...ACAO} />;
 
 // Um ícone por card de caminho, na ordem em que os cards aparecem na home. Cada um é um emoji do
 // arquivo Emojis do Figma, e o nome do arquivo é o nome do componente lá.
@@ -78,7 +87,7 @@ export function IconeLoader({ className }: IconProps) {
   );
 }
 
-export const IconeInfo = icone("/icons/info.svg");
+export const IconeInfo = (p: IconProps) => <GlifoInfo {...p} {...SUAVE} />;
 // Mesmo desenho do WhatsApp, em branco, porque fica sobre o fundo escuro do botão de agendar.
 export const IconeAgendarWhatsapp = (p: IconProps) => <GlifoWhatsapp {...p} color="white" />;
 // Avatar do profissional: o cadastro pode trazer foto própria, e aí a padrão não é usada.
@@ -106,40 +115,29 @@ export const IconeEmailRodape = (p: IconProps) => <GlifoEmail {...p} {...CONTATO
 /* Ações de recurso
    A chave vem do banco (campo `icon` de cada ação), então a busca é por nome, não por componente. */
 
-// Os que ainda são arquivo continuam sendo arquivo. Os que tinham cópia viraram glifo com a cor do
-// lugar. A chave não mudou, porque ela vem do banco.
+// A chave não mudou, porque ela vem do banco. `logo` e `avatar` seguem sendo arquivo: um é marca, o
+// outro é a foto padrão do profissional.
 export const ICONES_ACAO = {
-  info: icone("/icons/info.svg"),
-  phone: icone("/icons/acao-telefone.svg"),
-  chat: icone("/icons/acao-chat.svg"),
-  telegram: icone("/icons/acao-telegram.svg"),
-  libras: icone("/icons/acao-libras.svg"),
-  place: icone("/icons/acao-local.svg"),
-  link: icone("/icons/acao-link.svg"),
+  info: (p: IconProps) => <GlifoInfo {...p} {...SUAVE} />,
+  phone: (p: IconProps) => <GlifoPhone {...p} {...ACAO} />,
+  chat: (p: IconProps) => <GlifoQuestionAnswer {...p} {...ACAO} />,
+  telegram: (p: IconProps) => <GlifoMessageFlye {...p} {...ACAO} />,
+  libras: (p: IconProps) => <GlifoPanTool {...p} {...ACAO} />,
+  place: (p: IconProps) => <GlifoPlace {...p} {...ACAO} />,
+  link: (p: IconProps) => <GlifoLink {...p} {...ACAO} />,
   logo: icone("/icons/logo-margem.svg", "Margem"),
   avatar: icone(URL_AVATAR_PADRAO),
-  email: (p: IconProps) => <GlifoEmail {...p} color="#055C40" />,
-  whatsapp: (p: IconProps) => <GlifoWhatsapp {...p} color="#055C40" />,
+  email: (p: IconProps) => <GlifoEmail {...p} {...ACAO} />,
+  whatsapp: (p: IconProps) => <GlifoWhatsapp {...p} {...ACAO} />,
   whatsappSchedule: (p: IconProps) => <GlifoWhatsapp {...p} color="white" />,
   menu: (p: IconProps) => <GlifoMenu {...p} color="#171B18" />,
-  arrow: (p: IconProps) => <GlifoSetaBaixo {...p} color="#055C40" />,
-  checkboxSelected: (p: IconProps) => <GlifoCheckBox {...p} color="#055C40" />,
+  arrow: (p: IconProps) => <GlifoDoubleArrowDown {...p} {...ACAO} />,
+  checkboxSelected: (p: IconProps) => <GlifoCheckBox {...p} {...ACAO} />,
 } as const;
 
 // A tela de resultado espera as imagens carregarem antes de aparecer. Glifo inline já vem no HTML e
-// não tem o que esperar, então só as URLs que sobraram entram nessa lista.
-export const URLS_DE_ICONE = [
-  "/icons/info.svg",
-  "/icons/acao-telefone.svg",
-  "/icons/acao-chat.svg",
-  "/icons/acao-telegram.svg",
-  "/icons/acao-libras.svg",
-  "/icons/acao-local.svg",
-  "/icons/acao-link.svg",
-  "/icons/logo-margem.svg",
-  "/icons/seta-card.svg",
-  URL_AVATAR_PADRAO,
-];
+// não tem o que esperar, então só sobraram estes dois.
+export const URLS_DE_ICONE = ["/icons/logo-margem.svg", URL_AVATAR_PADRAO];
 
 export type IconeAcao = keyof typeof ICONES_ACAO;
 
