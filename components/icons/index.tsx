@@ -1,9 +1,13 @@
 // Cada ícone é um asset exportado do Figma e salvo em /public/icons. Um componente por ícone: as URLs
 // não se repetem mais dentro das telas.
 //
-// Os nomes com sufixo (Home, Resultado, Modal, Menu, Rodape) existem porque o mesmo desenho foi
-// exportado mais de uma vez no Figma e cada tela aponta para uma URL diferente. Enquanto as URLs
-// não forem unificadas no Figma, unificar aqui trocaria o arquivo que a tela carrega hoje.
+// O nome do arquivo é o nome do glifo no Figma, nunca o lugar onde ele aparece. Ícone da biblioteca
+// Material vem em inglês (`question_answer`, `place`); emoji nosso vem em português
+// (`cerebro-emocional`). Regra completa em /docs/componentes.md, seção 6.
+//
+// Ainda sobram nomes com sufixo (Menu, Rodape, Resultado): são o mesmo glifo em cores ou tamanhos
+// diferentes, e unificar exige mover a cor do arquivo para o CSS com currentColor. Enquanto isso não
+// for feito, unificar aqui mudaria o visual da tela.
 
 type IconProps = { className?: string };
 
@@ -15,9 +19,10 @@ function icone(src: string, alt = "") {
 
 /* Logo */
 
+// Os três apontam para o mesmo arquivo: as cópias `-resultado` e `-modal` eram byte a byte iguais.
 export const LogoMargem = icone("/icons/logo-margem.svg", "Margem");
-export const LogoMargemResultado = icone("/icons/logo-margem-resultado.svg", "Margem");
-export const LogoMargemModal = icone("/icons/logo-margem-modal.svg", "Margem");
+export const LogoMargemResultado = icone("/icons/logo-margem.svg", "Margem");
+export const LogoMargemModal = icone("/icons/logo-margem.svg", "Margem");
 
 /* Menu e fechar */
 
@@ -36,14 +41,15 @@ export const IconeSetaResultado = icone("/icons/seta-resultado.svg");
 
 export const IconeSeguranca = icone("/icons/seguranca.svg");
 
-// Um ícone por card de caminho, na ordem em que os cards aparecem na home.
+// Um ícone por card de caminho, na ordem em que os cards aparecem na home. Cada um é um emoji do
+// arquivo Emojis do Figma, e o nome do arquivo é o nome do componente lá.
 export const ICONES_CAMINHO = [
-  "/icons/caminho-1.svg",
-  "/icons/caminho-2.svg",
-  "/icons/caminho-3.svg",
-  "/icons/caminho-4.svg",
-  "/icons/caminho-5.svg",
-  "/icons/caminho-6.svg",
+  "/icons/broto-crescimento-renascendo.svg",
+  "/icons/emergencia-sirene.svg",
+  "/icons/cerebro-emocional.svg",
+  "/icons/aperto-de-mao.svg",
+  "/icons/coracao-enfaixado.svg",
+  "/icons/poker-face.svg",
 ];
 
 export function IconeCaminho({ indice, className }: { indice: number; className?: string }) {
@@ -52,9 +58,10 @@ export function IconeCaminho({ indice, className }: { indice: number; className?
 
 /* Resultado */
 
-// O X do loader "Preparando informações...": o Figma exporta três arquivos, mas o desenho é o mesmo.
-// Único ícone em <svg> no código em vez de <img>: a animação aumenta o X até 1,5x, e um <img> é
-// desenhado em 12px e esticado, ficando pixelado. O desenho é o de /icons/loader-1.svg.
+// O X do loader "Preparando informações...". Único ícone em <svg> no código em vez de <img>: a
+// animação aumenta o X até 1,5x, e um <img> é desenhado em 12px e esticado, ficando pixelado.
+// O desenho vem do componente `loader` da página Loader do Margem System. Os três arquivos
+// loader-1/2/3.svg que existiam eram cópias idênticas e ninguém os carregava.
 export function IconeLoader({ className }: IconProps) {
   return (
     <svg className={className} width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -97,7 +104,7 @@ export const ICONES_ACAO = {
   place: "/icons/acao-local.svg",
   email: "/icons/acao-email.svg",
   link: "/icons/acao-link.svg",
-  logo: "/icons/logo-margem-resultado.svg",
+  logo: "/icons/logo-margem.svg",
   menu: "/icons/menu-resultado.svg",
   arrow: "/icons/seta-resultado.svg",
   avatar: URL_AVATAR_PADRAO,
