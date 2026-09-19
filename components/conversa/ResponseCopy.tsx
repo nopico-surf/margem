@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { OrientationResult } from "./types";
 
 const CARACTERES_POR_SEGUNDO = 250;
@@ -17,6 +17,7 @@ export function ResponseCopy({ orientation }: { orientation: OrientationResult }
 
   const fullText = paragraphs.join("\n\n");
   const [renderedLength, setRenderedLength] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -26,27 +27,43 @@ export function ResponseCopy({ orientation }: { orientation: OrientationResult }
 
     setRenderedLength(0);
 
-    const startedAt = performance.now();
     const charactersPerSecond = CARACTERES_POR_SEGUNDO;
     const paragraphGapMs = PAUSA_ENTRE_PARAGRAFOS_MS;
     let frameId = 0;
+    let tempoDecorrido = 0;
+    let frameAnterior = performance.now();
+
+    // Checado a cada frame, e não por IntersectionObserver: no mobile a barra de endereço muda a
+    // altura do viewport de layout sem mudar o que a pessoa vê, e o observer chegou a marcar como
+    // visível uma tela que já tinha rolado para além do texto. `visualViewport` reflete a área
+    // realmente visível.
+    function estaVisivel() {
+      const elemento = containerRef.current;
+      if (!elemento) return false;
+      const rect = elemento.getBoundingClientRect();
+      const alturaVisivel = window.visualViewport?.height ?? window.innerHeight;
+      return rect.bottom > 0 && rect.top < alturaVisivel;
+    }
 
     function animate(now: number) {
-      const elapsed = now - startedAt;
+      const delta = now - frameAnterior;
+      frameAnterior = now;
+      if (estaVisivel()) tempoDecorrido += delta;
+
       let nextLength = 0;
       let timelinePosition = 0;
 
       for (let index = 0; index < paragraphs.length; index += 1) {
         const paragraph = paragraphs[index];
         const paragraphDuration = (paragraph.length / charactersPerSecond) * 1000;
-        const paragraphElapsed = elapsed - timelinePosition;
+        const paragraphElapsed = tempoDecorrido - timelinePosition;
         const revealedInParagraph = Math.min(Math.max(Math.floor((paragraphElapsed / 1000) * charactersPerSecond), 0), paragraph.length);
 
         nextLength += revealedInParagraph;
         if (revealedInParagraph < paragraph.length || index === paragraphs.length - 1) break;
 
         const nextParagraphStart = timelinePosition + paragraphDuration + paragraphGapMs;
-        if (elapsed < nextParagraphStart) break;
+        if (tempoDecorrido < nextParagraphStart) break;
 
         nextLength += 2;
         timelinePosition = nextParagraphStart;
@@ -64,7 +81,7 @@ export function ResponseCopy({ orientation }: { orientation: OrientationResult }
   const displayedParagraphs = displayedText.split("\n\n");
 
   return (
-    <div className="figma-response-copy">
+    <div className="figma-response-copy" ref={containerRef}>
       {displayedParagraphs.map((p, i) => (
         <p key={i}>{p}</p>
       ))}
