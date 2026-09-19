@@ -48,9 +48,15 @@ Procurar, nesta ordem:
 
 O plano precisa dizer o que a varredura achou: quais componentes do Figma serão reaproveitados, quais serão criados e por que não havia equivalente. Sem isso o plano está incompleto.
 
-### 3. Componente antes de tela
+### 3. Reaproveitar antes de criar
 
-Todo componente aparece em `/ui` com todos os estados antes de ser usado numa tela.
+Antes de escrever markup, estilo, comportamento ou componente novo, procurar equivalentes já existentes no Figma e no código. Reutilizar ou compor os equivalentes sempre que atenderem ao caso, preservando seus tokens, estados, propriedades e regras de posicionamento. Só criar algo novo quando não houver equivalente ou quando a referência definir uma diferença estrutural real. Não duplicar componentes, estilos, ícones, tokens ou comportamentos sem justificar a necessidade.
+
+Sempre pedir autorização antes de criar um componente novo no código. A solicitação deve explicar quais equivalentes foram procurados, por que não podem ser reutilizados e qual será o escopo do novo componente. Sem autorização, reutilizar ou compor os componentes existentes e não criar outro.
+
+Todo componente novo aparece em `/ui` com todos os estados antes de ser usado numa tela.
+
+Elementos que pertencem ao fluxo normal da página devem permanecer no fluxo normal. Não usar `fixed`, `sticky` ou sobreposição ao conteúdo sem uma definição explícita no Figma.
 
 ### 4. Só então a tela
 

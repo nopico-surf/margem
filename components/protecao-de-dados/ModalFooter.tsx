@@ -1,9 +1,11 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
+
 export function ModalFooter({ onClose }: { onClose: (origem: "botao_fechar") => void }) {
   return (
-    <button className="dados-modal-button" type="button" onClick={() => onClose("botao_fechar")}>
+    <Button tamanho="medium" larguraTotal onClick={() => onClose("botao_fechar")}>
       Fechar
-    </button>
+    </Button>
   );
 }

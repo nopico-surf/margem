@@ -85,18 +85,6 @@
   color:var(--neutral-950-88);
 }
 
-.dados-modal-button {
-  width:100%;
-  padding:14px 16px;
-  border:0;
-  border-radius:12px;
-  background:var(--brand-800);
-  color:#fff;
-  font-weight:500;
-  font-size:16px;
-  line-height:20px;
-}
-
 .dados-page {
   min-height:100svh;
   background:#fff;
