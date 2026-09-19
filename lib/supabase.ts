@@ -138,7 +138,6 @@ export async function salvarRespostaGerada(orientation: Orientation) {
 export async function registrarInteracao(params: {
   sessaoId: string;
   tipo: "card" | "campo_aberto" | "pergunta_aprofundamento";
-  chaveBusca?: string;
   texto: string;
   respostaId?: string | null;
   foiCacheHit: boolean;
@@ -156,7 +155,6 @@ export async function registrarInteracao(params: {
     supabase.from("historico_interacoes").insert({
       sessao_id: params.sessaoId,
       tipo: params.tipo,
-      chave_busca: params.chaveBusca ?? null,
       texto_original: params.texto,
       resposta_id: params.respostaId ?? null,
       foi_cache_hit: params.foiCacheHit,
