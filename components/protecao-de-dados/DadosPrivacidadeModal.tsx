@@ -4,7 +4,7 @@ import { ModalHeader } from "./ModalHeader";
 import { ModalSection } from "./ModalSection";
 import { ModalFooter } from "./ModalFooter";
 
-type DadosPrivacidadeModalProps = { onClose: () => void };
+type DadosPrivacidadeModalProps = { onClose: (origem: "x" | "botao_fechar") => void };
 
 export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
   return (

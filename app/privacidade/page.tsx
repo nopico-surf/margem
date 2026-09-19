@@ -7,8 +7,8 @@ import { track } from "@/lib/mixpanel";
 export default function PrivacidadePage() {
   const router = useRouter();
 
-  function voltar() {
-    track("politica_dados_fechada");
+  function voltar(origem: "x" | "botao_fechar") {
+    track("politica_dados_fechada", { origem });
     router.back();
   }
 

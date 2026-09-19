@@ -133,7 +133,10 @@ export default function ConversaPage() {
           if (!resourcesResponse.ok) throw new Error();
           return resourcesResult;
         })
-        .catch(() => ({ profissionais: [], servicos_publicos: [], instituicoes: [] }))
+        .catch(() => {
+          track("recursos_falharam", { origem, eh_retry: ehRetry });
+          return { profissionais: [], servicos_publicos: [], instituicoes: [] };
+        })
         .then((resourcesResult) => {
           setResources(resourcesResult);
           const midias = midiasDosRecursos(resourcesResult);

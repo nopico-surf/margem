@@ -49,6 +49,11 @@ export function ResultPage({ message, orientation, isLoading, isResourcesLoading
     track("menu_clicado", { rota: "/conversa" });
   }
 
+  function fecharMenu() {
+    setMenuOpen(false);
+    track("menu_fechado", { rota: "/conversa" });
+  }
+
   return (
     <main className={`figma-result-page${carregamentoInicial ? " figma-result-page-initial-loading" : ""}`}>
       <Header
@@ -56,7 +61,7 @@ export function ResultPage({ message, orientation, isLoading, isResourcesLoading
         hrefDoLogo="/inicio"
         onLogoClick={() => track("logo_clicado", { rota: "/conversa" })}
       />
-      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <SideMenu open={menuOpen} onClose={fecharMenu} />
       <div className="figma-result-main">
         <Messages message={message} orientation={orientation} isLoading={isLoading} error={error} onRetry={onRetry} />
         {mostrarSecoes && <BlocoMaisOpcoes isLoading={Object.values(isResourcesLoading).some(Boolean)} />}

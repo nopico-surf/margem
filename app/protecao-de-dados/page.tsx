@@ -28,7 +28,11 @@ export default function ProtecaoDeDadosPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessaoId }),
-    }).catch(() => {});
+    })
+      .then((response) => {
+        if (!response.ok) track("consentimento_falhou");
+      })
+      .catch(() => track("consentimento_falhou"));
     router.push("/inicio");
   }
 

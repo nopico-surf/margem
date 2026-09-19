@@ -137,7 +137,8 @@ export async function POST(request: Request) {
       foi_cache_hit: foiCache,
       tempo_gemini_ms: tempoGeminiMs,
     });
-  } catch {
+  } catch (err) {
+    console.error("[orientacao] Falha inesperada:", err instanceof Error ? err.message : err);
     return NextResponse.json({ error: "Não foi possível preparar a orientação." }, { status: 500 });
   }
 }

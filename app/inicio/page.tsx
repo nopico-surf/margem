@@ -63,13 +63,18 @@ export default function AppPage() {
     track("menu_clicado", { rota: "/inicio" });
   }
 
+  function closeMenu() {
+    setMenuOpen(false);
+    track("menu_fechado", { rota: "/inicio" });
+  }
+
   if (checkingConsent) return null;
 
   return (
     <main className="app-shell">
       <KeyboardDiagnostics />
       <Header onOpenMenu={openMenu} />
-      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <SideMenu open={menuOpen} onClose={closeMenu} />
 
       <HomeHero text={text} onChangeText={setText} onSubmit={submit} onShowTopics={showTopics} />
       <CardHomeGroup onSelect={handleCardClick} />

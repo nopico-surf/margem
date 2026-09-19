@@ -56,14 +56,15 @@ export type InstituicaoApoio = {
 export async function buscarProfissionaisPorCategoria(categoria: string) {
   const supabase = getServerClient();
   if (!supabase) return [];
-  const { data } = await supabase.from("profissionais_cadastrados").select("*").eq("categoria_resposta_relevante", categoria);
+  const { data, error } = await supabase.from("profissionais_cadastrados").select("*").eq("categoria_resposta_relevante", categoria);
+  if (error) console.error("[supabase] buscarProfissionaisPorCategoria falhou:", error.message);
   return (data ?? []) as ProfissionalCadastrado[];
 }
 
 export async function buscarServicosPublicosPorCategoria(categoria: string) {
   const supabase = getServerClient();
   if (!supabase) return servicosPublicosPadrao.filter((servico) => servico.categoria_resposta_relevante === categoria);
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("servicos_publicos")
     .select("*")
     .eq("categoria_resposta_relevante", categoria)
@@ -72,33 +73,40 @@ export async function buscarServicosPublicosPorCategoria(categoria: string) {
     .order("natureza")
     .order("ordem")
     .order("id");
+  if (error) console.error("[supabase] buscarServicosPublicosPorCategoria falhou:", error.message);
   return (data ?? []) as ServicoPublico[];
 }
 
 export async function buscarInstituicoesPorCategoria(categoria: string) {
   const supabase = getServerClient();
   if (!supabase) return instituicoesPadrao.filter((instituicao) => instituicao.categoria_resposta_relevante === categoria);
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("instituicoes_apoio")
     .select("*")
     .eq("categoria_resposta_relevante", categoria)
     .eq("ativo", true)
     .order("ordem")
     .order("id");
+  if (error) console.error("[supabase] buscarInstituicoesPorCategoria falhou:", error.message);
   return (data ?? []) as InstituicaoApoio[];
 }
 
 export async function registrarConsentimento(sessaoId: string) {
   const supabase = getServerClient();
   if (!supabase) return;
-  await supabase.from("sessoes").upsert({ id: sessaoId, consentimento_lgpd: true });
-  await supabase.from("auditoria_sessoes").insert({ sessao_id: sessaoId, acao: "criada" });
+  const [sessao, auditoria] = await Promise.all([
+    supabase.from("sessoes").upsert({ id: sessaoId, consentimento_lgpd: true }),
+    supabase.from("auditoria_sessoes").insert({ sessao_id: sessaoId, acao: "criada" }),
+  ]);
+  if (sessao.error) console.error("[supabase] registrarConsentimento (sessoes) falhou:", sessao.error.message);
+  if (auditoria.error) console.error("[supabase] registrarConsentimento (auditoria_sessoes) falhou:", auditoria.error.message);
 }
 
 export async function buscarRespostaPorChave(chaveBusca: string) {
   const supabase = getServerClient();
   if (!supabase) return null;
-  const { data } = await supabase.from("respostas").select("*").eq("chave_busca", chaveBusca).maybeSingle();
+  const { data, error } = await supabase.from("respostas").select("*").eq("chave_busca", chaveBusca).maybeSingle();
+  if (error) console.error("[supabase] buscarRespostaPorChave falhou:", error.message);
   return data as (Orientation & { id: string }) | null;
 }
 
@@ -107,7 +115,7 @@ export async function buscarRespostaPorChave(chaveBusca: string) {
 export async function salvarRespostaGerada(orientation: Orientation) {
   const supabase = getServerClient();
   if (!supabase) return null;
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("respostas")
     .insert({
       origem: "gerada_gemini",
@@ -121,6 +129,7 @@ export async function salvarRespostaGerada(orientation: Orientation) {
     })
     .select("id")
     .single();
+  if (error) console.error("[supabase] salvarRespostaGerada falhou:", error.message);
   return data?.id as string | undefined;
 }
 
@@ -139,8 +148,9 @@ export async function registrarInteracao(params: {
   const supabase = getServerClient();
   if (!supabase) return;
   // garante que a sessão existe mesmo se o consentimento não tiver sido gravado antes (ex: localStorage antigo)
-  await supabase.from("sessoes").upsert({ id: params.sessaoId, consentimento_lgpd: true }, { onConflict: "id", ignoreDuplicates: true });
-  await Promise.all([
+  const sessao = await supabase.from("sessoes").upsert({ id: params.sessaoId, consentimento_lgpd: true }, { onConflict: "id", ignoreDuplicates: true });
+  if (sessao.error) console.error("[supabase] registrarInteracao (sessoes) falhou:", sessao.error.message);
+  const [historico, auditoria] = await Promise.all([
     supabase.from("historico_interacoes").insert({
       sessao_id: params.sessaoId,
       tipo: "campo_aberto",
@@ -153,5 +163,7 @@ export async function registrarInteracao(params: {
     }),
     params.recebeuOrientacao === false ? null : supabase.from("auditoria_sessoes").insert({ sessao_id: params.sessaoId, acao: "recebeu_orientacao" }),
   ]);
+  if (historico.error) console.error("[supabase] registrarInteracao (historico_interacoes) falhou:", historico.error.message);
+  if (auditoria?.error) console.error("[supabase] registrarInteracao (auditoria_sessoes) falhou:", auditoria.error.message);
 }
 
