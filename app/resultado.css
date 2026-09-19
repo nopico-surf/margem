@@ -92,7 +92,7 @@
 
 .figma-result-band {
   padding:16px 0;
-  background:var(--figma-result-soft);
+  background:var(--colors-neutral-50);
 }
 
 .figma-section-inner {
