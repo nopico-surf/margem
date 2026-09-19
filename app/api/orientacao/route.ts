@@ -82,14 +82,18 @@ export async function POST(request: Request) {
     let foiCache = false;
     let textoOriginal = texto;
 
+    let tipoInteracao: "card" | "campo_aberto" = "campo_aberto";
+    let chaveCard: string | undefined;
+
     if (cardIndex !== undefined && cardIndex >= 0 && cardIndex < CARDS_CHAVES.length) {
-      const chaveCard = CARDS_CHAVES[cardIndex];
+      chaveCard = CARDS_CHAVES[cardIndex];
       cached = await buscarRespostaPorChave(chaveCard);
       if (cached) {
         orientation = cached;
         respostaId = cached.id;
         foiCache = true;
         textoOriginal = chaveCard;
+        tipoInteracao = "card";
       }
     }
 
@@ -105,6 +109,8 @@ export async function POST(request: Request) {
         console.error(`[orientacao] Gemini falhou: ${resultado.motivo}${resultado.detalhe ? ` (${resultado.detalhe})` : ""} (${resultado.tempoMs}ms)`);
         await registrarInteracao({
           sessaoId,
+          tipo: tipoInteracao,
+          chaveBusca: chaveCard,
           texto: textoOriginal,
           respostaId: null,
           foiCacheHit: false,
@@ -123,6 +129,8 @@ export async function POST(request: Request) {
     if (sessaoId) {
       await registrarInteracao({
         sessaoId,
+        tipo: tipoInteracao,
+        chaveBusca: chaveCard,
         texto: textoOriginal,
         respostaId,
         foiCacheHit: foiCache,

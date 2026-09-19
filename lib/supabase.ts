@@ -137,6 +137,8 @@ export async function salvarRespostaGerada(orientation: Orientation) {
 // tempoGeminiMs/geminiFalhou/motivoFalha ficam vazios quando a interação veio de card ou de cache (não chamou o Gemini).
 export async function registrarInteracao(params: {
   sessaoId: string;
+  tipo: "card" | "campo_aberto" | "pergunta_aprofundamento";
+  chaveBusca?: string;
   texto: string;
   respostaId?: string | null;
   foiCacheHit: boolean;
@@ -153,7 +155,8 @@ export async function registrarInteracao(params: {
   const [historico, auditoria] = await Promise.all([
     supabase.from("historico_interacoes").insert({
       sessao_id: params.sessaoId,
-      tipo: "campo_aberto",
+      tipo: params.tipo,
+      chave_busca: params.chaveBusca ?? null,
       texto_original: params.texto,
       resposta_id: params.respostaId ?? null,
       foi_cache_hit: params.foiCacheHit,
