@@ -47,7 +47,7 @@ export const LogoMargemModal = icone("/icons/logo-margem.svg", "Margem");
 // Uma cor só nas duas telas. Era #012A1C na home e #171B18 no resultado, para o mesmo ícone.
 export const IconeMenu = (p: IconProps) => <GlifoMenu {...p} color="var(--colors-neutral-950)" />;
 // Branco porque fica sobre o overlay escuro do menu.
-export const IconeFecharMenu = (p: IconProps) => <GlifoClose {...p} size={32} color="var(--neutral-0)" />;
+export const IconeFecharMenu = (p: IconProps) => <GlifoClose {...p} size={32} color="var(--colors-neutral-0)" />;
 export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="var(--colors-brand-primary-950)" />;
 
 /* Setas */
