@@ -3,10 +3,19 @@
 import { IconeAgendarWhatsapp } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 
-// Desabilitado de propósito enquanto o agendamento não existe.
-export function BotaoAgendar({ label, onClick }: { label: string; onClick: () => void }) {
+export function BotaoAgendar({
+  label,
+  onClick,
+  href,
+  disabled = false,
+}: {
+  label: string;
+  onClick?: () => void;
+  href?: string;
+  disabled?: boolean;
+}) {
   return (
-    <Button larguraTotal disabled onClick={onClick}>
+    <Button larguraTotal disabled={disabled} href={href} alvoExterno={!!href} onClick={onClick}>
       <IconeAgendarWhatsapp />
       {label}
     </Button>

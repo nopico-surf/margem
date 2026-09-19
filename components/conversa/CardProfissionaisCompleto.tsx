@@ -42,6 +42,13 @@ export function CardProfissionaisCompleto({ profissional, estado = "default" }: 
 
   if (!profissional) return null;
 
+  const whatsappBase = profissional.whatsapp_link?.trim();
+  const whatsappHref = whatsappBase
+    ? whatsappBase.startsWith("http")
+      ? whatsappBase
+      : `https://wa.me/${whatsappBase.replace(/\D/g, "")}`
+    : undefined;
+
   return (
     <article className="figma-professional-card">
       <div className="figma-professional-head">
@@ -65,6 +72,8 @@ export function CardProfissionaisCompleto({ profissional, estado = "default" }: 
       {profissional.bio && <p>{profissional.bio}</p>}
       <BotaoAgendar
         label="Agendar por WhatsApp"
+        href={whatsappHref}
+        disabled={!whatsappHref}
         onClick={() =>
           track("agendar_whatsapp_clicado", {
             profissional_id: profissional.id,
