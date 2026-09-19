@@ -67,7 +67,7 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
         description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros."
       />
       <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
-      {profissionais.length === 0 ? (
+      {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />
       ) : (
         profissionaisFiltrados.map((profissional) => (

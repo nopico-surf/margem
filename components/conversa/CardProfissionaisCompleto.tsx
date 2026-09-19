@@ -42,11 +42,12 @@ export function CardProfissionaisCompleto({ profissional, estado = "default" }: 
 
   if (!profissional) return null;
 
-  const whatsappBase = profissional.whatsapp_link?.trim();
-  const whatsappHref = whatsappBase
-    ? whatsappBase.startsWith("http")
-      ? whatsappBase
-      : `https://wa.me/${whatsappBase.replace(/\D/g, "")}`
+  const whatsappDigits = profissional.whatsapp_link?.replace(/\D/g, "");
+  const whatsappText = encodeURIComponent(
+    `Oi Vitor, achei o(a) ${profissional.nome} na Margem e gostaria de agendar uma sessão`
+  );
+  const whatsappHref = whatsappDigits
+    ? `https://wa.me/${whatsappDigits}?text=${whatsappText}`
     : undefined;
 
   return (
