@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { OrientationResult } from "./types";
 
-const CARACTERES_POR_SEGUNDO = 250;
+const CARACTERES_POR_SEGUNDO = 300;
 const PAUSA_ENTRE_PARAGRAFOS_MS = 100;
 
 // A resposta aparece sendo escrita, um parágrafo por vez. Quem pediu menos movimento no sistema
