@@ -6,6 +6,7 @@ import { CardHeader } from "./CardHeader";
 import { CardProfissionaisCompleto } from "./CardProfissionaisCompleto";
 import { FiltroEspecialidade, type Especialidade } from "./FiltroEspecialidade";
 import { BotaoServicosPublicos } from "@/components/ui/BotaoServicosPublicos";
+import { rolarAteSecao } from "@/components/ui/SectionJump";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -73,7 +74,12 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
           <CardProfissionaisCompleto profissional={profissional} key={profissional.id} />
         ))
       )}
-      <BotaoServicosPublicos onClick={() => track("ver_servicos_publicos_clicado")} />
+      <div style={{ alignSelf: "center" }}>
+        <BotaoServicosPublicos onClick={() => {
+          track("ver_servicos_publicos_clicado");
+          rolarAteSecao("figma-section-public-services");
+        }} />
+      </div>
     </ContainerConteudo>
   );
 }
