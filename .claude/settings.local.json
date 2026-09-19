@@ -15,7 +15,13 @@
       "PowerShell(git add components/KeyboardDiagnostics.tsx app/app/page.tsx)",
       "PowerShell(git add app/home-overrides.css components/MessageInput.tsx)",
       "PowerShell(git commit -F \"C:\\\\Users\\\\vitor\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-vitor-OneDrive-Documents-Margem\\\\4fe79854-ca29-4044-a187-2e5fc0f39ee1\\\\scratchpad\\\\msg.txt\")",
-      "PowerShell(git commit -F \"C:\\\\Users\\\\vitor\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-vitor-OneDrive-Documents-Margem\\\\4fe79854-ca29-4044-a187-2e5fc0f39ee1\\\\scratchpad\\\\msg2.txt\")"
+      "PowerShell(git commit -F \"C:\\\\Users\\\\vitor\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-vitor-OneDrive-Documents-Margem\\\\4fe79854-ca29-4044-a187-2e5fc0f39ee1\\\\scratchpad\\\\msg2.txt\")",
+      "Bash(npm run *)",
+      "Bash(git fetch *)",
+      "Bash(git rev-list *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
