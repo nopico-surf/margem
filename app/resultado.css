@@ -67,23 +67,22 @@
   margin-bottom:0;
 }
 
-/* Animação alternativa: os grupos de palavras entram com fade, da esquerda para a direita.
-   Ativa só com NEXT_PUBLIC_ANIMACAO_RESPOSTA=fade.
+/* Os grupos de palavras entram com fade, da esquerda para a direita, conforme a resposta aparece.
+   Desliga com NEXT_PUBLIC_ANIMACAO_RESPOSTA=letra.
    Os spans são inline e só animam opacidade de propósito: display, transform ou qualquer coisa
-   que entre no fluxo muda a quebra de linha e move a diagramação enquanto o texto aparece. */
+   que entre no fluxo muda a quebra de linha e move de lugar palavra que já estava na tela. */
 .figma-response-copy__pedaco {
-  opacity:0;
-  transition:opacity var(--duracao-fade-pedaco,260ms) ease-out;
+  animation:figma-fade-pedaco var(--duracao-fade-pedaco,260ms) ease-out both;
 }
 
-.figma-response-copy__pedaco.esta-visivel {
-  opacity:1;
+@keyframes figma-fade-pedaco {
+  from { opacity:0; }
+  to { opacity:1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .figma-response-copy__pedaco {
-    transition:none;
-    opacity:1;
+    animation:none;
   }
 }
 

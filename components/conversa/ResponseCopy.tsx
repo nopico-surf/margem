@@ -106,14 +106,19 @@ function RespostaLetraALetra({ paragraphs }: { paragraphs: string[] }) {
   );
 }
 
-type Item = { tipo: "espaco"; texto: string } | { tipo: "pedaco"; texto: string; indice: number };
+type Item =
+  | { tipo: "espaco"; texto: string; indiceAnterior: number }
+  | { tipo: "pedaco"; texto: string; indice: number };
 
-// O texto inteiro está no DOM desde o primeiro frame, com a diagramação final já formada: cada
-// pedaço só vai de opacidade 0 para 1 no lugar onde já estava. Nada entra ou sai do fluxo, então
-// nenhuma linha se move enquanto a resposta aparece.
+// O bloco cresce conforme o texto aparece, como na versão letra a letra: só o que já foi revelado
+// ocupa espaço, então não há área em branco reservada esperando o texto chegar.
 //
-// Os espaços entre um pedaço e outro ficam fora dos spans, e os spans são inline, para que a
-// quebra de linha caia exatamente onde cairia se o parágrafo fosse texto puro.
+// Uma palavra já visível nunca se move, porque a quebra de linha é sequencial: as primeiras N
+// palavras quebram onde quebrariam no texto inteiro. Isso só vale enquanto os spans forem inline.
+// Com display inline-block cada pedaço vira uma caixa indivisível, a linha deixa de poder quebrar
+// dentro dele e a diagramação muda.
+//
+// Os espaços entre um pedaço e outro ficam fora dos spans, pelo mesmo motivo.
 function montarPedacos(paragraphs: string[]) {
   const inicios: number[] = [];
   let indice = 0;
@@ -139,7 +144,7 @@ function montarPedacos(paragraphs: string[]) {
       if (/^\s+$/.test(token)) {
         if (palavrasAcumuladas >= PALAVRAS_POR_PEDACO) {
           fecharPedaco();
-          itens.push({ tipo: "espaco", texto: token });
+          itens.push({ tipo: "espaco", texto: token, indiceAnterior: indice - 1 });
         } else {
           acumulado.push(token);
         }
@@ -200,26 +205,28 @@ function RespostaFade({ paragraphs }: { paragraphs: string[] }) {
       ref={containerRef}
       style={{ "--duracao-fade-pedaco": `${DURACAO_FADE_MS}ms` } as React.CSSProperties}
     >
-      {blocos.map((itens, i) => (
-        <p key={i}>
-          {itens.map((item, j) =>
-            item.tipo === "espaco" ? (
-              <Fragment key={`e${j}`}>{item.texto}</Fragment>
-            ) : (
-              <span
-                key={`p${item.indice}`}
-                className={
-                  item.indice < reveladas
-                    ? "figma-response-copy__pedaco esta-visivel"
-                    : "figma-response-copy__pedaco"
-                }
-              >
-                {item.texto}
-              </span>
-            )
-          )}
-        </p>
-      ))}
+      {blocos.map((itens, i) => {
+        const primeiro = itens.find((item) => item.tipo === "pedaco");
+        if (!primeiro || primeiro.indice >= reveladas) return null;
+
+        return (
+          <p key={i}>
+            {itens.map((item, j) => {
+              if (item.tipo === "espaco") {
+                return item.indiceAnterior < reveladas ? (
+                  <Fragment key={`e${j}`}>{item.texto}</Fragment>
+                ) : null;
+              }
+
+              return item.indice < reveladas ? (
+                <span key={`p${item.indice}`} className="figma-response-copy__pedaco">
+                  {item.texto}
+                </span>
+              ) : null;
+            })}
+          </p>
+        );
+      })}
     </div>
   );
 }
