@@ -18,7 +18,16 @@ const urbanist = Urbanist({
 
 export const metadata: Metadata = {
   title: "Margem",
-  description: "Orientação inicial e caminhos de apoio.",
+  description: "Orientação e conexão profissional para pessoas em uso de álcool ou outras drogas",
+  openGraph: {
+    title: "Margem",
+    description: "Orientação e conexão profissional para pessoas em uso de álcool ou outras drogas",
+    images: [{ url: "/assets/og-image.png", width: 1200, height: 630, alt: "Margem" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/assets/og-image.png"],
+  },
 };
 
 export const viewport: Viewport = {
