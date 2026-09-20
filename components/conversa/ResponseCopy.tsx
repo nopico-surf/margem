@@ -6,14 +6,14 @@ import type { OrientationResult } from "./types";
 const CARACTERES_POR_SEGUNDO = 300;
 const PAUSA_ENTRE_PARAGRAFOS_MS = 100;
 
-// Teste de animação alternativa. Liga com NEXT_PUBLIC_ANIMACAO_RESPOSTA=fade no .env.local;
-// sem a variável, a resposta continua aparecendo letra a letra como antes.
+// A resposta aparece por grupos de palavras com fade. Em teste: para voltar à revelação letra a
+// letra, basta NEXT_PUBLIC_ANIMACAO_RESPOSTA=letra, e o código da versão antiga continua aqui.
 const MS_ENTRE_PEDACOS = 110;
 const DURACAO_FADE_MS = 260;
 const PALAVRAS_POR_PEDACO = 5;
 const PAUSA_ENTRE_PARAGRAFOS_FADE_MS = 160;
 
-const MODO_FADE = process.env.NEXT_PUBLIC_ANIMACAO_RESPOSTA === "fade";
+const MODO_FADE = process.env.NEXT_PUBLIC_ANIMACAO_RESPOSTA !== "letra";
 
 function prefereMenosMovimento() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
