@@ -63,11 +63,16 @@ function RespostaLetraALetra({ paragraphs }: { paragraphs: string[] }) {
     let frameAnterior = performance.now();
 
     function animate(now: number) {
+      // Saiu da área visível no meio da animação: completa o texto inteiro de uma vez, agora que
+      // ninguém está vendo, pra quando a pessoa rolar de volta não ter nenhuma mudança de altura
+      // acontecendo bem onde ela está olhando.
+      if (!estaVisivel(containerRef.current)) {
+        setRenderedLength(fullText.length);
+        return;
+      }
+
       const delta = now - frameAnterior;
       frameAnterior = now;
-      // O relógio avança sempre, mesmo fora de tela, pra animação continuar progredindo. Só o
-      // setRenderedLength (o que altera a altura do bloco na página) é que fica condicionado à
-      // visibilidade, pra não empurrar o que a pessoa está vendo enquanto o texto está fora da tela.
       tempoDecorrido += delta;
 
       let nextLength = 0;
@@ -89,9 +94,7 @@ function RespostaLetraALetra({ paragraphs }: { paragraphs: string[] }) {
         timelinePosition = nextParagraphStart;
       }
 
-      if (estaVisivel(containerRef.current)) {
-        setRenderedLength((previousLength) => Math.max(previousLength, nextLength));
-      }
+      setRenderedLength((previousLength) => Math.max(previousLength, nextLength));
       if (nextLength < fullText.length) frameId = window.requestAnimationFrame(animate);
     }
 
@@ -187,20 +190,22 @@ function RespostaFade({ paragraphs }: { paragraphs: string[] }) {
     let frameAnterior = performance.now();
     let contagem = 0;
 
-    // O relógio corre em JS, e não por animation-delay do CSS. Ele avança sempre, mesmo fora de
-    // tela, pra animação continuar progredindo; só o setReveladas (o que altera a altura do bloco
-    // na página) fica condicionado à visibilidade, pra não empurrar o que a pessoa está vendo
-    // enquanto o texto está fora da tela.
     function animate(now: number) {
+      // Saiu da área visível no meio da animação: completa tudo de uma vez, agora que ninguém está
+      // vendo, pra quando a pessoa rolar de volta não ter nenhuma mudança de altura acontecendo bem
+      // onde ela está olhando.
+      if (!estaVisivel(containerRef.current)) {
+        setReveladas(total);
+        return;
+      }
+
       const delta = now - frameAnterior;
       frameAnterior = now;
       tempoDecorrido += delta;
 
       while (contagem < total && inicios[contagem] <= tempoDecorrido) contagem += 1;
 
-      if (estaVisivel(containerRef.current)) {
-        setReveladas((anterior) => Math.max(anterior, contagem));
-      }
+      setReveladas((anterior) => Math.max(anterior, contagem));
       if (contagem < total) frameId = window.requestAnimationFrame(animate);
     }
 
