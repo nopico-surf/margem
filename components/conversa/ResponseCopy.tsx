@@ -65,7 +65,10 @@ function RespostaLetraALetra({ paragraphs }: { paragraphs: string[] }) {
     function animate(now: number) {
       const delta = now - frameAnterior;
       frameAnterior = now;
-      if (estaVisivel(containerRef.current)) tempoDecorrido += delta;
+      // O relógio avança sempre, mesmo fora de tela, pra animação continuar progredindo. Só o
+      // setRenderedLength (o que altera a altura do bloco na página) é que fica condicionado à
+      // visibilidade, pra não empurrar o que a pessoa está vendo enquanto o texto está fora da tela.
+      tempoDecorrido += delta;
 
       let nextLength = 0;
       let timelinePosition = 0;
@@ -86,7 +89,9 @@ function RespostaLetraALetra({ paragraphs }: { paragraphs: string[] }) {
         timelinePosition = nextParagraphStart;
       }
 
-      setRenderedLength((previousLength) => Math.max(previousLength, nextLength));
+      if (estaVisivel(containerRef.current)) {
+        setRenderedLength((previousLength) => Math.max(previousLength, nextLength));
+      }
       if (nextLength < fullText.length) frameId = window.requestAnimationFrame(animate);
     }
 
@@ -182,16 +187,20 @@ function RespostaFade({ paragraphs }: { paragraphs: string[] }) {
     let frameAnterior = performance.now();
     let contagem = 0;
 
-    // O relógio corre em JS, e não por animation-delay do CSS, pelo mesmo motivo da versão letra
-    // a letra: o tempo só avança enquanto o texto está na área visível.
+    // O relógio corre em JS, e não por animation-delay do CSS. Ele avança sempre, mesmo fora de
+    // tela, pra animação continuar progredindo; só o setReveladas (o que altera a altura do bloco
+    // na página) fica condicionado à visibilidade, pra não empurrar o que a pessoa está vendo
+    // enquanto o texto está fora da tela.
     function animate(now: number) {
       const delta = now - frameAnterior;
       frameAnterior = now;
-      if (estaVisivel(containerRef.current)) tempoDecorrido += delta;
+      tempoDecorrido += delta;
 
       while (contagem < total && inicios[contagem] <= tempoDecorrido) contagem += 1;
 
-      setReveladas((anterior) => Math.max(anterior, contagem));
+      if (estaVisivel(containerRef.current)) {
+        setReveladas((anterior) => Math.max(anterior, contagem));
+      }
       if (contagem < total) frameId = window.requestAnimationFrame(animate);
     }
 
