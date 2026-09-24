@@ -36,6 +36,11 @@ export default function ProtecaoDeDadosPage() {
     router.push("/inicio");
   }
 
+  function onChangeConsent(value: boolean) {
+    if (value) track("consentimento_marcado");
+    setConsent(value);
+  }
+
   function abrirModal() {
     track("politica_dados_aberta");
     router.push("/privacidade");
@@ -56,7 +61,7 @@ export default function ProtecaoDeDadosPage() {
       }
       acoes={
         <>
-          <ConsentCard checked={consent} onChange={setConsent} />
+          <ConsentCard checked={consent} onChange={onChangeConsent} />
           <BotaoContinuar onClick={onContinue} disabled={!consent} />
         </>
       }
