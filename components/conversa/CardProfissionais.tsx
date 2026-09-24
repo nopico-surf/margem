@@ -70,8 +70,8 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
       {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />
       ) : (
-        profissionaisFiltrados.map((profissional) => (
-          <CardProfissionaisCompleto profissional={profissional} key={profissional.id} />
+        profissionaisFiltrados.map((profissional, index) => (
+          <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
         ))
       )}
       <div style={{ alignSelf: "center" }}>

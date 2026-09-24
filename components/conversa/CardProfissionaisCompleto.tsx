@@ -23,9 +23,11 @@ const registroLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
 type CardProfissionaisCompletoProps = {
   profissional?: ProfissionalCadastrado;
   estado?: "default" | "in-construction";
+  // posição na lista filtrada que a pessoa está vendo, começando em 1
+  posicao?: number;
 };
 
-export function CardProfissionaisCompleto({ profissional, estado = "default" }: CardProfissionaisCompletoProps) {
+export function CardProfissionaisCompleto({ profissional, estado = "default", posicao }: CardProfissionaisCompletoProps) {
   if (estado === "in-construction") {
     return (
       <article className="figma-professional-card figma-professional-card-construction">
@@ -77,8 +79,11 @@ export function CardProfissionaisCompleto({ profissional, estado = "default" }: 
         disabled={!whatsappHref}
         onClick={() =>
           track("agendar_whatsapp_clicado", {
+            tipo_recurso: "profissional",
             profissional_id: profissional.id,
+            recurso_nome: profissional.nome,
             especialidade: profissional.especialidade,
+            posicao: posicao ?? null,
           })
         }
       />
