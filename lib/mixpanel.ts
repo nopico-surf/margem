@@ -39,8 +39,12 @@ function registrarOrigem() {
   if (referrer) mixpanel.register({ referrer });
 }
 
+// localhost e IPs de rede privada (acesso pelo celular via Wi-Fi, ex: 192.168.1.3:3000)
+const HOST_LOCAL = /^(localhost|127\.\d+\.\d+\.\d+|\[::1\]|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|.+\.local)$/;
+
 function iniciar() {
   if (iniciado || !token || typeof window === "undefined") return iniciado;
+  if (HOST_LOCAL.test(window.location.hostname)) return false;
   mixpanel.init(token, {
     ip: false,
     autocapture: false,
