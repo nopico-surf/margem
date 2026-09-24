@@ -11,7 +11,7 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
     <div className="dados-modal" role="dialog" aria-modal="true" aria-labelledby="dados-modal-title">
       <ModalHeader onClose={onClose} />
       <div className="dados-modal-body">
-        <h2 id="dados-modal-title">Como cuidados dos seus dados</h2>
+        <h1 id="dados-modal-title">Como cuidamos dos seus dados</h1>
 
         <ModalSection titulo="Abertura">
           <p>Essa página explica o que acontece com o que você escreve na Margem. A gente tentou escrever do jeito mais direto possível, sem juridiquês. Se ficar alguma dúvida, dá pra falar com a gente pelo e-mail lá no final.</p>

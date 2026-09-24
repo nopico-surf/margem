@@ -16,18 +16,31 @@ const urbanist = Urbanist({
   variable: "--font-urbanist",
 });
 
+const URL_DO_SITE = "https://www.somosmargem.com.br";
+const DESCRICAO = "Orientação e conexão profissional para pessoas em uso de álcool ou outras drogas";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(URL_DO_SITE),
   title: "Margem",
-  description: "Orientação e conexão profissional para pessoas em uso de álcool ou outras drogas",
+  description: DESCRICAO,
   openGraph: {
     title: "Margem",
-    description: "Orientação e conexão profissional para pessoas em uso de álcool ou outras drogas",
+    description: DESCRICAO,
     images: [{ url: "/assets/og-image.png", width: 1200, height: 630, alt: "Margem" }],
   },
   twitter: {
     card: "summary_large_image",
     images: ["/assets/og-image.png"],
   },
+};
+
+// Dados estruturados pro Google entender o que é a Margem.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Margem",
+  url: URL_DO_SITE,
+  description: DESCRICAO,
 };
 
 export const viewport: Viewport = {
@@ -38,6 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR" className={`${inter.variable} ${urbanist.variable}`}>
       <body>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
         <GoogleTagManager />
         <MixpanelPageView />
         {children}

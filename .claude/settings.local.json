@@ -21,7 +21,10 @@
       "Bash(git rev-list *)",
       "Bash(git push *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(npx tsc *)",
+      "Bash(node \"C:/Users/vitor/AppData/Local/Temp/claude/C--Users-vitor-OneDrive-Documents-Margem/c71ad860-aa6e-4d9d-82cf-1923ca212413/scratchpad/audit.mjs\" .env.local)",
+      "Bash(node \"C:/Users/vitor/AppData/Local/Temp/claude/C--Users-vitor-OneDrive-Documents-Margem/c71ad860-aa6e-4d9d-82cf-1923ca212413/scratchpad/audit2.mjs\" .env.local)"
     ]
   }
 }

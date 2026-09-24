@@ -25,8 +25,16 @@ Tudo que toca chave de API ou banco roda server-side. A chave do Gemini e a serv
 Estrutura esperada:
 
 ```
+proxy.ts                        decide pra onde vai "/", sem piscar (lê cookie)
 /app
-  page.tsx                    boas-vindas (step 1 e step 2)
+  layout.tsx                  metadataBase, JSON-LD, fonts
+  robots.ts                   libera /bem-vindo e /privacidade; bloqueia o resto
+  sitemap.ts                  lista /bem-vindo e /privacidade
+  /bem-vindo
+    page.tsx                  step 1 (sobre a Margem)
+    layout.tsx                script que redireciona quem já consentiu antes
+  /protecao-de-dados
+    page.tsx                  step 2 (consentimento LGPD), grava cookie
   /conversa/page.tsx          cards + campo aberto + resposta
   /privacidade/page.tsx       política completa, texto longo
   /ui/page.tsx                galeria de componentes (só dev)
@@ -51,9 +59,9 @@ Estrutura esperada:
 
 ## 3. O fluxo, do começo ao fim
 
-**Primeira visita.** Step 1 (Sobre a Margem): pulável, com card de emergência visível contendo CVV 188, SAMU 192, Polícia 190 e Disque Social 121. Step 2 (Sobre dados): não pulável, com um único checkbox de consentimento que cobre tudo (armazenamento local, IA, analytics, compartilhamento anonimizado com governo e pesquisa). Esse step traz também o aviso de que, pra quem é menor de 18, conversar com um responsável pode ser importante. Sem pedir declaração de idade, sem bloqueio, sem avisar ninguém.
+**Primeira visita.** Step 1 (Sobre a Margem): pulável, com card de emergência visível contendo CVV 188, SAMU 192, Polícia 190 e Disque Social 121. Step 2 (Sobre dados): não pulável hoje, com um único checkbox de consentimento que cobre tudo (armazenamento local, IA, analytics, compartilhamento anonimizado com governo e pesquisa). Esse step traz também o aviso de que, pra quem é menor de 18, conversar com um responsável pode ser importante. Sem pedir declaração de idade, sem bloqueio, sem avisar ninguém.
 
-O consentimento grava em `localStorage` e em `sessoes.consentimento_lgpd`. Quem já consentiu não vê essa tela de novo.
+O consentimento grava em `localStorage`, em `sessoes.consentimento_lgpd` e em um cookie `margem-consentimento=true` que sobrevive por 400 dias. O cookie é lido pelo `proxy.ts` antes da página carregar, o que elimina o piscar ou conteúdo vazio. Quem já consentiu não vê essa tela de novo.
 
 **Tela principal.** Seis cards que representam estados emocionais distintos, mais um sétimo para familiares e pessoas próximas. Em paralelo, um campo de texto livre. A pessoa escolhe qualquer um dos caminhos, não é um funil.
 
@@ -239,6 +247,10 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
 - [x] Nenhuma chave sensível no bundle do cliente (Service Role Key roda server-side)
 - [ ] Fallback de "tentar novamente" quando o Gemini falha (hoje a tela fica no loading, ver seção 4)
 - [x] Falha do Gemini monitorável (log da Vercel, evento `gemini_falhou` no Mixpanel, histórico sem resposta)
+- [x] SEO básico: metadataBase, robots.txt, sitemap.xml, JSON-LD Organization
+- [x] h1 nas telas de entrada (`/bem-vindo`, `/protecao-de-dados`, `/privacidade`)
+- [x] Redirecionamento sem piscar: proxy + cookie, sem tela vazia
+- [ ] Consentimento condicional em barra inferior (pra quem não passar pelos passos padrões)
 
 <!-- BEGIN:nextjs-agent-rules -->
 

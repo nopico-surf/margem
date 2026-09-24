@@ -21,6 +21,8 @@ export default function ProtecaoDeDadosPage() {
     try {
       window.localStorage.setItem("margem-consentimento", "true");
     } catch {}
+    // O proxy.ts lê este cookie pra mandar "/" direto pra /inicio.
+    document.cookie = "margem-consentimento=true; path=/; max-age=34560000; samesite=lax";
     grantGoogleConsent();
     track("consentimento_concedido");
     const sessaoId = getOrCreateSessaoId();
