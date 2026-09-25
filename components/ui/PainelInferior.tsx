@@ -44,8 +44,7 @@ export function PainelInferior(props: PainelInferiorProps) {
                 Recusar
               </Button>
               <Button tamanho="medium" larguraTotal onClick={props.onAceitar}>
-                <span className="painel-inferior-so-mobile">Aceitar</span>
-                <span className="painel-inferior-so-desktop">Li e estou de acordo</span>
+                Aceitar
               </Button>
             </div>
             <Button tamanho="medium" larguraTotal variante="transparent" onClick={props.onVerDados}>

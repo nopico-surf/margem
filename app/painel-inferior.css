@@ -67,32 +67,7 @@
   min-width: 0;
 }
 
-.painel-inferior-so-desktop {
-  display: none;
-}
-
 @media (min-width: 48em) {
-  .painel-inferior-so-mobile {
-    display: none;
-  }
-
-  .painel-inferior-so-desktop {
-    display: inline;
-  }
-
-  .painel-inferior-decisao {
-    flex-direction: column;
-  }
-
-  .painel-inferior[data-variante="cookies"] {
-    gap: var(--spacing-24);
-  }
-
-  .painel-inferior-titulo {
-    font-size: var(--font-size-2xl);
-    line-height: var(--line-height-4xl);
-  }
-
   /* No desktop o painel vira um cartão no canto, e o Continuar da barra não existe (o botão está
      dentro da página). */
   .painel-inferior {
