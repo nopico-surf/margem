@@ -10,7 +10,7 @@
 .app-footer-list {
   width:100%;
   max-width:1080px;
-  padding:0 var(--spacing-16);
+  padding:0 var(--pagina-padding-lateral);
   box-sizing:border-box;
   margin-left:auto;
   margin-right:auto;

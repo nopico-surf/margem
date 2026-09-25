@@ -86,6 +86,21 @@ textarea {
   background: var(--neutral-0);
 }
 
+/* Padding lateral das telas internas: o mesmo da /bem-vindo (16 no mobile, 32 a partir do desktop). */
+:root {
+  --pagina-padding-lateral: var(--layout-page-padding-mobile);
+}
+
+@media (min-width: 48em) {
+  :root {
+    --pagina-padding-lateral: var(--layout-page-padding-desktop);
+  }
+
+  .app-header {
+    padding-inline: var(--pagina-padding-lateral);
+  }
+}
+
 .app-header img,
 .app-header svg {
   display: block;
