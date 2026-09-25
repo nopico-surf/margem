@@ -18,7 +18,7 @@
    24px que o rodapé já tem embaixo. */
 @media (max-width: 47.99em) {
   .bv-pagina {
-    padding-bottom: calc(var(--spacing-80) - var(--spacing-24));
+    padding-bottom: calc(var(--spacing-96) - var(--spacing-24));
   }
 }
 
