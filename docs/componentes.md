@@ -437,7 +437,7 @@ Em `/public/assets`: `dois-amigos-abracando.webp`, `homem-regata-verde.webp`, `m
 
 - **Recusar** só fecha o painel. Sem consentimento, clicar num card ou enviar o campo livre na `/inicio` reabre o painel; aceitar executa a ação, recusar a descarta.
 - **Barra de Continuar** (mobile): sobe 1s depois que o painel de cookies sai.
-- **Texto do Figma corrigido:** o card "Por perto" no Figma diz "ara quem está próximo...", e o código diz "Para quem está próximo...".
+- **Texto do Figma corrigido:** o card "Por perto" no Figma diz "ara quem está próximo...", e o código diz "Para quem apoia alguém em uso".
 - **Sem card de emergência** na entrada. Ver CLAUDE.md seção 3.
 
 ### Pendências
