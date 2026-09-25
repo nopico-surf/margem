@@ -438,6 +438,13 @@
     text-box: trim-both cap alphabetic;
   }
 
+  /* A coluna encolhe até a largura do texto, então os cards nunca passam do fim da descrição. */
+  .bv-hero-coluna {
+    justify-self: start;
+    width: fit-content;
+    max-width: 100%;
+  }
+
   .bv-hero-cards {
     padding: var(--spacing-16) 0 0;
   }
