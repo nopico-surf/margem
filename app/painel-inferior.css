@@ -16,10 +16,17 @@
   box-shadow: 0 0 var(--spacing-32) var(--colors-alpha-16);
   transform: translateY(0);
   transition: transform 350ms ease, visibility 0s;
-  /* Camada própria: no celular a barra do navegador encolhe e cresce ao rolar, e sem isso o painel
-     fixo acompanha cada reajuste da janela e dá pulos. */
-  will-change: transform;
-  backface-visibility: hidden;
+}
+
+/* Navegadores como o DuckDuckGo escondem a barra ao rolar sem redimensionar a janela do `bottom: 0`, e o
+   painel fica flutuando com um vão embaixo ou pulando. Ancorar pelo `dvh` acompanha a área realmente
+   visível. */
+@supports (top: 100dvh) {
+  .painel-inferior {
+    top: 100dvh;
+    bottom: auto;
+    transform: translateY(-100%);
+  }
 }
 
 .painel-inferior[data-visivel="false"] {
