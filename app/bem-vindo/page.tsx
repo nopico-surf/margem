@@ -11,6 +11,7 @@ import { CardPublico } from "@/components/bem-vindo/CardPublico";
 import { Stepper } from "@/components/bem-vindo/Stepper";
 import { Button } from "@/components/ui/Button";
 import { PainelInferior } from "@/components/ui/PainelInferior";
+import { KeyboardDiagnostics } from "@/components/app/KeyboardDiagnostics";
 import { GlifoGroups, GlifoHealing, GlifoLock, GlifoVerifiedUser, GlifoWork } from "@/components/icons/glifos";
 import { conceder, jaConsentiu } from "@/lib/consentimento";
 import { track } from "@/lib/mixpanel";
@@ -194,6 +195,7 @@ export default function BemVindoPage() {
         onVerDados={verDados}
       />
       <PainelInferior variante="continuar" visivel={barraVisivel} onContinuar={continuar} />
+      <KeyboardDiagnostics />
     </main>
   );
 }
