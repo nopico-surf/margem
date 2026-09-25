@@ -256,6 +256,7 @@
 
 .card-publico-descricao {
   margin: 0;
+  color: var(--colors-alpha-88);
   font-size: var(--font-size-xs);
   line-height: var(--line-height-lg);
 }
@@ -321,6 +322,7 @@
 
 .stepper-descricao {
   margin: 0;
+  color: var(--colors-alpha-88);
   font-size: var(--font-size-xs);
   line-height: var(--line-height-lg);
 }

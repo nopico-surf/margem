@@ -129,7 +129,7 @@ export default function BemVindoPage() {
         <section className="bv-secao">
           <h2 className="bv-secao-titulo">Como funciona</h2>
           <div className="passos-grade">
-            <Stepper numero={1} titulo="Você conta ou seleciona" texto="Do jeito que conseguir, sem precisar ter certeza" />
+            <Stepper numero={1} titulo="Conte ou escolha um tópico" texto="Digite livremente ou selecione opções prontas" />
             <Stepper numero={2} titulo="A gente organiza" texto="Uma orientação clara pensada para o seu momento" />
             <Stepper
               numero={3}
