@@ -332,6 +332,7 @@
 /* ===== Como funciona: lista de passos e cards ===== */
 
 .passos-grade {
+  --passos-raio: var(--radius-2xl);
   display: flex;
   flex-direction: column;
 }
@@ -370,20 +371,20 @@
 }
 
 .passos-ramo:last-child::before {
-  height: calc(50% + var(--spacing-12) - var(--radius-xl));
+  height: calc(50% + var(--spacing-12) - var(--passos-raio));
 }
 
 .passos-ramo:last-child:first-child::before {
-  height: calc(50% + var(--spacing-16) - var(--radius-xl));
+  height: calc(50% + var(--spacing-16) - var(--passos-raio));
 }
 
 .passos-ramo::after {
-  top: calc(50% - var(--radius-xl));
+  top: calc(50% - var(--passos-raio));
   width: calc(var(--size-16) + var(--spacing-8));
-  height: var(--radius-xl);
+  height: var(--passos-raio);
   border-bottom: var(--border-width-thin) solid var(--colors-brand-primary-600);
   border-left: var(--border-width-thin) solid var(--colors-brand-primary-600);
-  border-bottom-left-radius: var(--radius-xl);
+  border-bottom-left-radius: var(--passos-raio);
 }
 
 /* ===== Desktop ===== */
@@ -503,10 +504,11 @@
   /* Stepper deitado: número e linha em cima, texto embaixo. A linha atravessa o vão até o número
      seguinte (margem negativa igual ao gap da grade). */
   .passos-grade {
+    --passos-raio: var(--radius-3xl);
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: var(--layout-grid-gutter-desktop);
-    row-gap: var(--layout-grid-gutter-desktop);
+    row-gap: var(--spacing-56);
   }
 
   .stepper {
@@ -533,7 +535,7 @@
   }
 
   .stepper[data-ultimo="true"] .stepper-linha {
-    margin-right: var(--radius-xl);
+    margin-right: var(--passos-raio);
   }
 
   /* A linha do passo 3 desenha uma serpente: vai até a borda direita, desce até o meio do vão, volta
@@ -545,11 +547,11 @@
     position: absolute;
     top: var(--spacing-16);
     right: 0;
-    width: var(--radius-xl);
-    height: calc(100% - var(--spacing-32) + var(--layout-grid-gutter-desktop) / 2);
+    width: var(--passos-raio);
+    height: calc(100% - var(--spacing-16) - var(--passos-raio) + var(--spacing-56) / 2);
     border-top: var(--border-width-thin) solid var(--colors-brand-primary-600);
     border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
-    border-top-right-radius: var(--radius-xl);
+    border-top-right-radius: var(--passos-raio);
     pointer-events: none;
   }
 
@@ -557,13 +559,13 @@
     content: "";
     box-sizing: border-box;
     position: absolute;
-    top: calc(100% - var(--radius-xl) + var(--layout-grid-gutter-desktop) / 2);
+    top: calc(100% - var(--passos-raio) + var(--spacing-56) / 2);
     right: 0;
-    width: calc(300% + 2 * var(--layout-grid-gutter-desktop) - var(--radius-xl));
-    height: var(--radius-xl);
+    width: calc(300% + 2 * var(--layout-grid-gutter-desktop) - var(--passos-raio));
+    height: var(--passos-raio);
     border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
     border-bottom: var(--border-width-thin) solid var(--colors-brand-primary-600);
-    border-bottom-right-radius: var(--radius-xl);
+    border-bottom-right-radius: var(--passos-raio);
     pointer-events: none;
   }
 
@@ -599,10 +601,10 @@
   }
 
   .passos-ramo:first-child::before {
-    top: calc(-1 * var(--layout-grid-gutter-desktop) / 2);
-    width: var(--radius-xl);
-    height: calc(100% + var(--layout-grid-gutter-desktop) / 2);
+    top: calc(-1 * var(--spacing-56) / 2 - var(--border-width-thin));
+    width: var(--passos-raio);
+    height: calc(100% + var(--spacing-56) / 2 + var(--border-width-thin));
     border-top: var(--border-width-thin) solid var(--colors-brand-primary-600);
-    border-top-left-radius: var(--radius-xl);
+    border-top-left-radius: var(--passos-raio);
   }
 }
