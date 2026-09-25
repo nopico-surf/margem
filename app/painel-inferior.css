@@ -68,6 +68,19 @@
 }
 
 @media (min-width: 48em) {
+  .painel-inferior[data-variante="cookies"] {
+    gap: var(--spacing-24);
+  }
+
+  .painel-inferior-titulo {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-4xl);
+  }
+
+  .painel-inferior-decisao {
+    flex-direction: column-reverse;
+  }
+
   /* No desktop o painel vira um cartão no canto, e o Continuar da barra não existe (o botão está
      dentro da página). */
   .painel-inferior {
