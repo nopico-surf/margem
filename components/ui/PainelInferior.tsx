@@ -39,12 +39,15 @@ export function PainelInferior(props: PainelInferiorProps) {
             </p>
           </div>
           <div className="painel-inferior-acoes">
-            <Button tamanho="medium" larguraTotal onClick={props.onAceitar}>
-              Li e estou de acordo
-            </Button>
-            <Button tamanho="medium" larguraTotal variante="secondary" onClick={props.onRecusar}>
-              Recusar
-            </Button>
+            <div className="painel-inferior-decisao">
+              <Button tamanho="medium" larguraTotal variante="secondary" onClick={props.onRecusar}>
+                Recusar
+              </Button>
+              <Button tamanho="medium" larguraTotal onClick={props.onAceitar}>
+                <span className="painel-inferior-so-mobile">Aceitar</span>
+                <span className="painel-inferior-so-desktop">Li e estou de acordo</span>
+              </Button>
+            </div>
             <Button tamanho="medium" larguraTotal variante="transparent" onClick={props.onVerDados}>
               Ver como a gente cuida dos seus dados
             </Button>
