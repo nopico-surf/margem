@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button";
 // O `continuar` só existe no mobile: no desktop o botão está dentro da própria página.
 type PainelInferiorProps = { visivel: boolean } & (
   | { variante: "cookies"; onAceitar?: () => void; onRecusar?: () => void; onVerDados?: () => void }
-  | { variante: "continuar"; onContinuar?: () => void }
+  | { variante: "continuar"; onContinuar?: () => void; texto?: string }
 );
 
 export function PainelInferior(props: PainelInferiorProps) {
@@ -52,7 +52,7 @@ export function PainelInferior(props: PainelInferiorProps) {
         </>
       ) : (
         <Button tamanho="medium" larguraTotal onClick={props.onContinuar}>
-          Continuar
+          {props.texto ?? "Continuar"}
         </Button>
       )}
     </div>

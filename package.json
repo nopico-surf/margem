@@ -9,7 +9,9 @@
     "lint": "node scripts/lint-regras.mjs"
   },
   "dependencies": {
+    "@flags-sdk/growthbook": "^0.3.1",
     "@supabase/supabase-js": "latest",
+    "flags": "^4.3.1",
     "mixpanel-browser": "^2.83.0",
     "next": "latest",
     "react": "latest",
