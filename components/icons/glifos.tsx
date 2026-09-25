@@ -1,5 +1,5 @@
 // Um componente por glifo. A cor, a opacidade e o tamanho são parâmetro, e é por isso que o mesmo
-// desenho serve a todos os lugares onde ele aparece. Estes 16 desenhos estavam espalhados em 26
+// desenho serve a todos os lugares onde ele aparece. Estes 21 desenhos estavam espalhados em 26
 // arquivos, que diferiam só em cor e em escala.
 //
 // O nome do componente é o nome do glifo no Figma, em PascalCase. Todos vêm do arquivo Ícones
@@ -21,6 +21,11 @@
 //   GlifoPlace            place               (Maps)
 //   GlifoMessageFlye      message_flye        (AV)
 //   GlifoSecurity         security            (Hardware)
+//   GlifoVerifiedUser     verified_user       (Action)
+//   GlifoLock             lock                (Action)
+//   GlifoHealing          healing             (Image)
+//   GlifoWork             work                (Action)
+//   GlifoGroups           groups              (Social)
 //
 // Não há divergência entre os dois lados: todo componente aqui tem o nome do componente no Figma.
 //
@@ -301,3 +306,45 @@ export function GlifoInfo({ className, color = "currentColor", opacity = 1, size
   );
 }
 
+
+// Os cinco abaixo são 24x24, ao contrário dos anteriores. Vieram da tela /bem-vindo (Cards LP).
+
+export function GlifoVerifiedUser({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM19 11C19 15.52 16.02 19.69 12 20.93C7.98 19.69 5 15.52 5 11V6.3L12 3.19L19 6.3V11ZM7.41 11.59L6 13L10 17L18 9L16.59 7.58L10 14.17L7.41 11.59Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoLock({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM9 6C9 4.34 10.34 3 12 3C13.66 3 15 4.34 15 6V8H9V6ZM18 20H6V10H18V20ZM12 17C13.1 17 14 16.1 14 15C14 13.9 13.1 13 12 13C10.9 13 10 13.9 10 15C10 16.1 10.9 17 12 17Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoHealing({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M17.73 12.02L21.71 8.04C22.1 7.65 22.1 7.02 21.71 6.63L17.37 2.29C16.98 1.9 16.35 1.9 15.96 2.29L11.98 6.27L8 2.29C7.8 2.1 7.55 2 7.29 2C7.04 2 6.78 2.1 6.59 2.29L2.25 6.63C1.86 7.02 1.86 7.65 2.25 8.04L6.23 12.02L2.25 16C1.86 16.39 1.86 17.02 2.25 17.41L6.59 21.75C6.98 22.14 7.61 22.14 8 21.75L11.98 17.77L15.96 21.75C16.16 21.95 16.41 22.04 16.67 22.04C16.93 22.04 17.18 21.94 17.38 21.75L21.72 17.41C22.11 17.02 22.11 16.39 21.72 16L17.73 12.02V12.02ZM12 9C12.55 9 13 9.45 13 10C13 10.55 12.55 11 12 11C11.45 11 11 10.55 11 10C11 9.45 11.45 9 12 9ZM7.29 10.96L3.66 7.34L7.29 3.71L10.91 7.33L7.29 10.96ZM10 13C9.45 13 9 12.55 9 12C9 11.45 9.45 11 10 11C10.55 11 11 11.45 11 12C11 12.55 10.55 13 10 13ZM12 15C11.45 15 11 14.55 11 14C11 13.45 11.45 13 12 13C12.55 13 13 13.45 13 14C13 14.55 12.55 15 12 15ZM14 11C14.55 11 15 11.45 15 12C15 12.55 14.55 13 14 13C13.45 13 13 12.55 13 12C13 11.45 13.45 11 14 11ZM16.66 20.34L13.03 16.72L16.66 13.09L20.28 16.71L16.66 20.34Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoWork({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 6H17V4C17 2.89 16.11 2 15 2H9C7.89 2 7 2.89 7 4V6H4C2.89 6 2 6.89 2 8V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V8C22 6.89 21.11 6 20 6ZM9 4H15V6H9V4ZM20 19H4V17H20V19ZM20 14H4V8H7V10H9V8H15V10H17V8H20V14Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoGroups({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M4 13C5.1 13 6 12.1 6 11C6 9.9 5.1 9 4 9C2.9 9 2 9.9 2 11C2 12.1 2.9 13 4 13ZM5.13 14.1C4.76 14.04 4.39 14 4 14C3.01 14 2.07 14.21 1.22 14.58C0.48 14.9 0 15.62 0 16.43V18H4.5V16.39C4.5 15.56 4.73 14.78 5.13 14.1ZM20 13C21.1 13 22 12.1 22 11C22 9.9 21.1 9 20 9C18.9 9 18 9.9 18 11C18 12.1 18.9 13 20 13ZM24 16.43C24 15.62 23.52 14.9 22.78 14.58C21.93 14.21 20.99 14 20 14C19.61 14 19.24 14.04 18.87 14.1C19.27 14.78 19.5 15.56 19.5 16.39V18H24V16.43ZM16.24 13.65C15.07 13.13 13.63 12.75 12 12.75C10.37 12.75 8.93 13.14 7.76 13.65C6.68 14.13 6 15.21 6 16.39V18H18V16.39C18 15.21 17.32 14.13 16.24 13.65ZM8.07 16C8.16 15.77 8.2 15.61 8.98 15.31C9.95 14.93 10.97 14.75 12 14.75C13.03 14.75 14.05 14.93 15.02 15.31C15.79 15.61 15.83 15.77 15.93 16H8.07ZM12 8C12.55 8 13 8.45 13 9C13 9.55 12.55 10 12 10C11.45 10 11 9.55 11 9C11 8.45 11.45 8 12 8ZM12 6C10.34 6 9 7.34 9 9C9 10.66 10.34 12 12 12C13.66 12 15 10.66 15 9C15 7.34 13.66 6 12 6Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}

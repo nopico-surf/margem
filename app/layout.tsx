@@ -43,6 +43,12 @@ const jsonLd = {
   description: DESCRICAO,
 };
 
+// Quem consentiu antes do cookie existir só tem o localStorage, então o proxy.ts manda pra /bem-vindo.
+// Este script roda antes da tela ser desenhada: grava o cookie e troca pra /inicio sem piscar.
+// Mora aqui e não em app/bem-vindo/layout.tsx porque um <script> criado no cliente (ao voltar de
+// /privacidade, por exemplo) gera erro no React; o layout raiz nunca é recriado na navegação.
+const irParaInicioSeJaConsentiu = `try{if(location.pathname==="/bem-vindo"&&localStorage.getItem("margem-consentimento")==="true"){document.cookie="margem-consentimento=true; path=/; max-age=34560000; samesite=lax";document.documentElement.style.visibility="hidden";location.replace("/inicio"+location.search)}}catch(e){}`;
+
 export const viewport: Viewport = {
   interactiveWidget: "resizes-visual",
 };
@@ -52,6 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR" className={`${inter.variable} ${urbanist.variable}`}>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+        <script dangerouslySetInnerHTML={{ __html: irParaInicioSeJaConsentiu }} />
         <GoogleTagManager />
         <MixpanelPageView />
         {children}

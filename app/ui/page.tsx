@@ -3,6 +3,11 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Avatar } from "@/components/ui/Avatar";
+import { CardsLp } from "@/components/bem-vindo/CardsLp";
+import { CardPublico } from "@/components/bem-vindo/CardPublico";
+import { Stepper } from "@/components/bem-vindo/Stepper";
+import { PainelInferior } from "@/components/ui/PainelInferior";
+import { GlifoVerifiedUser } from "@/components/icons/glifos";
 import { IconeAgendarWhatsapp, IconeSeta, IconeSetaResultado } from "@/components/icons";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
 import "./galeria.css";
@@ -78,7 +83,7 @@ const COMBINACOES: Combinacao[] = [
   },
   {
     titulo: "primary / medium / canto 12 / largura total",
-    usadaEm: "BotaoContinuar no onboarding e na proteção de dados",
+    usadaEm: "BotaoContinuar (hoje só no ResponseError, o onboarding não o usa mais)",
     props: { variante: "primary", tamanho: "medium", larguraTotal: true },
     conteudo: "Continuar",
   },
@@ -197,6 +202,71 @@ export default async function GaleriaDeComponentes() {
               <span className="label-xx-small galeria-nota">{estado.nota}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Cards LP</h2>
+        <p className="text-small-regular galeria-nota">
+          Sem clique, então sem hover, foco ou desabilitado. Um único estado.
+        </p>
+        <div className="galeria-palco galeria-palco-cards">
+          <CardsLp
+            icone={<GlifoVerifiedUser color="var(--colors-brand-primary-600)" />}
+            titulo="Sem julgamento"
+            texto="Conte do seu jeito"
+          />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Card público</h2>
+        <p className="text-small-regular galeria-nota">
+          Sem clique, então sem hover. Um único estado. A foto se ancora pelo object-position.
+        </p>
+        <div className="galeria-palco galeria-palco-cards">
+          <CardPublico
+            foto="/assets/maos-sobre-mesa.webp"
+            posicaoDaFoto="center 60%"
+            titulo="Por perto"
+            texto="Para quem está próximo de alguém em uso"
+          />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Stepper</h2>
+        <p className="text-small-regular galeria-nota">
+          Vertical no mobile e horizontal a partir de 768 pixels: redimensione a janela. O último passo
+          não tem linha própria, ela segue para os cards em /bem-vindo.
+        </p>
+        <div className="galeria-palco galeria-palco-stepper">
+          <Stepper numero={1} titulo="Você conta ou seleciona" texto="Do jeito que conseguir, sem precisar ter certeza" />
+          <Stepper numero={2} titulo="A gente organiza" texto="Uma orientação clara pensada para o seu momento" />
+          <Stepper numero={3} titulo="Você escolhe o caminho" texto="A gente conecta possibilidades. A decisão é sua" ultimo />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Painel inferior</h2>
+        <p className="text-small-regular galeria-nota">
+          Duas variantes, cookies e continuar. Na página ele é fixo embaixo, entra subindo e sai
+          descendo; aqui está solto no fluxo para caber na galeria. A variante continuar some a partir
+          de 768 pixels, porque no desktop o botão está dentro da página.
+        </p>
+        <div className="galeria-estados">
+          <div className="galeria-estado">
+            <div className="galeria-palco galeria-palco-painel">
+              <PainelInferior variante="cookies" visivel />
+            </div>
+            <span className="label-xx-small galeria-nome">cookies</span>
+          </div>
+          <div className="galeria-estado">
+            <div className="galeria-palco galeria-palco-painel">
+              <PainelInferior variante="continuar" visivel />
+            </div>
+            <span className="label-xx-small galeria-nome">continuar</span>
+          </div>
         </div>
       </section>
 

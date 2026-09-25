@@ -167,3 +167,22 @@
   border-radius: var(--radius-full);
   background: var(--colors-brand-primary-500);
 }
+
+/* Os novos componentes de /bem-vindo. O painel inferior é fixo na página real, aqui fica no fluxo. */
+.galeria-palco-cards {
+  max-width: 20rem;
+}
+
+.galeria-palco-stepper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 24rem;
+}
+
+.galeria-palco-painel .painel-inferior {
+  position: static;
+  transform: none;
+  visibility: visible;
+  min-width: 20rem;
+}

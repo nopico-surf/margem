@@ -27,14 +27,12 @@ Estrutura esperada:
 ```
 proxy.ts                        decide pra onde vai "/", sem piscar (lê cookie)
 /app
-  layout.tsx                  metadataBase, JSON-LD, fonts
+  layout.tsx                  metadataBase, JSON-LD, fonts, script que tira de /bem-vindo quem já consentiu
   robots.ts                   libera /bem-vindo e /privacidade; bloqueia o resto
   sitemap.ts                  lista /bem-vindo e /privacidade
   /bem-vindo
-    page.tsx                  step 1 (sobre a Margem)
-    layout.tsx                script que redireciona quem já consentiu antes
-  /protecao-de-dados
-    page.tsx                  step 2 (consentimento LGPD), grava cookie
+    page.tsx                  entrada única: sobre a Margem + painel de dados e cookies (consentimento LGPD, grava cookie)
+  (/protecao-de-dados         desativada: redireciona pra /bem-vindo, ver next.config.mjs)
   /conversa/page.tsx          cards + campo aberto + resposta
   /privacidade/page.tsx       política completa, texto longo
   /ui/page.tsx                galeria de componentes (só dev)
@@ -59,9 +57,11 @@ proxy.ts                        decide pra onde vai "/", sem piscar (lê cookie)
 
 ## 3. O fluxo, do começo ao fim
 
-**Primeira visita.** Step 1 (Sobre a Margem): pulável, com card de emergência visível contendo CVV 188, SAMU 192, Polícia 190 e Disque Social 121. Step 2 (Sobre dados): não pulável hoje, com um único checkbox de consentimento que cobre tudo (armazenamento local, IA, analytics, compartilhamento anonimizado com governo e pesquisa). Esse step traz também o aviso de que, pra quem é menor de 18, conversar com um responsável pode ser importante. Sem pedir declaração de idade, sem bloqueio, sem avisar ninguém.
+**Primeira visita.** Uma tela só, `/bem-vindo` (Sobre a Margem), com o painel de "Dados e cookies" subindo por cima. O painel tem "Li e estou de acordo", "Recusar" e "Ver como a gente cuida dos seus dados" (abre `/privacidade`). Um único aceite cobre tudo (armazenamento local, IA, analytics, compartilhamento anonimizado com governo e pesquisa). A tela traz também o aviso de que, pra quem é menor de 18, conversar com um responsável pode ser importante. Sem pedir declaração de idade, sem bloqueio, sem avisar ninguém.
 
-O consentimento grava em `localStorage`, em `sessoes.consentimento_lgpd` e em um cookie `margem-consentimento=true` que sobrevive por 400 dias. O cookie é lido pelo `proxy.ts` antes da página carregar, o que elimina o piscar ou conteúdo vazio. Quem já consentiu não vê essa tela de novo.
+Não há mais card de emergência (CVV 188, SAMU 192, Polícia 190, Disque Social 121) na entrada: os seis designs de 25/09/2026 não o trazem, e a decisão foi começar sem. Os contatos de emergência continuam existindo na resposta (ver "Sempre, em paralelo").
+
+**Recusar não bloqueia.** O painel fecha e a pessoa segue navegando. No mobile, 1s depois de o painel sair sobe uma barra fixa com "Continuar" (no desktop o botão já está dentro da página). Sem consentimento, cada tentativa de conversar na `/inicio` (clicar num card ou enviar o campo livre) reabre o painel em vez de seguir; a ação só acontece se a pessoa aceitar, e se recusar de novo nada acontece. O consentimento grava em `localStorage`, em `sessoes.consentimento_lgpd` e em um cookie `margem-consentimento=true` que sobrevive por 400 dias (`lib/consentimento.ts`). O cookie é lido pelo `proxy.ts` antes da página carregar, o que elimina o piscar ou conteúdo vazio. Quem já consentiu não vê `/bem-vindo` de novo. Quem recusou vê de novo ao abrir `/`, porque não há cookie.
 
 **Tela principal.** Seis cards que representam estados emocionais distintos, mais um sétimo para familiares e pessoas próximas. Em paralelo, um campo de texto livre. A pessoa escolhe qualquer um dos caminhos, não é um funil.
 
@@ -235,7 +235,7 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
 
 ## 11. Definição de pronto do v0
 
-- [x] Boas-vindas em dois steps, com consentimento gravado e não repetido
+- [x] Boas-vindas em tela única (era em dois steps), com painel de consentimento gravado e não repetido
 - [x] Seis cards renderizando resposta do banco sem chamar IA (v0; 7º "para familiares" pode vir depois)
 - [x] Campo livre sempre chamando o Gemini, com resposta salva no banco (cache do campo livre desligado, ver seção 5)
 - [ ] Cache do campo livre por mensagens parecidas (abordagem a definir)
@@ -248,9 +248,10 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
 - [ ] Fallback de "tentar novamente" quando o Gemini falha (hoje a tela fica no loading, ver seção 4)
 - [x] Falha do Gemini monitorável (log da Vercel, evento `gemini_falhou` no Mixpanel, histórico sem resposta)
 - [x] SEO básico: metadataBase, robots.txt, sitemap.xml, JSON-LD Organization
-- [x] h1 nas telas de entrada (`/bem-vindo`, `/protecao-de-dados`, `/privacidade`)
+- [x] h1 nas telas de entrada (`/bem-vindo`, `/privacidade`)
 - [x] Redirecionamento sem piscar: proxy + cookie, sem tela vazia
-- [ ] Consentimento condicional em barra inferior (pra quem não passar pelos passos padrões)
+- [x] Consentimento condicional em painel inferior (pra quem recusou ou não passou por `/bem-vindo`): reabre ao clicar num card ou enviar o campo livre na `/inicio`
+- [ ] Analytics respeitar a recusa: hoje `track()` do Mixpanel não checa o consentimento, então quem recusou ainda gera evento
 
 <!-- BEGIN:nextjs-agent-rules -->
 

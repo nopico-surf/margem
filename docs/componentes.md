@@ -120,12 +120,12 @@ Componentes: `card-home`, `card-home-group`, `header-home`, `_card-profissionais
 | Pasta | Componentes |
 |---|---|
 | `components/app` | CardHome, CardHomeGroup, CardHomeHeader, HomeHero, IdentityBadge, KeyboardDiagnostics, MessageInput |
-| `components/bem-vindo` | EmergencyPanel |
+| `components/bem-vindo` | CardsLp, CardPublico, Stepper, EmergencyPanel (sem uso desde 25/09/2026) |
 | `components/conversa` | ActionRow, CardBackground, CardHeader, CardProfissionais, CardProfissionaisCompleto, CardRecurso, CardsInstituicoes, CardsServicosPublicos, CheckBoxGroup, ChecklistSection, FiltroEspecialidade, MoreOptions, ResourceActions, ResponseCopy, ResponseError, ResponseLoading, ResultMessages, ResultPage, UserMessage |
 | `components/intro` | IntroBubble, IntroCopy, IntroHeader, IntroShell |
 | `components/layout` | Footer, Header, MenuContatos, SideMenu |
-| `components/protecao-de-dados` | ConsentCard, DadosPrivacidadeModal, LinkPoliticaDados, ModalFooter, ModalHeader, ModalSection |
-| `components/ui` | **Button** (o botão), e os que hoje são só um atalho para ele: ActionButton, BotaoAgendar, BotaoContinuar, BotaoFecharMenu, BotaoMenu, BotaoServicosPublicos, BotaoTopicos, Checkbox, ContatoLink, SectionJump |
+| `components/protecao-de-dados` | DadosPrivacidadeModal, ModalFooter, ModalHeader, ModalSection, mais ConsentCard e LinkPoliticaDados (sem uso desde 25/09/2026) |
+| `components/ui` | **Button** (o botão), e os que hoje são só um atalho para ele: ActionButton, BotaoAgendar, BotaoContinuar, BotaoFecharMenu, BotaoMenu, BotaoServicosPublicos, BotaoTopicos, Checkbox, ContatoLink, PainelInferior, SectionJump |
 | raiz | GoogleTagManager, MixpanelPageView |
 
 Convenção do código: `PascalCase.tsx`, mistura de português e inglês sem critério (`CardProfissionais` ao lado de `ResponseLoading`, `BotaoMenu` ao lado de `ActionButton`).
@@ -397,3 +397,52 @@ deliberada: o card do profissional ficou 4px mais alto. O esqueleto (`.figma-ske
 junto, senão a tela saltaria ao terminar de carregar. O Figma será ajustado para 96 também.
 
 Resolvidos em 18/09/2026: cores do `badge` confirmadas; `card-bg` renomeado para `container-conteudo`; variantes do `avatar` nomeadas `photo` e `fallback`; seção `Cards pro dor` virou `Cards home`; `zap` virou `whatsapp`; unificação dos SVGs concluída, de 41 arquivos para 7; os 7 componentes de botão do código reconciliados com o set `button` do Figma, sem alterar o visual (ver seção 5).
+
+---
+
+## 10. A tela /bem-vindo, de 25/09/2026
+
+`/bem-vindo` virou a entrada única: a etapa `/protecao-de-dados` foi desativada (redireciona pra `/bem-vindo`) e o consentimento virou o painel de "Dados e cookies". Implementada a partir de seis frames do arquivo Experiência do produto: `bem-vindo-mobile`, `bem-vindo-mobile-consentido`, `bem-vindo-desktop` (1080), `bem-vindo-desktop-consentido` (1080) e `bem-vindo-desktop` (1920), mais a foto solta do hero. "Consentido" é o frame sem o painel de cookies.
+
+**Corte de tela.** Mobile abaixo de 48em (768 pixels), desktop dali em diante. O conteúdo abaixo do hero nunca passa de 67.5rem (1080 pixels), e o hero ocupa a largura toda (frame de 1920). Tipografia e espaçamento mudam entre os dois: título do hero 24 para 32, título de seção 20 para 24, corpo do hero 14 para 16.
+
+### Componentes novos, todos sem equivalente no Figma
+
+Os quatro não existiam nem no Figma nem no código. Nenhum tem hover: cards não têm clique, e o painel só tem botões, que já têm os estados do `button`.
+
+| Código | Nome proposto no Figma | O que é |
+|---|---|---|
+| `bem-vindo/CardsLp` | `cards-lp` (nas instâncias aparece como "Cards LP") | Ícone de 24, título e uma linha, sem clique |
+| `bem-vindo/CardPublico` | `card-publico` (hoje "Frame 149", nome auto-gerado) | Foto em cima, título e uma linha embaixo |
+| `bem-vindo/Stepper` | `stepper`, propriedade `orientation` = vertical, horizontal | Número em círculo, linha e texto. Vertical no mobile, horizontal no desktop |
+| `ui/PainelInferior` | `painel-inferior`, propriedade `variant` = cookies, continuar | Painel fixo embaixo. `cookies` tem título, texto e três botões; `continuar` tem um botão só, e no desktop não existe |
+
+Composição: `cards-lp` e `card-publico` são só markup. O painel usa o `Button` (primary, secondary, transparent, tamanho medium). A tela reaproveita `Header`, `SideMenu`, `Footer` e `Button`.
+
+Todos aparecem em `/ui`.
+
+### O ramo do "Como funciona"
+
+A linha que sai do passo 3 e chega em cada card não é componente: são pseudo-elementos de `.passos-ramo` em `app/bem-vindo.css`. No Figma são três vetores soltos (`Vector 1` a `3` no mobile, `Group 1` no desktop) com altura fixa, que quebrariam quando o texto de um card quebra em duas linhas. Aqui a curva termina no meio de cada card e o raio é o `radius-xl`. Se o desenho do Figma mudar, mudar lá o ponto onde a curva entra no card.
+
+### Ícones novos
+
+Cinco glifos 24x24 em `components/icons/glifos.tsx`: `verified_user`, `lock`, `healing`, `work`, `groups`. Os nomes vêm do desenho do Material Symbols e só `verified_user` foi confirmado no arquivo Ícones; conferir os outros quatro. No Figma os três ícones do "Como funciona" usam `#087F5B`, que não é token, e os dois do hero usam `#089162`. No código todos usam `brand-primary-600` (`#089162`).
+
+### Fotos
+
+Em `/public/assets`: `dois-amigos-abracando.webp`, `homem-regata-verde.webp`, `maos-sobre-mesa.webp`. Foram exportadas do Figma e convertidas para webp (a original do hero tinha 22 MB). A imagem solta `Two_friends_hugging_2K` é a mesma foto, sem o corte; o hero usa a versão do frame.
+
+### Decisões de comportamento
+
+- **Recusar** só fecha o painel. Sem consentimento, clicar num card ou enviar o campo livre na `/inicio` reabre o painel; aceitar executa a ação, recusar a descarta.
+- **Barra de Continuar** (mobile): sobe 1s depois que o painel de cookies sai.
+- **Texto do Figma corrigido:** o card "Por perto" no Figma diz "ara quem está próximo...", e o código diz "Para quem está próximo...".
+- **Sem card de emergência** na entrada. Ver CLAUDE.md seção 3.
+
+### Pendências
+
+- [ ] Nomear os componentes acima no Margem System (`cards-lp`, `card-publico`, `stepper`, `painel-inferior`) e nomear o "Frame 149".
+- [ ] Confirmar no Ícones os nomes `lock`, `healing`, `work`, `groups`.
+- [ ] `EmergencyPanel`, `IntroShell`, `IntroBubble`, `IntroCopy`, `IntroHeader`, `ConsentCard` e `LinkPoliticaDados` ficaram sem uso. Não foram apagados.
+- [ ] O `track()` do Mixpanel não checa o consentimento.

@@ -1,0 +1,600 @@
+/* Tela /bem-vindo, a entrada única (eram /bem-vindo e /protecao-de-dados).
+
+   Mobile primeiro. A partir de 48em (768 pixels) vira desktop: o hero passa a duas colunas, o "Como
+   funciona" passa a três e o stepper deita. O conteúdo de baixo nunca passa de 67.5rem (1080 pixels);
+   o hero ocupa a largura toda, como no frame de 1920 do Figma.
+
+   Larguras em rem vêm dos frames do Figma e não têm token: 48em é 768 pixels, 67.5rem é 1080 pixels. */
+
+.bv-pagina {
+  position: relative;
+  min-height: 100svh;
+  background: var(--colors-neutral-50);
+  color: var(--colors-neutral-950);
+}
+
+/* A barra fixa do mobile não pode cobrir o fim da página. */
+.bv-pagina[data-com-barra="true"] {
+  padding-bottom: var(--spacing-80);
+}
+
+/* ===== Header sobre o hero ===== */
+
+.bv-pagina .app-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  height: var(--size-48);
+  background: var(--colors-brand-primary-100);
+  box-shadow: 0 0 var(--spacing-32) var(--spacing-32) var(--colors-brand-primary-100);
+}
+
+/* ===== Hero ===== */
+
+.bv-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+}
+
+.bv-hero-topo {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A altura cresce com a largura da tela: 449 por 415 é a proporção do frame mobile. */
+.bv-hero-foto {
+  position: relative;
+  aspect-ratio: 449 / 415;
+  overflow: hidden;
+}
+
+.bv-hero-foto img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.bv-hero-coluna {
+  display: flex;
+  flex-direction: column;
+}
+
+.bv-hero-texto {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14);
+  margin: calc(-1 * var(--size-48) - var(--spacing-2)) var(--layout-page-padding-mobile) 0;
+  padding: var(--spacing-24);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.bv-hero-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-4xl);
+  text-box: trim-both cap alphabetic;
+}
+
+.bv-hero-descricao {
+  margin: 0;
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+.bv-hero-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--layout-grid-gutter-mobile);
+  padding: var(--spacing-24) var(--layout-page-padding-mobile) 0;
+}
+
+/* Botões Continuar que ficam dentro da página. No mobile quem faz esse papel é o painel fixo. */
+.bv-continuar {
+  display: none;
+}
+
+/* ===== Conteúdo abaixo do hero ===== */
+
+.bv-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  width: 100%;
+  max-width: 67.5rem;
+  margin: 0 auto;
+  padding: var(--spacing-24) var(--layout-page-padding-mobile) 0;
+}
+
+.bv-secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-20);
+}
+
+.bv-secao-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-3xl);
+  text-box: trim-both cap alphabetic;
+}
+
+.bv-publico {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--layout-grid-gutter-mobile);
+}
+
+.bv-aviso {
+  margin: 0;
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+/* No desktop o rodapé e o botão de dados ficam na mesma linha. No mobile o botão de dados é o da
+   coluna lateral do "Como funciona", então este não aparece. */
+.bv-rodape {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 67.5rem;
+  margin: 0 auto;
+  padding: var(--spacing-16) var(--layout-page-padding-mobile) 0;
+}
+
+.bv-rodape .app-footer {
+  align-items: flex-start;
+  padding-inline: 0;
+}
+
+.bv-rodape .app-footer-title,
+.bv-rodape .app-footer-list {
+  padding-inline: 0;
+}
+
+/* O Figma tira o padding lateral do botão (padding=false) e, no desktop, usa o tamanho medium. */
+.bv-rodape .bv-rodape-dados.btn {
+  display: none;
+}
+
+/* Coluna à esquerda dos cards: no mobile só o aviso e o botão de dados, depois dos cards. */
+.passos-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-32);
+  margin-top: var(--spacing-24);
+}
+
+.bv-lateral-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+}
+
+/* O Figma tira o padding lateral do botão (padding=false). */
+.bv-lateral-dados.btn {
+  align-self: flex-start;
+  padding-inline: 0;
+}
+
+/* ===== cards-lp ===== */
+
+.cards-lp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+  overflow: clip;
+}
+
+.cards-lp-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.cards-lp-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  color: var(--colors-neutral-950);
+  text-box: trim-both cap alphabetic;
+}
+
+.cards-lp-descricao {
+  margin: 0;
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
+/* ===== card-publico ===== */
+
+.card-publico {
+  display: flex;
+  flex-direction: column;
+  height: 15rem;
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+  overflow: clip;
+}
+
+.card-publico-foto {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.card-publico-foto img {
+  object-fit: cover;
+}
+
+.card-publico-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  padding: var(--spacing-16);
+}
+
+.card-publico-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-2xl);
+  text-box: trim-both cap alphabetic;
+}
+
+.card-publico-descricao {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
+/* ===== stepper, mobile: vertical ===== */
+
+.stepper {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--size-32) 1fr;
+  column-gap: var(--spacing-8);
+  min-height: var(--size-64);
+}
+
+.stepper[data-ultimo="true"] {
+  min-height: 0;
+}
+
+.stepper-marcador {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepper-numero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--size-32);
+  height: var(--size-32);
+  border-radius: var(--radius-full);
+  background: var(--colors-brand-primary-600);
+  color: var(--colors-neutral-0);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+}
+
+.stepper-linha {
+  flex: 1 1 0;
+  width: var(--border-width-thin);
+  margin-left: var(--spacing-16);
+  background: var(--colors-brand-primary-600);
+}
+
+.stepper-texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-6);
+  align-self: start;
+  min-height: var(--size-32);
+}
+
+.stepper-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  text-box: trim-both cap alphabetic;
+}
+
+.stepper-descricao {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
+/* ===== Como funciona: lista de passos e cards ===== */
+
+.passos-grade {
+  display: flex;
+  flex-direction: column;
+}
+
+.passos-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  margin: var(--spacing-16) 0 0 calc(var(--size-32) + var(--spacing-8));
+}
+
+/* O ramo liga a linha do passo 3 a cada card. A vertical passa reto por todos menos o último, que
+   só vai até o meio e faz a curva. O primeiro sobe 16 até o texto do passo 3, os outros sobem 12
+   (o vão entre cards). No mobile a vertical fica no centro do número (24 à esquerda do card). */
+.passos-ramo {
+  position: relative;
+}
+
+.passos-ramo::before,
+.passos-ramo::after {
+  content: "";
+  position: absolute;
+  left: calc(-1 * (var(--size-16) + var(--spacing-8)));
+  pointer-events: none;
+}
+
+.passos-ramo::before {
+  top: calc(-1 * var(--spacing-12));
+  height: calc(100% + var(--spacing-12));
+  border-left: var(--border-width-thin) solid var(--colors-brand-primary-600);
+}
+
+.passos-ramo:first-child::before {
+  top: calc(-1 * var(--spacing-16));
+  height: calc(100% + var(--spacing-16));
+}
+
+.passos-ramo:last-child::before {
+  height: calc(50% + var(--spacing-12) - var(--radius-xl));
+}
+
+.passos-ramo:last-child:first-child::before {
+  height: calc(50% + var(--spacing-16) - var(--radius-xl));
+}
+
+.passos-ramo::after {
+  top: calc(50% - var(--radius-xl));
+  width: calc(var(--size-16) + var(--spacing-8));
+  height: var(--radius-xl);
+  border-bottom: var(--border-width-thin) solid var(--colors-brand-primary-600);
+  border-left: var(--border-width-thin) solid var(--colors-brand-primary-600);
+  border-bottom-left-radius: var(--radius-xl);
+}
+
+/* ===== Desktop ===== */
+
+@media (min-width: 48em) {
+  .bv-pagina .app-header {
+    position: static;
+    padding-inline: var(--layout-page-padding-desktop);
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .bv-hero {
+    gap: 0;
+  }
+
+  .bv-hero-topo {
+    display: grid;
+    margin: var(--spacing-6) var(--layout-page-padding-desktop) 0;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-48);
+    align-items: center;
+    min-height: max(24rem, 30.8vw);
+  }
+
+  .bv-hero-foto {
+    align-self: stretch;
+    aspect-ratio: auto;
+    border-radius: var(--radius-2xl);
+  }
+
+  .bv-hero-foto img {
+    object-position: center 90%;
+  }
+
+  .bv-hero-texto {
+    gap: var(--spacing-16);
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .bv-hero-titulo {
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-5xl);
+  }
+
+  .bv-hero-descricao {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-2xl);
+    text-box: trim-both cap alphabetic;
+  }
+
+  .bv-hero-cards {
+    padding: var(--spacing-16) 0 0;
+  }
+
+  /* 19.8331rem são os 317,33 pixels do Figma: um terço da coluna de 1016. */
+  .bv-continuar {
+    display: flex;
+    width: 19.8331rem;
+    max-width: 100%;
+  }
+
+  .bv-hero-coluna .bv-continuar {
+    margin-top: var(--spacing-32);
+  }
+
+  .bv-conteudo {
+    gap: var(--spacing-48);
+    padding: var(--spacing-48) var(--layout-page-padding-desktop) 0;
+  }
+
+  .bv-secao {
+    gap: var(--spacing-24);
+  }
+
+  .bv-secao-titulo {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-4xl);
+  }
+
+  .bv-publico {
+    gap: var(--spacing-48);
+  }
+
+  .card-publico {
+    height: 20.1875rem;
+  }
+
+  .bv-rodape .bv-rodape-dados.btn,
+  .bv-lateral-dados.btn {
+    padding-block: var(--spacing-14);
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-xl);
+  }
+
+  .bv-rodape .bv-rodape-dados.btn {
+    display: inline-flex;
+    align-self: center;
+  }
+
+  .bv-lateral-texto {
+    gap: var(--spacing-8);
+  }
+
+  .bv-rodape {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-48);
+    padding: var(--spacing-48) var(--layout-page-padding-desktop) var(--spacing-32);
+  }
+
+  /* Stepper deitado: número e linha em cima, texto embaixo. A linha atravessa o vão até o número
+     seguinte (margem negativa igual ao gap da grade). */
+  .passos-grade {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--layout-grid-gutter-desktop);
+    row-gap: var(--layout-grid-gutter-desktop);
+  }
+
+  .stepper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-12);
+    min-height: 0;
+  }
+
+  .stepper-marcador {
+    flex-direction: row;
+    margin-right: calc(-1 * var(--layout-grid-gutter-desktop));
+  }
+
+  .stepper[data-ultimo="true"] .stepper-marcador {
+    margin-right: 0;
+  }
+
+  .stepper-linha {
+    flex: 1 1 0;
+    width: auto;
+    height: var(--border-width-thin);
+    margin: var(--spacing-16) 0 0;
+  }
+
+  .stepper[data-ultimo="true"] .stepper-linha {
+    margin-right: var(--radius-xl);
+  }
+
+  /* A curva do fim da linha do passo 3: desce pela borda direita até o vão dos cards. */
+  .stepper[data-ultimo="true"]::after {
+    content: "";
+    position: absolute;
+    top: var(--spacing-16);
+    right: 0;
+    width: var(--radius-xl);
+    height: calc(100% - var(--spacing-16) + var(--layout-grid-gutter-desktop));
+    border-top: var(--border-width-thin) solid var(--colors-brand-primary-600);
+    border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
+    border-top-right-radius: var(--radius-xl);
+    pointer-events: none;
+  }
+
+  .stepper-texto {
+    align-self: stretch;
+    min-height: 0;
+  }
+
+  .passos-lateral {
+    grid-row: 2;
+    grid-column: 1;
+    align-self: start;
+    margin-top: 0;
+  }
+
+  .passos-cards {
+    grid-row: 2;
+    grid-column: 2 / span 2;
+    margin: 0;
+    padding-right: var(--layout-grid-gutter-desktop);
+  }
+
+  /* Ramos à direita: a vertical fica na borda da coluna e a curva entra no card pela direita. */
+  .passos-ramo::before,
+  .passos-ramo::after {
+    left: auto;
+    right: calc(-1 * var(--layout-grid-gutter-desktop));
+  }
+
+  .passos-ramo::before {
+    border-left: 0;
+    border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
+  }
+
+  .passos-ramo:first-child::before {
+    top: 0;
+    height: 100%;
+  }
+
+  .passos-ramo:last-child::before {
+    height: calc(50% + var(--spacing-12) - var(--radius-xl));
+  }
+
+  .passos-ramo::after {
+    width: var(--layout-grid-gutter-desktop);
+    border-left: 0;
+    border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: var(--radius-xl);
+  }
+}

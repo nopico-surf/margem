@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/inicio", "/conversa", "/protecao-de-dados", "/ui", "/api/"],
+      disallow: ["/inicio", "/conversa", "/ui", "/api/"],
     },
     sitemap: "https://www.somosmargem.com.br/sitemap.xml",
   };

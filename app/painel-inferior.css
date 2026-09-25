@@ -1,0 +1,80 @@
+/* Painel fixo embaixo. Figma: `painel-inferior`, variantes cookies e continuar. Usado em /bem-vindo
+   e em /inicio. Entra subindo e sai descendo. */
+
+.painel-inferior {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  padding: var(--spacing-20) var(--layout-page-padding-mobile) var(--spacing-16);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--colors-neutral-0);
+  box-shadow: 0 0 var(--spacing-32) var(--colors-alpha-16);
+  transform: translateY(0);
+  transition: transform 350ms ease, visibility 0s;
+}
+
+.painel-inferior[data-visivel="false"] {
+  transform: translateY(100%);
+  visibility: hidden;
+  transition: transform 350ms ease, visibility 0s 350ms;
+}
+
+.painel-inferior[data-variante="continuar"] {
+  padding-top: var(--spacing-16);
+}
+
+.painel-inferior-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-4xl);
+  color: var(--colors-neutral-950);
+  text-box: trim-both cap alphabetic;
+}
+
+.painel-inferior-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-20);
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+.painel-inferior-texto p {
+  margin: 0;
+}
+
+.painel-inferior-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+@media (min-width: 48em) {
+  /* No desktop o painel vira um cartão no canto, e o Continuar da barra não existe (o botão está
+     dentro da página). */
+  .painel-inferior {
+    left: auto;
+    right: var(--layout-page-padding-desktop);
+    width: 28.0625rem;
+    padding: var(--spacing-32) var(--layout-page-padding-tablet) var(--spacing-14);
+  }
+
+  .painel-inferior[data-variante="continuar"] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .painel-inferior,
+  .painel-inferior[data-visivel="false"] {
+    transition: none;
+  }
+}
