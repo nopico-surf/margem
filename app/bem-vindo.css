@@ -397,13 +397,17 @@
     box-shadow: none;
   }
 
+  /* O hero ocupa a altura da janela; o que vem depois (.bv-conteudo) só aparece rolando. */
   .bv-hero {
     gap: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
   .bv-hero-topo {
     display: grid;
-    margin: var(--spacing-6) var(--layout-page-padding-desktop) 0;
+    flex: 1;
+    margin: var(--spacing-6) var(--layout-page-padding-desktop) var(--layout-page-padding-desktop);
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-48);
     align-items: center;
