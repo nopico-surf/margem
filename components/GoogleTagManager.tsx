@@ -25,11 +25,14 @@ export function grantGoogleConsent() {
 
   if (window.gtag) {
     window.gtag("consent", "update", consentUpdate);
-    return;
+  } else {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(["consent", "update", consentUpdate]);
   }
 
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push(["consent", "update", consentUpdate]);
+  // O page_view inicial sai antes do aceite, sem cookie e sem origem. Este evento deixa o GTM
+  // mandar um page_view novo, já consentido e com as UTMs ainda na URL.
+  window.dataLayer.push({ event: "consentimento_concedido" });
 }
 
 export function GoogleTagManager() {
