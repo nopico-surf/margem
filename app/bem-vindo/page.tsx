@@ -143,7 +143,7 @@ export default function BemVindoPage() {
                 <CardsLp
                   icone={<GlifoHealing color={COR_DO_ICONE} />}
                   titulo="Serviços públicos"
-                  texto="Atendimento gratuito no sistema de saúde"
+                  texto="CAPS AD e UBS atendem de graça, pelo SUS"
                 />
               </div>
               <div className="passos-ramo">
@@ -184,9 +184,6 @@ export default function BemVindoPage() {
 
       <div className="bv-rodape">
         <Footer />
-        <Button variante="transparent" className="bv-rodape-dados" onClick={verDados}>
-          Ver como a gente cuida dos seus dados
-        </Button>
       </div>
 
       <PainelInferior

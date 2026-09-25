@@ -13,9 +13,11 @@
   color: var(--colors-neutral-950);
 }
 
-/* A barra fixa do mobile não pode cobrir o fim da página. */
-.bv-pagina[data-com-barra="true"] {
-  padding-bottom: var(--spacing-80);
+/* A barra fixa do mobile não pode cobrir o fim da página. No desktop ela não existe. */
+@media (max-width: 47.99em) {
+  .bv-pagina[data-com-barra="true"] {
+    padding-bottom: var(--spacing-80);
+  }
 }
 
 /* ===== Header sobre o hero ===== */
@@ -141,8 +143,6 @@
   line-height: var(--line-height-xl);
 }
 
-/* No desktop o rodapé e o botão de dados ficam na mesma linha. No mobile o botão de dados é o da
-   coluna lateral do "Como funciona", então este não aparece. */
 .bv-rodape {
   display: flex;
   flex-direction: column;
@@ -160,11 +160,6 @@
 .bv-rodape .app-footer-title,
 .bv-rodape .app-footer-list {
   padding-inline: 0;
-}
-
-/* O Figma tira o padding lateral do botão (padding=false) e, no desktop, usa o tamanho medium. */
-.bv-rodape .bv-rodape-dados.btn {
-  display: none;
 }
 
 /* Coluna à esquerda dos cards: no mobile só o aviso e o botão de dados, depois dos cards. */
@@ -480,16 +475,10 @@
     height: 20.1875rem;
   }
 
-  .bv-rodape .bv-rodape-dados.btn,
   .bv-lateral-dados.btn {
     padding-block: var(--spacing-14);
     font-size: var(--font-size-md);
     line-height: var(--line-height-xl);
-  }
-
-  .bv-rodape .bv-rodape-dados.btn {
-    display: inline-flex;
-    align-self: center;
   }
 
   .bv-lateral-texto {
@@ -508,7 +497,7 @@
      seguinte (margem negativa igual ao gap da grade). */
   .passos-grade {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: var(--layout-grid-gutter-desktop);
     row-gap: var(--layout-grid-gutter-desktop);
   }
@@ -540,17 +529,34 @@
     margin-right: var(--radius-xl);
   }
 
-  /* A curva do fim da linha do passo 3: desce pela borda direita até o vão dos cards. */
+  /* A linha do passo 3 desenha uma serpente: vai até a borda direita, desce até o meio do vão, volta
+     pela esquerda e desce até o primeiro card (essa parte sai do .passos-ramo). Aqui fica o trecho da
+     direita: ::after desce, ::before atravessa a grade de volta. */
   .stepper[data-ultimo="true"]::after {
     content: "";
+    box-sizing: border-box;
     position: absolute;
     top: var(--spacing-16);
     right: 0;
     width: var(--radius-xl);
-    height: calc(100% - var(--spacing-16) + var(--layout-grid-gutter-desktop));
+    height: calc(100% - var(--spacing-32) + var(--layout-grid-gutter-desktop) / 2);
     border-top: var(--border-width-thin) solid var(--colors-brand-primary-600);
     border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
     border-top-right-radius: var(--radius-xl);
+    pointer-events: none;
+  }
+
+  .stepper[data-ultimo="true"]::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    top: calc(100% - var(--radius-xl) + var(--layout-grid-gutter-desktop) / 2);
+    right: 0;
+    width: calc(300% + 2 * var(--layout-grid-gutter-desktop) - var(--radius-xl));
+    height: var(--radius-xl);
+    border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
+    border-bottom: var(--border-width-thin) solid var(--colors-brand-primary-600);
+    border-bottom-right-radius: var(--radius-xl);
     pointer-events: none;
   }
 
@@ -561,44 +567,35 @@
 
   .passos-lateral {
     grid-row: 2;
-    grid-column: 1;
-    align-self: start;
+    grid-column: 3;
+    align-self: end;
     margin-top: 0;
   }
 
   .passos-cards {
     grid-row: 2;
-    grid-column: 2 / span 2;
+    grid-column: 1 / span 2;
     margin: 0;
-    padding-right: var(--layout-grid-gutter-desktop);
+    padding-left: var(--spacing-32);
   }
 
-  /* Ramos à direita: a vertical fica na borda da coluna e a curva entra no card pela direita. */
+  /* A linha chega pela esquerda: a vertical passa reto pelos cards, o primeiro recebe a curva de
+     entrada da serpente e cada card curva pra dentro. */
   .passos-ramo::before,
   .passos-ramo::after {
-    left: auto;
-    right: calc(-1 * var(--layout-grid-gutter-desktop));
+    left: calc(-1 * var(--spacing-32));
+    box-sizing: border-box;
   }
 
-  .passos-ramo::before {
-    border-left: 0;
-    border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
+  .passos-ramo::after {
+    width: var(--spacing-32);
   }
 
   .passos-ramo:first-child::before {
-    top: 0;
-    height: 100%;
-  }
-
-  .passos-ramo:last-child::before {
-    height: calc(50% + var(--spacing-12) - var(--radius-xl));
-  }
-
-  .passos-ramo::after {
-    width: var(--layout-grid-gutter-desktop);
-    border-left: 0;
-    border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: var(--radius-xl);
+    top: calc(-1 * var(--layout-grid-gutter-desktop) / 2);
+    width: var(--radius-xl);
+    height: calc(100% + var(--layout-grid-gutter-desktop) / 2);
+    border-top: var(--border-width-thin) solid var(--colors-brand-primary-600);
+    border-top-left-radius: var(--radius-xl);
   }
 }
