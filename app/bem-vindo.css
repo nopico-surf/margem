@@ -57,7 +57,7 @@
 
 .bv-hero-foto img {
   object-fit: cover;
-  object-position: center;
+  object-position: center 90%;
 }
 
 .bv-hero-coluna {
@@ -417,10 +417,6 @@
     align-self: stretch;
     aspect-ratio: auto;
     border-radius: var(--radius-2xl);
-  }
-
-  .bv-hero-foto img {
-    object-position: center 90%;
   }
 
   .bv-hero-texto {
