@@ -32,10 +32,11 @@ export function PainelInferior(props: PainelInferiorProps) {
           <h2 className="painel-inferior-titulo">Dados e cookies</h2>
           <div className="painel-inferior-texto">
             <p>
-              O que você compartilhar fica guardado sem estar ligado a você, nós armazenamos tudo de forma anônima,
-              segura e sigilosa, pra te devolver uma orientação melhor e pra entender o que as pessoas mais precisam.
+              Pra te orientar, a Margem guarda o que você escreve sem ligar isso a você, e usa inteligência artificial
+              pra montar a sua resposta. Dados anônimos também ajudam governo e pesquisas a entender o que as pessoas
+              mais precisam. Usamos cookies essenciais pra tudo isso funcionar e, se você deixar, também cookies que
+              medem como a Margem é usada, sem saber quem você é. Se recusar, só a medição fica de fora.
             </p>
-            <p>Usamos cookies essenciais para o site funcionar e também para medirmos como a Margem é usada.</p>
           </div>
           <div className="painel-inferior-acoes">
             <Button tamanho="medium" larguraTotal onClick={props.onAceitar}>
