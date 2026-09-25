@@ -17,10 +17,11 @@ const CONTROLE: BotaoContinuar = { texto: TEXTO_PADRAO, experimento: null, varia
 
 // Se o GrowthBook cair, a flag não existir ou não houver id, a página mostra o texto de sempre.
 export async function textoDoBotaoContinuar(): Promise<BotaoContinuar> {
-  try {
-    const id = (await cookies()).get(COOKIE_SESSAO)?.value;
-    if (!id) return CONTROLE;
+  // Fora do try: cookies() sinaliza "página dinâmica" lançando um erro que não pode ser engolido.
+  const id = (await cookies()).get(COOKIE_SESSAO)?.value;
+  if (!id) return CONTROLE;
 
+  try {
     const cliente = await growthbookAdapter.initialize();
     const resultado = cliente.evalFeature<string>(FLAG_TEXTO_BOTAO, { attributes: { id } });
     if (typeof resultado.value !== "string" || resultado.value.trim() === "") return CONTROLE;
