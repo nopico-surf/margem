@@ -13,10 +13,12 @@
   color: var(--colors-neutral-950);
 }
 
-/* A barra fixa do mobile não pode cobrir o fim da página. No desktop ela não existe. */
+/* A barra fixa do mobile não pode cobrir o fim da página. No desktop ela não existe. O espaço é
+   reservado sempre (não só quando a barra aparece) pra a página não mudar de altura, e desconta os
+   24px que o rodapé já tem embaixo. */
 @media (max-width: 47.99em) {
-  .bv-pagina[data-com-barra="true"] {
-    padding-bottom: var(--spacing-80);
+  .bv-pagina {
+    padding-bottom: calc(var(--spacing-80) - var(--spacing-24));
   }
 }
 
