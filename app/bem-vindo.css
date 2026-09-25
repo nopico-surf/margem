@@ -497,7 +497,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-48);
-    padding: var(--spacing-48) var(--layout-page-padding-desktop) var(--spacing-32);
+    padding: var(--spacing-48) var(--layout-page-padding-desktop) 0;
   }
 
   /* Stepper deitado: número e linha em cima, texto embaixo. A linha atravessa o vão até o número
