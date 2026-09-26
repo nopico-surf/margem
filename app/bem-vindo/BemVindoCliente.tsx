@@ -129,7 +129,7 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
               foto="/assets/maos-sobre-mesa.webp"
               posicaoDaFoto="center 60%"
               titulo="Por perto"
-              texto="Para quem está próximo de alguém em uso"
+              texto="Para quem apoia alguém em uso"
             />
           </div>
           <div className="bv-continuar">
