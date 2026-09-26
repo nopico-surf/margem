@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Margem",
     description: DESCRICAO,
-    images: [{ url: "/assets/og-image.webp", width: 1200, height: 630, alt: "Margem" }],
+    images: [{ url: "/assets/og-margem.webp", width: 1200, height: 630, alt: "Margem" }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/assets/og-image.webp"],
+    images: ["/assets/og-margem.webp"],
   },
 };
 
