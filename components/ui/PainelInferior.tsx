@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/Button";
 //
 // O `continuar` só existe no mobile: no desktop o botão está dentro da própria página.
 type PainelInferiorProps = { visivel: boolean } & (
-  | { variante: "cookies"; onAceitar?: () => void; onRecusar?: () => void; onVerDados?: () => void }
+  | { variante: "cookies"; onEntendi?: () => void; onVerDados?: () => void }
   | { variante: "continuar"; onContinuar?: () => void; texto?: string }
 );
 
@@ -33,20 +33,15 @@ export function PainelInferior(props: PainelInferiorProps) {
           <div className="painel-inferior-texto">
             <p>
               Pra te orientar, a Margem guarda o que você escreve sem ligar isso a você, e usa inteligência artificial
-              pra montar a sua resposta. Dados anônimos também ajudam governo e pesquisas a entender o que as pessoas
-              mais precisam. Usamos cookies essenciais pra tudo isso funcionar e, se você deixar, também cookies que
-              medem como a Margem é usada, sem saber quem você é. Se recusar, só a medição fica de fora.
+              pra montar a sua resposta. Dados anônimos também podem ajudar pesquisas a entender o que as pessoas mais
+              precisam. Usamos cookies essenciais pra tudo isso funcionar e também cookies que medem como a Margem é
+              usada, sem saber quem você é.
             </p>
           </div>
           <div className="painel-inferior-acoes">
-            <div className="painel-inferior-decisao">
-              <Button tamanho="medium" larguraTotal variante="secondary" onClick={props.onRecusar}>
-                Recusar
-              </Button>
-              <Button tamanho="medium" larguraTotal onClick={props.onAceitar}>
-                Aceitar
-              </Button>
-            </div>
+            <Button tamanho="medium" larguraTotal onClick={props.onEntendi}>
+              Entendi
+            </Button>
             <Button tamanho="medium" larguraTotal variante="transparent" onClick={props.onVerDados}>
               Ver como a gente cuida dos seus dados
             </Button>

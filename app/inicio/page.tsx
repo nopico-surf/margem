@@ -46,11 +46,6 @@ export default function AppPage() {
     acao?.();
   }
 
-  function recusarCookies() {
-    acaoPendente.current = null;
-    setCookiesVisivel(false);
-  }
-
   function verDadosDosCookies() {
     track("politica_dados_aberta");
     router.push("/privacidade");
@@ -115,8 +110,7 @@ export default function AppPage() {
       <PainelInferior
         variante="cookies"
         visivel={cookiesVisivel}
-        onAceitar={aceitarCookies}
-        onRecusar={recusarCookies}
+        onEntendi={aceitarCookies}
         onVerDados={verDadosDosCookies}
       />
     </main>

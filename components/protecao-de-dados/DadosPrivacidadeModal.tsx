@@ -18,7 +18,7 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         </ModalSection>
 
         <ModalSection titulo="O que a gente guarda">
-          <p>O texto que você escreve nos campos livres. As opções que você escolhe nos cards. Um código aleatório que identifica sua visita, sem ligação nenhuma com você. Informações básicas de uso do site, tipo quais telas você abriu e quanto tempo ficou (medição anônima). Sua localização aproximada, só se você autorizar, e só pra mostrar CAPS, UBS e grupos de apoio perto de você. Confirmação de que você aceitou essa política de privacidade.</p>
+          <p>O texto que você escreve nos campos livres. As opções que você escolhe nos cards. Um código aleatório que identifica sua visita, sem ligação nenhuma com você. Informações básicas de uso do site, tipo quais telas você abriu e quanto tempo ficou (medição anônima). Sua localização aproximada, só se você autorizar, e só pra mostrar CAPS, UBS e grupos de apoio perto de você. Confirmação de que você viu o aviso de dados e cookies.</p>
         </ModalSection>
 
         <ModalSection titulo="O que a gente não guarda">
@@ -31,8 +31,8 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         </ModalSection>
 
         <ModalSection titulo="Armazenamento local e medição de uso">
-          <p>A gente guarda no seu navegador uma confirmação de que você aceitou essa política. Isso permite que você não tenha que aceitar de novo toda vez que entra.</p>
-          <p>A gente também mede de forma anônima como você usa o site: quais telas você abriu, quanto tempo ficou, se clicou em algo. Esses dados não deixam você identificável. A gente só quer saber se o que a gente tá fazendo tá ajudando ou se precisa mudar. Essa medição começa assim que você marca o checkbox de consentimento na entrada.</p>
+          <p>A gente guarda no seu navegador uma confirmação de que você viu o aviso de dados e cookies. Isso permite que você não veja o aviso de novo toda vez que entra.</p>
+          <p>A gente também mede de forma anônima como você usa o site: quais telas você abriu, quanto tempo ficou, se clicou em algo. Esses dados não deixam você identificável. A gente só quer saber se o que a gente tá fazendo tá ajudando ou se precisa mudar. Essa medição começa assim que você abre o site, antes mesmo de você tocar em &quot;Entendi&quot; no aviso de dados e cookies.</p>
         </ModalSection>
 
         <ModalSection titulo="Quem mais tem acesso">
@@ -52,10 +52,10 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         </ModalSection>
 
         <ModalSection titulo="Cookies e armazenamento">
-          <p>Quando você marca o checkbox &quot;Li e concordo&quot; na entrada, você tá autorizando a gente a:</p>
+          <p>A gente usa o armazenamento do seu navegador pra duas coisas:</p>
           <ul>
-            <li>Guardar sua confirmação de consentimento no seu navegador, pra não perguntar de novo toda vez que você entra.</li>
-            <li>Medir de forma anônima como você usa o site (quais telas, quanto tempo, cliques), isso também usa armazenamento local.</li>
+            <li>Guardar que você já viu o aviso de dados e cookies (quando você toca em &quot;Entendi&quot;), pra não mostrar de novo toda vez que você entra.</li>
+            <li>Medir de forma anônima como você usa o site (quais telas, quanto tempo, cliques). Essa medição começa assim que você abre o site.</li>
           </ul>
         </ModalSection>
 

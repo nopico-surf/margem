@@ -201,8 +201,7 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
       <PainelInferior
         variante="cookies"
         visivel={cookiesVisivel}
-        onAceitar={aceitar}
-        onRecusar={fecharCookies}
+        onEntendi={aceitar}
         onVerDados={verDados}
       />
       <PainelInferior variante="continuar" visivel={barraVisivel} onContinuar={continuar} texto={botao.texto} />

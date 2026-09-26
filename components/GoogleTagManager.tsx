@@ -1,7 +1,6 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect } from "react";
 import { HOST_LOCAL } from "@/lib/host-local";
 
 declare global {
@@ -13,37 +12,7 @@ declare global {
 
 const googleTagManagerId = process.env.NEXT_PUBLIC_GTM_ID;
 
-export function grantGoogleConsent() {
-  if (typeof window === "undefined") return;
-
-  const consentUpdate = {
-    analytics_storage: "granted",
-    ad_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied",
-  };
-
-  if (window.gtag) {
-    window.gtag("consent", "update", consentUpdate);
-  } else {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(["consent", "update", consentUpdate]);
-  }
-
-  // O page_view inicial sai antes do aceite, sem cookie e sem origem. Este evento deixa o GTM
-  // mandar um page_view novo, já consentido e com as UTMs ainda na URL.
-  window.dataLayer.push({ event: "consentimento_concedido" });
-}
-
 export function GoogleTagManager() {
-  useEffect(() => {
-    try {
-      if (window.localStorage.getItem("margem-consentimento") === "true") {
-        grantGoogleConsent();
-      }
-    } catch {}
-  }, []);
-
   if (!googleTagManagerId) return null;
 
   return (
@@ -52,14 +21,13 @@ export function GoogleTagManager() {
         {`window.dataLayer = window.dataLayer || [];
 function gtag(){window.dataLayer.push(arguments);}
 gtag('consent', 'default', {
-  analytics_storage: 'denied',
+  analytics_storage: 'granted',
   ad_storage: 'denied',
   ad_user_data: 'denied',
   ad_personalization: 'denied',
   functionality_storage: 'denied',
   personalization_storage: 'denied',
-  security_storage: 'granted',
-  wait_for_update: 500
+  security_storage: 'granted'
 });`}
       </Script>
       {/* A checagem de host roda no navegador: no servidor não dá pra saber de onde a página foi aberta.

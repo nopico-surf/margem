@@ -1,7 +1,6 @@
 "use client";
 
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
-import { grantGoogleConsent } from "@/components/GoogleTagManager";
 import { track } from "@/lib/mixpanel";
 
 export function jaConsentiu(): boolean {
@@ -19,7 +18,6 @@ export function conceder() {
     window.localStorage.setItem("margem-consentimento", "true");
   } catch {}
   document.cookie = "margem-consentimento=true; path=/; max-age=34560000; samesite=lax";
-  grantGoogleConsent();
   track("consentimento_concedido");
   const sessaoId = getOrCreateSessaoId();
   fetch("/api/sessao", {
