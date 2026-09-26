@@ -30,7 +30,7 @@
 .painel-inferior-x {
   display: flex;
   align-items: center;
-  padding: var(--spacing-8);
+  padding: var(--spacing-12);
   border: 0;
   border-radius: var(--radius-full);
   background: var(--colors-neutral-0);
