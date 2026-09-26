@@ -32,11 +32,42 @@
   box-sizing:border-box;
   color:var(--colors-neutral-900);
   font:400 var(--font-size-sm)/var(--line-height-xl) var(--font-inter),sans-serif;
-  caret-color:var(--colors-brand-primary-800);
+  /* O cursor visível é o customizado, desenhado no .message-component-mirror. */
+  caret-color:transparent;
 }
 
 .message-component-focused textarea {
   color:transparent;
+}
+
+.message-component-field {
+  position:relative;
+}
+
+.message-component-mirror {
+  position:absolute;
+  inset:0;
+  z-index:2;
+  overflow:hidden;
+  padding:var(--spacing-8);
+  box-sizing:border-box;
+  color:transparent;
+  font:400 var(--font-size-sm)/var(--line-height-xl) var(--font-inter),sans-serif;
+  white-space:pre-wrap;
+  overflow-wrap:break-word;
+  pointer-events:none;
+}
+
+/* Âncora inline sem largura: não cria ponto de quebra nem empurra o texto. */
+.message-component-caret-anchor {
+  position:relative;
+}
+
+.message-component-caret-anchor .message-component-caret {
+  position:absolute;
+  left:calc(var(--message-caret-width) / -2);
+  top:50%;
+  transform:translateY(-50%);
 }
 
 .message-component-placeholder {
@@ -52,10 +83,23 @@
   white-space:nowrap;
 }
 
+/* O Chrome arredonda a barra para pixels inteiros da tela. Em tela de densidade 1, 1,5px vira 1px ou
+   2px conforme onde a letra termina, e o cursor muda de espessura a cada tecla. 2px não varia; em
+   densidade 2 ou mais, 1,5px já cai em pixels inteiros. */
+.message-component {
+  --message-caret-width:2px;
+}
+
+@media(min-resolution:2dppx) {
+  .message-component {
+    --message-caret-width:1.5px;
+  }
+}
+
 .message-component-caret {
   display:inline-block;
   flex:0 0 auto;
-  width:1.5px;
+  width:var(--message-caret-width);
   height:18px;
   border-radius:var(--radius-full);
   background:var(--colors-brand-primary-800);

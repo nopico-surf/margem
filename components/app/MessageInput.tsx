@@ -27,6 +27,8 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const initialFocusRef = useRef(true);
+  const espelhoRef = useRef<HTMLDivElement>(null);
+  const [cursorEm, setCursorEm] = useState<number | null>(null);
   const state = value.length > 0 ? "filed" : focused ? "focused" : "default";
 
   // Mantém título + campo logo acima do teclado virtual. Cada navegador informa o teclado de
@@ -193,6 +195,37 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
     textarea.style.overflowY = textarea.scrollHeight > MAX_HEIGHT ? "auto" : "hidden";
   }, [value]);
 
+  // Cursor customizado: o navegador não deixa mudar largura nem piscada do cursor nativo. Uma cópia
+  // invisível do texto fica por cima da textarea com o cursor desenhado dentro dela, na posição da
+  // seleção, então a quebra de linha é a mesma do campo sem precisar medir nada.
+  // Tudo escuta no document e lê textareaRef.current na hora: se o React trocar o elemento da
+  // textarea, um listener preso ao elemento antigo desligaria o cursor depois de cada tecla.
+  useEffect(() => {
+    function atualizar() {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+      const ativo = document.activeElement === textarea && textarea.selectionStart === textarea.selectionEnd;
+      setCursorEm(ativo ? textarea.selectionEnd : null);
+    }
+    atualizar();
+    // Sem "input" aqui: atualizar estado num listener nativo de input re-renderiza a textarea
+    // controlada antes do onChange do React ler o valor, e o caractere digitado se perde.
+    const eventos = ["focusin", "focusout", "keyup", "pointerup", "selectionchange"] as const;
+    eventos.forEach((nome) => document.addEventListener(nome, atualizar));
+    return () => eventos.forEach((nome) => document.removeEventListener(nome, atualizar));
+  }, []);
+
+  // A cópia precisa quebrar linha na mesma largura (a barra de rolagem da textarea come espaço) e rolar junto.
+  useLayoutEffect(() => {
+    const textarea = textareaRef.current;
+    const espelho = espelhoRef.current;
+    if (!textarea || !espelho) return;
+    espelho.style.paddingRight = `calc(var(--spacing-8) + ${textarea.offsetWidth - textarea.clientWidth}px)`;
+    espelho.scrollTop = textarea.scrollTop;
+  }, [value, cursorEm]);
+
+  const posicaoCursor = cursorEm === null ? null : Math.min(cursorEm, value.length);
+
   return (
     <form className={`message-component message-component-${state}`} onSubmit={onSubmit} onClick={() => { setFocused(true); textareaRef.current?.focus(); }}>
       {state === "default" && (
@@ -201,18 +234,39 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
           <span>Como as drogas têm afetado você?</span>
         </div>
       )}
-      <textarea
-        ref={textareaRef}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        onFocus={() => {
-          if (!initialFocusRef.current) setFocused(true);
-        }}
-        onBlur={() => setFocused(false)}
-        placeholder=""
-        aria-label="Como as drogas têm afetado você?"
-        rows={1}
-      />
+      <div className="message-component-field">
+        <textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(event) => {
+            onChange(event.target.value);
+            setCursorEm(event.target.selectionStart === event.target.selectionEnd ? event.target.selectionEnd : null);
+          }}
+          onFocus={() => {
+            if (!initialFocusRef.current) setFocused(true);
+          }}
+          onBlur={() => setFocused(false)}
+          onScroll={(event) => {
+            if (espelhoRef.current) espelhoRef.current.scrollTop = event.currentTarget.scrollTop;
+          }}
+          placeholder=""
+          aria-label="Como as drogas têm afetado você?"
+          rows={1}
+        />
+        <div ref={espelhoRef} className="message-component-mirror" aria-hidden="true">
+          {posicaoCursor === null ? value : (
+            <>
+              {value.slice(0, posicaoCursor)}
+              {/* O word joiner dá à âncora a altura da linha sem largura e sem ponto de quebra. */}
+              <span key={`${posicaoCursor}-${value.length}`} className="message-component-caret-anchor">
+                {"⁠"}
+                <span className="message-component-caret" />
+              </span>
+              {value.slice(posicaoCursor)}
+            </>
+          )}
+        </div>
+      </div>
       {(state === "focused" || state === "filed") && (
         <div className="message-component-meta">
           <span>Conte do seu jeito</span>
