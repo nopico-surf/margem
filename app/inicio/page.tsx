@@ -22,10 +22,12 @@ export default function AppPage() {
   const [text, setText] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Quem recusou os cookies continua usando a Margem, mas o painel volta a cada tentativa de
-  // conversar (card ou campo livre) até ela aceitar.
+  // Quem chega direto na /inicio (digitando a URL, por exemplo) sem ter consentido vê o painel
+  // logo ao abrir. Se fechar sem aceitar, ele volta a cada tentativa de conversar (card ou campo livre).
   useEffect(() => {
-    setConsentiu(jaConsentiu());
+    const jaAceitou = jaConsentiu();
+    setConsentiu(jaAceitou);
+    if (!jaAceitou) setCookiesVisivel(true);
   }, []);
 
   function comConsentimento(acao: () => void) {
