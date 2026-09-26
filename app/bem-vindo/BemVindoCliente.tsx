@@ -129,7 +129,7 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
               foto="/assets/maos-sobre-mesa.webp"
               posicaoDaFoto="center 60%"
               titulo="Por perto"
-              texto="Para quem apoia alguém em uso"
+              texto="Para quem está próximo de alguém em uso"
             />
           </div>
           <div className="bv-continuar">
@@ -156,7 +156,7 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
                 <CardsLp
                   icone={<GlifoHealing color={COR_DO_ICONE} />}
                   titulo="Serviços públicos"
-                  texto="CAPS AD e UBS atendem de graça, pelo SUS"
+                  texto="Atendimento gratuito no sistema de saúde"
                 />
               </div>
               <div className="passos-ramo">
@@ -169,29 +169,29 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
               <div className="passos-ramo">
                 <CardsLp
                   icone={<GlifoGroups color={COR_DO_ICONE} />}
-                  titulo="Grupos de apoio"
-                  texto="Encontros de escuta e apoio para você e familiares"
+                  titulo="Redes de apoio"
+                  texto="Encontros presenciais e online"
                 />
               </div>
             </div>
 
-            <div className="passos-lateral">
-              <div className="bv-continuar">
-                <Button tamanho="medium" larguraTotal onClick={continuar}>
-                  {botao.texto}
-                </Button>
-              </div>
-              <div className="bv-lateral-texto">
-                <p className="bv-aviso">
-                  A Margem não faz atendimento e não substitui profissional ou serviço público. Se você tem menos de 18
-                  anos, conversar com seus responsáveis pode ajudar
-                </p>
-                <Button variante="transparent" className="bv-lateral-dados" onClick={verDados}>
-                  Ver como a gente cuida dos seus dados
-                </Button>
-              </div>
+            <div className="bv-continuar passos-continuar">
+              <Button tamanho="medium" larguraTotal onClick={continuar}>
+                {botao.texto}
+              </Button>
             </div>
           </div>
+        </section>
+
+        <section className="bv-importante">
+          <h2 className="bv-importante-titulo">Importante</h2>
+          <p className="bv-aviso">
+            A Margem não faz atendimento e não substitui profissional ou serviço público. Se você tem menos de 18 anos,
+            conversar com seus responsáveis pode ajudar
+          </p>
+          <Button variante="transparent" tamanho="x-small" className="bv-importante-dados" onClick={verDados}>
+            Ver como a gente cuida dos seus dados
+          </Button>
         </section>
       </div>
 

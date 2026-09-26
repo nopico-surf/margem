@@ -164,24 +164,29 @@
   padding-inline: 0;
 }
 
-/* Coluna à esquerda dos cards: no mobile só o aviso e o botão de dados, depois dos cards. */
-.passos-lateral {
+/* Card "Importante" (card group do Figma): fica depois do Como funciona, no mobile e no desktop. */
+.bv-importante {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-32);
-  margin-top: var(--spacing-24);
+  align-items: flex-start;
+  gap: var(--spacing-16);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
 }
 
-.bv-lateral-texto {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-24);
+.bv-importante-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  text-box: trim-both cap alphabetic;
 }
 
-/* O Figma tira o padding lateral do botão (padding=false). */
-.bv-lateral-dados.btn {
-  align-self: flex-start;
-  padding-inline: 0;
+/* O Figma tira o padding lateral do botão (padding=false) e usa 2 de padding vertical. */
+.bv-importante-dados.btn {
+  padding: var(--spacing-2) 0;
 }
 
 /* ===== cards-lp ===== */
@@ -483,16 +488,6 @@
     height: 20.1875rem;
   }
 
-  .bv-lateral-dados.btn {
-    padding-block: var(--spacing-14);
-    font-size: var(--font-size-md);
-    line-height: var(--line-height-xl);
-  }
-
-  .bv-lateral-texto {
-    gap: var(--spacing-8);
-  }
-
   .bv-rodape {
     flex-direction: row;
     align-items: center;
@@ -504,7 +499,6 @@
   /* Stepper deitado: número e linha em cima, texto embaixo. A linha atravessa o vão até o número
      seguinte (margem negativa igual ao gap da grade). */
   .passos-grade {
-    --passos-raio: var(--radius-3xl);
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: var(--layout-grid-gutter-desktop);
@@ -561,7 +555,7 @@
     position: absolute;
     top: calc(100% - var(--passos-raio) + var(--spacing-56) / 2);
     right: 0;
-    width: calc(300% + 2 * var(--layout-grid-gutter-desktop) - var(--passos-raio));
+    width: calc(250% + 2 * var(--layout-grid-gutter-desktop) - var(--passos-raio));
     height: var(--passos-raio);
     border-right: var(--border-width-thin) solid var(--colors-brand-primary-600);
     border-bottom: var(--border-width-thin) solid var(--colors-brand-primary-600);
@@ -574,36 +568,40 @@
     min-height: 0;
   }
 
-  .passos-lateral {
-    grid-row: 2;
-    grid-column: 3;
-    align-self: end;
-    margin-top: 0;
-  }
-
   .passos-cards {
     grid-row: 2;
-    grid-column: 1 / span 2;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--layout-grid-gutter-desktop);
     margin: 0;
-    padding-left: var(--spacing-32);
   }
 
-  /* A linha chega pela esquerda: a vertical passa reto pelos cards, o primeiro recebe a curva de
-     entrada da serpente e cada card curva pra dentro. */
+  /* No Figma o botão está 24 abaixo dos cards, não os 56 do vão da grade. */
+  .passos-continuar {
+    grid-row: 3;
+    grid-column: 1 / -1;
+    margin-top: calc(var(--spacing-24) - var(--spacing-56));
+  }
+
+  /* Cada card recebe um trecho que desce da linha horizontal (no meio do vão de 56) até o topo, no
+     centro. O primeiro faz a curva de entrada. O ::after do mobile não existe aqui. */
+  .passos-ramo::after {
+    display: none;
+  }
+
   .passos-ramo::before,
-  .passos-ramo::after {
-    left: calc(-1 * var(--spacing-32));
+  .passos-ramo:first-child::before,
+  .passos-ramo:last-child::before,
+  .passos-ramo:last-child:first-child::before {
     box-sizing: border-box;
-  }
-
-  .passos-ramo::after {
-    width: var(--spacing-32);
-  }
-
-  .passos-ramo:first-child::before {
     top: calc(-1 * var(--spacing-56) / 2 - var(--border-width-thin));
+    left: 50%;
+    height: calc(var(--spacing-56) / 2 + var(--border-width-thin));
+  }
+
+  .passos-ramo::before {
     width: var(--passos-raio);
-    height: calc(100% + var(--spacing-56) / 2 + var(--border-width-thin));
     border-top: var(--border-width-thin) solid var(--colors-brand-primary-600);
     border-top-left-radius: var(--passos-raio);
   }

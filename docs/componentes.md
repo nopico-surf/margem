@@ -423,7 +423,14 @@ Todos aparecem em `/ui`.
 
 ### O ramo do "Como funciona"
 
-A linha que sai do passo 3 e chega em cada card não é componente: são pseudo-elementos de `.passos-ramo` em `app/bem-vindo.css`. No Figma são três vetores soltos (`Vector 1` a `3` no mobile, `Group 1` no desktop) com altura fixa, que quebrariam quando o texto de um card quebra em duas linhas. Aqui a curva termina no meio de cada card e o raio é o `radius-xl`. Se o desenho do Figma mudar, mudar lá o ponto onde a curva entra no card.
+A linha que sai do passo 3 e chega em cada card não é componente: são pseudo-elementos em `app/bem-vindo.css` (`.stepper[data-ultimo]` e `.passos-ramo`). No Figma são vetores soltos (`Vector 1` a `3` no mobile, `Group 1` no desktop) com altura fixa, que quebrariam quando o texto de um card quebra em duas linhas.
+
+- **Mobile:** vertical, curva entrando pela esquerda no meio de cada card (raio `radius-2xl`).
+- **Desktop (atualizado em 26/09/2026):** os três cards ficam em linha, cada um embaixo do seu passo. A linha do passo 3 sai pela direita, desce, volta por um trecho horizontal no meio do vão de 56 e desce até o topo de cada card, no centro, com a mesma curva de `radius-2xl` nos três. O "Continuar" fica 24 abaixo dos cards (não os 56 do vão da grade, por isso a margem negativa em `.passos-continuar`).
+
+### Card "Importante"
+
+Não é componente: é um bloco (`.bv-importante`) com título, o aviso de menores de 18 anos e o `Button` transparent x-small (sem padding lateral, 2 de padding vertical). Fica depois do "Como funciona", igual no mobile e no desktop (card group do Figma, 1329:6596 e 1329:6568). Antes o aviso e o link ficavam dentro do "Como funciona".
 
 ### Ícones novos
 
@@ -437,7 +444,8 @@ Em `/public/assets`: `dois-amigos-abracando.webp`, `homem-regata-verde.webp`, `m
 
 - **Recusar** só fecha o painel. Sem consentimento, clicar num card ou enviar o campo livre na `/inicio` reabre o painel; aceitar executa a ação, recusar a descarta.
 - **Barra de Continuar** (mobile): sobe 1s depois que o painel de cookies sai.
-- **Texto do Figma corrigido:** o card "Por perto" no Figma diz "ara quem está próximo...", e o código diz "Para quem apoia alguém em uso".
+- **Texto do Figma corrigido:** o card "Por perto" no mobile diz "ara quem está próximo...", e o código usa "Para quem está próximo de alguém em uso" (texto do desktop).
+- **Texto que mudou em 26/09/2026:** "Serviços públicos" diz "Atendimento gratuito no sistema de saúde", e o terceiro card virou "Redes de apoio" / "Encontros presenciais e online" (o Figma desktop repetia o texto de "Profissionais").
 - **Sem card de emergência** na entrada. Ver CLAUDE.md seção 3.
 
 ### Pendências
