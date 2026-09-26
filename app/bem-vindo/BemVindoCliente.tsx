@@ -51,7 +51,8 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
     esperaDaBarra.current = setTimeout(() => setBarraVisivel(true), ESPERA_DA_BARRA);
   }
 
-  function aceitar() {
+  function aceitar(origem: "botao" | "x") {
+    track("aviso_cookies_entendi", { origem, rota: "/bem-vindo" });
     conceder();
     registrarExposicao();
     fecharCookies();

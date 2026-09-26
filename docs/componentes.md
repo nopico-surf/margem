@@ -415,7 +415,7 @@ Os quatro não existiam nem no Figma nem no código. Nenhum tem hover: cards nã
 | `bem-vindo/CardsLp` | `cards-lp` (nas instâncias aparece como "Cards LP") | Ícone de 24, título e uma linha, sem clique |
 | `bem-vindo/CardPublico` | `card-publico` (hoje "Frame 149", nome auto-gerado) | Foto em cima, título e uma linha embaixo |
 | `bem-vindo/Stepper` | `stepper`, propriedade `orientation` = vertical, horizontal | Número em círculo, linha e texto. Vertical no mobile, horizontal no desktop |
-| `ui/PainelInferior` | `painel-inferior`, propriedade `variant` = cookies, continuar | Painel fixo embaixo. `cookies` tem título, texto e três botões; `continuar` tem um botão só, e no desktop não existe |
+| `ui/PainelInferior` | `painel-inferior`, propriedade `variant` = cookies, continuar | Painel fixo embaixo. `cookies` tem o X (fecha como "Entendi"), texto e dois botões, sem título; `continuar` tem um botão só, e no desktop não existe |
 
 Composição: `cards-lp` e `card-publico` são só markup. O painel usa o `Button` (primary, secondary, transparent, tamanho medium). A tela reaproveita `Header`, `SideMenu`, `Footer` e `Button`.
 

@@ -1,5 +1,6 @@
 /* Painel fixo embaixo. Figma: `painel-inferior`, variantes cookies e continuar. Usado em /bem-vindo
-   e em /inicio. Entra subindo e sai descendo. */
+   e em /inicio. Entra subindo e sai descendo. O elemento raiz é só o invólucro transparente: o X
+   (cookies) fica acima do cartão branco. */
 
 .painel-inferior {
   position: fixed;
@@ -9,11 +10,8 @@
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-16);
-  padding: var(--spacing-20) var(--layout-page-padding-mobile) var(--spacing-16);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  background: var(--colors-neutral-0);
-  box-shadow: 0 0 var(--spacing-32) var(--colors-alpha-16);
+  align-items: flex-end;
+  gap: var(--spacing-10);
   transform: translateY(0);
   transition: transform 350ms ease, visibility 0s;
 }
@@ -24,18 +22,39 @@
   transition: transform 350ms ease, visibility 0s 350ms;
 }
 
-.painel-inferior[data-variante="continuar"] {
-  padding-top: var(--spacing-16);
+.painel-inferior-fechar {
+  display: flex;
+  padding: 0 var(--spacing-16);
 }
 
-.painel-inferior-titulo {
-  margin: 0;
-  font-family: var(--font-urbanist), sans-serif;
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semi-bold);
-  line-height: var(--line-height-3xl);
-  color: var(--colors-neutral-950);
-  text-box: trim-both cap alphabetic;
+.painel-inferior-x {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-8);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--colors-neutral-0);
+  box-shadow: 0 0 var(--spacing-32) var(--colors-alpha-16);
+  cursor: pointer;
+}
+
+.painel-inferior-x svg {
+  display: block;
+}
+
+.painel-inferior-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  width: 100%;
+  padding: var(--spacing-16) var(--layout-page-padding-mobile);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--colors-neutral-0);
+  box-shadow: 0 0 var(--spacing-32) var(--colors-alpha-16);
+}
+
+.painel-inferior[data-variante="cookies"] .painel-inferior-cartao {
+  padding: var(--spacing-16);
 }
 
 .painel-inferior-texto {
@@ -58,22 +77,20 @@
 }
 
 @media (min-width: 48em) {
-  .painel-inferior[data-variante="cookies"] {
-    gap: var(--spacing-24);
-  }
-
-  .painel-inferior-titulo {
-    font-size: var(--font-size-2xl);
-    line-height: var(--line-height-4xl);
-  }
-
   /* No desktop o painel vira um cartão no canto, e o Continuar da barra não existe (o botão está
-     dentro da página). */
+     dentro da página). O X fica colado na borda direita do cartão. */
   .painel-inferior {
     left: auto;
     right: var(--layout-page-padding-desktop);
     width: 28.0625rem;
-    padding: var(--spacing-32) var(--layout-page-padding-tablet) var(--spacing-14);
+  }
+
+  .painel-inferior-fechar {
+    padding: 0;
+  }
+
+  .painel-inferior[data-variante="cookies"] .painel-inferior-cartao {
+    padding: var(--spacing-24);
   }
 
   .painel-inferior[data-variante="continuar"] {
@@ -86,4 +103,12 @@
   .painel-inferior[data-visivel="false"] {
     transition: none;
   }
+}
+
+/* O X fica na frente do cartão. A sombra dele é cortada na borda de baixo do próprio botão, pra não
+   escurecer o cartão. */
+.painel-inferior-fechar {
+  position: relative;
+  z-index: 1;
+  clip-path: inset(calc(-1 * var(--spacing-64)) calc(-1 * var(--spacing-64)) 0 calc(-1 * var(--spacing-64)));
 }

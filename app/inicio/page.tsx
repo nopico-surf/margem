@@ -39,7 +39,8 @@ export default function AppPage() {
     setCookiesVisivel(true);
   }
 
-  function aceitarCookies() {
+  function aceitarCookies(origem: "botao" | "x") {
+    track("aviso_cookies_entendi", { origem, rota: "/inicio" });
     conceder();
     setConsentiu(true);
     setCookiesVisivel(false);
