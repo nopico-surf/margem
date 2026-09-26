@@ -590,6 +590,15 @@
     display: none;
   }
 
+  /* Cards da mesma altura: o ramo estica com a linha da grade e o card preenche, sobrando espaço embaixo nos de menos texto. */
+  .passos-ramo {
+    display: flex;
+  }
+
+  .passos-ramo > .cards-lp {
+    flex: 1;
+  }
+
   .passos-ramo::before,
   .passos-ramo:first-child::before,
   .passos-ramo:last-child::before,
