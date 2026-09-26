@@ -79,14 +79,13 @@ export function IconeCaminho({ indice, className }: { indice: number; className?
 
 /* Resultado */
 
-// O X do loader "Preparando informações...". Único ícone em <svg> no código em vez de <img>: a
-// animação aumenta o X até 1,5x, e um <img> é desenhado em 12px e esticado, ficando pixelado.
-// O desenho vem do componente `loader` da página Loader do Margem System. Os três arquivos
-// loader-1/2/3.svg que existiam eram cópias idênticas e ninguém os carregava.
+// O anel do loader "Preparando informações...". Em <svg> em vez de <img> para o
+// mix-blend-mode: multiply agir entre os dois anéis sobrepostos.
+// O desenho vem do componente `loader-content` (632:511) do Margem System: dois vetores, o mesmo anel.
 export function IconeLoader({ className }: IconProps) {
   return (
-    <svg className={className} width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-      <path d="M10.3396 7.51471C9.59711 6.73393 8.69843 6.22222 7.65318 5.96276C8.68161 5.6985 9.57068 5.18198 10.318 4.3964C11.4329 3.22643 11.988 1.75856 12 0H9.12615C9.12134 1.00901 8.8354 1.83303 8.26832 2.47928C7.69643 3.13033 6.94433 3.45465 6.01441 3.45465C5.09891 3.45465 4.34681 3.12793 3.76051 2.47928C3.17661 1.83544 2.88586 1.00901 2.88106 0H0C0 1.79459 0.555066 3.26967 1.6652 4.43003C2.41009 5.20841 3.30636 5.71772 4.34922 5.97237C3.34481 6.23904 2.45815 6.75315 1.70605 7.53634C0.569483 8.72072 0 10.2078 0 12H2.87865C2.87865 11.9928 2.87625 11.9856 2.87625 11.9784C2.87625 10.9622 3.1646 10.1237 3.73648 9.46787C4.30837 8.80961 5.06047 8.47808 5.99038 8.47808C6.90588 8.47808 7.65798 8.81201 8.24429 9.47748C8.83059 10.1429 9.12615 10.979 9.12615 11.9784C9.12615 11.9856 9.12374 11.9928 9.12374 12H11.9976C11.9976 11.9832 12 11.9712 12 11.9568C12.0024 10.1622 11.4497 8.68228 10.3396 7.51471Z" fill="var(--colors-neutral-950)" />
+    <svg className={className} width="16" height="15.7409" viewBox="0 0 16 15.7409" fill="none" aria-hidden="true">
+      <path d="M13.6705 7.87044C13.6705 4.78949 11.1317 2.2918 8 2.29175C4.86831 2.29175 2.32948 4.78946 2.32948 7.87044C2.32953 10.9514 4.86834 13.4491 8 13.4491V15.7409L7.58749 15.7304C3.49708 15.5261 0.217674 12.2991 0.0106161 8.27478L0 7.87044C0 3.52376 3.58177 0 8 0L8.411 0.0104439C12.6382 0.220951 16 3.6594 16 7.87044L15.9894 8.27478C15.7754 12.4335 12.2803 15.7408 8 15.7409V13.4491C11.1316 13.4491 13.6705 10.9513 13.6705 7.87044Z" fill="var(--colors-alpha-88)" />
     </svg>
   );
 }

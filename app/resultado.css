@@ -321,27 +321,6 @@
   accent-color:var(--colors-brand-primary-800);
 }
 
-.figma-response-loading {
-  display:flex;
-  flex-direction:column;
-  gap:var(--spacing-4);
-  font-size:var(--font-size-xs);
-  line-height:var(--line-height-lg);
-  color:rgb(23 27 24 / 60%);
-}
-
-.figma-response-loader {
-  display:flex;
-  gap:var(--spacing-12);
-  height:var(--size-12);
-}
-
-.figma-response-loader-icon {
-  width:var(--size-12);
-  height:var(--size-12);
-  opacity:.3;
-}
-
 .figma-skeleton {
   display:block;
   border-radius:var(--radius-sm);
