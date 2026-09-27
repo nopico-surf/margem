@@ -63,7 +63,7 @@
 
 .message-component-caret-anchor .message-component-caret {
   position:absolute;
-  left:calc(var(--message-caret-width) / -2);
+  left:calc(var(--message-caret-width) / -2 + 1.5px);
   top:50%;
   transform:translateY(-50%);
 }
@@ -97,7 +97,7 @@
   display:inline-block;
   flex:0 0 auto;
   width:var(--message-caret-width);
-  height:18px;
+  height:20px;
   border-radius:var(--radius-full);
   background:var(--colors-brand-primary-800);
   animation:message-caret-blink 1s step-end infinite;
