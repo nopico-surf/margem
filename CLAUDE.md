@@ -212,7 +212,7 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
 
 ## 10. Como trabalhar comigo
 
-- Antes de escrever código de uma feature nova, me mostrar o plano em até 10 linhas e esperar meu ok.
+- Sempre mostrar o plano (até 10 linhas) e esperar meu ok antes de fazer qualquer alteração: código, docs, config, migração, commit. Vale para feature, ajuste pequeno e correção de bug. Só leitura e investigação dispensam plano.
 - **Zero invenção quando eu mando referência.** Quando eu mando uma referência (link do Figma, print, texto exato que eu escrevi), o que está nela é o teto e o chão: implementar exatamente aquilo, nem mais nem menos.
   - Não criar botão, campo, CTA, texto, ícone, estado ou seção que não esteja na referência, mesmo que pareça óbvio, mesmo que "toda tela parecida tem isso".
   - Não completar texto que eu mandei incompleto, não trocar palavra por sinônimo, não adicionar frase de transição, não inventar microcopy de placeholder ou de erro que eu não escrevi.
