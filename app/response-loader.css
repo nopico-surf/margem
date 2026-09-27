@@ -12,7 +12,7 @@
 	font-size:var(--font-size-md);
 	font-weight:400;
 	line-height:var(--line-height-2xl);
-	color:rgb(23 27 24 / 60%);
+	color:var(--colors-alpha-64);
 }
 
 .figma-response-loading > span{
@@ -42,9 +42,9 @@
 	left:0;
 	transform:translateY(-50%);
 	mix-blend-mode:multiply;
-	animation-duration:6s;
+	animation-duration:var(--duration-6000);
 	animation-iteration-count:infinite;
-	animation-timing-function:cubic-bezier(.37,0,.63,1);
+	animation-timing-function:var(--easing-in-out);
 }
 .figma-response-loader-icon-1{animation-name:loader-anel-1}
 .figma-response-loader-icon-2{

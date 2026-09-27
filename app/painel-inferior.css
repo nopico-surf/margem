@@ -7,17 +7,17 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 20;
+  z-index: var(--z-index-panel);
   display: flex;
   flex-direction: column;
   transform: translateY(0);
-  transition: transform 350ms ease, visibility 0s;
+  transition: transform var(--duration-350) ease, visibility 0s;
 }
 
 .painel-inferior[data-visivel="false"] {
   transform: translateY(100%);
   visibility: hidden;
-  transition: transform 350ms ease, visibility 0s 350ms;
+  transition: transform var(--duration-350) ease, visibility 0s var(--duration-350);
 }
 
 .painel-inferior-cartao {
@@ -28,7 +28,7 @@
   padding: var(--spacing-16) var(--layout-page-padding-mobile);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   background: var(--colors-neutral-0);
-  box-shadow: 0 0 var(--spacing-32) var(--colors-alpha-16);
+  box-shadow: var(--shadow-glow);
 }
 
 .painel-inferior[data-variante="cookies"] .painel-inferior-cartao {

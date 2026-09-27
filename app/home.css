@@ -35,7 +35,7 @@
   border:var(--border-width-hairline) solid var(--colors-status-success-200);
   border-radius:var(--radius-xl);
   background:var(--colors-brand-primary-50);
-  box-shadow:0 0 37px var(--colors-alpha-16);
+  box-shadow: var(--shadow-glow);
 }
 
 .message-input textarea {
@@ -91,7 +91,7 @@
 
 .pathways {
   width:100%;
-  max-width:1080px;
+  max-width: var(--layout-content-max-width-page);
   margin-left:auto;
   margin-right:auto;
   padding:var(--spacing-24) var(--pagina-padding-lateral);
@@ -236,7 +236,7 @@
 
 .hero-focus-track,
 .topics-button {
-  max-width:1080px;
+  max-width: var(--layout-content-max-width-page);
 }
 
 .pathways {
@@ -278,7 +278,7 @@
   margin-left:auto;
 }
 
-@media(max-width:599px) {
+@media(max-width:639.98px) {
   html.keyboard-open .hero-focus-track {
     display:flex;
     flex-direction:column;

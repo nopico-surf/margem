@@ -295,5 +295,37 @@
   --layout-content-max-width-xl: 1280px;
   --layout-content-max-width-2xl: 1440px;
   --layout-content-max-width-3xl: 1920px;
+  --layout-content-max-width-page: 1080px;
   --layout-page-background: #ffffff;
+
+  /* Camadas */
+  --z-index-base: 1;
+  --z-index-raised: 2;
+  --z-index-panel: 20;
+  --z-index-menu: 30;
+  --z-index-modal: 100;
+
+  /* Duração e easing */
+  --duration-260: 260ms;
+  --duration-350: 350ms;
+  --duration-420: 420ms;
+  --duration-1000: 1000ms;
+  --duration-1500: 1500ms;
+  --duration-6000: 6000ms;
+  --easing-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --easing-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --easing-in-out: cubic-bezier(0.37, 0, 0.63, 1);
+
+  /* Sombra. No Figma são estilos de efeito `shadow/shadow-*`, com a cor ligada à variável. */
+  --shadow-glow: 0 0 32px var(--colors-alpha-16);
+  --shadow-halo: 0 0 32px 32px var(--colors-brand-primary-100);
+  --shadow-elevated: 0 8px 24px -8px var(--colors-alpha-8);
+
+  /* Breakpoints. Documentação: CSS não aceita var() dentro de @media, então as media queries
+     escrevem o número literal e o lint (scripts/lint-regras.mjs) só aceita estes valores.
+     min-width usa o valor; max-width usa o valor menos 0.02px. */
+  --breakpoint-xs: 420px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1088px;
 }

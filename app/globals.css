@@ -111,7 +111,7 @@ textarea {
 }
 
 .app-logo {
-  width: 86.756px;
+  width: var(--control-icon-5xl);
   height: 12px;
 }
 
@@ -132,10 +132,10 @@ textarea {
   height: 24px;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 640px) {
   .app-shell {
     max-width: 384px;
     margin: 0 auto;
-    box-shadow: 0 8px 24px -8px rgb(0 0 0 / 5%);
+    box-shadow: var(--shadow-elevated);
   }
 }

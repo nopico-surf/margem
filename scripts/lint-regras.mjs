@@ -83,12 +83,63 @@ const REGRA_NUMBERS_DIRETO = {
   contar: (texto) => contarOcorrencias(/--numbers-[\w-]+/g, texto),
 };
 
+const REGRA_Z_INDEX_CRU = {
+  id: "z-index-cru",
+  descricao: "z-index numérico fora de app/tokens.css. Deveria usar --z-index-*.",
+  aplicaA: (caminho) => caminhoRelativo(caminho) !== TOKENS_FILE,
+  contar: (texto) => contarOcorrencias(/z-index:\s*-?\d/g, texto),
+};
+
+const REGRA_DURACAO_CRUA = {
+  id: "duracao-crua",
+  descricao: "Duração de transition/animation fora de app/tokens.css. Deveria usar --duration-*.",
+  aplicaA: (caminho) => caminhoRelativo(caminho) !== TOKENS_FILE,
+  contar: (texto) =>
+    contarOcorrencias(/(?:transition|animation[\w-]*)\s*:[^;{}]*?(?<![\w.-])(?!0s\b)\d*\.?\d+m?s\b/g, texto),
+};
+
+const REGRA_EASING_CRU = {
+  id: "easing-cru",
+  descricao: "cubic-bezier fora de app/tokens.css. Deveria usar --easing-*.",
+  aplicaA: (caminho) => caminhoRelativo(caminho) !== TOKENS_FILE,
+  contar: (texto) => contarOcorrencias(/cubic-bezier\(/g, texto),
+};
+
+const REGRA_SOMBRA_CRUA = {
+  id: "sombra-crua",
+  descricao: "box-shadow com valor cru fora de app/tokens.css. Deveria usar --shadow-*.",
+  aplicaA: (caminho) => caminhoRelativo(caminho) !== TOKENS_FILE,
+  contar: (texto) => contarOcorrencias(/box-shadow:(?!\s*(?:none\b|var\(|inherit\b|initial\b))/g, texto),
+};
+
+// CSS não aceita var() em @media, então o número é literal e a escala é conferida aqui.
+// Espelha --breakpoint-* de app/tokens.css. max-width usa o valor menos 0.02px (ou 0.01em).
+const BREAKPOINTS_PERMITIDOS = new Set(["420px", "640px", "768px", "1088px", "48em", "419.98px", "639.98px", "767.98px", "1087.98px", "47.99em"]);
+
+const REGRA_BREAKPOINT_FORA_DA_ESCALA = {
+  id: "breakpoint-fora-da-escala",
+  descricao: "@media com largura fora da escala --breakpoint-* (420, 640, 768, 1088).",
+  aplicaA: (caminho) => caminho.endsWith(".css"),
+  contar: (texto) => {
+    let total = 0;
+    for (const m of texto.matchAll(/@media[^{]*?\(\s*(?:min|max)-width:\s*([\d.]+(?:px|em))\s*\)/g)) {
+      if (!BREAKPOINTS_PERMITIDOS.has(m[1])) total++;
+    }
+    return total;
+  },
+};
+
 const REGRAS_POR_CONTAGEM = [
   REGRA_TRAVESSAO,
   REGRA_PX_CRU,
   REGRA_HEX_CRU,
   REGRA_FIGMA_ASSET_URL,
   REGRA_NUMBERS_DIRETO,
+  REGRA_Z_INDEX_CRU,
+  REGRA_DURACAO_CRUA,
+  REGRA_EASING_CRU,
+  REGRA_SOMBRA_CRUA,
+  REGRA_BREAKPOINT_FORA_DA_ESCALA,
 ];
 
 // Ícone referenciando arquivo que não existe em /public. Regra à parte: não é contagem por

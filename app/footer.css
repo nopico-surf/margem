@@ -9,7 +9,7 @@
 .app-footer-title,
 .app-footer-list {
   width:100%;
-  max-width:1080px;
+  max-width: var(--layout-content-max-width-page);
   padding:0 var(--pagina-padding-lateral);
   box-sizing:border-box;
   margin-left:auto;

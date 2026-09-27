@@ -159,9 +159,45 @@ O número no nome é o valor em px, e nessas duas escalas ele é verdade nos doi
 | `layout/grid-gutter-tablet` | 24 |
 | `layout/grid-gutter-desktop` | 32 |
 | `layout/content-max-width-sm` a `-3xl` | 640, 768, 1024, 1280, 1440, 1920 |
+| `layout/content-max-width-page` | 1080 (largura do conteúdo das telas: footer, home, onboarding, resultado, modal) |
 | `layout/layout-page-background` | `#ffffff` |
 
 `layout/layout-page-background` era uma variável chamada `layout/Color`, sem função declarada, com escopo aberto em todas as propriedades. Foi renomeada e escopada para preenchimento de frame, mas **continua pendente de revisão**: pode ser lixo de rascunho e não token de verdade.
+
+O logo (`.app-logo`) usa `control/control-icon-5xl` (86). Antes era 86.756px cru.
+
+### Camadas, movimento e breakpoints
+
+Criados em 26/09/2026. Mesmo valor nos modos Mobile e Desktop. No Figma o escopo é vazio (não aparecem nos seletores de propriedade), porque não existe escopo para z-index, duração ou easing.
+
+| Token | Valor | Onde |
+|---|---|---|
+| `z-index/z-index-base` | 1 | camada local dentro de um componente |
+| `z-index/z-index-raised` | 2 | camada local acima da base |
+| `z-index/z-index-panel` | 20 | painel inferior |
+| `z-index/z-index-menu` | 30 | menu lateral |
+| `z-index/z-index-modal` | 100 | modal de dados e privacidade |
+| `duration/duration-260` | 260ms | entrada dos pedaços da resposta |
+| `duration/duration-350` | 350ms | saída do menu e painel inferior |
+| `duration/duration-420` | 420ms | entrada do menu |
+| `duration/duration-1000` | 1000ms | cursor do campo de mensagem |
+| `duration/duration-1500` | 1500ms | brilho do esqueleto de carregamento |
+| `duration/duration-6000` | 6000ms | ciclo do loader da resposta |
+| `easing/easing-out-expo` | `cubic-bezier(0.16, 1, 0.3, 1)` | menu lateral |
+| `easing/easing-out-quart` | `cubic-bezier(0.25, 1, 0.5, 1)` | saída do menu lateral |
+| `easing/easing-in-out` | `cubic-bezier(0.37, 0, 0.63, 1)` | loader da resposta |
+| `breakpoint/breakpoint-xs` | 420 | menu lateral |
+| `breakpoint/breakpoint-sm` | 640 | home, globals |
+| `breakpoint/breakpoint-md` | 768 (`48em` no CSS) | footer, bem-vindo, painel inferior, globals |
+| `breakpoint/breakpoint-lg` | 1088 | resultado |
+
+Palavras-chave (`ease`, `ease-out`, `step-end`, `0s`) não são tokens e ficam no CSS.
+
+**Breakpoint não vira `var()`.** CSS não aceita `var()` dentro de `@media`, então a media query escreve o número literal e `scripts/lint-regras.mjs` (regra `breakpoint-fora-da-escala`) só aceita os valores da escala. `min-width` usa o valor; `max-width` usa o valor menos 0.02px (`639.98px`, `1087.98px`), para as duas faixas não se sobreporem. O md continua em `48em` e `47.99em`.
+
+### Alpha sem 60
+
+O código tinha `rgb(23 27 24 / 60%)` em duas telas. `alpha-60` não existe e a rampa não ganhou um: o uso foi para `alpha-64`.
 
 ---
 
@@ -264,7 +300,15 @@ Esses ainda usam capitalização e barra, padrão diferente do das variáveis. N
 
 ### Estilos de efeito
 
-Três: `background blur`, `drop shadow`, `glass`.
+Seis: `background blur`, `drop shadow`, `glass` e as três sombras de tela, criadas em 26/09/2026, cada uma com a cor ligada a uma variável:
+
+| Estilo | Valor | Cor | CSS |
+|---|---|---|---|
+| `shadow/shadow-glow` | 0 0 32, sem espalhamento | `alpha-16` | `--shadow-glow` (home, campo de mensagem, painel inferior) |
+| `shadow/shadow-halo` | 0 0 32, espalhamento 32 | `brand-primary-100` | `--shadow-halo` (bem-vindo) |
+| `shadow/shadow-elevated` | 0 8, desfoque 24, espalhamento -8 | `alpha-8` | `--shadow-elevated` (globals) |
+
+Sombra é token composto: os valores moram dentro dele, não em variáveis de blur avulsas. `drop shadow` (raio 74) é anterior e não tem uso no código.
 
 ---
 

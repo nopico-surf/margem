@@ -1,11 +1,11 @@
 .dados-modal {
   position:fixed;
   inset:0;
-  z-index:100;
+  z-index: var(--z-index-modal);
   display:flex;
   flex-direction:column;
   width:100%;
-  max-width:1080px;
+  max-width: var(--layout-content-max-width-page);
   margin:0 auto;
   background:#fff;
   overflow-y:auto;
@@ -20,7 +20,7 @@
 }
 
 .dados-modal-logo {
-  width:86.756px;
+  width: var(--control-icon-5xl);
   height:12px;
 }
 
