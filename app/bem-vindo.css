@@ -135,6 +135,7 @@
 .bv-publico {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
   gap: var(--layout-grid-gutter-mobile);
 }
 
@@ -229,16 +230,23 @@
 .card-publico {
   display: flex;
   flex-direction: column;
-  height: 15rem;
   border-radius: var(--radius-xl);
   background: var(--colors-neutral-0);
   overflow: clip;
 }
 
+/* Lado a lado, os cards dividem as duas linhas do grid: a foto tem a mesma altura nos dois e a
+   linha do texto assume a do maior, então o branco fica igual mesmo com quebras de linha diferentes. */
+.bv-publico .card-publico {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
 .card-publico-foto {
   position: relative;
-  flex: 1 1 0;
-  min-height: 0;
+  height: 9.5rem;
 }
 
 .card-publico-foto img {
@@ -484,8 +492,8 @@
     gap: var(--spacing-48);
   }
 
-  .card-publico {
-    height: 20.1875rem;
+  .card-publico-foto {
+    height: 13.5rem;
   }
 
   .bv-rodape {
