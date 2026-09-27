@@ -12,7 +12,7 @@ import { Stepper } from "@/components/bem-vindo/Stepper";
 import { Button } from "@/components/ui/Button";
 import { PainelInferior } from "@/components/ui/PainelInferior";
 import { GlifoGroups, GlifoHealing, GlifoLock, GlifoVerifiedUser, GlifoWork } from "@/components/icons/glifos";
-import { conceder, jaConsentiu } from "@/lib/consentimento";
+import { conceder, jaConsentiu, jaRecusou, recusar } from "@/lib/consentimento";
 import { track } from "@/lib/mixpanel";
 import type { BotaoContinuar } from "@/lib/experimento";
 
@@ -29,17 +29,19 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
   const esperaDaBarra = useRef<ReturnType<typeof setTimeout>>(undefined);
   const exposicaoRegistrada = useRef(false);
 
-  // Só depois de montar, pra o painel entrar subindo em vez de já nascer no lugar. Quem já aceitou
-  // (e voltou de /privacidade, por exemplo) não vê o painel de novo, só a barra de Continuar.
+  // Só depois de montar, pra o painel entrar subindo em vez de já nascer no lugar. Quem já respondeu
+  // (aceitou, ou recusou nesta aba, e voltou de /privacidade, por exemplo) não vê o painel de novo,
+  // só a barra de Continuar.
   useEffect(() => {
-    if (jaConsentiu()) {
+    if (jaConsentiu() || jaRecusou()) {
       registrarExposicao();
       setBarraVisivel(true);
     } else setCookiesVisivel(true);
     return () => clearTimeout(esperaDaBarra.current);
   }, []);
 
-  // Exposição ao teste A/B do botão: só depois do consentimento, uma vez por carga da página.
+  // Exposição ao teste A/B do botão: depois de a pessoa responder ao painel, aceitando ou não (a
+  // medição anônima continua na recusa), uma vez por carga da página.
   function registrarExposicao() {
     if (exposicaoRegistrada.current || !botao.experimento || !botao.variante) return;
     exposicaoRegistrada.current = true;
@@ -51,9 +53,14 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
     esperaDaBarra.current = setTimeout(() => setBarraVisivel(true), ESPERA_DA_BARRA);
   }
 
-  function aceitar(origem: "botao" | "x") {
-    track("aviso_cookies_entendi", { origem, rota: "/bem-vindo" });
-    conceder();
+  function aceitarPersonalizacao() {
+    conceder({ rota: "/bem-vindo", gatilho: "abertura" });
+    registrarExposicao();
+    fecharCookies();
+  }
+
+  function navegarSemPersonalizacao() {
+    recusar({ rota: "/bem-vindo", gatilho: "abertura" });
     registrarExposicao();
     fecharCookies();
   }
@@ -202,7 +209,8 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
       <PainelInferior
         variante="cookies"
         visivel={cookiesVisivel}
-        onEntendi={aceitar}
+        onAceitar={aceitarPersonalizacao}
+        onRecusar={navegarSemPersonalizacao}
         onVerDados={verDados}
       />
       <PainelInferior variante="continuar" visivel={barraVisivel} onContinuar={continuar} texto={botao.texto} />

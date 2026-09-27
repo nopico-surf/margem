@@ -18,7 +18,7 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         </ModalSection>
 
         <ModalSection titulo="O que a gente guarda">
-          <p>O texto que você escreve nos campos livres. As opções que você escolhe nos cards. Um código aleatório que identifica sua visita, sem ligação nenhuma com você. Informações básicas de uso do site, tipo quais telas você abriu e quanto tempo ficou (medição anônima). Sua localização aproximada, só se você autorizar, e só pra mostrar CAPS, UBS e grupos de apoio perto de você. Confirmação de que você viu o aviso de dados e cookies.</p>
+          <p>O texto que você escreve nos campos livres e as opções que você escolhe nos cards, só se você aceitar a personalização. Um código aleatório que identifica sua visita, sem ligação nenhuma com você. Informações básicas de uso do site, tipo quais telas você abriu e quanto tempo ficou (medição anônima). Sua localização aproximada, só se você autorizar, e só pra mostrar CAPS, UBS e grupos de apoio perto de você. Confirmação de que você aceitou a personalização.</p>
         </ModalSection>
 
         <ModalSection titulo="O que a gente não guarda">
@@ -26,17 +26,21 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
           <p>Se você escrever seu nome ou algum dado desses no campo de texto, isso fica guardado junto com o resto do que você escreveu. Por isso a gente pede pra evitar.</p>
         </ModalSection>
 
+        <ModalSection titulo="Se você não aceitar">
+          <p>Se você tocar em &quot;Navegar sem personalização&quot;, dá pra continuar navegando pela Margem. O que você escreve e os cards que você escolhe não são guardados nem enviados pra inteligência artificial, então a gente não consegue montar uma orientação pra você. Quando você tocar num card ou enviar uma mensagem, o aviso volta pra você poder aceitar.</p>
+        </ModalSection>
+
         <ModalSection titulo="Por que a gente guarda">
           <p>Pra montar a orientação que você recebe na hora. Pra melhorar as respostas, com revisão de psicóloga e da equipe clínica. Pra entender o que as pessoas mais buscam e onde faltam serviços, sempre olhando o conjunto e nunca uma pessoa específica. Pra medir como o site está funcionando e se está chegando em quem precisa.</p>
         </ModalSection>
 
         <ModalSection titulo="Armazenamento local e medição de uso">
-          <p>A gente guarda no seu navegador uma confirmação de que você viu o aviso de dados e cookies. Isso permite que você não veja o aviso de novo toda vez que entra.</p>
-          <p>A gente também mede de forma anônima como você usa o site: quais telas você abriu, quanto tempo ficou, se clicou em algo. Esses dados não deixam você identificável. A gente só quer saber se o que a gente tá fazendo tá ajudando ou se precisa mudar. Essa medição começa assim que você abre o site, antes mesmo de você tocar em &quot;Entendi&quot; no aviso de dados e cookies.</p>
+          <p>A gente guarda no seu navegador a confirmação de que você aceitou a personalização. Isso permite que você não veja o aviso de novo toda vez que entra. Se você navegar sem personalização, a gente só lembra disso enquanto a aba estiver aberta, e o aviso volta na próxima visita.</p>
+          <p>A gente também mede de forma anônima como você usa o site: quais telas você abriu, quanto tempo ficou, se clicou em algo. Esses dados não deixam você identificável. A gente só quer saber se o que a gente tá fazendo tá ajudando ou se precisa mudar. Essa medição começa assim que você abre o site e continua mesmo se você navegar sem personalização. Se você aceitar a personalização, ela também registra qual card você escolheu e o tamanho do texto que você enviou, mas nunca o texto em si.</p>
         </ModalSection>
 
         <ModalSection titulo="Quem mais tem acesso">
-          <p>Pra Margem funcionar, a gente usa serviços de terceiros que ajudam com armazenamento de dados, hospedagem do site e inteligência artificial pra gerar as respostas. Essas empresas tratam os dados a nosso pedido e estão sob as mesmas obrigações de confidencialidade que a Margem.</p>
+          <p>Pra Margem funcionar, a gente usa serviços de terceiros que ajudam com armazenamento de dados, hospedagem do site, medição de uso e inteligência artificial pra gerar as respostas. Parte desse processamento acontece fora do Brasil. O que você escreve e os cards que você escolhe só vão pra inteligência artificial se você aceitar a personalização. Essas empresas tratam os dados a nosso pedido e estão sob as mesmas obrigações de confidencialidade que a Margem.</p>
           <p>Dados anonimizados (sem qualquer informação que deixe você identificável) podem ser compartilhados com órgãos públicos e pesquisadores pra entender melhor o que as pessoas mais precisam, sempre com o objetivo de melhorar serviços de saúde e redução de danos. A gente nunca compartilha dados anonimizados para venda de produtos, publicidade ou qualquer outro uso comercial.</p>
           <p>Fora isso, a gente não compartilha dados que deixem você identificável. A única exceção é ordem judicial, que a gente é obrigada a cumprir por lei.</p>
         </ModalSection>
@@ -54,8 +58,8 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         <ModalSection titulo="Cookies e armazenamento">
           <p>A gente usa o armazenamento do seu navegador pra duas coisas:</p>
           <ul>
-            <li>Guardar que você já viu o aviso de dados e cookies (quando você toca em &quot;Entendi&quot;), pra não mostrar de novo toda vez que você entra.</li>
-            <li>Medir de forma anônima como você usa o site (quais telas, quanto tempo, cliques). Essa medição começa assim que você abre o site.</li>
+            <li>Guardar a sua escolha no aviso de dados e cookies. Se você toca em &quot;Aceitar personalização&quot;, a gente lembra disso pra não perguntar de novo toda vez que você entra. Se você toca em &quot;Navegar sem personalização&quot;, só lembra enquanto a aba estiver aberta.</li>
+            <li>Medir de forma anônima como você usa o site (quais telas, quanto tempo, cliques). Essa medição começa assim que você abre o site e continua mesmo se você navegar sem personalização.</li>
           </ul>
         </ModalSection>
 

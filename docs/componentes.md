@@ -415,7 +415,7 @@ Os quatro não existiam nem no Figma nem no código. Nenhum tem hover: cards nã
 | `bem-vindo/CardsLp` | `cards-lp` (nas instâncias aparece como "Cards LP") | Ícone de 24, título e uma linha, sem clique |
 | `bem-vindo/CardPublico` | `card-publico` (hoje "Frame 149", nome auto-gerado) | Foto em cima, título e uma linha embaixo |
 | `bem-vindo/Stepper` | `stepper`, propriedade `orientation` = vertical, horizontal | Número em círculo, linha e texto. Vertical no mobile, horizontal no desktop |
-| `ui/PainelInferior` | `painel-inferior`, propriedade `variant` = cookies, continuar | Painel fixo embaixo. `cookies` tem o X (fecha como "Entendi"), texto e dois botões, sem título; `continuar` tem um botão só, e no desktop não existe |
+| `ui/PainelInferior` | `painel-inferior`, propriedade `variant` = cookies, continuar | Painel fixo embaixo. `cookies` tem texto e três botões (link "Ver como a gente cuida dos seus dados", secondary "Navegar sem personalização" e primary "Aceitar personalização"), sem X e sem título; `continuar` tem um botão só, e no desktop não existe |
 
 Composição: `cards-lp` e `card-publico` são só markup. O painel usa o `Button` (primary, secondary, transparent, tamanho medium). A tela reaproveita `Header`, `SideMenu`, `Footer` e `Button`.
 
@@ -442,7 +442,8 @@ Em `/public/assets`: `dois-amigos-abracando.webp`, `homem-regata-verde.webp`, `m
 
 ### Decisões de comportamento
 
-- **Recusar** só fecha o painel. Sem consentimento, clicar num card ou enviar o campo livre na `/inicio` reabre o painel; aceitar executa a ação, recusar a descarta.
+- **Painel de cookies (26/09/2026):** frames 1301:7187 (mobile, padding 16) e 1326:5711 (desktop, padding 24), os dois com 449 de largura. O X está oculto nos dois, então saiu.
+- **"Navegar sem personalização"** só fecha o painel e não grava nada; a recusa fica só na aba (`sessionStorage`). Sem consentimento, clicar num card ou enviar o campo livre na `/inicio` reabre o painel; "Aceitar personalização" executa a ação, recusar a descarta.
 - **Barra de Continuar** (mobile): sobe 1s depois que o painel de cookies sai.
 - **Texto do Figma corrigido:** o card "Por perto" no mobile diz "ara quem está próximo...", e o código usa "Para quem está próximo de alguém em uso" (texto do desktop).
 - **Texto que mudou em 26/09/2026:** "Serviços públicos" diz "Atendimento gratuito no sistema de saúde", e o terceiro card virou "Redes de apoio" / "Encontros presenciais e online" (o Figma desktop repetia o texto de "Profissionais").
@@ -453,4 +454,4 @@ Em `/public/assets`: `dois-amigos-abracando.webp`, `homem-regata-verde.webp`, `m
 - [ ] Nomear os componentes acima no Margem System (`cards-lp`, `card-publico`, `stepper`, `painel-inferior`) e nomear o "Frame 149".
 - [ ] Confirmar no Ícones os nomes `lock`, `healing`, `work`, `groups`.
 - [ ] `EmergencyPanel`, `IntroShell`, `IntroBubble`, `IntroCopy`, `IntroHeader`, `ConsentCard` e `LinkPoliticaDados` ficaram sem uso. Não foram apagados.
-- [ ] O `track()` do Mixpanel não checa o consentimento.
+- [x] O `track()` do Mixpanel não checa o consentimento, de propósito: a medição anônima de navegação continua depois da recusa (o painel avisa). Card e texto só chegam a ele depois do aceite.

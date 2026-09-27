@@ -1,6 +1,6 @@
 /* Painel fixo embaixo. Figma: `painel-inferior`, variantes cookies e continuar. Usado em /bem-vindo
-   e em /inicio. Entra subindo e sai descendo. O elemento raiz é só o invólucro transparente: o X
-   (cookies) fica acima do cartão branco. */
+   e em /inicio. Entra subindo e sai descendo. O elemento raiz é só o invólucro transparente do
+   cartão branco. */
 
 .painel-inferior {
   position: fixed;
@@ -10,8 +10,6 @@
   z-index: 20;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: var(--spacing-10);
   transform: translateY(0);
   transition: transform 350ms ease, visibility 0s;
 }
@@ -20,26 +18,6 @@
   transform: translateY(100%);
   visibility: hidden;
   transition: transform 350ms ease, visibility 0s 350ms;
-}
-
-.painel-inferior-fechar {
-  display: flex;
-  padding: 0 var(--spacing-16);
-}
-
-.painel-inferior-x {
-  display: flex;
-  align-items: center;
-  padding: var(--spacing-12);
-  border: 0;
-  border-radius: var(--radius-full);
-  background: var(--colors-neutral-0);
-  box-shadow: 0 0 var(--spacing-32) var(--colors-alpha-16);
-  cursor: pointer;
-}
-
-.painel-inferior-x svg {
-  display: block;
 }
 
 .painel-inferior-cartao {
@@ -78,15 +56,11 @@
 
 @media (min-width: 48em) {
   /* No desktop o painel vira um cartão no canto, e o Continuar da barra não existe (o botão está
-     dentro da página). O X fica colado na borda direita do cartão. */
+     dentro da página). */
   .painel-inferior {
     left: auto;
     right: var(--layout-page-padding-desktop);
     width: 28.0625rem;
-  }
-
-  .painel-inferior-fechar {
-    padding: 0;
   }
 
   .painel-inferior[data-variante="cookies"] .painel-inferior-cartao {
@@ -103,12 +77,4 @@
   .painel-inferior[data-visivel="false"] {
     transition: none;
   }
-}
-
-/* O X fica na frente do cartão. A sombra dele é cortada na borda de baixo do próprio botão, pra não
-   escurecer o cartão. */
-.painel-inferior-fechar {
-  position: relative;
-  z-index: 1;
-  clip-path: inset(calc(-1 * var(--spacing-64)) calc(-1 * var(--spacing-64)) 0 calc(-1 * var(--spacing-64)));
 }

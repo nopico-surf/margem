@@ -10,43 +10,53 @@ import { HomeHero } from "@/components/app/HomeHero";
 import { CardHomeGroup } from "@/components/app/CardHomeGroup";
 import { PainelInferior } from "@/components/ui/PainelInferior";
 import { CARDS_HOME } from "@/lib/cards-home";
-import { conceder, jaConsentiu } from "@/lib/consentimento";
+import { conceder, jaConsentiu, jaRecusou, recusar, type ContextoConsentimento } from "@/lib/consentimento";
 import { registrar, track } from "@/lib/mixpanel";
 
 export default function AppPage() {
   const router = useRouter();
   const [consentiu, setConsentiu] = useState(false);
   const [cookiesVisivel, setCookiesVisivel] = useState(false);
-  // O que a pessoa tentou fazer sem ter consentido. Roda se ela aceitar, e se perde se ela recusar.
+  // O que a pessoa tentou fazer sem ter consentido. Roda se ela aceitar, e se perde se ela recusar:
+  // nada é gravado nem enviado, o card não abre e o texto continua no campo.
   const acaoPendente = useRef<(() => void) | null>(null);
+  // O que fez o painel subir, só pra medir aceite e recusa (nunca qual card nem o que foi escrito).
+  const gatilho = useRef<ContextoConsentimento["gatilho"]>("abertura");
   const [text, setText] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Quem chega direto na /inicio (digitando a URL, por exemplo) sem ter consentido vê o painel
-  // logo ao abrir. Se fechar sem aceitar, ele volta a cada tentativa de conversar (card ou campo livre).
+  // Quem chega direto na /inicio (digitando a URL, por exemplo) sem ter respondido ao painel o vê
+  // logo ao abrir. Quem recusou nesta aba não: o painel volta a cada tentativa de conversar (card ou
+  // campo livre), não a cada abertura.
   useEffect(() => {
     const jaAceitou = jaConsentiu();
     setConsentiu(jaAceitou);
-    if (!jaAceitou) setCookiesVisivel(true);
+    if (!jaAceitou && !jaRecusou()) setCookiesVisivel(true);
   }, []);
 
-  function comConsentimento(acao: () => void) {
+  function comConsentimento(motivo: ContextoConsentimento["gatilho"], acao: () => void) {
     if (consentiu) {
       acao();
       return;
     }
     acaoPendente.current = acao;
+    gatilho.current = motivo;
     setCookiesVisivel(true);
   }
 
-  function aceitarCookies(origem: "botao" | "x") {
-    track("aviso_cookies_entendi", { origem, rota: "/inicio" });
-    conceder();
+  function aceitarPersonalizacao() {
+    conceder({ rota: "/inicio", gatilho: gatilho.current });
     setConsentiu(true);
     setCookiesVisivel(false);
     const acao = acaoPendente.current;
     acaoPendente.current = null;
     acao?.();
+  }
+
+  function navegarSemPersonalizacao() {
+    recusar({ rota: "/inicio", gatilho: gatilho.current });
+    setCookiesVisivel(false);
+    acaoPendente.current = null;
   }
 
   function verDadosDosCookies() {
@@ -58,7 +68,7 @@ export default function AppPage() {
     event?.preventDefault();
     const value = text.trim();
     if (!value) return;
-    comConsentimento(() => enviarTexto(value));
+    comConsentimento("texto_livre", () => enviarTexto(value));
   }
 
   function enviarTexto(value: string) {
@@ -72,7 +82,7 @@ export default function AppPage() {
   }
 
   function handleCardClick(index: number) {
-    comConsentimento(() => abrirCard(index));
+    comConsentimento("card", () => abrirCard(index));
   }
 
   function abrirCard(index: number) {
@@ -113,7 +123,8 @@ export default function AppPage() {
       <PainelInferior
         variante="cookies"
         visivel={cookiesVisivel}
-        onEntendi={aceitarCookies}
+        onAceitar={aceitarPersonalizacao}
+        onRecusar={navegarSemPersonalizacao}
         onVerDados={verDadosDosCookies}
       />
     </main>

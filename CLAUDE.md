@@ -57,11 +57,13 @@ proxy.ts                        decide pra onde vai "/", sem piscar (lê cookie)
 
 ## 3. O fluxo, do começo ao fim
 
-**Primeira visita.** Uma tela só, `/bem-vindo` (Sobre a Margem), com o painel de "Dados e cookies" subindo por cima. O painel tem "Li e estou de acordo", "Recusar" e "Ver como a gente cuida dos seus dados" (abre `/privacidade`). Um único aceite cobre tudo (armazenamento local, IA, analytics, compartilhamento anonimizado com governo e pesquisa). A tela traz também o aviso de que, pra quem é menor de 18, conversar com um responsável pode ser importante. Sem pedir declaração de idade, sem bloqueio, sem avisar ninguém.
+**Primeira visita.** Uma tela só, `/bem-vindo` (Sobre a Margem), com o painel de "Dados e cookies" subindo por cima. O painel informa que a medição anônima de uso acontece independentemente da escolha (não é dado sensível, base legal de legítimo interesse) e pede consentimento específico só pro que é dado sensível: guardar o que a pessoa escreve ou escolhe nos cards, processar com IA (parcialmente fora do Brasil) e usar sem identificação em pesquisas públicas. Três botões: "Ver como a gente cuida dos seus dados" (abre `/privacidade`), "Navegar sem personalização" (recusa) e "Aceitar personalização". Não tem X: fechar é escolher. A tela traz também o aviso de que, pra quem é menor de 18, conversar com um responsável pode ser importante. Sem pedir declaração de idade, sem bloqueio, sem avisar ninguém.
 
 Não há mais card de emergência (CVV 188, SAMU 192, Polícia 190, Disque Social 121) na entrada: os seis designs de 25/09/2026 não o trazem, e a decisão foi começar sem. Os contatos de emergência continuam existindo na resposta (ver "Sempre, em paralelo").
 
-**Recusar não bloqueia.** O painel fecha e a pessoa segue navegando. No mobile, 1s depois de o painel sair sobe uma barra fixa com "Continuar" (no desktop o botão já está dentro da página). Sem consentimento, cada tentativa de conversar na `/inicio` (clicar num card ou enviar o campo livre) reabre o painel em vez de seguir; a ação só acontece se a pessoa aceitar, e se recusar de novo nada acontece. O consentimento grava em `localStorage`, em `sessoes.consentimento_lgpd` e em um cookie `margem-consentimento=true` que sobrevive por 400 dias (`lib/consentimento.ts`). O cookie é lido pelo `proxy.ts` antes da página carregar, o que elimina o piscar ou conteúdo vazio. Quem já consentiu não vê `/bem-vindo` de novo. Quem recusou vê de novo ao abrir `/`, porque não há cookie.
+**Recusar não bloqueia a navegação, só a personalização.** "Navegar sem personalização" fecha o painel e a pessoa segue navegando, e a medição anônima continua. No mobile, 1s depois de o painel sair sobe uma barra fixa com "Continuar" (no desktop o botão já está dentro da página). Conversar exige o aceite: sem ele, cada tentativa na `/inicio` (clicar num card ou enviar o campo livre) reabre o painel em vez de seguir, e nada é gravado nem enviado à IA até a pessoa aceitar. Se ela recusar de novo, o card não abre, o texto continua no campo e nada acontece. O aceite grava em `localStorage`, em `sessoes.consentimento_lgpd` e em um cookie `margem-consentimento=true` que sobrevive por 400 dias (`lib/consentimento.ts`). O cookie é lido pelo `proxy.ts` antes da página carregar, o que elimina o piscar ou conteúdo vazio. Quem já consentiu não vê `/bem-vindo` de novo. A recusa não grava cookie: fica só na aba (`sessionStorage`), pra o painel não voltar a cada tela, e quem recusou vê o painel de novo ao abrir `/` numa próxima visita.
+
+**Medição.** O Mixpanel mede navegação mesmo depois da recusa (o painel avisa; legítimo interesse). Card e texto do campo livre só chegam a ele depois do aceite: `card_selecionado` e `card_titulo` levam o título do card, `texto_livre_enviado` só o tamanho do texto. `consentimento_concedido` e `consentimento_recusado` levam `rota` e `gatilho` (`abertura`, `card` ou `texto_livre`), nunca o card nem o texto. O `identify` usa o mesmo UUID de sessão do Supabase, de propósito.
 
 **Tela principal.** Seis cards que representam estados emocionais distintos, mais um sétimo para familiares e pessoas próximas. Em paralelo, um campo de texto livre. A pessoa escolhe qualquer um dos caminhos, não é um funil.
 
@@ -251,7 +253,8 @@ Só as `NEXT_PUBLIC_` podem aparecer no cliente. `.env.local` fora do git desde 
 - [x] h1 nas telas de entrada (`/bem-vindo`, `/privacidade`)
 - [x] Redirecionamento sem piscar: proxy + cookie, sem tela vazia
 - [x] Consentimento condicional em painel inferior (pra quem recusou ou não passou por `/bem-vindo`): reabre ao clicar num card ou enviar o campo livre na `/inicio`
-- [ ] Analytics respeitar a recusa: hoje `track()` do Mixpanel não checa o consentimento, então quem recusou ainda gera evento
+- [x] Analytics e recusa (decidido em 26/09/2026): a medição anônima de navegação continua depois da recusa e o painel avisa; card e tamanho do texto só entram no Mixpanel depois do aceite
+- [ ] Revogar o consentimento com a mesma facilidade do aceite (LGPD art. 8º, §5º): hoje só por e-mail, pedindo com o código da sessão
 
 <!-- BEGIN:nextjs-agent-rules -->
 
