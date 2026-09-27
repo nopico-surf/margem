@@ -229,13 +229,14 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
   return (
     <form className={`message-component message-component-${state}`} onSubmit={onSubmit} onClick={() => { setFocused(true); textareaRef.current?.focus(); }}>
       {state === "default" && (
-        <div className="message-component-placeholder" aria-hidden="true">
+        <div className="message-component-placeholder label-medium-regular" aria-hidden="true">
           <span className="message-component-caret" />
-          <span>Como as drogas têm afetado você?</span>
+          <span>Conte sobre seu momento</span>
         </div>
       )}
       <div className="message-component-field">
         <textarea
+          className="label-medium-regular"
           ref={textareaRef}
           value={value}
           onChange={(event) => {
@@ -250,10 +251,10 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
             if (espelhoRef.current) espelhoRef.current.scrollTop = event.currentTarget.scrollTop;
           }}
           placeholder=""
-          aria-label="Como as drogas têm afetado você?"
+          aria-label="Conte sobre seu momento"
           rows={1}
         />
-        <div ref={espelhoRef} className="message-component-mirror" aria-hidden="true">
+        <div ref={espelhoRef} className="message-component-mirror label-medium-regular" aria-hidden="true">
           {posicaoCursor === null ? value : (
             <>
               {value.slice(0, posicaoCursor)}
@@ -269,9 +270,9 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       </div>
       {(state === "focused" || state === "filed") && (
         <div className="message-component-meta">
-          <span>Conte do seu jeito</span>
+          <span className="label-x-small">Conte do seu jeito</span>
           {/* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */}
-          <button type="submit" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
+          <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
         </div>
       )}
     </form>
