@@ -7,3 +7,4 @@ supabase/.temp/
 *.tsbuildinfo
 
 certificates
+.claude/settings.local.json
