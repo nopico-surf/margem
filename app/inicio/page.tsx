@@ -76,7 +76,6 @@ export default function AppPage() {
     track("texto_livre_enviado", { tamanho_texto: value.length });
     try {
       window.sessionStorage.setItem("margem-mensagem", value);
-      window.sessionStorage.removeItem("margem-cardIndex");
     } catch {}
     router.push("/conversa");
   }
@@ -88,11 +87,7 @@ export default function AppPage() {
   function abrirCard(index: number) {
     registrar({ origem_entrada: "card", card_titulo: CARDS_HOME[index].titulo });
     track("card_selecionado", { card_indice: index, card_titulo: CARDS_HOME[index].titulo });
-    try {
-      window.sessionStorage.setItem("margem-cardIndex", String(index));
-      window.sessionStorage.removeItem("margem-mensagem");
-    } catch {}
-    router.push("/conversa");
+    router.push(`/conversa/${CARDS_HOME[index].slug}`);
   }
 
   function showTopics() {

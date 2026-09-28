@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ResultPage } from "@/components/conversa/ResultPage";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
-import { TITULOS_CARDS_HOME } from "@/lib/cards-home";
 import { track } from "@/lib/mixpanel";
 import type { CardResource, OrientationResult } from "@/components/conversa/types";
 import { URLS_DE_ICONE } from "@/components/icons";
@@ -70,14 +69,15 @@ export default function ConversaPage() {
   // pedidos por conversa: dois registros no histórico e os skeletons piscando quando a segunda
   // resposta chegava depois da primeira.
   const jaBuscou = useRef(false);
-  // Guarda a entrada original (texto/card) pra "tentar novamente" reenviar exatamente a mesma mensagem.
-  const entradaRef = useRef<{ texto: string; cardIndex: string | null; origem: "card" | "texto" } | null>(null);
+  // Guarda o texto original pra "tentar novamente" reenviar exatamente a mesma mensagem.
+  const entradaRef = useRef<{ texto: string } | null>(null);
   const numeroTentativaRef = useRef(1);
 
   const buscarOrientacao = useCallback(async (ehRetry: boolean) => {
     const entrada = entradaRef.current;
     if (!entrada) return;
-    const { texto, cardIndex, origem } = entrada;
+    const { texto } = entrada;
+    const origem = "texto";
     const tentativa = numeroTentativaRef.current;
 
     setIsLoading(true);
@@ -95,7 +95,6 @@ export default function ConversaPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           texto: texto || "",
-          cardIndex: cardIndex ? parseInt(cardIndex) : undefined,
           sessaoId: getOrCreateSessaoId(),
         }),
       });
@@ -187,27 +186,23 @@ export default function ConversaPage() {
     jaBuscou.current = true;
 
     let texto: string | null = null;
-    let cardIndex: string | null = null;
     try {
       texto = window.sessionStorage.getItem("margem-mensagem");
-      cardIndex = window.sessionStorage.getItem("margem-cardIndex");
     } catch {}
 
-    if (!texto && !cardIndex) {
+    if (!texto) {
       router.replace("/inicio");
       return;
     }
 
-    const cardTitle = cardIndex ? TITULOS_CARDS_HOME[Number(cardIndex)] : null;
-    const displayText = cardTitle || texto;
-    setMessage(displayText || "");
-    entradaRef.current = { texto: texto || "", cardIndex, origem: cardIndex ? "card" : "texto" };
+    setMessage(texto);
+    entradaRef.current = { texto };
     buscarOrientacao(false);
   }, [router, buscarOrientacao]);
 
   function tentarNovamente() {
     track("retry_gemini_clicado", {
-      origem: entradaRef.current?.origem ?? null,
+      origem: "texto",
       numero_tentativa: numeroTentativaRef.current,
     });
     buscarOrientacao(true);
