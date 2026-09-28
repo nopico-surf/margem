@@ -29,6 +29,7 @@ export type ProfissionalCadastrado = {
   email: string | null;
   localizacao: string | null;
   status: "ativo" | "pago" | "gratuito";
+  ativo: boolean;
   categoria_resposta_relevante: string | null;
 };
 
@@ -56,7 +57,11 @@ export type InstituicaoApoio = {
 export async function buscarProfissionaisPorCategoria(categoria: string) {
   const supabase = getServerClient();
   if (!supabase) return [];
-  const { data, error } = await supabase.from("profissionais_cadastrados").select("*").eq("categoria_resposta_relevante", categoria);
+  const { data, error } = await supabase
+    .from("profissionais_cadastrados")
+    .select("*")
+    .eq("categoria_resposta_relevante", categoria)
+    .eq("ativo", true);
   if (error) console.error("[supabase] buscarProfissionaisPorCategoria falhou:", error.message);
   return (data ?? []) as ProfissionalCadastrado[];
 }
