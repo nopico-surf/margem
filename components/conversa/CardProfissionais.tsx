@@ -65,9 +65,15 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
     <ContainerConteudo id="figma-section-professionals">
       <CardHeader
         title="Profissionais que podem ajudar"
-        description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros."
+        description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"
       />
       <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
+      {especialidadeSelecionada === "psicologo" && (
+        <div className="figma-session-price">
+          <span className="figma-session-price-badge">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></span>
+          <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
+        </div>
+      )}
       {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />
       ) : profissionaisFiltrados.length === 1 ? (
