@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
@@ -8,8 +8,10 @@ import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { ContainerConteudo } from "@/components/conversa/ContainerConteudo";
 import { CardProfissionaisCompleto } from "@/components/conversa/CardProfissionaisCompleto";
+import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
 import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { Badge } from "@/components/ui/Badge";
+import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
@@ -22,6 +24,31 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
   const pathname = usePathname();
   const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>(especialidadeInicial);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
+
+  const urlsDasFotos = profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO);
+  const chaveDasFotos = urlsDasFotos.join("|");
+
+  useEffect(() => {
+    let cancelado = false;
+
+    if (urlsDasFotos.length === 0) {
+      setFotosCarregadas([]);
+      return;
+    }
+
+    Promise.all(urlsDasFotos.map((url) => new Promise<void>((resolve) => {
+      const imagem = new Image();
+      imagem.onload = imagem.onerror = () => resolve();
+      imagem.src = url;
+    }))).then(() => {
+      if (!cancelado) setFotosCarregadas(urlsDasFotos);
+    });
+
+    return () => { cancelado = true; };
+  }, [chaveDasFotos]);
+
+  const fotosProntas = urlsDasFotos.length === 0 || urlsDasFotos.every((url) => fotosCarregadas.includes(url));
 
   function abrirMenu() {
     setMenuOpen(true);
@@ -73,6 +100,12 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
         <ContainerConteudo id="profissionais-sem-resultado">
           <CardProfissionaisCompleto estado="in-construction" />
         </ContainerConteudo>
+      ) : !fotosProntas ? (
+        <div className="profissionais-grid">
+          {profissionaisFiltrados.map((profissional) => (
+            <CardProfissionalSkeleton key={profissional.id} />
+          ))}
+        </div>
       ) : (
         <div className="profissionais-grid">
           {profissionaisFiltrados.map((profissional, index) => (
