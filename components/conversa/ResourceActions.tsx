@@ -13,7 +13,7 @@ type ResourceActionsProps = { resource: CardResource; tipoRecurso: TipoRecurso }
 
 export function ResourceActions({ resource, tipoRecurso }: ResourceActionsProps) {
   return (
-    <ActionRow>
+    <ActionRow origem="acoes">
       {resource.actions.map((action, index) => (
         <ActionButton
           key={`${resource.id}-${index}`}

@@ -73,7 +73,7 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
       ) : profissionaisFiltrados.length === 1 ? (
         <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} />
       ) : (
-        <ActionRow className="figma-professionals-row">
+        <ActionRow className="figma-professionals-row" origem="profissionais">
           {profissionaisFiltrados.map((profissional, index) => (
             <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
           ))}
