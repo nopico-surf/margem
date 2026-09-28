@@ -63,7 +63,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
             <strong>{profissional.nome}</strong>
             <span>{especialidadeLabel[profissional.especialidade]}</span>
           </div>
-          <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} anos de experiência`}</small>
+          <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} ${profissional.anos_experiencia === 1 ? "ano" : "anos"} de experiência`}</small>
         </div>
       </div>
       {profissional.tags.length > 0 && (
