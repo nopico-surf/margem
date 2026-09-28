@@ -111,7 +111,7 @@ export function CardResultado({ cardIndex, slug, message, orientation, riscoEmer
     fetch("/api/orientacao", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ buscarRecursos: true }),
+      body: JSON.stringify({ buscarRecursos: true, sessaoId: getOrCreateSessaoId() }),
     })
       .then(async (resourcesResponse) => {
         const resourcesResult = await resourcesResponse.json();
