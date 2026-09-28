@@ -5,6 +5,7 @@ import { ContainerConteudo } from "./ContainerConteudo";
 import { ActionRow } from "./ActionRow";
 import { CardHeader } from "./CardHeader";
 import { CardProfissionaisCompleto } from "./CardProfissionaisCompleto";
+import { CardProfissionalSkeleton } from "./CardProfissionalSkeleton";
 import { FiltroEspecialidade, type Especialidade } from "./FiltroEspecialidade";
 import { Badge } from "@/components/ui/Badge";
 import { BotaoServicosPublicos } from "@/components/ui/BotaoServicosPublicos";
@@ -45,7 +46,7 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
       <ContainerConteudo id="figma-section-professionals">
         <div className="figma-skeleton-description" aria-hidden="true"><span className="figma-skeleton figma-skeleton-heading" /><span className="figma-skeleton" /><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
         <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
-        <article className="figma-professional-card figma-skeleton-professional" aria-hidden="true"><div className="figma-professional-head"><span className="figma-skeleton figma-skeleton-avatar" /><div><span className="figma-skeleton figma-skeleton-name" /><span className="figma-skeleton figma-skeleton-specialty" /><span className="figma-skeleton figma-skeleton-detail" /><span className="figma-skeleton figma-skeleton-detail" /></div></div><div className="figma-skeleton-tags"><span className="figma-skeleton" /><span className="figma-skeleton" /><span className="figma-skeleton" /></div><div className="figma-skeleton-description"><span className="figma-skeleton" /><span className="figma-skeleton" /><span className="figma-skeleton" /></div><span className="figma-skeleton figma-skeleton-button" /></article>
+        <CardProfissionalSkeleton />
         <span className="figma-skeleton figma-skeleton-public-link" aria-hidden="true" />
       </ContainerConteudo>
     );
