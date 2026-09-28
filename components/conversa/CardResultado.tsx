@@ -7,33 +7,71 @@ import { PainelInferior } from "@/components/ui/PainelInferior";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import { conceder, jaConsentiu, jaRecusou, recusar } from "@/lib/consentimento";
 import { track } from "@/lib/mixpanel";
+import { URLS_DE_ICONE } from "@/components/icons";
+import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import type { CardResource, OrientationResult } from "./types";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
+
+type RecursosDaApi = {
+  profissionais: ProfissionalCadastrado[];
+  servicos_publicos: CardResource[];
+  instituicoes: CardResource[];
+};
 
 type CardResultadoProps = {
   cardIndex: number;
   slug: string;
   message: string;
   orientation: OrientationResult;
-  resources: {
-    profissionais: ProfissionalCadastrado[];
-    servicos_publicos: CardResource[];
-    instituicoes: CardResource[];
-  };
   riscoEmergency: boolean;
 };
 
-// A resposta já vem pronta do servidor (é a mesma de sempre, do banco), então esta tela nunca
-// carrega nem falha: existe só pra decidir se registra a interação (precisa de consentimento) e
-// pra mostrar o painel de consentimento a quem chegou direto nesta URL sem ter passado por /inicio.
-export function CardResultado({ cardIndex, slug, message, orientation, resources, riscoEmergency }: CardResultadoProps) {
+function carregarImagem(url: string) {
+  return new Promise<void>((resolve) => {
+    let concluida = false;
+    const concluir = () => {
+      if (concluida) return;
+      concluida = true;
+      window.clearTimeout(timeout);
+      resolve();
+    };
+    const timeout = window.setTimeout(concluir, 2000);
+    const imagem = new Image();
+    imagem.onload = imagem.onerror = concluir;
+    imagem.src = url;
+  });
+}
+
+function midiasDosRecursos(recursos: RecursosDaApi) {
+  return {
+    profissionais: [...new Set([
+      ...URLS_DE_ICONE,
+      ...recursos.profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO),
+    ])],
+    servicosPublicos: URLS_DE_ICONE,
+    instituicoes: URLS_DE_ICONE,
+  };
+}
+
+// A resposta (texto e checklist) já vem pronta do servidor (é a mesma de sempre, do banco), então
+// só ela nunca carrega nem falha. Profissionais, serviços públicos e instituições são buscados aqui,
+// depois do consentimento, do mesmo jeito que a segunda chamada de /conversa (buscarRecursos: true).
+export function CardResultado({ cardIndex, slug, message, orientation, riscoEmergency }: CardResultadoProps) {
   const router = useRouter();
   const [cookiesVisivel, setCookiesVisivel] = useState(false);
+  const [resources, setResources] = useState<RecursosDaApi | null>(null);
+  const [isResourcesLoading, setIsResourcesLoading] = useState({
+    profissionais: true,
+    servicosPublicos: true,
+    instituicoes: true,
+  });
   const jaRegistrou = useRef(false);
+  const jaBuscouRecursos = useRef(false);
 
   useEffect(() => {
     if (jaConsentiu()) {
       registrarAcesso();
+      buscarRecursos();
       return;
     }
     if (!jaRecusou()) setCookiesVisivel(true);
@@ -59,18 +97,52 @@ export function CardResultado({ cardIndex, slug, message, orientation, resources
           risco_detectado: Boolean(result.risco?.emergency ?? riscoEmergency),
           tempo_gemini_ms: result.tempo_gemini_ms ?? null,
           tempo_resposta_ms: Math.round(performance.now() - inicio),
-          qtd_profissionais: resources.profissionais.length,
-          qtd_servicos: resources.servicos_publicos.length,
-          qtd_instituicoes: resources.instituicoes.length,
+          qtd_profissionais: resources?.profissionais.length ?? 0,
+          qtd_servicos: resources?.servicos_publicos.length ?? 0,
+          qtd_instituicoes: resources?.instituicoes.length ?? 0,
         });
       })
       .catch(() => {});
+  }
+
+  function buscarRecursos() {
+    if (jaBuscouRecursos.current) return;
+    jaBuscouRecursos.current = true;
+    fetch("/api/orientacao", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ buscarRecursos: true }),
+    })
+      .then(async (resourcesResponse) => {
+        const resourcesResult = await resourcesResponse.json();
+        if (!resourcesResponse.ok) throw new Error();
+        return resourcesResult as RecursosDaApi;
+      })
+      .catch(() => {
+        track("recursos_falharam", { origem: "card" });
+        return { profissionais: [], servicos_publicos: [], instituicoes: [] } as RecursosDaApi;
+      })
+      .then((resourcesResult) => {
+        setResources(resourcesResult);
+        const midias = midiasDosRecursos(resourcesResult);
+
+        Promise.all(midias.profissionais.map(carregarImagem)).then(() => {
+          setIsResourcesLoading((carregamento) => ({ ...carregamento, profissionais: false }));
+        });
+        Promise.all(midias.servicosPublicos.map(carregarImagem)).then(() => {
+          setIsResourcesLoading((carregamento) => ({ ...carregamento, servicosPublicos: false }));
+        });
+        Promise.all(midias.instituicoes.map(carregarImagem)).then(() => {
+          setIsResourcesLoading((carregamento) => ({ ...carregamento, instituicoes: false }));
+        });
+      });
   }
 
   function aceitarPersonalizacao() {
     conceder({ rota: `/conversa/${slug}`, gatilho: "abertura" });
     setCookiesVisivel(false);
     registrarAcesso();
+    buscarRecursos();
   }
 
   function navegarSemPersonalizacao() {
@@ -89,7 +161,7 @@ export function CardResultado({ cardIndex, slug, message, orientation, resources
         message={message}
         orientation={orientation}
         isLoading={false}
-        isResourcesLoading={{ profissionais: false, servicosPublicos: false, instituicoes: false }}
+        isResourcesLoading={isResourcesLoading}
         resources={resources}
         error={null}
         onRetry={() => {}}

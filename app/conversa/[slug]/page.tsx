@@ -2,14 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CardResultado } from "@/components/conversa/CardResultado";
 import { CARDS_HOME, indiceDoCard } from "@/lib/cards-home";
-import { CATEGORIA_PADRAO, paraCardResource } from "@/lib/recursos";
 import { detectarRisco } from "@/lib/risco";
-import {
-  buscarInstituicoesPorCategoria,
-  buscarProfissionaisPorCategoria,
-  buscarRespostaPorChave,
-  buscarServicosPublicosPorCategoria,
-} from "@/lib/supabase";
+import { buscarRespostaPorChave } from "@/lib/supabase";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,12 +30,7 @@ export default async function ConversaCardPage({ params }: Props) {
   if (indice === -1) notFound();
   const card = CARDS_HOME[indice];
 
-  const [resposta, profissionais, servicosPublicos, instituicoes] = await Promise.all([
-    buscarRespostaPorChave(card.chave),
-    buscarProfissionaisPorCategoria(CATEGORIA_PADRAO),
-    buscarServicosPublicosPorCategoria(CATEGORIA_PADRAO),
-    buscarInstituicoesPorCategoria(CATEGORIA_PADRAO),
-  ]);
+  const resposta = await buscarRespostaPorChave(card.chave);
 
   if (!resposta) notFound();
 
@@ -54,19 +43,12 @@ export default async function ConversaCardPage({ params }: Props) {
     perguntas_aprofundamento: resposta.perguntas_aprofundamento,
   };
 
-  const resources = {
-    profissionais,
-    servicos_publicos: servicosPublicos.map((servico) => paraCardResource(servico.id, servico.nome, servico.descricao, servico.acoes)),
-    instituicoes: instituicoes.map((instituicao) => paraCardResource(instituicao.id, instituicao.nome, instituicao.descricao, instituicao.contatos)),
-  };
-
   return (
     <CardResultado
       cardIndex={indice}
       slug={card.slug}
       message={card.titulo}
       orientation={orientation}
-      resources={resources}
       riscoEmergency={detectarRisco(card.chave).emergency}
     />
   );
