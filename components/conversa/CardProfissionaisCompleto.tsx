@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
@@ -27,6 +28,8 @@ type CardProfissionaisCompletoProps = {
 };
 
 export function CardProfissionaisCompleto({ profissional, estado = "default", posicao }: CardProfissionaisCompletoProps) {
+  const pathname = usePathname();
+
   if (estado === "in-construction") {
     return (
       <article className="figma-professional-card figma-professional-card-construction">
@@ -77,6 +80,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
         disabled={!whatsappHref}
         onClick={() =>
           track("agendar_whatsapp_clicado", {
+            rota: pathname,
             tipo_recurso: "profissional",
             profissional_id: profissional.id,
             recurso_nome: profissional.nome,
