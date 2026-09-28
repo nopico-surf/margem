@@ -4,7 +4,7 @@ import { PointerEvent, ReactNode, useRef } from "react";
 
 // Fila horizontal de ações. No desktop dá pra arrastar com o mouse; no toque o scroll nativo
 // já resolve, então o arrasto fica desligado para não competir com ele.
-export function ActionRow({ children }: { children: ReactNode }) {
+export function ActionRow({ children, className = "figma-action-row" }: { children: ReactNode; className?: string }) {
   const rowRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({ active: false, startX: 0, startScrollLeft: 0 });
 
@@ -30,7 +30,7 @@ export function ActionRow({ children }: { children: ReactNode }) {
   return (
     <div
       ref={rowRef}
-      className="figma-action-row"
+      className={className}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={stopDragging}
