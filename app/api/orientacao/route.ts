@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     if (buscarRecursos) {
       const [profissionais, servicosPublicos, instituicoes] = await Promise.all([
-        buscarProfissionaisPorCategoria(CATEGORIA_PADRAO),
+        buscarProfissionaisPorCategoria(CATEGORIA_PADRAO, sessaoId),
         buscarServicosPublicosPorCategoria(CATEGORIA_PADRAO),
         buscarInstituicoesPorCategoria(CATEGORIA_PADRAO),
       ]);
