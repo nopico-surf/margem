@@ -4,3 +4,5 @@ export const OG_IMAGE_PADRAO = {
   height: 630,
   alt: "Margem",
 };
+
+export const OG_SITE_NAME = "Margem";

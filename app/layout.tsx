@@ -3,6 +3,7 @@ import { Inter, Urbanist } from "next/font/google";
 import "./globals.css";
 import { GoogleTagManager } from "@/components/GoogleTagManager";
 import { MixpanelPageView } from "@/components/MixpanelPageView";
+import { OG_SITE_NAME } from "@/lib/metadata";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
     title: "Margem",
     description: DESCRICAO,
     images: [{ url: "/assets/og-margem.webp", width: 1200, height: 630, alt: "Margem" }],
+    siteName: OG_SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
