@@ -82,6 +82,27 @@
   color: var(--colors-alpha-88);
 }
 
+.side-menu-professionals + h2 {
+  margin-top: var(--spacing-32);
+}
+
+.side-menu-professionals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.side-menu-professionals button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
+  text-align: left;
+  cursor: pointer;
+}
+
 .side-menu-contacts {
   display: flex;
   flex-direction: column;

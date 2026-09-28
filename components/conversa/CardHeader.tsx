@@ -1,8 +1,8 @@
 // Figma: "card_header". Título e descrição no topo de cada seção do resultado.
-export function CardHeader({ title, description }: { title: string; description: string }) {
+export function CardHeader({ title, description, as: Titulo = "h2" }: { title: string; description: string; as?: "h1" | "h2" }) {
   return (
     <header className="figma-section-heading">
-      <h2>{title}</h2>
+      <Titulo>{title}</Titulo>
       <p>{description}</p>
     </header>
   );

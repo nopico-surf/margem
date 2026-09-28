@@ -121,6 +121,7 @@
   padding:0 var(--pagina-padding-lateral);
 }
 
+.figma-section-heading h1,
 .figma-section-heading h2 {
   margin:0;
   font:600 var(--font-size-lg)/var(--line-height-2xl) var(--font-urbanist),sans-serif;
@@ -702,6 +703,7 @@
   -webkit-line-clamp:3;
 }
 
+.figma-section-heading h1,
 .figma-section-heading h2,
 .figma-resource-heading h3 {
   display:block;

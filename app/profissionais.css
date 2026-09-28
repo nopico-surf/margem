@@ -1,0 +1,37 @@
+/* Tela /profissionais. Reaproveita header/filtro/badge/card de components/conversa, mas sem o teto
+   de largura que .figma-section-inner aplica: aqui os cards ocupam a tela inteira, com mais colunas
+   conforme sobra espaço (ver Figma, frame "Fluxo - Profissionais"). */
+.profissionais-pagina {
+  display: flex;
+  flex-direction: column;
+  background: var(--colors-neutral-50);
+}
+
+/* .app-header vem branco por padrão (globals.css); aqui deixa a página cinza aparecer atrás. */
+.profissionais-pagina .app-header {
+  background: transparent;
+}
+
+/* Empurra o rodapé pro fim da tela quando o conteúdo não preenche o viewport; quando preenche, ele
+   simplesmente segue o conteúdo, porque não sobra espaço livre pra margin-top:auto consumir. */
+.profissionais-pagina > .app-footer {
+  margin-top: auto;
+}
+
+.profissionais-cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  padding: var(--spacing-20) var(--pagina-padding-lateral) 0;
+}
+
+/* min-width maior que o card do Figma (253 a 401, conforme o frame) de propósito: com auto-fill no
+   valor mais baixo do Figma, telas muito largas ganhavam colunas demais (7 ou mais numa tela de
+   1920 de largura). 320 converge pra perto da progressão do Figma (4 colunas por volta de 1080 de
+   largura, 5 por volta de 1920) sem fixar breakpoint novo fora da escala do projeto. */
+.profissionais-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-12);
+  padding: var(--spacing-16) var(--pagina-padding-lateral) var(--spacing-24);
+}
