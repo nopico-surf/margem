@@ -171,6 +171,14 @@
   cursor:grabbing;
 }
 
+@media(min-width:1088px) {
+  .figma-professionals-row {
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    padding:0 var(--pagina-padding-lateral);
+  }
+}
+
 .figma-professionals-row::-webkit-scrollbar {
   display:none;
 }
