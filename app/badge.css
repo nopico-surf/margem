@@ -1,0 +1,27 @@
+/* Figma: página Badge, componente `badge`. Forma comum a todo badge; a cor troca por `data-color`. */
+
+.badge {
+  display:inline-flex;
+  align-items:center;
+  gap:var(--spacing-4);
+  padding:var(--spacing-4) var(--spacing-12);
+  border-radius:var(--radius-full);
+  font-size:var(--font-size-sm);
+  line-height:var(--line-height-xl);
+}
+
+.badge img,
+.badge svg {
+  width:var(--size-16);
+  height:var(--size-16);
+}
+
+.badge[data-color="primary"] {
+  background:var(--colors-brand-primary-300);
+  color:var(--colors-brand-primary-900);
+}
+
+.badge[data-color="secondary"] {
+  background:var(--colors-brand-secondary-300);
+  color:var(--colors-brand-secondary-950);
+}
