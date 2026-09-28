@@ -25,6 +25,11 @@
   padding: var(--spacing-20) var(--pagina-padding-lateral) 0;
 }
 
+/* Título em header-medium (ver estilos-de-texto.css), maior que o padrão de CardHeader. */
+.profissionais-cabecalho h1 {
+  font: 600 var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
+}
+
 /* min-width maior que o card do Figma (253 a 401, conforme o frame) de propósito: com auto-fill no
    valor mais baixo do Figma, telas muito largas ganhavam colunas demais (7 ou mais numa tela de
    1920 de largura). 320 converge pra perto da progressão do Figma (4 colunas por volta de 1080 de
