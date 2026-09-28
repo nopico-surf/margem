@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BotaoFecharMenu } from "@/components/ui/BotaoFecharMenu";
 import { MenuContatos } from "./MenuContatos";
+import { track } from "@/lib/mixpanel";
+import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
 
 type SideMenuProps = {
   open: boolean;
@@ -13,9 +16,16 @@ type SideMenuProps = {
 const DURACAO_FECHAMENTO = 350;
 
 export function SideMenu({ open, onClose }: SideMenuProps) {
+  const router = useRouter();
   const [mounted, setMounted] = useState(open);
   const [isClosing, setIsClosing] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  function irParaProfissionais(especialidade: Especialidade) {
+    track("profissionais_menu_clicado", { especialidade });
+    onClose();
+    router.push(`/profissionais?especialidade=${especialidade}`);
+  }
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -67,11 +77,16 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
       className={`side-menu ${isClosing ? "side-menu--closing" : "side-menu--open"}`}
       role="dialog"
       aria-modal="true"
-      aria-label="Contatos"
+      aria-label="Menu"
     >
       <div className="side-menu-backdrop" onClick={onClose} aria-hidden="true" />
       <BotaoFecharMenu onClick={onClose} ref={closeButtonRef} />
       <aside className="side-menu-panel">
+        <h2>Profissionais</h2>
+        <div className="side-menu-professionals">
+          <button type="button" onClick={() => irParaProfissionais("psicologo")}>Psicólogos</button>
+          <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Psiquiatras</button>
+        </div>
         <h2>Contatos</h2>
         <MenuContatos />
       </aside>

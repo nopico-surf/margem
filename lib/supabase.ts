@@ -97,6 +97,18 @@ export async function buscarProfissionaisPorCategoria(categoria: string, sessaoI
   return sessaoId ? embaralharComSeed(profissionais, sessaoId) : profissionais;
 }
 
+export async function buscarTodosProfissionaisAtivos() {
+  const supabase = getServerClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("profissionais_cadastrados")
+    .select("*")
+    .eq("ativo", true)
+    .order("nome");
+  if (error) console.error("[supabase] buscarTodosProfissionaisAtivos falhou:", error.message);
+  return (data ?? []) as ProfissionalCadastrado[];
+}
+
 export async function buscarServicosPublicosPorCategoria(categoria: string) {
   const supabase = getServerClient();
   if (!supabase) return servicosPublicosPadrao.filter((servico) => servico.categoria_resposta_relevante === categoria);
