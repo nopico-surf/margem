@@ -148,6 +148,15 @@
   width:100%;
 }
 
+@media(min-width:1088px) {
+  .figma-session-price {
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:var(--spacing-4) var(--spacing-8);
+  }
+}
+
 .figma-session-price-badge {
   padding:var(--spacing-4) var(--spacing-12);
   border-radius:var(--radius-full);
