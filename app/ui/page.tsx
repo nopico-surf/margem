@@ -31,6 +31,7 @@ function profissionalMock(indice: number): ProfissionalCadastrado {
     email: null,
     localizacao: null,
     status: "ativo",
+    ativo: true,
     categoria_resposta_relevante: null,
   };
 }
