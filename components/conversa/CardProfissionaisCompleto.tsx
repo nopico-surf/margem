@@ -1,6 +1,5 @@
 "use client";
 
-import { IconeInfo } from "@/components/icons";
 import { Avatar } from "@/components/ui/Avatar";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
@@ -63,7 +62,6 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
           </div>
           <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} anos de experiência`}</small>
         </div>
-        <IconeInfo className="figma-info-icon" />
       </div>
       {profissional.tags.length > 0 && (
         <div className="figma-badges">
