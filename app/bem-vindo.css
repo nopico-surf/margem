@@ -150,8 +150,6 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 67.5rem;
-  margin: 0 auto;
   padding: var(--spacing-16) var(--layout-page-padding-mobile) 0;
 }
 
