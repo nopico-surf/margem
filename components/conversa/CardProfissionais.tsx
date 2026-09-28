@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ContainerConteudo } from "./ContainerConteudo";
+import { ActionRow } from "./ActionRow";
 import { CardHeader } from "./CardHeader";
 import { CardProfissionaisCompleto } from "./CardProfissionaisCompleto";
 import { FiltroEspecialidade, type Especialidade } from "./FiltroEspecialidade";
@@ -72,11 +73,11 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
       ) : profissionaisFiltrados.length === 1 ? (
         <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} />
       ) : (
-        <div className="figma-professionals-row">
+        <ActionRow className="figma-professionals-row">
           {profissionaisFiltrados.map((profissional, index) => (
             <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
           ))}
-        </div>
+        </ActionRow>
       )}
       <div style={{ alignSelf: "center" }}>
         <BotaoServicosPublicos onClick={() => {
