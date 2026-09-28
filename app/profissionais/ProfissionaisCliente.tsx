@@ -82,11 +82,7 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
       <SideMenu open={menuOpen} onClose={fecharMenu} />
 
       <div className="profissionais-cabecalho">
-        <CardHeader
-          as="h1"
-          title="Profissionais que podem ajudar"
-          description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"
-        />
+        <CardHeader as="h1" title="Profissionais que podem ajudar" />
         <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
         {especialidadeSelecionada === "psicologo" && (
           <div className="figma-session-price">
