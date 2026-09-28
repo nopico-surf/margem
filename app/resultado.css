@@ -221,7 +221,7 @@
 
 .figma-professional-head {
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   gap:var(--spacing-12);
 }
 
@@ -241,6 +241,11 @@
 }
 
 .figma-professional-head strong {
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+  min-height:calc(2 * var(--line-height-md));
   font-size:var(--font-size-sm);
   line-height:var(--line-height-md);
 }
