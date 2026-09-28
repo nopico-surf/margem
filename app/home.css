@@ -8,15 +8,6 @@
    visualmente antes e depois na tela /inicio. */
 
 /* ===== vinha de flow.css | base ===== */
-.identity-badge {
-  padding:var(--spacing-4) var(--spacing-12);
-  border-radius:var(--radius-full);
-  background:var(--colors-brand-primary-300);
-  color:var(--colors-brand-primary-900);
-  font-size:var(--font-size-sm);
-  line-height:var(--line-height-xl);
-}
-
 .home-hero h1 {
   margin:0;
   font-family:var(--font-urbanist),sans-serif;
@@ -179,19 +170,6 @@
   align-items:center;
   gap:var(--spacing-8);
   width:100%;
-}
-
-.identity-badge {
-  display:flex;
-  align-items:center;
-  gap:var(--spacing-4);
-  padding:var(--spacing-4) var(--spacing-12);
-}
-
-.identity-badge img,
-.identity-badge svg {
-  width:var(--size-16);
-  height:var(--size-16);
 }
 
 .home-hero h1 {

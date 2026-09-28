@@ -157,20 +157,11 @@
   }
 }
 
-.figma-session-price-badge {
-  padding:var(--spacing-4) var(--spacing-12);
-  border-radius:var(--radius-full);
-  background:var(--colors-brand-secondary-300);
-  color:var(--colors-brand-secondary-900);
-  font-size:var(--font-size-sm);
-  line-height:var(--line-height-xl);
-}
-
 .figma-session-price-text {
   margin:0;
   font-size:var(--font-size-sm);
   line-height:var(--line-height-xl);
-  color:var(--colors-neutral-950);
+  color:var(--colors-alpha-88);
 }
 
 .figma-professional-card {
