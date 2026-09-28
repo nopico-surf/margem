@@ -7,10 +7,33 @@ import { CardsLp } from "@/components/bem-vindo/CardsLp";
 import { CardPublico } from "@/components/bem-vindo/CardPublico";
 import { Stepper } from "@/components/bem-vindo/Stepper";
 import { PainelInferior } from "@/components/ui/PainelInferior";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { GlifoVerifiedUser } from "@/components/icons/glifos";
 import { IconeAgendarWhatsapp, IconeSeta, IconeSetaResultado } from "@/components/icons";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import "./galeria.css";
+
+// Mock só pra galeria: nomes e tags iguais ao placeholder do Figma (node 654:4134), repetidos com
+// sufixo pra dar pra distinguir no dev tools. Sem chamada ao Supabase.
+function profissionalMock(indice: number): ProfissionalCadastrado {
+  return {
+    id: `mock-${indice}`,
+    nome: `Amanda Fernande de Bezerra ${indice}`,
+    especialidade: "psicologo",
+    registro_profissional: "00/00000",
+    anos_experiencia: 11,
+    foto_url: "/assets/professional-avatar.png",
+    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+    tags: ["Recaídas", "Redução de danos", "Abstinência"],
+    whatsapp_link: "5511999999999",
+    telefone: null,
+    email: null,
+    localizacao: null,
+    status: "ativo",
+    categoria_resposta_relevante: null,
+  };
+}
 
 // Galeria de componentes. Só dev: o instrucoes-design.md manda que todo componente apareça aqui,
 // com todos os estados, antes de entrar numa tela.
@@ -267,6 +290,23 @@ export default async function GaleriaDeComponentes() {
             </div>
             <span className="label-xx-small galeria-nome">continuar</span>
           </div>
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Card profissionais</h2>
+        <p className="text-small-regular galeria-nota">
+          Figma: card-profissionais (node 654:4134). Com 1 profissional, empilhado como sempre foi.
+          Com mais de 1, vira fileira horizontal com scroll, largura calculada a partir da tela
+          (sempre sobra um pedaço do próximo visível, teto em 280px).
+        </p>
+        <div className="galeria-estado">
+          <span className="label-xx-small galeria-nome">1 profissional</span>
+          <CardProfissionais profissionais={[profissionalMock(1)]} />
+        </div>
+        <div className="galeria-estado">
+          <span className="label-xx-small galeria-nome">9 profissionais</span>
+          <CardProfissionais profissionais={Array.from({ length: 9 }, (_, i) => profissionalMock(i + 1))} />
         </div>
       </section>
 

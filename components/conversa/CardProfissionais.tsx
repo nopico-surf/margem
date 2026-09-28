@@ -69,10 +69,14 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
       <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
       {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />
+      ) : profissionaisFiltrados.length === 1 ? (
+        <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} />
       ) : (
-        profissionaisFiltrados.map((profissional, index) => (
-          <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
-        ))
+        <div className="figma-professionals-row">
+          {profissionaisFiltrados.map((profissional, index) => (
+            <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
+          ))}
+        </div>
       )}
       <div style={{ alignSelf: "center" }}>
         <BotaoServicosPublicos onClick={() => {

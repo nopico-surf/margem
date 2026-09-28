@@ -150,6 +150,36 @@
   background:var(--colors-neutral-0);
 }
 
+/* Mais de um profissional: os cards saem do empilhamento vertical e viram uma fileira com scroll
+   horizontal, do mesmo jeito que o .figma-action-row já faz para os chips de filtro (full-bleed por
+   margem negativa, sem barra de scroll, arrastável). A largura de cada card é calculada a partir da
+   tela (100% da fileira menos spacing-32 de espiadinha), com teto nos 280px do Figma, para garantir
+   que sempre sobra um pedaço do próximo card visível, em qualquer aparelho. */
+.figma-professionals-row {
+  display:flex;
+  gap:var(--spacing-16);
+  width:calc(100% + 2 * var(--pagina-padding-lateral));
+  margin-left:calc(-1 * var(--pagina-padding-lateral));
+  padding:0 var(--pagina-padding-lateral);
+  overflow-x:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  cursor:grab;
+}
+
+.figma-professionals-row:active {
+  cursor:grabbing;
+}
+
+.figma-professionals-row::-webkit-scrollbar {
+  display:none;
+}
+
+.figma-professionals-row>.figma-professional-card {
+  flex:0 0 auto;
+  width:min(calc(100% - var(--spacing-32)), 280px);
+}
+
 .figma-professional-card-construction {
   gap:0;
 }
