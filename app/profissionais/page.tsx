@@ -5,7 +5,7 @@ import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 
 const TITULO = "Profissionais que podem ajudar";
-const DESCRICAO = "Profissionais parceiros da Margem para sessões com valor social";
+const DESCRICAO = "Psicólogos e psiquiatras parceiros da Margem, disponíveis para sessões com valor social e atendimento acolhedor para quem precisar.";
 
 export const metadata: Metadata = {
   title: TITULO,
