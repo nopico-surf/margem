@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
@@ -18,6 +19,7 @@ type ProfissionaisClienteProps = {
 };
 
 export function ProfissionaisCliente({ profissionais, especialidadeInicial }: ProfissionaisClienteProps) {
+  const pathname = usePathname();
   const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>(especialidadeInicial);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -33,6 +35,7 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
 
   function selecionarEspecialidade(especialidade: Especialidade) {
     setEspecialidadeSelecionada(especialidade);
+    window.history.replaceState(null, "", `${pathname}?especialidade=${especialidade}`);
     track("filtro_profissional_clicado", {
       filtro: especialidade === "psicologo" ? "psicologos" : "psiquiatras",
     });
