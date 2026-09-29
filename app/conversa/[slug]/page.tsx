@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: card.titulo,
     description: card.descricao,
     alternates: { canonical: `/conversa/${card.slug}` },
-    openGraph: { title: card.titulo, description: card.descricao },
+    openGraph: { type: "website", title: card.titulo, description: card.descricao },
   };
 }
 

@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   title: "Margem",
   description: DESCRICAO,
   openGraph: {
+    type: "website",
     title: "Margem",
     description: DESCRICAO,
     images: [{ url: "/assets/og-margem.webp", width: 1200, height: 630, alt: "Margem" }],
