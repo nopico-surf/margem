@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: TITULO,
   description: DESCRICAO,
   alternates: { canonical: "/profissionais" },
-  openGraph: { title: TITULO, description: DESCRICAO, images: [OG_IMAGE_PADRAO], siteName: OG_SITE_NAME },
+  openGraph: { type: "website", title: TITULO, description: DESCRICAO, images: [OG_IMAGE_PADRAO], siteName: OG_SITE_NAME },
 };
 
 type Props = { searchParams: Promise<{ especialidade?: string }> };
