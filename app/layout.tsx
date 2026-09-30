@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Urbanist } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { GoogleTagManager } from "@/components/GoogleTagManager";
 import { MixpanelPageView } from "@/components/MixpanelPageView";
@@ -64,7 +65,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
         <script dangerouslySetInnerHTML={{ __html: sincronizarCookieDeConsentimento }} />
         <GoogleTagManager />
-        <MixpanelPageView />
+        <Suspense fallback={null}>
+          <MixpanelPageView />
+        </Suspense>
         {children}
       </body>
     </html>

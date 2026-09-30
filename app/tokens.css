@@ -297,6 +297,9 @@
   --layout-content-max-width-3xl: 1920px;
   --layout-content-max-width-page: 1080px;
   --layout-page-background: #ffffff;
+  /* Não é variável do Figma: o Figma desenha o card de profissional de 253 a 401 de largura, e 320
+     é o mínimo escolhido pra grade auto-fill de /profissionais (motivo em app/profissionais.css). */
+  --layout-profissionais-card-min-width: 320px;
 
   /* Camadas */
   --z-index-base: 1;

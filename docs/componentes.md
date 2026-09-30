@@ -148,7 +148,8 @@ Convenção do código: `PascalCase.tsx`, mistura de português e inglês sem cr
 | `filter` | `conversa/FiltroEspecialidade` | Nome não corresponde |
 | `bloco-mais-opcoes` | `conversa/BlocoMaisOpcoes` | Corresponde desde 18/09/2026 |
 | `messages` | `conversa/Messages` | Corresponde desde 18/09/2026 |
-| `loader`, `skeleton-bone`, `screen-loading`, `loader-content` | `conversa/ResponseLoading`, mais os `span.figma-skeleton` soltos em 5 componentes | Quatro no Figma, e no código um componente mais um punhado de spans sem dono. Não são a mesma coisa: o `loader` das três estrelas é só a espera do primeiro texto do Gemini, e os `skeleton-bone` desenham os outros blocos da mesma página. **Pendente**, ver a seção 9 |
+| `loader`, `screen-loading` | `ui/Loader`, `ui/LoaderTela` | Correspondem desde 30/09/2026. O anel cinza com arco verde; `screen-loading` é ele sobre branco, na viewport inteira, usado em `/bem-vindo/loading.tsx` |
+| `loader-content`, `skeleton-bone` | `conversa/ResponseLoading` (a espera do Gemini, com anéis), mais os `span.figma-skeleton` soltos em 5 componentes | Não são a mesma coisa: `loader-content` é só a espera do primeiro texto do Gemini, e os `skeleton-bone` desenham os outros blocos da mesma página. **Pendente**, ver a seção 9 |
 | `header` | `layout/Header` | Corresponde. Eram dois no código até 18/09/2026, ver abaixo |
 | `menu-contatos` | `layout/MenuContatos` | Corresponde |
 | `card-home`, `card-home-group`, `header-home` | `app/CardHome`, `CardHomeGroup`, `CardHomeHeader` | Corresponde |
