@@ -27,6 +27,15 @@ export function SideMenu({ open, onClose }: SideMenuProps) {
     router.push(`/profissionais?especialidade=${especialidade}`);
   }
 
+  // Botão com router.push não tem o prefetch automático do <Link>, então sem isto a /profissionais só
+  // começa a baixar no clique e a tela anterior fica parada até o servidor responder. Baixando quando
+  // o menu abre, o clique já mostra o skeleton. As duas URLs são a mesma rota: o Next baixa uma vez só.
+  useEffect(() => {
+    if (!open) return;
+    router.prefetch("/profissionais?especialidade=psicologo");
+    router.prefetch("/profissionais?especialidade=psiquiatra");
+  }, [open, router]);
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
