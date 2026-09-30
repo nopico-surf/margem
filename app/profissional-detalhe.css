@@ -7,6 +7,8 @@
   display: flex;
   flex-direction: column;
   background: var(--colors-neutral-50);
+  /* No Figma a foto começa 40 abaixo do topo: o menu (48) cobre esses 40 e 8 da foto. */
+  padding-top: var(--spacing-40);
   /* Espaço para a barra fixa do WhatsApp não cobrir o rodapé. */
   padding-bottom: calc(var(--size-80) + env(safe-area-inset-bottom));
 }
@@ -15,12 +17,26 @@
   margin-top: auto;
 }
 
-/* Mobile: o header fica sobre a foto, com logo e menu brancos. O degradê de cima dá contraste. */
+/* Mobile: o menu fica no topo, sólido, com seta, logo e menu brancos. A cor vem da própria foto
+   (--profissional-cor-topo, calculada em ProfissionalDetalhe.tsx); sem ela, vale a cor da marca. */
 .profissional-pagina .app-header {
   position: absolute;
   inset: 0 0 auto;
   z-index: calc(var(--z-index-raised) + 1);
-  background: transparent;
+  background: var(--profissional-cor-topo, var(--colors-brand-primary-800));
+}
+
+/* Faixa logo abaixo do menu: a mesma cor, com o blur da foto que está por baixo, sumindo aos poucos.
+   Cobre só o começo da foto, não ela toda. */
+.profissional-pagina .app-header::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: var(--size-24);
+  background: var(--profissional-cor-topo, var(--colors-brand-primary-800));
+  backdrop-filter: blur(var(--size-8));
+  mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.8) 25%, rgb(0 0 0 / 0.4) 60%, transparent 100%);
+  pointer-events: none;
 }
 
 .profissional-pagina .app-header img,
@@ -38,17 +54,6 @@
   position: relative;
   display: flex;
   flex-direction: column;
-}
-
-.profissional-topo::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: var(--size-80);
-  background: linear-gradient(var(--colors-brand-primary-800), transparent);
-  opacity: 0.6;
-  z-index: var(--z-index-raised);
-  pointer-events: none;
 }
 
 .profissional-foto-moldura {
@@ -158,12 +163,20 @@
 
 @media (min-width: 48em) {
   .profissional-pagina {
+    padding-top: 0;
     padding-bottom: 0;
   }
 
   .profissional-pagina .app-header {
     position: static;
     z-index: auto;
+    background: transparent;
+    /* Figma: 24 entre o header e o conteúdo. */
+    margin-bottom: var(--spacing-24);
+  }
+
+  .profissional-pagina .app-header::after {
+    display: none;
   }
 
   .profissional-pagina .app-header img,
@@ -176,10 +189,6 @@
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-32);
     padding-inline: var(--pagina-padding-lateral);
-  }
-
-  .profissional-topo::before {
-    display: none;
   }
 
   .profissional-foto-moldura {

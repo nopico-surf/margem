@@ -13,7 +13,7 @@
 // assim e estender para `svg`.
 
 import {
-  GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoDoubleArrowDown, GlifoCheckBox,
+  GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoArrowBack, GlifoDoubleArrowDown, GlifoCheckBox,
   GlifoQuestionAnswer, GlifoPanTool, GlifoLink, GlifoPlace, GlifoPhone, GlifoMessageFlye,
   GlifoSecurity, GlifoArrowForwardIos, GlifoInfo,
 } from "./glifos";
@@ -39,6 +39,8 @@ function icone(src: string, alt = "") {
 export const LogoMargem = icone("/icons/logo-margem.svg", "Margem");
 export const LogoMargemResultado = icone("/icons/logo-margem.svg", "Margem");
 export const LogoMargemModal = icone("/icons/logo-margem.svg", "Margem");
+// Figma: `logo` com Complete?=False, só o símbolo. É a variante do header com seta de voltar no mobile.
+export const LogoMargemIcone = icone("/icons/logo-margem-icone.svg", "Margem");
 
 /* Menu e fechar */
 
@@ -46,6 +48,7 @@ export const LogoMargemModal = icone("/icons/logo-margem.svg", "Margem");
 // desenho é um só e quem define a cor é o lugar que usa.
 // Uma cor só nas duas telas. Era #012A1C na home e #171B18 no resultado, para o mesmo ícone.
 export const IconeMenu = (p: IconProps) => <GlifoMenu {...p} color="var(--colors-neutral-950)" />;
+export const IconeVoltar = (p: IconProps) => <GlifoArrowBack {...p} color="var(--colors-neutral-950)" />;
 // Branco porque fica sobre o overlay escuro do menu.
 export const IconeFecharMenu = (p: IconProps) => <GlifoClose {...p} size={32} color="var(--colors-neutral-0)" />;
 export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="var(--colors-brand-primary-950)" />;
