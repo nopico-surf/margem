@@ -1,17 +1,38 @@
 "use client";
 
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
-import { FiltroEspecialidade } from "@/components/conversa/FiltroEspecialidade";
+import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { Badge } from "@/components/ui/Badge";
 
 // Figma: Experiência do produto, frames 1369:50724 (mobile) e 1369:51516 (desktop). É o shell da
 // /profissionais: tudo o que não depende do Supabase já aparece, e só os cards ficam em skeleton.
-// Não lê ?especialidade= (só existe depois da resposta), então o filtro começa em Psicologos.
 
 const QUANTIDADE_DE_SKELETONS = 6;
+
+// O preço é só de psicólogo, igual na tela pronta (ProfissionaisCliente).
+function Filtro({ especialidade }: { especialidade: Especialidade }) {
+  return (
+    <>
+      <FiltroEspecialidade selecionada={especialidade} onChange={() => {}} />
+      {especialidade === "psicologo" && (
+        <div className="figma-session-price">
+          <Badge color="secondary">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></Badge>
+          <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
+        </div>
+      )}
+    </>
+  );
+}
+
+function FiltroDaUrl() {
+  const especialidade = useSearchParams().get("especialidade") === "psiquiatra" ? "psiquiatra" : "psicologo";
+  return <Filtro especialidade={especialidade} />;
+}
 
 export function ProfissionaisCarregando() {
   return (
@@ -20,11 +41,12 @@ export function ProfissionaisCarregando() {
 
       <div className="profissionais-cabecalho">
         <CardHeader as="h1" title="Profissionais que podem ajudar" />
-        <FiltroEspecialidade selecionada="psicologo" onChange={() => {}} />
-        <div className="figma-session-price">
-          <Badge color="secondary">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></Badge>
-          <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
-        </div>
+        {/* Vindo do menu (navegação no cliente), a URL já é conhecida e o filtro nasce certo, com
+            Psiquiatras marcado e sem preço. Só no HTML estático, que não conhece a query, vale o
+            fallback em Psicologos até a resposta chegar. */}
+        <Suspense fallback={<Filtro especialidade="psicologo" />}>
+          <FiltroDaUrl />
+        </Suspense>
       </div>
 
       <div className="profissionais-grid">
