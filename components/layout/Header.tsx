@@ -1,6 +1,6 @@
 "use client";
 
-import { LogoMargem } from "@/components/icons";
+import { IconeVoltar, LogoMargem, LogoMargemIcone } from "@/components/icons";
 import { BotaoMenu } from "@/components/ui/BotaoMenu";
 
 // Figma: página Header, componente `header`.
@@ -17,13 +17,29 @@ type HeaderProps = {
   // Quando vem, o logo vira link. Na home ele não vem, porque a pessoa já está no início.
   hrefDoLogo?: string;
   onLogoClick?: () => void;
+  // Quando vem, é a variante com seta de voltar (Figma: header, state3 no mobile e state4 no
+  // tablet): seta à esquerda, logo no centro, menu à direita. No mobile o logo é só o símbolo
+  // (logo, Complete?=False); a partir do tablet é o completo. Sem ele, o header é o de sempre.
+  onVoltar?: () => void;
 };
 
-export function Header({ onOpenMenu, hrefDoLogo, onLogoClick }: HeaderProps) {
-  const logo = <LogoMargem className="app-logo" />;
+export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar }: HeaderProps) {
+  const logo = onVoltar ? (
+    <>
+      <LogoMargem className="app-logo app-logo-completo" />
+      <LogoMargemIcone className="app-logo-icone" />
+    </>
+  ) : (
+    <LogoMargem className="app-logo" />
+  );
 
   return (
-    <header className="app-header">
+    <header className={onVoltar ? "app-header app-header-com-voltar" : "app-header"}>
+      {onVoltar && (
+        <button className="voltar-button" type="button" aria-label="Voltar" onClick={onVoltar}>
+          <IconeVoltar />
+        </button>
+      )}
       {hrefDoLogo ? (
         <a href={hrefDoLogo} aria-label="Ir para o início" onClick={onLogoClick}>
           {logo}

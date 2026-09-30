@@ -11,6 +11,7 @@
 //   GlifoInstagram        instagram           (Social)
 //   GlifoMenu             menu                (Navigation)
 //   GlifoClose            close               (Navigation)
+//   GlifoArrowBack        arrow_back          (Navigation)
 //   GlifoDoubleArrowDown  double_arrow_down   (Navigation)
 //   GlifoArrowForwardIos  arrow_forward_ios   (Navigation)
 //   GlifoCheckBox         check_box           (Toggle)
@@ -119,6 +120,23 @@ export function GlifoClose({ className, color = "currentColor", opacity = 1, siz
       </g>
       <defs>
       <clipPath id="Close-clip0_0_168">
+      <rect width="24" height="24" fill="white"/>
+      </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function GlifoArrowBack({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g id="ArrowBack-arrow_back" clipPath="url(#ArrowBack-clip0_0_475)">
+      <g id="ArrowBack-Vector">
+      </g>
+      <path id="ArrowBack-Vector_2" d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill={color} fillOpacity={opacity}/>
+      </g>
+      <defs>
+      <clipPath id="ArrowBack-clip0_0_475">
       <rect width="24" height="24" fill="white"/>
       </clipPath>
       </defs>
