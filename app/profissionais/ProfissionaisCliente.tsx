@@ -13,6 +13,7 @@ import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/F
 import { Badge } from "@/components/ui/Badge";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { track } from "@/lib/mixpanel";
+import { carregarImagem } from "@/lib/carregar-imagem";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 type ProfissionaisClienteProps = {
@@ -37,11 +38,7 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
       return;
     }
 
-    Promise.all(urlsDasFotos.map((url) => new Promise<void>((resolve) => {
-      const imagem = new Image();
-      imagem.onload = imagem.onerror = () => resolve();
-      imagem.src = url;
-    }))).then(() => {
+    Promise.all(urlsDasFotos.map(carregarImagem)).then(() => {
       if (!cancelado) setFotosCarregadas(urlsDasFotos);
     });
 
