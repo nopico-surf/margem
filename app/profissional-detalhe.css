@@ -79,6 +79,12 @@
   background: var(--colors-neutral-0);
 }
 
+@media (min-width: 48em) {
+  .profissional-card {
+    padding: var(--spacing-24);
+  }
+}
+
 .profissional-identidade {
   display: flex;
   flex-direction: column;

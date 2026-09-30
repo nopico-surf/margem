@@ -21,25 +21,33 @@ export function ActionRow({
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType === "touch") return;
-    if ((event.target as Element).closest("a, button")) return;
     const row = rowRef.current;
     if (!row) return;
     dragState.current = { active: true, startX: event.clientX, startScrollLeft: row.scrollLeft, moveu: false };
-    row.setPointerCapture(event.pointerId);
-    row.style.userSelect = "none";
   }
 
   function onPointerMove(event: PointerEvent<HTMLDivElement>) {
     const row = rowRef.current;
     if (!row || !dragState.current.active) return;
-    event.preventDefault();
     const delta = event.clientX - dragState.current.startX;
-    if (Math.abs(delta) >= LIMIAR_ARRASTO_PX) dragState.current.moveu = true;
+    if (!dragState.current.moveu) {
+      if (Math.abs(delta) < LIMIAR_ARRASTO_PX) return;
+      dragState.current.moveu = true;
+      row.setPointerCapture(event.pointerId);
+      row.style.userSelect = "none";
+    }
+    event.preventDefault();
     row.scrollLeft = dragState.current.startScrollLeft - delta;
   }
 
   function stopDragging() {
-    if (origem && dragState.current.active && dragState.current.moveu) track("fileira_arrastada", { origem });
+    const { active, moveu } = dragState.current;
+    if (origem && active && moveu) track("fileira_arrastada", { origem });
+    if (active && moveu) {
+      const engolir = (e: MouseEvent) => e.stopPropagation();
+      window.addEventListener("click", engolir, { capture: true, once: true });
+      setTimeout(() => window.removeEventListener("click", engolir, { capture: true }), 100);
+    }
     dragState.current.active = false;
     const row = rowRef.current;
     if (row) row.style.userSelect = "";
@@ -53,6 +61,7 @@ export function ActionRow({
       onPointerMove={onPointerMove}
       onPointerUp={stopDragging}
       onPointerCancel={stopDragging}
+      onDragStart={(event) => event.preventDefault()}
     >
       {children}
     </div>
