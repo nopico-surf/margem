@@ -165,14 +165,29 @@
   color:var(--colors-alpha-88);
 }
 
+.card-padrao {
+  padding: var(--spacing-16);
+}
+
+@media (min-width: 48em) {
+  .card-padrao {
+    padding: var(--spacing-24);
+  }
+}
+
 .figma-professional-card {
   display:flex;
   flex-direction:column;
   gap:var(--spacing-12);
   padding:var(--spacing-16);
-  border:var(--border-width-medium) solid var(--colors-neutral-100);
   border-radius:var(--radius-xl);
   background:var(--colors-neutral-0);
+}
+
+@media (min-width: 48em) {
+  .figma-professional-card {
+    padding:var(--spacing-24);
+  }
 }
 
 /* Mais de um profissional: os cards saem do empilhamento vertical e viram uma fileira com scroll
@@ -211,6 +226,16 @@
 .figma-professionals-row>.figma-professional-card {
   flex:0 0 auto;
   width:min(calc(100% - var(--spacing-32)), 280px);
+}
+
+/* Margem auto nas pontas centraliza quando os cards cabem e vira 0 quando há scroll, então nenhum
+   card fica inalcançável (justify-content:center cortaria os primeiros). */
+.figma-professionals-row>:first-child {
+  margin-left:auto;
+}
+
+.figma-professionals-row>:last-child {
+  margin-right:auto;
 }
 
 .figma-professional-card-construction {
@@ -338,6 +363,12 @@
   gap:var(--spacing-24);
   padding:var(--spacing-24) var(--pagina-padding-lateral);
   background:var(--colors-neutral-0);
+}
+
+@media (min-width: 48em) {
+  .figma-resource-card {
+    padding:var(--spacing-24);
+  }
 }
 
 .figma-resource-heading {
