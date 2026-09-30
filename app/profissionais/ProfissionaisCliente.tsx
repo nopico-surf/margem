@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
@@ -18,12 +18,13 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 type ProfissionaisClienteProps = {
   profissionais: ProfissionalCadastrado[];
-  especialidadeInicial: Especialidade;
 };
 
-export function ProfissionaisCliente({ profissionais, especialidadeInicial }: ProfissionaisClienteProps) {
+export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProps) {
   const pathname = usePathname();
-  const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>(especialidadeInicial);
+  // A especialidade mora só na URL: o replaceState de trocarEspecialidade atualiza o useSearchParams.
+  const especialidadeSelecionada: Especialidade =
+    useSearchParams().get("especialidade") === "psiquiatra" ? "psiquiatra" : "psicologo";
   const [menuOpen, setMenuOpen] = useState(false);
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
 
@@ -58,7 +59,6 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
   }
 
   function trocarEspecialidade(especialidade: Especialidade) {
-    setEspecialidadeSelecionada(especialidade);
     window.history.replaceState(null, "", `${pathname}?especialidade=${especialidade}`);
   }
 
