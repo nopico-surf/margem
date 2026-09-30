@@ -1,6 +1,5 @@
 "use client";
 
-import { IconeInfo } from "@/components/icons";
 import { ResourceActions } from "./ResourceActions";
 import type { CardResource, TipoRecurso } from "./types";
 
@@ -16,7 +15,6 @@ export function CardRecurso({ resource, tipoRecurso }: CardRecursoProps) {
           <h3>{resource.title}</h3>
           <p>{resource.description}</p>
         </div>
-        <IconeInfo />
       </div>
       <ResourceActions resource={resource} tipoRecurso={tipoRecurso} />
     </article>
