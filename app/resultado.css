@@ -748,3 +748,61 @@
   }
 }
 
+
+/* Link esticado do card de profissional (ver CardProfissionaisCompleto): o ::after cobre o card
+   inteiro, e o botão de agendar sobe acima dele para continuar clicável. */
+.figma-professional-card {
+  position:relative;
+}
+
+.figma-professional-link {
+  color:inherit;
+  text-decoration:none;
+}
+
+.figma-professional-link::after {
+  content:"";
+  position:absolute;
+  inset:0;
+}
+
+.figma-professional-card .btn {
+  position:relative;
+  z-index:var(--z-index-base);
+}
+
+/* CardHeader variante=cartao. Figma: `card-header`, o cartão branco com título e texto (Sobre, em
+   /profissionais/[slug]). O texto vai inteiro, sem o corte de 3 linhas da variante padrão. O
+   `text-box` tira o espaço vazio em cima e embaixo das letras, como o text-box-trim do Figma; no
+   texto só o começo é aparado, para o fim ter respiro. O título ganha overflow visível porque, com a
+   caixa na altura das maiúsculas, o overflow:hidden cortaria o topo de letras como o "b". */
+.figma-section-heading[data-variante="cartao"] {
+  padding:var(--spacing-16);
+  border-radius:var(--radius-xl);
+  background:var(--colors-neutral-0);
+}
+
+.figma-section-heading[data-variante="cartao"] h1,
+.figma-section-heading[data-variante="cartao"] h2 {
+  overflow:visible;
+  font-size:var(--font-size-lg);
+  line-height:var(--line-height-2xl);
+  text-box:trim-both cap alphabetic;
+}
+
+.figma-section-heading[data-variante="cartao"] p {
+  display:block;
+  overflow:visible;
+  margin-top:var(--spacing-14);
+  font-size:var(--font-size-md);
+  line-height:var(--line-height-2xl);
+  text-box:trim-start cap alphabetic;
+}
+
+@media (min-width:48em) {
+  .figma-section-heading[data-variante="cartao"] h1,
+  .figma-section-heading[data-variante="cartao"] h2 {
+    font-size:var(--font-size-2xl);
+    line-height:var(--line-height-4xl);
+  }
+}

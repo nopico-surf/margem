@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Orientation } from "@/lib/gemini";
 import { instituicoesPadrao, servicosPublicosPadrao } from "./default-resources";
+import { slugsDosProfissionais } from "./slug-profissional";
 
 let client: SupabaseClient | null = null;
 
@@ -107,6 +108,11 @@ export async function buscarTodosProfissionaisAtivos() {
     .order("nome");
   if (error) console.error("[supabase] buscarTodosProfissionaisAtivos falhou:", error.message);
   return (data ?? []) as ProfissionalCadastrado[];
+}
+
+export async function buscarProfissionalPorSlug(slug: string) {
+  const profissionais = await buscarTodosProfissionaisAtivos();
+  return slugsDosProfissionais(profissionais).find((item) => item.slug === slug)?.profissional ?? null;
 }
 
 export async function buscarServicosPublicosPorCategoria(categoria: string) {

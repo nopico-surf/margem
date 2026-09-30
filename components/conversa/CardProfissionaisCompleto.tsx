@@ -1,24 +1,33 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
+import { slugDoNome } from "@/lib/slug-profissional";
 
 // Figma: "card-profissionais-completo".
 
-const especialidadeLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
+export const especialidadeLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
   psicologo: "Psicologia",
   psiquiatra: "Psiquiatria",
   assistente_social: "Assistência Social",
 };
 
-const registroLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
+export const registroLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
   psicologo: "CRP",
   psiquiatra: "CRM",
   assistente_social: "CRESS",
 };
+
+export function hrefWhatsappProfissional(profissional: ProfissionalCadastrado) {
+  const digitos = profissional.whatsapp_link?.replace(/\D/g, "");
+  if (!digitos) return undefined;
+  const texto = encodeURIComponent(`Oi Vitor, achei o(a) ${profissional.nome} na Margem e gostaria de agendar uma sessão`);
+  return `https://wa.me/${digitos}?text=${texto}`;
+}
 
 type CardProfissionaisCompletoProps = {
   profissional?: ProfissionalCadastrado;
@@ -46,13 +55,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
 
   if (!profissional) return null;
 
-  const whatsappDigits = profissional.whatsapp_link?.replace(/\D/g, "");
-  const whatsappText = encodeURIComponent(
-    `Oi Vitor, achei o(a) ${profissional.nome} na Margem e gostaria de agendar uma sessão`
-  );
-  const whatsappHref = whatsappDigits
-    ? `https://wa.me/${whatsappDigits}?text=${whatsappText}`
-    : undefined;
+  const whatsappHref = hrefWhatsappProfissional(profissional);
 
   return (
     <article className="figma-professional-card">
@@ -60,7 +63,24 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
         <Avatar className="figma-professional-avatar" src={profissional.foto_url} />
         <div className="figma-professional-copy">
           <div className="figma-professional-identity">
-            <strong>{profissional.nome}</strong>
+            <strong>
+              {/* O ::after do link cobre o card inteiro: tocar em qualquer parte abre a página, menos no botão. */}
+              <Link
+                className="figma-professional-link"
+                href={`/profissionais/${slugDoNome(profissional.nome)}`}
+                onClick={() =>
+                  track("card_profissional_clicado", {
+                    rota: pathname,
+                    profissional_id: profissional.id,
+                    recurso_nome: profissional.nome,
+                    especialidade: profissional.especialidade,
+                    posicao: posicao ?? null,
+                  })
+                }
+              >
+                {profissional.nome}
+              </Link>
+            </strong>
             <span>{especialidadeLabel[profissional.especialidade]}</span>
           </div>
           <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} ${profissional.anos_experiencia === 1 ? "ano" : "anos"} de experiência`}</small>

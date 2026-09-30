@@ -8,6 +8,7 @@ import { CardPublico } from "@/components/bem-vindo/CardPublico";
 import { Stepper } from "@/components/bem-vindo/Stepper";
 import { PainelInferior } from "@/components/ui/PainelInferior";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
+import { CardHeader } from "@/components/conversa/CardHeader";
 import { GlifoVerifiedUser } from "@/components/icons/glifos";
 import { IconeAgendarWhatsapp, IconeSeta, IconeSetaResultado } from "@/components/icons";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
@@ -226,6 +227,32 @@ export default async function GaleriaDeComponentes() {
               <span className="label-xx-small galeria-nota">{estado.nota}</span>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Card header</h2>
+        <p className="text-small-regular galeria-nota">
+          Figma: card-header. Sem clique, então sem hover, foco ou desabilitado. A variante cartao tem
+          fundo branco e mostra o texto inteiro; o título sobe para 24 a partir de 768 pixels.
+        </p>
+        <div className="galeria-estados">
+          <div className="galeria-estado">
+            <div className="galeria-palco">
+              <CardHeader title="Profissionais que podem ajudar" description="Psicólogos e psiquiatras parceiros da Margem" />
+            </div>
+            <span className="label-xx-small galeria-nome">padrao</span>
+          </div>
+          <div className="galeria-estado">
+            <div className="galeria-palco">
+              <CardHeader
+                variante="cartao"
+                title="Sobre"
+                description="Psicóloga, com atuação clínica voltada ao cuidado em saúde mental de adolescentes, adultos e idosos. Busco oferecer um espaço seguro e ético, que favoreça o autoconhecimento."
+              />
+            </div>
+            <span className="label-xx-small galeria-nome">cartao</span>
+          </div>
         </div>
       </section>
 
