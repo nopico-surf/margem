@@ -43,7 +43,8 @@ function profissionalMock(indice: number): ProfissionalCadastrado {
 // Ela mostra o que existe. Não é lugar de criar componente novo, e não tem cópia própria de token:
 // a cor, o espaço e os estilos de texto são lidos dos arquivos gerados, a cada carregamento.
 
-export const dynamic = "force-dynamic";
+// Só dev e sem uso em produção: rota bloqueante, sem shell instantâneo (o force-dynamic não é aceito com cacheComponents).
+export const instant = false;
 
 type PropsDeBotao = {
   variante?: "primary" | "secondary" | "transparent";
