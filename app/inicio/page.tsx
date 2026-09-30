@@ -34,6 +34,14 @@ export default function AppPage() {
     if (!jaAceitou && !jaRecusou()) setCookiesVisivel(true);
   }, []);
 
+  // Cards e campo livre navegam com router.push, que não tem o prefetch automático do <Link>. Sem
+  // isto, o loading da /conversa/[slug] só aparece depois que o servidor responde ao clique. Baixar a
+  // rota não grava nem envia nada da pessoa. Os seis cards são a mesma rota: o Next baixa uma vez só.
+  useEffect(() => {
+    CARDS_HOME.forEach((card) => router.prefetch(`/conversa/${card.slug}`));
+    router.prefetch("/conversa");
+  }, [router]);
+
   function comConsentimento(motivo: ContextoConsentimento["gatilho"], acao: () => void) {
     if (consentiu) {
       acao();

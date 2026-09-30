@@ -9,6 +9,7 @@ import { conceder, jaConsentiu, jaRecusou, recusar } from "@/lib/consentimento";
 import { track } from "@/lib/mixpanel";
 import { URLS_DE_ICONE } from "@/components/icons";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
+import { carregarImagem } from "@/lib/carregar-imagem";
 import type { CardResource, OrientationResult } from "./types";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
@@ -25,22 +26,6 @@ type CardResultadoProps = {
   orientation: OrientationResult;
   riscoEmergency: boolean;
 };
-
-function carregarImagem(url: string) {
-  return new Promise<void>((resolve) => {
-    let concluida = false;
-    const concluir = () => {
-      if (concluida) return;
-      concluida = true;
-      window.clearTimeout(timeout);
-      resolve();
-    };
-    const timeout = window.setTimeout(concluir, 2000);
-    const imagem = new Image();
-    imagem.onload = imagem.onerror = concluir;
-    imagem.src = url;
-  });
-}
 
 function midiasDosRecursos(recursos: RecursosDaApi) {
   return {
