@@ -89,7 +89,7 @@ export default function BemVindoCliente({ botao }: { botao: BotaoContinuar }) {
     <main className="bv-pagina" data-com-barra={barraVisivel ? "true" : "false"}>
       <section className="bv-hero">
         <Header onOpenMenu={abrirMenu} />
-        <SideMenu open={menuAberto} onClose={fecharMenu} />
+        <SideMenu open={menuAberto} onClose={fecharMenu} rota="/bem-vindo" />
 
         <div className="bv-hero-topo">
           <div className="bv-hero-foto">

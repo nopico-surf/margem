@@ -57,9 +57,13 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
     track("menu_fechado", { rota: "/profissionais" });
   }
 
-  function selecionarEspecialidade(especialidade: Especialidade) {
+  function trocarEspecialidade(especialidade: Especialidade) {
     setEspecialidadeSelecionada(especialidade);
     window.history.replaceState(null, "", `${pathname}?especialidade=${especialidade}`);
+  }
+
+  function selecionarEspecialidade(especialidade: Especialidade) {
+    trocarEspecialidade(especialidade);
     track("filtro_profissional_clicado", {
       filtro: especialidade === "psicologo" ? "psicologos" : "psiquiatras",
     });
@@ -76,7 +80,12 @@ export function ProfissionaisCliente({ profissionais, especialidadeInicial }: Pr
         hrefDoLogo="/inicio"
         onLogoClick={() => track("logo_clicado", { rota: "/profissionais" })}
       />
-      <SideMenu open={menuOpen} onClose={fecharMenu} />
+      <SideMenu
+        open={menuOpen}
+        onClose={fecharMenu}
+        rota="/profissionais"
+        onSelecionarEspecialidade={trocarEspecialidade}
+      />
 
       <div className="profissionais-cabecalho">
         <CardHeader as="h1" title="Profissionais que podem ajudar" />

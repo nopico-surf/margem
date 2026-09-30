@@ -117,7 +117,7 @@ export default function AppPage() {
     <main className="app-shell">
       <KeyboardDiagnostics />
       <Header onOpenMenu={openMenu} />
-      <SideMenu open={menuOpen} onClose={closeMenu} />
+      <SideMenu open={menuOpen} onClose={closeMenu} rota="/inicio" />
 
       <HomeHero text={text} onChangeText={setText} onSubmit={submit} onShowTopics={showTopics} />
       <CardHomeGroup onSelect={handleCardClick} />

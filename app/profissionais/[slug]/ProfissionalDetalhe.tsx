@@ -145,6 +145,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
       />
       <SideMenu
         open={menuOpen}
+        rota={pathname}
         onClose={() => {
           setMenuOpen(false);
           track("menu_fechado", { rota: pathname });
