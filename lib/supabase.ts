@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { cacheLife } from "next/cache";
 import { unstable_rethrow } from "next/navigation";
 import type { Orientation } from "@/lib/gemini";
 import { instituicoesPadrao, servicosPublicosPadrao } from "./default-resources";
@@ -106,9 +107,17 @@ export async function buscarProfissionaisPorCategoria(categoria: string, sessaoI
   return sessaoId ? embaralharComSeed(profissionais, sessaoId) : profissionais;
 }
 
+// Com cache a lista entra no shell da /profissionais. Edição no Supabase aparece em até 1h: 55 min de
+// servidor (expire) mais 5 min em que o navegador reaproveita a página (stale), sem webhook.
 export async function buscarTodosProfissionaisAtivos() {
+  "use cache";
   const supabase = getServerClient();
-  if (!supabase) return [];
+  // Falha não pode ficar 1h no cache como lista vazia: o perfil 'seconds' tira a lista do shell e ela
+  // volta a ser buscada na requisição até a próxima revalidação dar certo.
+  if (!supabase) {
+    cacheLife("seconds");
+    return [];
+  }
   try {
     const { data } = await supabase
       .from("profissionais_cadastrados")
@@ -116,10 +125,12 @@ export async function buscarTodosProfissionaisAtivos() {
       .eq("ativo", true)
       .order("nome")
       .throwOnError();
+    cacheLife({ stale: 300, revalidate: 1800, expire: 3300 });
     return data as ProfissionalCadastrado[];
   } catch (erro) {
     unstable_rethrow(erro);
     console.error("[supabase] buscarTodosProfissionaisAtivos falhou:", mensagemDoErro(erro));
+    cacheLife("seconds");
     return [];
   }
 }
