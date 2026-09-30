@@ -30,6 +30,12 @@
   font: 600 var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
 }
 
+/* Estado vazio: mantém o max-width de 1080 do .figma-section-inner, mas alinhado à esquerda, junto do título. */
+#profissionais-sem-resultado .figma-section-inner {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 /* min-width maior que o card do Figma (253 a 401, conforme o frame) de propósito: com auto-fill no
    valor mais baixo do Figma, telas muito largas ganhavam colunas demais (7 ou mais numa tela de
    1920 de largura). 320 converge pra perto da progressão do Figma (4 colunas por volta de 1080 de
