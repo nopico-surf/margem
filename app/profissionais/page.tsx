@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ProfissionaisCliente } from "./ProfissionaisCliente";
+import { ProfissionaisCarregando } from "./ProfissionaisCarregando";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
 
 type Props = { searchParams: Promise<{ especialidade?: string }> };
 
-export default async function ProfissionaisPage({ searchParams }: Props) {
+async function ProfissionaisConteudo({ searchParams }: Props) {
   const { especialidade } = await searchParams;
   const especialidadeInicial: Especialidade = especialidade === "psiquiatra" ? "psiquiatra" : "psicologo";
   const profissionais = await buscarTodosProfissionaisAtivos();
@@ -24,4 +26,14 @@ export default async function ProfissionaisPage({ searchParams }: Props) {
   // key força remontagem ao navegar entre /profissionais?especialidade=... vindo do menu: sem isso o
   // useState de especialidadeSelecionada mantém o valor do primeiro mount e ignora o novo query param.
   return <ProfissionaisCliente key={especialidadeInicial} profissionais={profissionais} especialidadeInicial={especialidadeInicial} />;
+}
+
+// A página em si é só o shell. searchParams e o Supabase só existem depois da resposta, então ficam
+// dentro do Suspense; até lá aparece ProfissionaisCarregando, que já é a tela com os cards em skeleton.
+export default function ProfissionaisPage({ searchParams }: Props) {
+  return (
+    <Suspense fallback={<ProfissionaisCarregando />}>
+      <ProfissionaisConteudo searchParams={searchParams} />
+    </Suspense>
+  );
 }
