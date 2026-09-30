@@ -238,3 +238,98 @@
   }
 }
 
+
+/* Esqueleto da tela (loading.tsx). Figma: Experiência do produto, frames 1399:18476 (mobile) e
+   1399:18470 (tablet e desktop). O bone e o shimmer são o `.figma-skeleton` de resultado.css. */
+
+/* No mobile o menu é a mesma cor da foto, e a foto ainda não chegou: fica cinza, com ícones escuros. */
+.profissional-pagina-carregando {
+  --profissional-cor-topo: var(--colors-neutral-100);
+}
+
+.profissional-pagina-carregando .app-header img,
+.profissional-pagina-carregando .app-header svg {
+  filter: none;
+}
+
+.profissional-skeleton-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-10);
+}
+
+.profissional-skeleton-nome {
+  width: 100%;
+  height: var(--size-24);
+}
+
+.profissional-skeleton-especialidade {
+  width: calc(var(--size-96) + var(--size-1));
+  height: var(--size-16);
+}
+
+.profissional-skeleton-registro {
+  display: flex;
+  gap: var(--spacing-32);
+}
+
+.profissional-skeleton-registro .figma-skeleton {
+  flex: 1;
+  height: var(--size-16);
+}
+
+.profissional-skeleton-preco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.profissional-skeleton-preco .figma-skeleton {
+  height: calc(var(--size-24) + var(--size-4));
+}
+
+.profissional-skeleton-preco-titulo {
+  width: 74%;
+}
+
+.profissional-skeleton-tags {
+  display: flex;
+  gap: var(--spacing-6);
+}
+
+.profissional-skeleton-tags .figma-skeleton {
+  flex: 1;
+  height: var(--size-24);
+  border-radius: var(--radius-full);
+}
+
+.profissional-skeleton-botao {
+  width: 100%;
+  height: var(--size-48);
+}
+
+.profissional-skeleton-sobre {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.profissional-skeleton-sobre-titulo {
+  width: var(--size-96);
+  height: var(--size-24);
+}
+
+.profissional-skeleton-sobre-linha {
+  width: 100%;
+  height: var(--size-16);
+}
+
+@media (min-width: 48em) {
+  /* Tablet e desktop mostram 2 linhas de tags, não 3. */
+  .profissional-skeleton-tags-extra {
+    display: none;
+  }
+}
