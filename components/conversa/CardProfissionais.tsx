@@ -12,6 +12,7 @@ import { BotaoServicosPublicos } from "@/components/ui/BotaoServicosPublicos";
 import { rolarAteSecao } from "@/components/ui/SectionJump";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { track } from "@/lib/mixpanel";
+import { carregarImagem } from "@/lib/carregar-imagem";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 export function CardProfissionais({ profissionais, isLoading = false }: { profissionais: ProfissionalCadastrado[]; isLoading?: boolean }) {
@@ -28,11 +29,7 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
       return;
     }
 
-    Promise.all(urlsDasFotos.map((url) => new Promise<void>((resolve) => {
-      const imagem = new Image();
-      imagem.onload = imagem.onerror = () => resolve();
-      imagem.src = url;
-    }))).then(() => {
+    Promise.all(urlsDasFotos.map(carregarImagem)).then(() => {
       if (!cancelado) setFotosCarregadas(urlsDasFotos);
     });
 
