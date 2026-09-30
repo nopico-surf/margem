@@ -1,0 +1,63 @@
+/* `loader` e `screen-loading` (Margem System 687:33 e 440:4106). O Figma não traz dados de animação
+   pro loader: o arco dá uma volta a cada 2,25s, alternando trechos rápidos e lentos (ver @keyframes). */
+
+.loader {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: var(--size-32);
+  height: var(--size-32);
+}
+
+.loader-anel,
+.loader-arco {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
+/* O span ocupa o anel inteiro e gira em volta do centro dele; o arco fica no canto de cima à esquerda. */
+.loader-giro {
+  position: absolute;
+  inset: 0;
+  /* Duas rotações somadas, cada uma numa propriedade (transform e rotate se compõem): a volta
+     contínua e uma oscilação suave por cima. A velocidade sobe e desce em curva, sem nunca parar,
+     porque a volta nunca para e a oscilação só a acelera ou freia. A oscilação é mais lenta que a volta. */
+  animation:
+    loader-volta calc(var(--duration-1500) * 1.5) linear infinite,
+    loader-ondula calc(var(--duration-1500) * 1.375) var(--easing-in-out) infinite alternate;
+}
+
+@keyframes loader-volta {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-ondula {
+  from {
+    rotate: -18deg;
+  }
+  to {
+    rotate: 18deg;
+  }
+}
+
+/* Branco opaco, não o alpha-0 do Figma (branco a 80%): a tela precisa esconder o que estiver atrás. */
+.loader-tela {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-16);
+  background: var(--colors-neutral-0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-giro {
+    animation: none;
+  }
+}
