@@ -326,7 +326,7 @@ export default async function GaleriaDeComponentes() {
         <p className="text-small-regular galeria-nota">
           Figma: card-profissionais (node 654:4134). Com 1 profissional, empilhado como sempre foi.
           Com mais de 1, vira fileira horizontal com scroll, largura calculada a partir da tela
-          (sempre sobra um pedaço do próximo visível, teto em 280px).
+          (sempre sobra um pedaço do próximo visível, teto de 280 de largura).
         </p>
         <div className="galeria-estado">
           <span className="label-xx-small galeria-nome">1 profissional</span>
