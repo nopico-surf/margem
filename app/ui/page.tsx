@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Avatar } from "@/components/ui/Avatar";
+import { Loader } from "@/components/ui/Loader";
 import { CardsLp } from "@/components/bem-vindo/CardsLp";
 import { CardPublico } from "@/components/bem-vindo/CardPublico";
 import { Stepper } from "@/components/bem-vindo/Stepper";
@@ -358,6 +359,16 @@ export default async function GaleriaDeComponentes() {
             </ul>
           </article>
         ))}
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Loader</h2>
+        <p className="text-small-regular galeria-nota">
+          O anel do loader. A tela de carregamento (screen-loading) é esse loader sobre branco, fixa na viewport inteira, e aparece na /bem-vindo. <a href="/ui/loader-tela">Ver a tela cheia</a>.
+        </p>
+        <div className="galeria-palco">
+          <Loader />
+        </div>
       </section>
 
       <section className="galeria-secao">
