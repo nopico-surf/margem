@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Avatar } from "@/components/ui/Avatar";
+import { Loader } from "@/components/ui/Loader";
 import { CardsLp } from "@/components/bem-vindo/CardsLp";
 import { CardPublico } from "@/components/bem-vindo/CardPublico";
 import { Stepper } from "@/components/bem-vindo/Stepper";
@@ -43,7 +44,8 @@ function profissionalMock(indice: number): ProfissionalCadastrado {
 // Ela mostra o que existe. Não é lugar de criar componente novo, e não tem cópia própria de token:
 // a cor, o espaço e os estilos de texto são lidos dos arquivos gerados, a cada carregamento.
 
-export const dynamic = "force-dynamic";
+// Só dev e sem uso em produção: rota bloqueante, sem shell instantâneo (o force-dynamic não é aceito com cacheComponents).
+export const instant = false;
 
 type PropsDeBotao = {
   variante?: "primary" | "secondary" | "transparent";
@@ -326,7 +328,7 @@ export default async function GaleriaDeComponentes() {
         <p className="text-small-regular galeria-nota">
           Figma: card-profissionais (node 654:4134). Com 1 profissional, empilhado como sempre foi.
           Com mais de 1, vira fileira horizontal com scroll, largura calculada a partir da tela
-          (sempre sobra um pedaço do próximo visível, teto em 280px).
+          (sempre sobra um pedaço do próximo visível, teto de 280 de largura).
         </p>
         <div className="galeria-estado">
           <span className="label-xx-small galeria-nome">1 profissional</span>
@@ -357,6 +359,16 @@ export default async function GaleriaDeComponentes() {
             </ul>
           </article>
         ))}
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Loader</h2>
+        <p className="text-small-regular galeria-nota">
+          O anel do loader. A tela de carregamento (screen-loading) é esse loader sobre branco, fixa na viewport inteira, e aparece na /bem-vindo. <a href="/ui/loader-tela">Ver a tela cheia</a>.
+        </p>
+        <div className="galeria-palco">
+          <Loader />
+        </div>
       </section>
 
       <section className="galeria-secao">
