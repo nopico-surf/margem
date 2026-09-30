@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { unstable_rethrow } from "next/navigation";
 import type { Orientation } from "@/lib/gemini";
 import { instituicoesPadrao, servicosPublicosPadrao } from "./default-resources";
 import { slugsDosProfissionais } from "./slug-profissional";
@@ -12,6 +13,13 @@ function getServerClient() {
   if (!url || !key) return null;
   client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   return client;
+}
+
+// Leituras chamadas durante a renderização usam throwOnError: assim o cancelamento do fetch no fim do
+// prerender chega aqui como o erro original do Next (com digest) e o unstable_rethrow devolve ao Next,
+// sem virar log de falha. Sem throwOnError o supabase-js converte tudo em { error } e o digest se perde.
+function mensagemDoErro(erro: unknown) {
+  return erro instanceof Error ? erro.message : String(erro);
 }
 
 export type AcaoContato = { kind: string; label: string; value: string | null };
@@ -101,13 +109,19 @@ export async function buscarProfissionaisPorCategoria(categoria: string, sessaoI
 export async function buscarTodosProfissionaisAtivos() {
   const supabase = getServerClient();
   if (!supabase) return [];
-  const { data, error } = await supabase
-    .from("profissionais_cadastrados")
-    .select("*")
-    .eq("ativo", true)
-    .order("nome");
-  if (error) console.error("[supabase] buscarTodosProfissionaisAtivos falhou:", error.message);
-  return (data ?? []) as ProfissionalCadastrado[];
+  try {
+    const { data } = await supabase
+      .from("profissionais_cadastrados")
+      .select("*")
+      .eq("ativo", true)
+      .order("nome")
+      .throwOnError();
+    return data as ProfissionalCadastrado[];
+  } catch (erro) {
+    unstable_rethrow(erro);
+    console.error("[supabase] buscarTodosProfissionaisAtivos falhou:", mensagemDoErro(erro));
+    return [];
+  }
 }
 
 export async function buscarProfissionalPorSlug(slug: string) {
@@ -159,9 +173,14 @@ export async function registrarConsentimento(sessaoId: string) {
 export async function buscarRespostaPorChave(chaveBusca: string) {
   const supabase = getServerClient();
   if (!supabase) return null;
-  const { data, error } = await supabase.from("respostas").select("*").eq("chave_busca", chaveBusca).maybeSingle();
-  if (error) console.error("[supabase] buscarRespostaPorChave falhou:", error.message);
-  return data as (Orientation & { id: string }) | null;
+  try {
+    const { data } = await supabase.from("respostas").select("*").eq("chave_busca", chaveBusca).maybeSingle().throwOnError();
+    return data as (Orientation & { id: string }) | null;
+  } catch (erro) {
+    unstable_rethrow(erro);
+    console.error("[supabase] buscarRespostaPorChave falhou:", mensagemDoErro(erro));
+    return null;
+  }
 }
 
 // Resposta do Gemini é gravada sem chave_busca: o campo livre não reaproveita resposta salva (a chave é
