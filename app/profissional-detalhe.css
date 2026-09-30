@@ -1,0 +1,225 @@
+/* Tela /profissionais/[slug]. Figma: Margem System, frames 668:924 (mobile), 670:2049 (tablet) e
+   670:1273 (desktop). Mobile é o padrão; a partir do breakpoint md a foto vai para o lado do card e as
+   fontes sobem um degrau, como no Figma. */
+
+.profissional-pagina {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--colors-neutral-50);
+  /* Espaço para a barra fixa do WhatsApp não cobrir o rodapé. */
+  padding-bottom: calc(var(--size-80) + env(safe-area-inset-bottom));
+}
+
+.profissional-pagina > .app-footer {
+  margin-top: auto;
+}
+
+/* Mobile: o header fica sobre a foto, com logo e menu brancos. O degradê de cima dá contraste. */
+.profissional-pagina .app-header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: calc(var(--z-index-raised) + 1);
+  background: transparent;
+}
+
+.profissional-pagina .app-header img,
+.profissional-pagina .app-header svg {
+  filter: brightness(0) invert(1);
+}
+
+.profissional-conteudo {
+  width: 100%;
+  max-width: calc(var(--breakpoint-lg) - var(--size-8));
+  margin-inline: auto;
+}
+
+.profissional-topo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.profissional-topo::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--size-80);
+  background: linear-gradient(var(--colors-brand-primary-800), transparent);
+  opacity: 0.6;
+  z-index: var(--z-index-raised);
+  pointer-events: none;
+}
+
+.profissional-foto-moldura {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+.profissional-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profissional-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-20);
+  /* No Figma o card sobe 76 sobre a foto (card em y=284, foto de 360). */
+  margin: calc(-1 * (var(--size-80) - var(--size-4))) var(--spacing-16) 0;
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.profissional-identidade {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-10);
+}
+
+/* `text-box` tira o espaço vazio acima e abaixo das letras, como o text-box-trim do Figma. É ele que
+   deixa o título colado no texto seguinte, com a distância exata do gap. */
+.profissional-nome {
+  margin: 0;
+  text-box: trim-both cap alphabetic;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-2xl);
+  color: var(--colors-neutral-950);
+}
+
+.profissional-especialidade {
+  margin: 0;
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-md);
+  color: var(--colors-alpha-56);
+}
+
+.profissional-registro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-8);
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+  color: var(--colors-alpha-80);
+}
+
+.profissional-tags {
+  max-height: none;
+  overflow: visible;
+}
+
+.profissional-tags span {
+  background: var(--colors-alpha-8);
+  backdrop-filter: blur(var(--size-4));
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xs);
+  color: var(--colors-alpha-72);
+}
+
+/* Margem externa do Sobre. O cartão em si é o CardHeader variante=cartao. A margem lateral é a mesma
+   do topo (foto e card), para os dois terem a mesma largura. */
+.profissional-sobre {
+  margin: var(--spacing-12) var(--pagina-padding-lateral) 0;
+}
+
+/* Dois botões no DOM, um visível por vez: barra fixa no mobile, botão dentro do card a partir do tablet. */
+.profissional-agendar-card {
+  display: none;
+}
+
+.profissional-agendar-barra {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: var(--z-index-panel);
+  padding: var(--spacing-16) var(--spacing-16) calc(var(--spacing-16) + env(safe-area-inset-bottom));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--colors-neutral-0);
+  box-shadow: var(--shadow-glow);
+}
+
+@media (min-width: 48em) {
+  .profissional-pagina {
+    padding-bottom: 0;
+  }
+
+  .profissional-pagina .app-header {
+    position: static;
+    z-index: auto;
+  }
+
+  .profissional-pagina .app-header img,
+  .profissional-pagina .app-header svg {
+    filter: none;
+  }
+
+  .profissional-topo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-32);
+    padding-inline: var(--pagina-padding-lateral);
+  }
+
+  .profissional-topo::before {
+    display: none;
+  }
+
+  .profissional-foto-moldura {
+    aspect-ratio: auto;
+    border-radius: var(--radius-xl);
+  }
+
+  .profissional-card {
+    margin: 0;
+    gap: var(--spacing-32);
+  }
+
+  .profissional-identidade {
+    gap: var(--spacing-16);
+  }
+
+  .profissional-nome {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-4xl);
+  }
+
+  .profissional-especialidade {
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-2xl);
+  }
+
+  .profissional-registro {
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-2xl);
+  }
+
+  .profissional-registro span {
+    text-box: trim-both cap alphabetic;
+  }
+
+  .profissional-sobre {
+    margin-top: var(--spacing-32);
+  }
+
+  .profissional-agendar-card {
+    display: block;
+  }
+
+  .profissional-agendar-barra {
+    display: none;
+  }
+}
+
