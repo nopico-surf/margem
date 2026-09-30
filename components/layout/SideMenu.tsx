@@ -10,20 +10,28 @@ import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
 type SideMenuProps = {
   open: boolean;
   onClose: () => void;
+  rota: string;
+  // Dentro da /profissionais a troca de especialidade é só no cliente: na mesma rota o router.push
+  // mantém a tela antiga parada, sem skeleton, até o servidor responder.
+  onSelecionarEspecialidade?: (especialidade: Especialidade) => void;
 };
 
 // A saída tem animação, então o painel continua montado por mais 350ms depois de fechar.
 const DURACAO_FECHAMENTO = 350;
 
-export function SideMenu({ open, onClose }: SideMenuProps) {
+export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade }: SideMenuProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(open);
   const [isClosing, setIsClosing] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   function irParaProfissionais(especialidade: Especialidade) {
-    track("profissionais_menu_clicado", { especialidade });
+    track("profissionais_menu_clicado", { especialidade, rota });
     onClose();
+    if (onSelecionarEspecialidade) {
+      onSelecionarEspecialidade(especialidade);
+      return;
+    }
     router.push(`/profissionais?especialidade=${especialidade}`);
   }
 

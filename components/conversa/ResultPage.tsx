@@ -61,7 +61,7 @@ export function ResultPage({ message, orientation, isLoading, isResourcesLoading
         hrefDoLogo="/inicio"
         onLogoClick={() => track("logo_clicado", { rota: "/conversa" })}
       />
-      <SideMenu open={menuOpen} onClose={fecharMenu} />
+      <SideMenu open={menuOpen} onClose={fecharMenu} rota="/conversa" />
       <div className="figma-result-main">
         <Messages message={message} orientation={orientation} isLoading={isLoading} error={error} onRetry={onRetry} />
         {mostrarSecoes && <BlocoMaisOpcoes isLoading={Object.values(isResourcesLoading).some(Boolean)} />}
