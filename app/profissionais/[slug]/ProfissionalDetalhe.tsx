@@ -104,9 +104,9 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
   // anterior do site e a seta leva para /inicio. A Navigation API só conta telas do próprio site;
   // `history.length` também conta a aba em branco, por isso fica só como reserva.
   function voltar() {
-    track("voltar_clicado", { rota: pathname });
     const navegacao = (window as Window & { navigation?: { canGoBack: boolean } }).navigation;
     const temTelaAnterior = navegacao ? navegacao.canGoBack : window.history.length > 1;
+    track("voltar_clicado", { rota: pathname, destino: temTelaAnterior ? "tela_anterior" : "inicio" });
     if (temTelaAnterior) router.back();
     else router.push("/inicio");
   }
