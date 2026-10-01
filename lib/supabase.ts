@@ -25,7 +25,11 @@ function mensagemDoErro(erro: unknown) {
 
 export type AcaoContato = { kind: string; label: string; value: string | null };
 
+export type Formacao = { curso: string; instituicao: string | null; nivel: string | null; conclusao: number | null };
+
 export type ProfissionalCadastrado = {
+  abordagem?: string | null;
+  formacoes?: Formacao[];
   id: string;
   nome: string;
   especialidade: "psicologo" | "psiquiatra" | "assistente_social";

@@ -10,6 +10,7 @@ import { Stepper } from "@/components/bem-vindo/Stepper";
 import { PainelInferior } from "@/components/ui/PainelInferior";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { CardHeader } from "@/components/conversa/CardHeader";
+import { CardFormacoes } from "@/components/conversa/CardFormacoes";
 import { GlifoVerifiedUser } from "@/components/icons/glifos";
 import { IconeAgendarWhatsapp, IconeSeta, IconeSetaResultado } from "@/components/icons";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
@@ -236,7 +237,7 @@ export default async function GaleriaDeComponentes() {
         <h2 className="header-medium">Card header</h2>
         <p className="text-small-regular galeria-nota">
           Figma: card-header. Sem clique, então sem hover, foco ou desabilitado. A variante cartao tem
-          fundo branco e mostra o texto inteiro; o título sobe para 24 a partir de 768 pixels.
+          fundo branco e mostra o texto inteiro, com o mesmo tamanho no mobile e no desktop.
         </p>
         <div className="galeria-estados">
           <div className="galeria-estado">
@@ -254,6 +255,17 @@ export default async function GaleriaDeComponentes() {
               />
             </div>
             <span className="label-xx-small galeria-nome">cartao</span>
+          </div>
+          <div className="galeria-estado">
+            <div className="galeria-palco">
+              <CardFormacoes
+                formacoes={[
+                  { curso: "Psicologia", instituicao: "Universidade Paulista", nivel: "Graduação", conclusao: 2025 },
+                  { curso: "Neuropsicologia", instituicao: "Anhembi Morumbi", nivel: "Pós-graduação", conclusao: 2026 },
+                ]}
+              />
+            </div>
+            <span className="label-xx-small galeria-nome">formacoes</span>
           </div>
         </div>
       </section>

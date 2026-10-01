@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
+import { CardFormacoes } from "@/components/conversa/CardFormacoes";
 import { especialidadeLabel, hrefWhatsappProfissional, registroLabel } from "@/components/conversa/CardProfissionaisCompleto";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
@@ -112,6 +113,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
   }
 
   const whatsappHref = hrefWhatsappProfissional(profissional);
+  const formacoes = profissional.formacoes ?? [];
 
   function agendar() {
     track("agendar_whatsapp_clicado", {
@@ -190,10 +192,12 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
           </article>
         </div>
 
-        {profissional.bio && (
-          <section className="profissional-sobre">
-            <CardHeader variante="cartao" title="Sobre" description={profissional.bio} />
-          </section>
+        {(profissional.bio || profissional.abordagem || formacoes.length > 0) && (
+          <div className="profissional-sobre">
+            {profissional.bio && <CardHeader variante="cartao" title="Sobre mim" description={profissional.bio} />}
+            {profissional.abordagem && <CardHeader variante="cartao" title="Minha abordagem" description={profissional.abordagem} />}
+            <CardFormacoes formacoes={formacoes} />
+          </div>
         )}
       </div>
 

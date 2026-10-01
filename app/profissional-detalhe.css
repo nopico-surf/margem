@@ -61,7 +61,7 @@
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  border-radius: 0;
 }
 
 .profissional-foto {
@@ -143,6 +143,9 @@
 /* Margem externa do Sobre. O cartão em si é o CardHeader variante=cartao. A margem lateral é a mesma
    do topo (foto e card), para os dois terem a mesma largura. */
 .profissional-sobre {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
   margin: var(--spacing-12) var(--pagina-padding-lateral) 0;
 }
 
