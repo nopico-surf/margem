@@ -813,6 +813,12 @@
   background:var(--colors-neutral-0);
 }
 
+@media (min-width:48em) {
+  .figma-section-heading[data-variante="cartao"] {
+    padding:var(--spacing-24);
+  }
+}
+
 .figma-section-heading[data-variante="cartao"] h1,
 .figma-section-heading[data-variante="cartao"] h2 {
   overflow:visible;

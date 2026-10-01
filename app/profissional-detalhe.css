@@ -145,8 +145,8 @@
 .profissional-sobre {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-12);
-  margin: var(--spacing-12) var(--pagina-padding-lateral) 0;
+  gap: var(--spacing-16);
+  margin: var(--spacing-16) var(--pagina-padding-lateral) 0;
 }
 
 /* Dois botões no DOM, um visível por vez: barra fixa no mobile, botão dentro do card a partir do tablet. */
@@ -229,7 +229,8 @@
   }
 
   .profissional-sobre {
-    margin-top: var(--spacing-32);
+    gap: var(--spacing-24);
+    margin-top: var(--spacing-24);
   }
 
   .profissional-agendar-card {
