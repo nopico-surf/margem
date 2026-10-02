@@ -17,6 +17,17 @@ function Tags({ quantidade }: { quantidade: number }) {
   );
 }
 
+function CardSobre() {
+  return (
+    <div className="profissional-skeleton-sobre">
+      <span className="figma-skeleton profissional-skeleton-sobre-titulo" />
+      {Array.from({ length: 5 }, (_, i) => (
+        <span key={i} className="figma-skeleton profissional-skeleton-sobre-linha" />
+      ))}
+    </div>
+  );
+}
+
 export default function CarregandoProfissional() {
   return (
     <main className="figma-result-page profissional-pagina profissional-pagina-carregando" aria-busy="true">
@@ -41,7 +52,7 @@ export default function CarregandoProfissional() {
               <span className="figma-skeleton profissional-skeleton-preco-texto" />
             </div>
 
-            <div className="profissional-skeleton-bloco">
+            <div className="profissional-skeleton-bloco profissional-skeleton-tags-bloco">
               <Tags quantidade={3} />
               <Tags quantidade={3} />
               <div className="profissional-skeleton-tags-extra">
@@ -56,12 +67,10 @@ export default function CarregandoProfissional() {
         </div>
 
         <section className="profissional-sobre">
-          <div className="profissional-skeleton-sobre">
-            <span className="figma-skeleton profissional-skeleton-sobre-titulo" />
-            {Array.from({ length: 5 }, (_, i) => (
-              <span key={i} className="figma-skeleton profissional-skeleton-sobre-linha" />
-            ))}
-          </div>
+          {/* Sobre mim, Minha abordagem e Minhas formações. */}
+          {Array.from({ length: 3 }, (_, i) => (
+            <CardSobre key={i} />
+          ))}
         </section>
       </div>
 

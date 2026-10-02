@@ -262,6 +262,12 @@
   gap: var(--spacing-10);
 }
 
+/* Espaçamentos iguais aos da tela montada: identidade 10 (16 no tablet e desktop), preço 4, tags 6,
+   linhas de texto no passo de 20 da line-height-xl e 14 entre o título e o texto. */
+.profissional-skeleton-tags-bloco {
+  gap: var(--spacing-6);
+}
+
 .profissional-skeleton-nome {
   width: 100%;
   height: var(--size-24);
@@ -285,7 +291,7 @@
 .profissional-skeleton-preco {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
+  gap: var(--spacing-4);
 }
 
 .profissional-skeleton-preco .figma-skeleton {
@@ -315,7 +321,7 @@
 .profissional-skeleton-sobre {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-14);
+  gap: var(--spacing-4);
   padding: var(--spacing-16);
   border-radius: var(--radius-xl);
   background: var(--colors-neutral-0);
@@ -324,6 +330,7 @@
 .profissional-skeleton-sobre-titulo {
   width: var(--size-96);
   height: var(--size-24);
+  margin-bottom: var(--spacing-10);
 }
 
 .profissional-skeleton-sobre-linha {
@@ -332,6 +339,18 @@
 }
 
 @media (min-width: 48em) {
+  .profissional-skeleton-bloco {
+    gap: var(--spacing-16);
+  }
+
+  .profissional-skeleton-tags-bloco {
+    gap: var(--spacing-6);
+  }
+
+  .profissional-skeleton-sobre {
+    padding: var(--spacing-24);
+  }
+
   /* Tablet e desktop mostram 2 linhas de tags, não 3. */
   .profissional-skeleton-tags-extra {
     display: none;
