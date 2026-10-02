@@ -834,15 +834,18 @@
   font-size:var(--font-size-sm);
   line-height:var(--line-height-xl);
   color:var(--colors-alpha-88);
+  white-space:pre-line;
   text-box:trim-start cap alphabetic;
 }
 
-/* Minhas formações: lista de formacao-item (curso em sm medium, instituição e nível em xs). */
+/* Minhas formações: lista de formacao-item (curso em sm medium, instituição e nível em xs).
+   O text-box aparar o respiro das linhas faz o gap de 16 valer de letra a letra, entre o título e o
+   primeiro item e entre os itens; o último item mantém o fim sem aparar, como o texto do Sobre. */
 .figma-formacoes ul {
   display:flex;
   flex-direction:column;
   gap:var(--spacing-16);
-  margin:var(--spacing-14) 0 0;
+  margin:var(--spacing-16) 0 0;
   padding:0;
   list-style:none;
 }
@@ -853,12 +856,13 @@
   gap:var(--spacing-2);
 }
 
-.figma-formacoes li p {
+.figma-formacoes[data-variante="cartao"] li p {
   margin:0;
   font-size:var(--font-size-sm);
   font-weight:var(--font-weight-medium);
   line-height:var(--line-height-md);
   color:var(--colors-alpha-88);
+  text-box:trim-start cap alphabetic;
 }
 
 .figma-formacoes li div {
@@ -867,4 +871,12 @@
   font-size:var(--font-size-xs);
   line-height:var(--line-height-lg);
   color:var(--colors-alpha-64);
+}
+
+.figma-formacoes li:not(:last-child) div span:last-child {
+  text-box:trim-end cap alphabetic;
+}
+
+.figma-formacoes[data-variante="cartao"] li:not(:last-child) p:last-child {
+  text-box:trim-both cap alphabetic;
 }
