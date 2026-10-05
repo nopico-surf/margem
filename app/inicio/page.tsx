@@ -49,6 +49,7 @@ export default function AppPage() {
     }
     acaoPendente.current = acao;
     gatilho.current = motivo;
+    (document.activeElement as HTMLElement | null)?.blur();
     setCookiesVisivel(true);
   }
 
