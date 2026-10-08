@@ -87,7 +87,7 @@ const COMBINACOES: Combinacao[] = [
     props: { variante: "transparent", tamanho: "small", redondo: true, larguraTotal: true },
     conteudo: (
       <>
-        Se preferir, veja os serviços públicos <IconeSetaResultado />
+        Se preferir, navegue por aqui <IconeSetaResultado />
       </>
     ),
   },
