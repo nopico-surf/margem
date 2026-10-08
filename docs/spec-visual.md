@@ -128,7 +128,7 @@ Cada escala tem os 11 degraus completos: 50, 100, 200, 300, 400, 500, 600, 700, 
 
 ### Alpha
 
-Grupo antes chamado `colors/opacidade/opaca-*`, agora `colors/alpha/alpha-*`. É uma rampa de transparência sobre **`colors/neutral/neutral-950`**, que é `#171b18`, em 12 degraus: 0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88.
+Grupo antes chamado `colors/opacidade/opaca-*`, agora `colors/alpha/alpha-*`. É uma rampa de transparência sobre **`colors/neutral/neutral-950`**, que é `#171b18`, em 13 degraus: 0, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88.
 
 Cada variável é um alias para a cor base mais uma opacidade, e não um hex colado. É o jeito certo: mudar `neutral-950` reflete na rampa inteira.
 
