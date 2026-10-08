@@ -59,7 +59,13 @@ export function CardProfissionais({
         )}
         <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
         {naHome && <span className="figma-skeleton home-osso-valor" aria-hidden="true" />}
-        <CardProfissionalSkeleton />
+        {naHome ? (
+          <ActionRow className="figma-professionals-row" origem="profissionais">
+            {[0, 1, 2, 3, 4].map((i) => <CardProfissionalSkeleton key={i} />)}
+          </ActionRow>
+        ) : (
+          <CardProfissionalSkeleton />
+        )}
         {!naHome && <span className="figma-skeleton figma-skeleton-public-link" aria-hidden="true" />}
       </ContainerConteudo>
     );
