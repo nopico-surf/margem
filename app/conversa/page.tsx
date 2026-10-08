@@ -8,6 +8,7 @@ import { track } from "@/lib/mixpanel";
 import type { CardResource, OrientationResult } from "@/components/conversa/types";
 import { URLS_DE_ICONE } from "@/components/icons";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
+import { fotoPequena } from "@/lib/foto-pequena";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Copy fixa do Figma (1205:16250) para quando o Gemini falha: não varia por motivo de falha.
@@ -46,7 +47,7 @@ function midiasDosRecursos(recursos: RecursosDaApi) {
   return {
     profissionais: [...new Set([
       ...URLS_DE_ICONE,
-      ...recursos.profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO),
+      ...recursos.profissionais.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO)),
     ])],
     servicosPublicos: URLS_DE_ICONE,
     instituicoes: URLS_DE_ICONE,

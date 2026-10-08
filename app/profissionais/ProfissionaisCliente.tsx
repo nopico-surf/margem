@@ -12,6 +12,7 @@ import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissional
 import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
+import { fotoPequena } from "@/lib/foto-pequena";
 import { track } from "@/lib/mixpanel";
 import { carregarImagem } from "@/lib/carregar-imagem";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -28,7 +29,7 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
   const [menuOpen, setMenuOpen] = useState(false);
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
 
-  const urlsDasFotos = profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO);
+  const urlsDasFotos = profissionais.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO));
   const chaveDasFotos = urlsDasFotos.join("|");
 
   useEffect(() => {

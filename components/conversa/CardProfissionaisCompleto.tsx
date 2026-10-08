@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
+import { fotoPequena } from "@/lib/foto-pequena";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -60,7 +61,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
   return (
     <article className="figma-professional-card">
       <div className="figma-professional-head">
-        <Avatar className="figma-professional-avatar" src={profissional.foto_url} />
+        <Avatar className="figma-professional-avatar" src={profissional.foto_url && fotoPequena(profissional.foto_url)} />
         <div className="figma-professional-copy">
           <div className="figma-professional-identity">
             <strong>

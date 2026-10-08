@@ -175,6 +175,7 @@ Não são preferência de estilo. São critério de aceite.
 - **Telas abertas dentro de um fluxo devem respeitar o container do fluxo.** Modais e páginas acionados a partir do onboarding devem manter as mesmas margens e largura máxima do `IntroShell`, sem ocupar a viewport inteira.
 - **Nunca usar URL de asset do Figma no código.** Os links `https://www.figma.com/api/mcp/asset/...` que o MCP do Figma devolve expiram em 7 dias. Todo ícone, imagem ou SVG vindo do Figma é baixado e salvo no nosso servidor (`/public/icons` ou `/public/assets`) e referenciado pelo caminho local. Antes de salvar, checar se o mesmo arquivo já existe lá.
 - **Avatar fallback de profissional.** O arquivo `/public/assets/professional-avatar-fallback.svg` deve manter o desenho do Figma sem o retângulo técnico externo `fill="#1E1E1E"`, que cria bordas pretas nos cantos arredondados. Ao substituir esse SVG, remover esse retângulo antes de validar ou subir.
+- **Foto de profissional tem duas versões.** A original (1200x1200) serve a página interna; os cards usam a versão `-192.webp` ao lado dela (`lib/foto-pequena.ts`). Ao cadastrar ou trocar foto em `/public/assets`, rodar `node scripts/fotos-pequenas.mjs`, senão o card mostra o avatar fallback.
 
 ---
 

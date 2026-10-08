@@ -11,6 +11,7 @@ import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoServicosPublicos } from "@/components/ui/BotaoServicosPublicos";
 import { rolarAteSecao } from "@/components/ui/SectionJump";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
+import { fotoPequena } from "@/lib/foto-pequena";
 import { track } from "@/lib/mixpanel";
 import { carregarImagem } from "@/lib/carregar-imagem";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -29,7 +30,7 @@ export function CardProfissionais({
   const naHome = variante === "home";
   const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>("psicologo");
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
-  const urlsDasFotos = profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO);
+  const urlsDasFotos = profissionais.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO));
   const chaveDasFotos = urlsDasFotos.join("|");
 
   useEffect(() => {

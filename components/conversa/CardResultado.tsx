@@ -9,6 +9,7 @@ import { conceder, jaConsentiu, jaRecusou, recusar } from "@/lib/consentimento";
 import { track } from "@/lib/mixpanel";
 import { URLS_DE_ICONE } from "@/components/icons";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
+import { fotoPequena } from "@/lib/foto-pequena";
 import { carregarImagem } from "@/lib/carregar-imagem";
 import type { CardResource, OrientationResult } from "./types";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -31,7 +32,7 @@ function midiasDosRecursos(recursos: RecursosDaApi) {
   return {
     profissionais: [...new Set([
       ...URLS_DE_ICONE,
-      ...recursos.profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO),
+      ...recursos.profissionais.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO)),
     ])],
     servicosPublicos: URLS_DE_ICONE,
     instituicoes: URLS_DE_ICONE,
