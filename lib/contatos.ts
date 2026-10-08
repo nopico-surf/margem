@@ -7,3 +7,8 @@ export const CONTATOS: Array<{ tipo: TipoContato; href: string; texto: string; e
   { tipo: "instagram", href: "https://instagram.com/somos_margem_", texto: "somos_margem_", externo: true },
   { tipo: "email", href: "mailto:vitor@somosmargem.com.br", texto: "vitor@somosmargem.com.br", externo: false },
 ];
+
+// Banner e atalho "Cannabis medicinal" da home: o mesmo WhatsApp, já com a mensagem escrita.
+export const LINK_WHATSAPP_CANNABIS = `https://wa.me/5511968996977?text=${encodeURIComponent(
+  "Acessei a Margem e quero saber mais sobre Cannabis Medicinal",
+)}`;

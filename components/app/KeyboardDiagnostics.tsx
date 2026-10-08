@@ -83,7 +83,7 @@ export function KeyboardDiagnostics() {
         vkDisponivel: Boolean(vk),
         vkAtivo: Boolean(vk?.overlaysContent),
         vkAltura: vk ? Math.round(vk.boundingRect.height) : -1,
-        shift: root.style.getPropertyValue("--hero-track-shift").trim() || "0px",
+        shift: root.style.getPropertyValue("--teclado-linha").trim() || "-",
         classActive: root.classList.contains("keyboard-open"),
         modo: root.dataset.keyboardMode ?? "-",
         painelFolga,
@@ -127,7 +127,7 @@ export function KeyboardDiagnostics() {
       <div>
         virtualKeyboard: {data.vkDisponivel ? `sim, ativo ${data.vkAtivo}, altura ${data.vkAltura}` : "nao"}
       </div>
-      <div>keyboard-open: {String(data.classActive)} | modo: {data.modo} | shift: {data.shift}</div>
+      <div>keyboard-open: {String(data.classActive)} | modo: {data.modo} | linha: {data.shift}</div>
       <div>painel folga embaixo: {data.painelFolga}</div>
       {data.vkDisponivel && !data.vkAtivo && (
         <button type="button" onClick={ativarVirtualKeyboard} style={{ marginTop: 4, font: "12px monospace", padding: "2px 6px" }}>

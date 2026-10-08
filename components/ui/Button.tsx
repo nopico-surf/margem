@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 // Figma: página Button core, componente `button`.
 //
 // Eram sete componentes no código (ActionButton, BotaoAgendar, BotaoContinuar,
-// BotaoServicosPublicos, BotaoTopicos, mais os dois de ícone) para um único set no Figma. Cada um
+// BotaoServicosPublicos, BotaoTopicos (saiu com a home de 07/10/2026), mais os dois de ícone) para um único set no Figma. Cada um
 // tinha o estilo escrito num CSS diferente, e nenhum tinha hover, foco, pressionado ou carregando.
 //
 // Aqui estão só os eixos que aparecem em tela. O Figma tem `mode`, `padding` e `function=danger`

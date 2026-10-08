@@ -12,7 +12,10 @@ import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardFormacoes } from "@/components/conversa/CardFormacoes";
 import { GlifoVerifiedUser } from "@/components/icons/glifos";
-import { IconeAgendarWhatsapp, IconeSeta, IconeSetaResultado } from "@/components/icons";
+import { IconeAgendarWhatsapp, IconeSetaResultado } from "@/components/icons";
+import { FaixaComoFunciona } from "@/components/app/FaixaComoFunciona";
+import { BlocoCannabis, SeloGiratorio } from "@/components/app/BlocoCannabis";
+import { CardHomeGroupGaleria } from "./CardHomeGaleria";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import "./galeria.css";
@@ -77,16 +80,6 @@ const COMBINACOES: Combinacao[] = [
     usadaEm: "ActionButton, que vira link quando tem href, e SectionJump",
     props: { variante: "secondary", tamanho: "small", redondo: true },
     conteudo: "Saiba mais",
-  },
-  {
-    titulo: "transparent / small / canto 12",
-    usadaEm: "BotaoTopicos",
-    props: { variante: "transparent", tamanho: "small" },
-    conteudo: (
-      <>
-        Se preferir, veja os tópicos <IconeSeta />
-      </>
-    ),
   },
   {
     titulo: "transparent / small / redondo / largura total",
@@ -281,6 +274,42 @@ export default async function GaleriaDeComponentes() {
             titulo="Sem julgamento"
             texto="Conte do seu jeito"
           />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Faixa Como funciona</h2>
+        <p className="text-small-regular galeria-nota">
+          Anda sozinha da direita para a esquerda e para enquanto o mouse, o dedo ou o foco do teclado está
+          nela; volta a andar 2,5s depois. Arrastável. Com prefers-reduced-motion não anda. Os atalhos verdes
+          são links e só têm o estado default no Figma (hover, foco e pressionado pendentes de definição).
+        </p>
+        <div className="galeria-palco galeria-palco-largo">
+          <FaixaComoFunciona />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Cards de caminho</h2>
+        <p className="text-small-regular galeria-nota">
+          Os seis caminhos da home. O Figma só define o default; hover e pressionado pendentes de definição.
+        </p>
+        <div className="galeria-palco galeria-palco-largo">
+          <CardHomeGroupGaleria />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Bloco Cannabis medicinal e selo giratório</h2>
+        <p className="text-small-regular galeria-nota">
+          O selo gira sem parar (parado com prefers-reduced-motion). No mobile ele fica sobre a foto; a partir
+          de 768 pixels sobe para o lado do texto e, a partir de 1440, fica ao lado do título. Redimensione a janela.
+        </p>
+        <div className="galeria-palco">
+          <SeloGiratorio />
+        </div>
+        <div className="galeria-palco galeria-palco-largo">
+          <BlocoCannabis />
         </div>
       </section>
 

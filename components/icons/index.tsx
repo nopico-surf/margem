@@ -15,7 +15,8 @@
 import {
   GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoArrowBack, GlifoDoubleArrowDown, GlifoCheckBox,
   GlifoQuestionAnswer, GlifoPanTool, GlifoLink, GlifoPlace, GlifoPhone, GlifoMessageFlye,
-  GlifoSecurity, GlifoArrowForwardIos, GlifoInfo,
+  GlifoInfo, GlifoLock, GlifoCached, GlifoSick, GlifoSentimentDissatisfied,
+  GlifoPersonAddAlt1, GlifoSupport, GlifoMotionPhotosPaused,
 } from "./glifos";
 // O caminho da foto padrão mora no `avatar`, em components/ui. Aqui ele serve só à chave `avatar`
 // de ICONES_ACAO, que vem do banco, e ao preload de URLS_DE_ICONE.
@@ -51,6 +52,8 @@ export const IconeMenu = (p: IconProps) => <GlifoMenu {...p} color="var(--colors
 export const IconeVoltar = (p: IconProps) => <GlifoArrowBack {...p} color="var(--colors-neutral-950)" />;
 // Branco porque fica sobre o overlay escuro do menu.
 export const IconeFecharMenu = (p: IconProps) => <GlifoClose {...p} size={32} color="var(--colors-neutral-0)" />;
+// X do header no campo aberto em tela cheia da home: mesma cor e tamanho do menu que ele substitui.
+export const IconeFecharHeader = (p: IconProps) => <GlifoClose {...p} color="var(--colors-neutral-950)" />;
 export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="var(--colors-brand-primary-950)" />;
 
 /* Setas */
@@ -59,25 +62,19 @@ export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="var(
 // Segue a cor do botão onde está, para acompanhar o hover.
 export const IconeSeta = (p: IconProps) => <GlifoDoubleArrowDown {...p} />;
 export const IconeSetaResultado = IconeSeta;
-export const IconeSetaCard = (p: IconProps) => <GlifoArrowForwardIos {...p} {...SUAVE} />;
 
 /* Home */
 
-export const IconeSeguranca = (p: IconProps) => <GlifoSecurity {...p} {...ACAO} />;
+// O cadeado do badge "Você não precisa se identificar" (era o escudo de segurança até 07/10/2026).
+export const IconeCadeado = (p: IconProps) => <GlifoLock {...p} size={16} color="var(--colors-brand-primary-900)" />;
 
-// Um ícone por card de caminho, na ordem em que os cards aparecem na home. Cada um é um emoji do
-// arquivo Emojis do Figma, e o nome do arquivo é o nome do componente lá.
-export const ICONES_CAMINHO = [
-  "/icons/broto-crescimento-renascendo.svg",
-  "/icons/emergencia-sirene.svg",
-  "/icons/cerebro-emocional.svg",
-  "/icons/aperto-de-mao.svg",
-  "/icons/coracao-enfaixado.svg",
-  "/icons/poker-face.svg",
-];
+// Um ícone por card de caminho, na ordem em que os cards aparecem na home. Até 07/10/2026 eram os
+// emojis do arquivo Emojis do Figma; o layout novo da home usa glifos verdes de 28.
+const ICONES_CAMINHO = [GlifoCached, GlifoSick, GlifoSentimentDissatisfied, GlifoPersonAddAlt1, GlifoSupport, GlifoMotionPhotosPaused];
 
 export function IconeCaminho({ indice, className }: { indice: number; className?: string }) {
-  return <img className={className} src={ICONES_CAMINHO[indice]} alt="" />;
+  const Glifo = ICONES_CAMINHO[indice];
+  return <Glifo className={className} color="var(--colors-brand-primary-700)" />;
 }
 
 /* Resultado */

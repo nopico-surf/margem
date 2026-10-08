@@ -1,10 +1,10 @@
-import { IconeSeguranca } from "@/components/icons";
+import { IconeCadeado } from "@/components/icons";
 import { Badge } from "@/components/ui/Badge";
 
 export function IdentityBadge() {
   return (
     <Badge color="primary">
-      <IconeSeguranca />
+      <IconeCadeado />
       Você não precisa se identificar
     </Badge>
   );

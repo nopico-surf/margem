@@ -6,6 +6,9 @@ type MessageInputProps = {
   value: string;
   onChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  // Com a tela cheia aberta o campo fica no estado focado mesmo sem foco (o teclado fechado, por
+  // exemplo), como no Figma: nunca volta ao default branco enquanto a tela cheia estiver aberta.
+  expandido?: boolean;
 };
 
 // REGRA: se um botão ou input está num container que muda de visibilidade/layout baseado em outro
@@ -21,18 +24,22 @@ const TEMPO_SEM_SINAL = 500;
 // Fração da altura da tela. No Instagram (Android) o teclado mediu ~36%; a sobra cobre teclados um pouco mais altos.
 const ESTIMATIVA_TECLADO = 0.38;
 
+// Altura do teclado na última vez que o navegador informou, na mesma largura de tela. Serve de reserva
+// provisória na próxima abertura, antes de o navegador informar de novo.
+let tecladoMedido: { largura: number; altura: number } | null = null;
+
 type VirtualKeyboardApi = EventTarget & { overlaysContent: boolean; boundingRect: DOMRect };
 
-export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
+export function MessageInput({ value, onChange, onSubmit, expandido = false }: MessageInputProps) {
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const initialFocusRef = useRef(true);
   const espelhoRef = useRef<HTMLDivElement>(null);
   const [cursorEm, setCursorEm] = useState<number | null>(null);
-  const state = value.length > 0 ? "filed" : focused ? "focused" : "default";
+  const state = value.length > 0 ? "filed" : focused || expandido ? "focused" : "default";
 
-  // Mantém título + campo logo acima do teclado virtual. Cada navegador informa o teclado de
-  // um jeito: o Chrome e o Safari encolhem o visualViewport, alguns webviews encolhem a janela
+  // Mantém o campo logo acima do teclado virtual (ele fica no pé da tela cheia, que vai até a linha
+  // do teclado). Cada navegador informa o teclado de um jeito: o Chrome e o Safari encolhem o visualViewport, alguns webviews encolhem a janela
   // inteira e outros (ex: navegador interno do Instagram) não informam nada.
   useEffect(() => {
     const root = document.documentElement;
@@ -54,7 +61,7 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
     const alturaVisivel = () => (viewport ? viewport.height : window.innerHeight);
     const campoFocado = () => {
       const el = document.activeElement;
-      return el instanceof HTMLTextAreaElement && el.closest(".hero-focus-track") !== null;
+      return el instanceof HTMLTextAreaElement && el.closest(".home-hero") !== null;
     };
 
     function update() {
@@ -68,7 +75,7 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
 
       // Sem subtrair offsetTop: no iOS a página rola ao abrir o teclado e isso esconderia a altura dele.
       const tecladoReal = alturaSemTeclado - alturaVisivel();
-      let modo: "fechado" | "real" | "estimado" = "fechado";
+      let modo: "fechado" | "real" | "provisorio" | "estimado" = "fechado";
       let linhaDoTeclado = alturaVisivel() + (viewport ? viewport.offsetTop : 0);
 
       const alturaVirtualKeyboard = virtualKeyboard?.overlaysContent ? virtualKeyboard.boundingRect.height : 0;
@@ -81,7 +88,14 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       } else if (focado && virtualKeyboardInformou) {
         // A API já provou que funciona e agora diz altura 0: o teclado foi fechado sem tirar o foco.
         modo = "fechado";
-      } else if (focado && touch && performance.now() - focoEm >= TEMPO_SEM_SINAL) {
+      } else if (focado && touch && performance.now() - focoEm < TEMPO_SEM_SINAL) {
+        // O teclado ainda está subindo e o navegador não informou nada. Reservar o espaço já no toque
+        // faz o campo, que desliza pra tela cheia, ir direto pra perto do lugar final, em vez de ir até
+        // o pé da tela e depois saltar pra cima do teclado. Sem ligar a API do teclado aqui.
+        modo = "provisorio";
+        const reserva = tecladoMedido?.largura === larguraAtual ? tecladoMedido.altura : alturaSemTeclado * ESTIMATIVA_TECLADO;
+        linhaDoTeclado = window.innerHeight - reserva;
+      } else if (focado && touch) {
         modo = "estimado";
         linhaDoTeclado = window.innerHeight - alturaSemTeclado * ESTIMATIVA_TECLADO;
         if (virtualKeyboard && !virtualKeyboard.overlaysContent) virtualKeyboard.overlaysContent = true;
@@ -90,26 +104,26 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       const aberto = modo !== "fechado";
       root.classList.toggle("keyboard-open", aberto);
       root.dataset.keyboardMode = modo;
-      // Se a janela inteira encolheu, trava o hero na altura original pra ele não refluir.
-      root.style.setProperty("--viewport-sem-teclado", `${alturaSemTeclado}px`);
-      root.classList.toggle("keyboard-resized", aberto && window.innerHeight < alturaSemTeclado - 120);
+      // O campo aberto em tela cheia (.home-hero[data-expandido]) é fixo e vai do topo visível até a
+      // linha do teclado, então o campo, que fica no pé dele, sobe junto com o teclado. No iOS a página
+      // rola ao abrir o teclado: o topo visível é o offsetTop do visualViewport.
+      if (aberto) {
+        const topo = modo === "real" && viewport && tecladoReal > 120 ? viewport.offsetTop : 0;
+        if (modo === "real") tecladoMedido = { largura: larguraAtual, altura: window.innerHeight - (linhaDoTeclado - topo) };
+        root.style.setProperty("--teclado-topo", `${topo}px`);
+        root.style.setProperty("--teclado-linha", `${linhaDoTeclado}px`);
+      } else {
+        root.style.removeProperty("--teclado-topo");
+        root.style.removeProperty("--teclado-linha");
+      }
 
-      const track = document.querySelector(".hero-focus-track");
-      if (!track) return;
-
-      // Mede sempre no estado cheio: sem deslocamento (getBoundingClientRect já devolve a
-      // posição com o transform aplicado) e sem nada escondido, senão esconder o badge e o
-      // título mudaria a própria medida que gerou a decisão, e ela ficaria oscilando.
-      root.style.setProperty("--hero-track-shift", "0px");
+      // Tela curta: não cabe header + badge + título + campo acima do teclado. Mede sempre com tudo
+      // visível, senão esconder o badge e o título mudaria a própria medida que gerou a decisão.
       root.classList.remove("keyboard-cramped");
-
-      const limite = linhaDoTeclado - 16;
-      const header = document.querySelector(".app-header");
-      const teto = header ? header.getBoundingClientRect().bottom : 0;
-      root.classList.toggle("keyboard-cramped", aberto && track.getBoundingClientRect().height > limite - teto);
-
-      const folga = limite - track.getBoundingClientRect().bottom;
-      root.style.setProperty("--hero-track-shift", aberto ? `${Math.min(0, folga)}px` : "0px");
+      // A partir do próprio campo: o Next guarda cópias escondidas da página, e um querySelector solto
+      // poderia achar o hero de uma delas.
+      const hero = textareaRef.current?.closest<HTMLElement>('.home-hero[data-expandido="true"]');
+      if (hero && aberto) root.classList.toggle("keyboard-cramped", hero.scrollHeight > hero.clientHeight + 1);
     }
 
     function aoFocar(event: FocusEvent) {
@@ -129,12 +143,11 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
     document.addEventListener("focusout", update);
     virtualKeyboard?.addEventListener("geometrychange", aoMudarVirtualKeyboard);
 
-    // O track também muda de altura sem o teclado se mexer: o bloco "Conte do seu jeito"
-    // aparecendo e a textarea crescendo de linha. Sem remedir aqui, o deslocamento fica
-    // velho e a margem até o teclado encolhe (ou some).
-    const trackObservado = document.querySelector(".hero-focus-track");
+    // O campo também muda de altura sem o teclado se mexer: o bloco "Conte do seu jeito" aparecendo e a
+    // textarea crescendo de linha. Sem remedir aqui, a decisão de esconder badge e título fica velha.
+    const heroObservado = textareaRef.current?.closest(".home-hero");
     const observer = new ResizeObserver(update);
-    if (trackObservado) observer.observe(trackObservado);
+    if (heroObservado) observer.observe(heroObservado);
 
     return () => {
       observer.disconnect();
@@ -145,8 +158,9 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
       document.removeEventListener("focusin", aoFocar);
       document.removeEventListener("focusout", update);
       virtualKeyboard?.removeEventListener("geometrychange", aoMudarVirtualKeyboard);
-      root.style.setProperty("--hero-track-shift", "0px");
-      root.classList.remove("keyboard-open", "keyboard-cramped", "keyboard-resized");
+      root.style.removeProperty("--teclado-topo");
+      root.style.removeProperty("--teclado-linha");
+      root.classList.remove("keyboard-open", "keyboard-cramped");
       delete root.dataset.keyboardMode;
     };
   }, []);
@@ -228,7 +242,9 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
 
   return (
     <form className={`message-component message-component-${state}`} onSubmit={onSubmit} onClick={() => { setFocused(true); textareaRef.current?.focus(); }}>
-      {state === "default" && (
+      {/* Placeholder e "Conte do seu jeito" ficam montados e só esmaecem ou recolhem (message-input.css):
+          assim o campo vai virando o outro estado, em vez de um bloco sumir e outro aparecer. */}
+      {value.length === 0 && (
         <div className="message-component-placeholder label-medium-regular" aria-hidden="true">
           <span className="message-component-caret" />
           <span>Conte sobre seu momento</span>
@@ -268,13 +284,15 @@ export function MessageInput({ value, onChange, onSubmit }: MessageInputProps) {
           )}
         </div>
       </div>
-      {(state === "focused" || state === "filed") && (
-        <div className="message-component-meta">
-          <span className="label-x-small">Conte do seu jeito</span>
-          {/* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */}
-          <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
+      <div className="message-component-gaveta" inert={state === "default"}>
+        <div className="message-component-gaveta-conteudo">
+          <div className="message-component-meta">
+            <span className="label-x-small">Conte do seu jeito</span>
+            {/* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */}
+            <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
+          </div>
         </div>
-      )}
+      </div>
     </form>
   );
 }

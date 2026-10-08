@@ -15,7 +15,18 @@ import { track } from "@/lib/mixpanel";
 import { carregarImagem } from "@/lib/carregar-imagem";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
-export function CardProfissionais({ profissionais, isLoading = false }: { profissionais: ProfissionalCadastrado[]; isLoading?: boolean }) {
+// `variante="home"` é o card-profissionais da home (Figma 1434:302136): sem a descrição, com a faixa de
+// preço numa caixa cinza e sem o botão de serviços públicos, que só faz sentido no resultado.
+export function CardProfissionais({
+  profissionais,
+  isLoading = false,
+  variante = "resultado",
+}: {
+  profissionais: ProfissionalCadastrado[];
+  isLoading?: boolean;
+  variante?: "resultado" | "home";
+}) {
+  const naHome = variante === "home";
   const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>("psicologo");
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
   const urlsDasFotos = profissionais.map((profissional) => profissional.foto_url || URL_AVATAR_PADRAO);
@@ -40,11 +51,11 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
 
   if (isLoading || !fotosProntas) {
     return (
-      <ContainerConteudo id="figma-section-professionals">
+      <ContainerConteudo id="figma-section-professionals" className={naHome ? "home-profissionais" : undefined}>
         <div className="figma-skeleton-description" aria-hidden="true"><span className="figma-skeleton figma-skeleton-heading" /><span className="figma-skeleton" /><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
         <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
         <CardProfissionalSkeleton />
-        <span className="figma-skeleton figma-skeleton-public-link" aria-hidden="true" />
+        {!naHome && <span className="figma-skeleton figma-skeleton-public-link" aria-hidden="true" />}
       </ContainerConteudo>
     );
   }
@@ -61,14 +72,14 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
   }
 
   return (
-    <ContainerConteudo id="figma-section-professionals">
+    <ContainerConteudo id="figma-section-professionals" className={naHome ? "home-profissionais" : undefined}>
       <CardHeader
         title="Profissionais que podem ajudar"
-        description="É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"
+        description={naHome ? undefined : "É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"}
       />
       <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
       {especialidadeSelecionada === "psicologo" && (
-        <div className="figma-session-price">
+        <div className="figma-session-price" data-variante={naHome ? "caixa" : undefined}>
           <Badge color="secondary">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></Badge>
           <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
         </div>
@@ -84,12 +95,14 @@ export function CardProfissionais({ profissionais, isLoading = false }: { profis
           ))}
         </ActionRow>
       )}
-      <div style={{ alignSelf: "center" }}>
-        <BotaoServicosPublicos onClick={() => {
-          track("ver_servicos_publicos_clicado");
-          rolarAteSecao("figma-section-public-services");
-        }} />
-      </div>
+      {!naHome && (
+        <div style={{ alignSelf: "center" }}>
+          <BotaoServicosPublicos onClick={() => {
+            track("ver_servicos_publicos_clicado");
+            rolarAteSecao("figma-section-public-services");
+          }} />
+        </div>
+      )}
     </ContainerConteudo>
   );
 }

@@ -1,9 +1,10 @@
 "use client";
 
 import { MouseEvent } from "react";
-import { IconeCaminho, IconeSetaCard } from "@/components/icons";
+import { IconeCaminho } from "@/components/icons";
 
-// Figma: "card_header" dentro de "card home".
+// Figma: "card-background" com o "card-header" de caminho dentro (home, "Você pode começar por aqui").
+// O card inteiro é o clique; "Buscar apoio" é só o rótulo do botão do Figma, não um segundo link.
 type CardHomeHeaderProps = {
   indice: number;
   titulo: string;
@@ -19,12 +20,14 @@ export function CardHomeHeader({ indice, titulo, descricao, onSelect }: CardHome
 
   return (
     <a href="/conversa" className="pathway-card" onClick={handleClick}>
-      <IconeCaminho indice={indice} className="pathway-icon" />
-      <span>
-        <strong>{titulo}</strong>
-        <small>{descricao}</small>
+      <span className="pathway-card-topo">
+        <IconeCaminho indice={indice} className="pathway-icon" />
+        <span className="pathway-card-texto">
+          <strong>{titulo}</strong>
+          <small>{descricao}</small>
+        </span>
       </span>
-      <IconeSetaCard className="pathway-arrow" />
+      <span className="pathway-card-acao">Buscar apoio</span>
     </a>
   );
 }

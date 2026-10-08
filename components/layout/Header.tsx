@@ -1,6 +1,6 @@
 "use client";
 
-import { IconeVoltar, LogoMargem, LogoMargemIcone } from "@/components/icons";
+import { IconeFecharHeader, IconeVoltar, LogoMargem, LogoMargemIcone } from "@/components/icons";
 import { BotaoMenu } from "@/components/ui/BotaoMenu";
 
 // Figma: página Header, componente `header`.
@@ -10,7 +10,7 @@ import { BotaoMenu } from "@/components/ui/BotaoMenu";
 // o fundo e se o logo leva para algum lugar.
 //
 // A classe .app-header é lida pelo MessageInput para medir o teto do hero quando o teclado abre.
-// O fundo da home vem de `.app-shell > .app-header`, porque lá ele fica sobre o hero.
+// Na home ele fica transparente sobre o hero verde (.home-hero .app-header, em home.css).
 
 type HeaderProps = {
   onOpenMenu: () => void;
@@ -21,9 +21,11 @@ type HeaderProps = {
   // tablet): seta à esquerda, logo no centro, menu à direita. No mobile o logo é só o símbolo
   // (logo, Complete?=False); a partir do tablet é o completo. Sem ele, o header é o de sempre.
   onVoltar?: () => void;
+  // Quando vem, o X fica no lugar do menu (Figma: header da home com o campo aberto em tela cheia).
+  onFechar?: () => void;
 };
 
-export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar }: HeaderProps) {
+export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar }: HeaderProps) {
   const logo = onVoltar ? (
     <>
       <LogoMargem className="app-logo app-logo-completo" />
@@ -47,7 +49,15 @@ export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar }: Header
       ) : (
         logo
       )}
-      <BotaoMenu onClick={onOpenMenu} />
+      {onFechar ? (
+        // Sem o onMouseDown, o toque tira o foco do campo antes do clique: o teclado começa a fechar, o
+        // campo cai pro pé da tela e só então o fechamento anima. Quem tira o foco é o próprio onFechar.
+        <button className="menu-button" type="button" aria-label="Fechar" onClick={onFechar} onMouseDown={(event) => event.preventDefault()}>
+          <IconeFecharHeader />
+        </button>
+      ) : (
+        <BotaoMenu onClick={onOpenMenu} />
+      )}
     </header>
   );
 }

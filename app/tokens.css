@@ -331,4 +331,15 @@
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1088px;
+
+  /* Força da cor da borda hairline. No celular (2x, 3x) os 0.5px existem de verdade; num monitor 1x
+     o navegador arredonda pra 1px com a cor cheia, o dobro da tinta. Lá a cor cai pela metade, que é
+     como o Figma desenha 0.5px numa tela 1x. Usar com color-mix na cor da borda. */
+  --border-hairline-forca: 100%;
+}
+
+@media (max-resolution: 1.5dppx) {
+  :root {
+    --border-hairline-forca: 50%;
+  }
 }
