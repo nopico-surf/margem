@@ -43,15 +43,13 @@ a {
   cursor: pointer;
 }
 
-/* O realce que o Chrome do Android pinta no toque. O padrão do navegador é um azul que não é
-   nosso, então vira token. Onde o componente já tem estado próprio, como no `.btn`, ele é
-   desligado lá e essa regra não vale. */
+/* Sem o realce que o Chrome do Android pinta no toque. O `:active` do componente já faz esse papel. */
 button,
 a,
 label,
 summary,
 [role="button"] {
-  -webkit-tap-highlight-color: var(--colors-alpha-32);
+  -webkit-tap-highlight-color: transparent;
 }
 
 button:disabled {
