@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
 import { fotoPequena } from "@/lib/foto-pequena";
+import { rotuloAnosDeExperiencia } from "@/lib/anos-experiencia";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -84,7 +85,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
             </strong>
             <span>{especialidadeLabel[profissional.especialidade]}</span>
           </div>
-          <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{profissional.anos_experiencia != null && `${profissional.anos_experiencia} ${profissional.anos_experiencia === 1 ? "ano" : "anos"} de experiência`}</small>
+          <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia)}</small>
         </div>
       </div>
       {profissional.tags.length > 0 && (
