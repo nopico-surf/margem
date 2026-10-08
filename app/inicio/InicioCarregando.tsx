@@ -26,7 +26,7 @@ export function InicioCarregando() {
 
       <div className="home-conteudo">
         <div className="home-osso-faixa" aria-hidden="true">
-          {[0, 1].map((i) => (
+          {[0, 1, 2, 3].map((i) => (
             <span className="home-osso-chip" key={i}>
               <span className="figma-skeleton home-osso-chip-numero" />
               <span className="home-osso-chip-texto">
@@ -41,7 +41,7 @@ export function InicioCarregando() {
           <div className="pathways" aria-hidden="true">
             <span className="figma-skeleton home-osso-secao-titulo" />
             <div className="pathway-list">
-              {[0, 1].map((i) => (
+              {[0, 1, 2, 3, 4, 5].map((i) => (
                 <span className="pathway-card home-osso-caminho" key={i}>
                   <span className="figma-skeleton home-osso-caminho-icone" />
                   <span className="figma-skeleton home-osso-caminho-titulo" />

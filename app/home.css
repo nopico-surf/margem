@@ -1078,6 +1078,7 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
 }
 
 .home-profissionais .figma-skeleton-professional {
+  flex: 0 0 auto;
   width: 17.5rem;
   min-height: 19.25rem; /* 308 */
 }
