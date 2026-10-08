@@ -19,6 +19,8 @@ type ButtonProps = {
   // Canto 999 em vez de 12. No Figma é a propriedade `radius-full`.
   redondo?: boolean;
   larguraTotal?: boolean;
+  // Figma: `padding=false`. 2 de padding vertical e nenhum lateral, em qualquer tamanho.
+  semPadding?: boolean;
   // Vira <a>. Serve para as ações de recurso, que são link de verdade.
   href?: string;
   alvoExterno?: boolean;
@@ -35,6 +37,7 @@ export function Button({
   tamanho = "small",
   redondo = false,
   larguraTotal = false,
+  semPadding = false,
   href,
   alvoExterno = false,
   disabled = false,
@@ -49,7 +52,8 @@ export function Button({
     "data-tamanho": tamanho,
     "data-redondo": String(redondo),
     "data-largura": larguraTotal ? "total" : "conteudo",
-    ...(carregando ? { "data-carregando": "true" } : {}),
+    ...(semPadding ? { "data-sem-padding": "true" } : {}),
+    ...(carregando ?{ "data-carregando": "true" } : {}),
     ...resto,
   };
 

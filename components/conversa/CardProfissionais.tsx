@@ -7,7 +7,7 @@ import { CardHeader } from "./CardHeader";
 import { CardProfissionaisCompleto } from "./CardProfissionaisCompleto";
 import { CardProfissionalSkeleton } from "./CardProfissionalSkeleton";
 import { FiltroEspecialidade, type Especialidade } from "./FiltroEspecialidade";
-import { Badge } from "@/components/ui/Badge";
+import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoServicosPublicos } from "@/components/ui/BotaoServicosPublicos";
 import { rolarAteSecao } from "@/components/ui/SectionJump";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
@@ -79,10 +79,7 @@ export function CardProfissionais({
       />
       <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
       {especialidadeSelecionada === "psicologo" && (
-        <div className="figma-session-price" data-variante={naHome ? "caixa" : undefined}>
-          <Badge color="secondary">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></Badge>
-          <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
-        </div>
+        <ValorSessaoPsicologos />
       )}
       {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />

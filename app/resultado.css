@@ -141,28 +141,38 @@
   gap:var(--spacing-6);
 }
 
-.figma-session-price {
+/* Figma: valor sessao psicologos (1438:341815). Único em todas as telas: caixa cinza, coluna no mobile e
+   linha no desktop. */
+.valor-sessao {
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   gap:var(--spacing-4);
   width:100%;
+  padding:var(--spacing-14) var(--spacing-10);
+  border:var(--border-width-hairline) solid color-mix(in srgb, var(--colors-alpha-8) var(--border-hairline-forca), transparent);
+  border-radius:var(--radius-xl);
+  background:var(--colors-neutral-100);
 }
 
-@media(min-width:1088px) {
-  .figma-session-price {
-    flex-direction:row;
-    flex-wrap:wrap;
-    align-items:baseline;
-    gap:var(--spacing-4) var(--spacing-8);
-  }
-}
-
-.figma-session-price-text {
+.valor-sessao-texto {
   margin:0;
-  font-size:var(--font-size-sm);
-  line-height:var(--line-height-xl);
-  color:var(--colors-alpha-88);
+  padding:0 var(--spacing-10);
+  font-size:var(--font-size-xs);
+  font-weight:var(--font-weight-bold);
+  line-height:var(--line-height-lg);
+  color:var(--colors-alpha-64);
+}
+
+@media(min-width:48em) {
+  .valor-sessao {
+    flex-direction:row;
+    align-items:center;
+  }
+
+  .valor-sessao-texto {
+    padding:0;
+  }
 }
 
 .card-padrao {

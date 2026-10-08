@@ -71,6 +71,11 @@
   line-height: var(--line-height-xl);
 }
 
+/* `padding=false` no Figma: 2 em cima e embaixo, nada nos lados, em todos os tamanhos. */
+.btn[data-sem-padding="true"] {
+  padding: var(--spacing-2) 0;
+}
+
 /* No Figma o ícone do botão medium é 20 (control-icon-md); nos menores continua 16. */
 .btn[data-tamanho="medium"] img,
 .btn[data-tamanho="medium"] svg {

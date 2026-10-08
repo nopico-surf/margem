@@ -211,7 +211,7 @@ export function InicioCliente({ profissionais }: { profissionais: ProfissionalCa
                     18 anos, conversar com seus responsáveis pode ajudar
                   </p>
                 </div>
-                <Button variante="transparent" tamanho="x-small" className="home-importante-dados" onClick={() => verDados("importante")}>
+                <Button variante="transparent" tamanho="x-small" semPadding className="home-importante-dados" onClick={() => verDados("importante")}>
                   Ver como a gente cuida dos seus dados
                 </Button>
               </div>

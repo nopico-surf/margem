@@ -9,7 +9,7 @@ import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardFormacoes } from "@/components/conversa/CardFormacoes";
 import { especialidadeLabel, hrefWhatsappProfissional, registroLabel } from "@/components/conversa/CardProfissionaisCompleto";
 import { Avatar } from "@/components/ui/Avatar";
-import { Badge } from "@/components/ui/Badge";
+import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -174,10 +174,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
             </div>
 
             {profissional.especialidade === "psicologo" && (
-              <div className="figma-session-price">
-                <Badge color="secondary">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></Badge>
-                <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
-              </div>
+              <ValorSessaoPsicologos />
             )}
 
             {profissional.tags.length > 0 && (

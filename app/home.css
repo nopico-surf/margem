@@ -516,43 +516,28 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   color: var(--colors-alpha-88);
 }
 
-/* Figma: "valor sessao psicologos" (1438:341815), a faixa de preço numa caixa cinza. */
-.figma-session-price[data-variante="caixa"] {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--spacing-4);
-  padding: var(--spacing-14) var(--spacing-10);
-  border: var(--border-width-hairline) solid color-mix(in srgb, var(--colors-alpha-8) var(--border-hairline-forca), transparent);
-  border-radius: var(--radius-xl);
-  background: var(--colors-neutral-100);
-}
-
-.figma-session-price[data-variante="caixa"] .figma-session-price-text {
-  padding: 0 var(--spacing-10);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-lg);
-  color: var(--colors-alpha-64);
-}
-
 @media (min-width: 48em) {
   .home-profissionais .figma-section-heading h2 {
     font-size: var(--font-size-2xl);
     line-height: var(--line-height-4xl);
   }
 
-  .figma-session-price[data-variante="caixa"] {
-    flex-direction: row;
-    align-items: center;
+  /* No Figma os cards crescem com a tela: ~300 em 1080, ~388 em 1920 e 2800. */
+  .home-profissionais .figma-professionals-row {
+    gap: var(--spacing-24);
   }
 
-  .figma-session-price[data-variante="caixa"] .figma-session-price-text {
-    padding: 0;
-  }
-
-  /* No Figma os cards crescem com a tela: ~300 em 1080, ~390 em 1920. */
   .home-profissionais .figma-professionals-row > .figma-professional-card {
-    width: clamp(17.5rem, 20vw, 27.25rem);
+    width: clamp(17.5rem, 20vw, 24.25rem);
+  }
+}
+
+/* A fileira do resultado usa 100vw, que inclui a barra de rolagem e a puxa uns 7px pra esquerda do
+   container centralizado. Na home ela se ancora no container, como no mobile. */
+@media (min-width: 1088px) {
+  .home-profissionais .figma-professionals-row {
+    width: calc(100% + 2 * var(--pagina-padding-lateral));
+    margin-left: calc(-1 * var(--pagina-padding-lateral));
   }
 }
 
@@ -835,11 +820,6 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   color: var(--colors-alpha-80);
 }
 
-/* O Figma tira o padding lateral do botão e usa 2 de padding vertical. */
-.home-importante .home-importante-dados.btn {
-  padding: var(--spacing-2) 0;
-}
-
 /* Desktop: os três lado a lado. 368 de altura em 1080 e 1920, 483 em 2800. No Figma os três dividem
    a linha por igual e o padding do Importante soma por fora: as duas primeiras colunas valem um terço
    do que sobra depois dos gaps e dos 48 de padding, e a terceira fica com o resto.
@@ -900,8 +880,9 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
     line-height: var(--line-height-3xl);
   }
 
+  /* Figma: o CTA é x-small no mobile e small no desktop. */
   .home-importante .home-importante-dados.btn {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
   }
 }
 
