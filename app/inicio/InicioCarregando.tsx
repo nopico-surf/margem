@@ -55,6 +55,16 @@ export function InicioCarregando() {
 
           <CardProfissionais profissionais={[]} isLoading variante="home" />
 
+          <div className="home-osso-cannabis" aria-hidden="true">
+            <div className="home-osso-cannabis-copy">
+              <span className="figma-skeleton home-osso-caminho-titulo" />
+              <span className="figma-skeleton" />
+              <span className="figma-skeleton" />
+              <span className="figma-skeleton home-osso-cannabis-botao" />
+            </div>
+            <span className="figma-skeleton home-osso-cannabis-foto" />
+          </div>
+
           <div className="home-publico-secao" aria-hidden="true">
             <span className="figma-skeleton home-osso-secao-titulo" />
             <div className="home-publico">

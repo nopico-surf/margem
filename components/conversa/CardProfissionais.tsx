@@ -52,8 +52,13 @@ export function CardProfissionais({
   if (isLoading || !fotosProntas) {
     return (
       <ContainerConteudo id="figma-section-professionals" className={naHome ? "home-profissionais" : undefined}>
-        <div className="figma-skeleton-description" aria-hidden="true"><span className="figma-skeleton figma-skeleton-heading" /><span className="figma-skeleton" /><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
+        {naHome ? (
+          <span className="figma-skeleton home-osso-profissionais-titulo" aria-hidden="true" />
+        ) : (
+          <div className="figma-skeleton-description" aria-hidden="true"><span className="figma-skeleton figma-skeleton-heading" /><span className="figma-skeleton" /><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
+        )}
         <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
+        {naHome && <span className="figma-skeleton home-osso-valor" aria-hidden="true" />}
         <CardProfissionalSkeleton />
         {!naHome && <span className="figma-skeleton figma-skeleton-public-link" aria-hidden="true" />}
       </ContainerConteudo>
