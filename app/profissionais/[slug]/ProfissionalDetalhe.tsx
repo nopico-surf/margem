@@ -11,6 +11,7 @@ import { especialidadeLabel, hrefWhatsappProfissional, registroLabel } from "@/c
 import { Avatar } from "@/components/ui/Avatar";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
+import { rotuloAnosDeExperiencia } from "@/lib/anos-experiencia";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
@@ -166,10 +167,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
               <p className="profissional-especialidade">{especialidadeLabel[profissional.especialidade]}</p>
               <div className="profissional-registro">
                 <span>{profissional.registro_profissional && `${registroLabel[profissional.especialidade]}: ${profissional.registro_profissional}`}</span>
-                <span>
-                  {profissional.anos_experiencia != null &&
-                    `${profissional.anos_experiencia} ${profissional.anos_experiencia === 1 ? "ano" : "anos"} de experiência`}
-                </span>
+                <span>{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia)}</span>
               </div>
             </div>
 
