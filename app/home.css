@@ -277,6 +277,14 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   gap: var(--spacing-24);
 }
 
+/* No mobile o vão entre os itens é 16; o do trilho (entre as duas cópias) acompanha pro loop emendar. */
+@media (max-width: 47.99em) {
+  .faixa-trilho,
+  .faixa-fileira {
+    gap: var(--spacing-16);
+  }
+}
+
 /* Tudo cabe: não anda, some a cópia e a fileira fica no centro. */
 .faixa-como-funciona[data-cabe="true"] .faixa-trilho {
   justify-content: center;
@@ -814,8 +822,8 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
 
 .home-importante p {
   margin: 0;
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-xl);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
   color: var(--colors-alpha-80);
 }
 
@@ -877,6 +885,11 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   .home-importante h3 {
     font-size: var(--font-size-xl);
     line-height: var(--line-height-3xl);
+  }
+
+  .home-importante p {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-xl);
   }
 
   /* Figma: o CTA é x-small no mobile e small no desktop. */
