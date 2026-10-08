@@ -141,8 +141,8 @@
   gap:var(--spacing-6);
 }
 
-/* Figma: valor sessao psicologos (1438:341815). Único em todas as telas: caixa cinza, coluna no mobile e
-   linha no desktop. */
+/* Figma: valor sessao psicologos (727:14997). Único em todas as telas: caixa cinza em coluna, pílula
+   em cima e texto embaixo, alinhados. Sem variação de desktop. */
 .valor-sessao {
   display:flex;
   flex-direction:column;
@@ -152,7 +152,12 @@
   padding:var(--spacing-14) var(--spacing-10);
   border:var(--border-width-hairline) solid color-mix(in srgb, var(--colors-alpha-8) var(--border-hairline-forca), transparent);
   border-radius:var(--radius-xl);
-  background:var(--colors-neutral-100);
+  background:var(--colors-alpha-4);
+}
+
+.valor-sessao > :first-child {
+  flex-shrink:0;
+  white-space:nowrap;
 }
 
 .valor-sessao-texto {
@@ -162,17 +167,6 @@
   font-weight:var(--font-weight-bold);
   line-height:var(--line-height-lg);
   color:var(--colors-alpha-64);
-}
-
-@media(min-width:48em) {
-  .valor-sessao {
-    flex-direction:row;
-    align-items:center;
-  }
-
-  .valor-sessao-texto {
-    padding:0;
-  }
 }
 
 .card-padrao {

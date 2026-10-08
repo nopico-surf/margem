@@ -131,6 +131,7 @@
 
   /* Cor: transparência sobre neutral-950. alpha-0 é o único fora do padrão: é branco a 80%. */
   --colors-alpha-0: rgb(255 255 255 / 80%);
+  --colors-alpha-4: rgb(23 27 24 / 4%);
   --colors-alpha-8: rgb(23 27 24 / 8%);
   --colors-alpha-16: rgb(23 27 24 / 16%);
   --colors-alpha-24: rgb(23 27 24 / 24%);
