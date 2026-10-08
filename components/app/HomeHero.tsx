@@ -215,7 +215,8 @@ export function HomeHero({ text, onChangeText, onSubmit, onOpenMenu, onExpandir,
             <div className="home-hero-texto" ref={textoRef}>
               <IdentityBadge />
               <h1 id="home-title">
-                Conexão, apoio e escuta,<br className="home-hero-quebra" /> sem julgamentos
+                <span className="home-hero-titulo-trecho">Conexão, apoio e escuta,</span>{" "}
+                <span className="home-hero-titulo-trecho">sem julgamentos</span>
               </h1>
             </div>
             <div className="home-hero-campo" ref={campoRef}>
