@@ -8,7 +8,7 @@ import { LINK_WHATSAPP_CANNABIS } from "@/lib/contatos";
 import { track } from "@/lib/mixpanel";
 
 // Figma: "Frame 212" na home (Experiência do produto, 1431:87344). Os passos de como a Margem
-// funciona, um aviso "Ou navegue diretamente por aqui" e dois atalhos verdes.
+// funciona, um aviso "Se preferir, navegue por aqui" e dois atalhos verdes.
 //
 // Anotação do Figma: anda devagar da direita para a esquerda, e a pessoa pode arrastar. Para andar
 // sem fim, a fileira aparece duas vezes e a rolagem volta meia volta quando chega na segunda cópia.
@@ -89,7 +89,7 @@ function Fileira({ copia }: { copia: boolean }) {
         </div>
       ))}
       <div className="faixa-aviso">
-        <span>Ou navegue diretamente por aqui</span>
+        <span>Se preferir, navegue por aqui</span>
         <GlifoExpandLess className="faixa-aviso-seta" color="var(--colors-neutral-400)" />
       </div>
       <Atalho
