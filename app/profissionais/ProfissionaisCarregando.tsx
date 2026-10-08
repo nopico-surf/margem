@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
 import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
-import { Badge } from "@/components/ui/Badge";
+import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 
 // Figma: Experiência do produto, frames 1369:50724 (mobile) e 1369:51516 (desktop). É o shell da
 // /profissionais: tudo o que não depende do Supabase já aparece, e só os cards ficam em skeleton.
@@ -20,10 +20,7 @@ function Filtro({ especialidade }: { especialidade: Especialidade }) {
     <>
       <FiltroEspecialidade selecionada={especialidade} onChange={() => {}} />
       {especialidade === "psicologo" && (
-        <div className="figma-session-price">
-          <Badge color="secondary">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></Badge>
-          <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
-        </div>
+        <ValorSessaoPsicologos />
       )}
     </>
   );

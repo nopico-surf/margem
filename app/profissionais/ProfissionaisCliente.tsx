@@ -10,7 +10,7 @@ import { ContainerConteudo } from "@/components/conversa/ContainerConteudo";
 import { CardProfissionaisCompleto } from "@/components/conversa/CardProfissionaisCompleto";
 import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
 import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
-import { Badge } from "@/components/ui/Badge";
+import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { track } from "@/lib/mixpanel";
 import { carregarImagem } from "@/lib/carregar-imagem";
@@ -91,10 +91,7 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
         <CardHeader as="h1" title="Profissionais que podem ajudar" />
         <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
         {especialidadeSelecionada === "psicologo" && (
-          <div className="figma-session-price">
-            <Badge color="secondary">Sessões de <strong>R$ 60</strong> a <strong>R$ 200</strong></Badge>
-            <p className="figma-session-price-text">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
-          </div>
+          <ValorSessaoPsicologos />
         )}
       </div>
 

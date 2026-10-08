@@ -76,6 +76,7 @@ O erro que o código cometeu foi nomear ícone por **onde ele aparece** em vez d
 | Logo | `logo` | `color` = white, green, neutral, neon |
 | Input text | `input-text` | `state` = default, error, filled, focus, hover, success, texting; `size` = small, medium |
 | Badge | `badge` | `color` = secondary, primary, neutral |
+| Valor sessão psicólogos | `valor sessao psicologos` (1438:341815) | Sem variante. `ValorSessaoPsicologos` em `components/ui`, usado na home, `/conversa`, `/profissionais` e `/profissionais/[slug]`. Coluna no mobile, linha no desktop |
 | Button core | `button` | `function`, `size`, `state`, `variant`, `mode`, `radius-full`, `padding`. **246 variantes** |
 | Button select | `button-select` | `state` = selected, default |
 | Specific buttons | 12 botões prontos: `button-telefone`, `button-whatsapp`, `button-grupos-online`, `button-grupos-presenciais`, `button-site`, `button-saiba-mais`, `button-email`, `button-perto-de-mim`, `button-telegram`, `button-libras`, `button-ligar-agora`, `button-chat` | |
@@ -431,7 +432,7 @@ A linha que sai do passo 3 e chega em cada card não é componente: são pseudo-
 
 ### Card "Importante"
 
-Não é componente: é um bloco (`.bv-importante`) com título, o aviso de menores de 18 anos e o `Button` transparent x-small (sem padding lateral, 2 de padding vertical). Fica depois do "Como funciona", igual no mobile e no desktop (card group do Figma, 1329:6596 e 1329:6568). Antes o aviso e o link ficavam dentro do "Como funciona".
+Não é componente: é um bloco (`.bv-importante`) com título, o aviso de menores de 18 anos e o `Button` transparent com `semPadding` (Figma `padding=false`: sem padding lateral, 2 de padding vertical), x-small no mobile e small no desktop. Fica depois do "Como funciona", igual no mobile e no desktop (card group do Figma, 1329:6596 e 1329:6568). Antes o aviso e o link ficavam dentro do "Como funciona".
 
 ### Ícones novos
 
