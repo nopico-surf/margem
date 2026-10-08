@@ -1,337 +1,1052 @@
-/* Tela inicial: hero, campo de mensagem e cards de caminho.
+/* Home (/inicio), a entrada da Margem desde 07/10/2026 (juntou a /bem-vindo e a /inicio antiga).
+   Figma: Experiência do produto, seção "Fluxo - Para recebimento dinâmico de dados" (1365:9775),
+   frames de 360, 1080, 1920 e 2800.
 
-   Junta quatro arquivos que antes se corrigiam em cadeia, na MESMA ordem em que eram importados,
-   entao a cascata e identica a de antes. Os blocos abaixo marcam de onde cada pedaco veio.
+   Mobile primeiro. A partir de 48em (768 pixels) o hero ganha a foto ao lado e as seções de baixo
+   deitam. A partir de 82em (1312 pixels) o título cabe numa linha só. A partir de 90em (1440 pixels)
+   o selo do bloco de cannabis vai para o lado do texto, como no frame de 1920.
 
-   Em 18/09/2026, .home-hero era redefinido quatro vezes aqui e .app-shell tres. Consolidado nesta
-   sessao: cada um agora e uma unica declaracao, com o valor que ja vencia a cascata antes. Conferido
-   visualmente antes e depois na tela /inicio. */
+   Ao contrário do resultado, o conteúdo daqui não tem largura máxima: no Figma ele ocupa a tela
+   toda até 2800, sempre com a margem lateral da página.
 
-/* ===== vinha de flow.css | base ===== */
+   Valores em px ou rem sem token vêm direto do Figma e estão comentados onde aparecem.
+
+   O campo de mensagem (.message-component) mora em message-input.css. */
+
+.home-pagina {
+  min-height: 100svh;
+  background: var(--colors-neutral-50);
+  color: var(--colors-neutral-950);
+}
+
+/* Título de seção: "Você pode começar por aqui" e "Para quem é a Margem". */
+.home-secao-titulo {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-3xl);
+  color: var(--colors-alpha-88);
+  text-box: trim-both cap alphabetic;
+}
+
+@media (min-width: 48em) {
+  .home-secao-titulo {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-4xl);
+  }
+}
+
+/* ===== Hero ===== */
+
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  border-bottom-right-radius: var(--radius-2xl);
+  background: var(--colors-brand-primary-100);
+  overflow: clip;
+}
+
+.home-hero .app-header {
+  background: transparent;
+}
+
+.home-hero-corpo {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-32) var(--pagina-padding-lateral) var(--spacing-40);
+}
+
+/* A foto só existe do tablet em diante. */
+.home-hero-foto {
+  display: none;
+  position: relative;
+}
+
+.home-hero-foto img {
+  object-fit: cover;
+  object-position: center 80%;
+}
+
+.home-hero-coluna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+}
+
+.home-hero-texto {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-14);
+}
+
 .home-hero h1 {
-  margin:0;
-  font-family:var(--font-urbanist),sans-serif;
-  font-size:var(--font-size-3xl);
-  font-weight:500;
-  line-height:var(--line-height-5xl);
-  text-align:center;
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-4xl);
+  color: var(--colors-alpha-88);
+  text-box: trim-both cap alphabetic;
 }
 
-.message-input {
-  display:flex;
-  flex-direction:column;
-  gap:var(--spacing-10);
-  width:100%;
-  padding:var(--spacing-8) var(--spacing-10);
-  border:var(--border-width-hairline) solid var(--colors-status-success-200);
-  border-radius:var(--radius-xl);
-  background:var(--colors-brand-primary-50);
-  box-shadow: var(--shadow-glow);
+@media (min-width: 48em) {
+  .home-hero-corpo {
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--spacing-40);
+    padding: var(--spacing-16) var(--pagina-padding-lateral) var(--spacing-32);
+  }
+
+  /* 908 por 577 é a foto do frame de 1920. */
+  .home-hero-foto {
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    aspect-ratio: 908 / 577;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+  }
+
+  /* Anotação do Figma: o campo acompanha onde o título termina e nunca passa dele. A coluna da grade
+     tem a largura do título (max-content), e o campo estica até ela. */
+  .home-hero-coluna {
+    display: grid;
+    flex: 1 1 0;
+    min-width: 0;
+    grid-template-columns: minmax(0, max-content);
+    align-content: center;
+    row-gap: var(--spacing-24);
+  }
+
+  .home-hero h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-5xl);
+  }
 }
 
-.message-input textarea {
-  width:100%;
-  min-height:44px;
-  resize:none;
-  border:0;
-  outline:0;
-  background:transparent;
-  color:var(--colors-neutral-950);
-  font-size:var(--font-size-sm);
-  line-height:var(--line-height-xl);
+/* Desktop: hero, faixa "Como funciona" e cards cabem juntos na primeira tela. A foto deixa de seguir
+   só a proporção e baixa até caber; o cover corta a imagem. --home-dobra-ocupada é medido em
+   InicioCliente (tudo do hero que não é foto, mais faixa, título e cards). A largura da foto é metade
+   do corpo do hero menos o gap (as duas colunas são flex 1 1 0), daí o cqi. 15rem é o mínimo: numa
+   janela muito baixa a foto para aí e os cards passam da dobra. */
+@media (min-width: 1088px) {
+  .home-hero-foto {
+    aspect-ratio: auto;
+    height: max(
+      15rem,
+      min(
+        calc((100cqi - var(--spacing-40)) / 2 * 577 / 908),
+        calc(100svh - var(--home-dobra-ocupada, 0px) - var(--spacing-24))
+      )
+    );
+  }
 }
 
-.message-input textarea::placeholder {
-  color:var(--colors-alpha-56);
+/* O título cabe numa linha quando a coluna de texto passa de ~600 pixels, o que acontece com o corpo do
+   hero a partir de 81.5rem. Container query porque a escala de breakpoints não tem esse degrau. */
+.home-hero-corpo {
+  container-type: inline-size;
 }
 
-.message-meta {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 var(--spacing-8) var(--spacing-8);
-  color:var(--colors-neutral-600);
-  font-size:var(--font-size-xs);
-  font-weight:500;
-  line-height:var(--line-height-md);
+@container (min-width: 81.5rem) {
+  .home-hero-quebra {
+    display: none;
+  }
 }
 
-.message-meta button {
-  padding:var(--spacing-10) var(--spacing-12);
-  border:0;
-  border-radius:var(--radius-lg);
-  background:var(--colors-brand-primary-800);
-  color:var(--colors-neutral-0);
-  font-size:var(--font-size-sm);
-  font-weight:500;
-  line-height:var(--line-height-md);
+/* ===== Hero com o campo aberto em tela cheia =====
+   Fixo, do topo visível até o fim da tela, com o conteúdo parando na linha do teclado (as duas
+   variáveis vêm do MessageInput; sem teclado, a tela toda). Fica abaixo do painel de dados e
+   cookies, que pode subir por cima dele. */
+
+html.home-campo-aberto {
+  overflow: hidden;
 }
 
-.message-meta button:disabled {
-  background:var(--colors-alpha-8);
-  color:var(--colors-alpha-24);
+.home-hero[data-expandido="true"] {
+  position: fixed;
+  top: var(--teclado-topo, var(--spacing-0));
+  right: 0;
+  left: 0;
+  z-index: calc(var(--z-index-panel) - 1);
+  height: 100dvh;
+  /* O verde vai sempre até o fim da tela (o teclado cobre o resto); só o conteúdo para na linha do
+     teclado, assim uma estimativa menor que o teclado real nunca mostra a página por baixo. */
+  padding-bottom: calc(var(--teclado-topo, var(--spacing-0)) + 100dvh - var(--teclado-linha, 100dvh));
+  border-radius: 0;
+  overflow: hidden;
+  /* Quando a reserva provisória do teclado é corrigida pelo valor real, o campo escorrega até o lugar
+     certo em vez de saltar. Só aberto: ao fechar, o HomeHero cuida do movimento. */
+  transition: padding-bottom var(--duration-420) var(--easing-out-expo);
 }
 
-.topics-button {
-  border:0;
-  background:transparent;
-  color:var(--colors-brand-primary-800);
-  font-size:var(--font-size-sm);
-  font-weight:500;
+@media (prefers-reduced-motion: reduce) {
+  .home-hero[data-expandido="true"] {
+    transition: none;
+  }
 }
+
+.home-hero[data-expandido="true"] .home-hero-corpo {
+  flex: 1;
+  min-height: 0;
+  padding: var(--spacing-24) var(--pagina-padding-lateral);
+}
+
+.home-hero[data-expandido="true"] .home-hero-foto {
+  display: none;
+}
+
+/* 50rem são os 800 pixels de largura máxima do frame de 1080 com o campo aberto. */
+.home-hero[data-expandido="true"] .home-hero-coluna {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+/* Tela curta: com o teclado aberto, badge e título saem e fica só o campo. */
+html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
+  display: none;
+}
+
+@media (min-width: 48em) {
+  .home-hero[data-expandido="true"] .home-hero-corpo {
+    padding: var(--spacing-48) var(--pagina-padding-lateral);
+  }
+
+  .home-hero[data-expandido="true"] .home-hero-quebra {
+    display: none;
+  }
+}
+
+/* ===== Conteúdo abaixo do hero ===== */
+
+.home-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  padding-top: var(--spacing-24);
+}
+
+.home-secoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-32);
+  padding: 0 var(--pagina-padding-lateral);
+}
+
+@media (min-width: 48em) {
+  .home-conteudo {
+    gap: var(--spacing-40);
+    padding-top: var(--spacing-40);
+  }
+
+  .home-secoes {
+    gap: var(--spacing-40);
+  }
+}
+
+/* ===== Faixa "Como funciona" ===== */
+
+.faixa-trilho {
+  display: flex;
+  gap: var(--spacing-24);
+  padding: 0 var(--pagina-padding-lateral);
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.faixa-trilho:active {
+  cursor: grabbing;
+}
+
+.faixa-trilho::-webkit-scrollbar {
+  display: none;
+}
+
+.faixa-fileira {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  gap: var(--spacing-24);
+}
+
+/* Tudo cabe: não anda, some a cópia e a fileira fica no centro. */
+.faixa-como-funciona[data-cabe="true"] .faixa-trilho {
+  justify-content: center;
+}
+
+.faixa-como-funciona[data-cabe="true"] .faixa-fileira[aria-hidden="true"] {
+  display: none;
+}
+
+.faixa-item {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-12) var(--spacing-24) var(--spacing-12) var(--spacing-12);
+  border: var(--border-width-hairline) solid;
+  border-radius: var(--radius-full);
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.faixa-passo {
+  border-color: color-mix(in srgb, var(--colors-neutral-200) var(--border-hairline-forca), transparent);
+  background: var(--colors-neutral-100);
+}
+
+.faixa-passo-numero {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: var(--size-32);
+  height: var(--size-32);
+  border-radius: var(--radius-full);
+  background: var(--colors-neutral-400);
+  color: var(--colors-neutral-0);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+}
+
+.faixa-item-texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-6);
+}
+
+.faixa-item-titulo {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-88);
+  text-box: trim-both cap alphabetic;
+}
+
+.faixa-item-descricao {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+  color: var(--colors-alpha-80);
+}
+
+.faixa-atalho {
+  border-color: color-mix(in srgb, var(--colors-status-success-700) var(--border-hairline-forca), transparent);
+  background: var(--colors-status-success-600);
+}
+
+/* 206 pixels: a largura do texto dos atalhos no Figma. */
+.faixa-atalho .faixa-item-texto {
+  width: 12.875rem;
+  white-space: normal;
+}
+
+.faixa-atalho .faixa-item-titulo {
+  color: var(--colors-neutral-0);
+}
+
+.faixa-atalho .faixa-item-descricao {
+  color: var(--colors-brand-primary-50);
+}
+
+.faixa-atalho-icone {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: var(--size-32);
+  height: var(--size-32);
+  border-radius: var(--radius-full);
+  background: var(--colors-brand-primary-400);
+}
+
+/* 96 de largura e o texto em 70, como no Figma. A seta fica sobre a borda da direita, com o fundo
+   da página por trás para cortar a linha. */
+.faixa-aviso {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-96);
+  padding: var(--spacing-6) var(--spacing-8);
+  border: var(--border-width-thin) solid var(--colors-neutral-100);
+  border-radius: var(--radius-md);
+  color: var(--colors-alpha-64);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+}
+
+.faixa-aviso span {
+  width: 4.375rem;
+}
+
+.faixa-aviso-seta {
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * var(--size-8) - var(--border-width-thin));
+  background: var(--colors-neutral-50);
+  transform: translateY(-50%) rotate(90deg);
+}
+
+/* ===== Cards de caminho ("Você pode começar por aqui") ===== */
 
 .pathways {
-  width:100%;
-  max-width: var(--layout-content-max-width-page);
-  margin-left:auto;
-  margin-right:auto;
-  padding:var(--spacing-24) var(--pagina-padding-lateral);
-  box-sizing:border-box;
-  background:var(--colors-neutral-50);
-}
-
-.pathways h2 {
-  margin:0 0 var(--spacing-4);
-  font-family:var(--font-urbanist),sans-serif;
-  font-size:var(--font-size-lg);
-}
-
-.pathways>p {
-  margin:0 0 var(--spacing-16);
-  color:var(--colors-alpha-88);
-  font-size:var(--font-size-sm);
-  line-height:var(--line-height-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
 }
 
 .pathway-list {
-  overflow:hidden;
-  border-radius:var(--radius-xl);
-  background:var(--colors-neutral-0);
+  display: flex;
+  gap: var(--spacing-16);
+  margin: 0 calc(-1 * var(--pagina-padding-lateral));
+  padding: 0 var(--pagina-padding-lateral);
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
 }
 
+.pathway-list:active {
+  cursor: grabbing;
+}
+
+.pathway-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* 280 de largura no Figma. No desktop eles crescem e dividem a linha quando os seis cabem (1920). */
 .pathway-card {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:var(--spacing-8);
-  padding:var(--spacing-14) var(--spacing-16);
-  border-bottom:var(--border-width-thin) solid var(--colors-neutral-50);
-  color:var(--colors-neutral-950);
-  text-decoration:none;
+  display: flex;
+  flex: 0 0 17.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-8);
+  min-width: 0;
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+  color: inherit;
+  text-decoration: none;
 }
 
-.pathway-card span {
-  display:flex;
-  flex-direction:column;
-  gap:var(--spacing-6);
-}
-
-.pathway-card strong {
-  font-family:var(--font-urbanist),sans-serif;
-  font-size:var(--font-size-md);
-}
-
-.pathway-card small {
-  color:var(--colors-alpha-88);
-  font-size:var(--font-size-xs);
-  line-height:var(--line-height-lg);
-}
-
-.pathway-card b {
-  font-size:var(--font-size-2xl);
-  font-weight:400;
-}
-
-
-/* ===== vinha de home-overrides.css | corrigia o flow ===== */
-/* Home frame overrides from Figma node 957:8298. */
-.hero-focus-track {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
-.app-header,
-.hero-focus-track {
-  width:100%;
-  max-width:600px;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-.hero-focus-track {
-  padding:0;
-  box-sizing:border-box;
-}
-
-.hero-input-group {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:var(--spacing-8);
-  width:100%;
-}
-
-.home-hero h1 {
-  margin:0;
-}
-
-.hero-message-group {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:var(--spacing-32);
-  width:100%;
-  margin-top:var(--spacing-40);
-}
-
-.hero-message-group .message-component {
-  width:100%;
-}
-
-.topics-button {
-  display:inline-flex;
-  align-items:center;
-  gap:var(--spacing-6);
-  padding:var(--spacing-10) var(--spacing-12);
-  margin-top:var(--spacing-32);
-}
-
-.topics-button img,
-.topics-button svg {
-  width:var(--size-16);
-  height:var(--size-16);
-}
-
-.topics-button {
-  max-width:600px;
-}
-
-.app-header {
-  width:100%;
-  max-width:none;
-}
-
-.hero-focus-track,
-.topics-button {
-  max-width: var(--layout-content-max-width-page);
-}
-
-.pathways {
-  background:var(--colors-neutral-50);
-}
-
-.pathway-card {
-  min-height:82px;
-  justify-content:flex-start;
-  gap:var(--spacing-16);
-}
-
-.pathway-card>span {
-  flex:1;
-  min-width:0;
-  gap:var(--spacing-4);
+.pathway-card-topo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  width: 100%;
 }
 
 .pathway-icon {
-  flex:0 0 var(--size-20);
-  width:var(--size-20);
-  height:var(--size-20);
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
 }
 
-.pathway-emoji {
-  display:grid;
-  flex:0 0 var(--size-20);
-  width:var(--size-20);
-  height:var(--size-20);
-  place-items:center;
-  font-size:var(--font-size-lg);
-  line-height:var(--line-height-xl);
+.pathway-card-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  min-width: 0;
 }
 
-.pathway-card .pathway-arrow {
-  flex:0 0 var(--size-16);
-  width:var(--size-16);
-  height:var(--size-16);
-  margin-left:auto;
+.pathway-card strong {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-88);
+  text-box: trim-both cap alphabetic;
 }
 
-@media(max-width:639.98px) {
-  html.keyboard-open .hero-focus-track {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    /* .home-hero centraliza os filhos, então o track encolheria pro conteúdo ao virar flex item. */
-    width:100%;
-    transform:translateY(var(--hero-track-shift,var(--spacing-0)));
-  }
-  /* Webview que encolhe a janela inteira: sem isso o hero (em svh) encolhe e tudo sobe junto. */
-  html.keyboard-resized .home-hero {
-    min-height:calc(var(--viewport-sem-teclado) - 72px)!important;
-  }
-  /* Tela curta: nao cabe header + badge + titulo + campo acima do teclado. */
-  html.keyboard-cramped .hero-input-group {
-    display:none;
-  }
-  html.keyboard-cramped .hero-message-group {
-    margin-top:0;
-  }
+.pathway-card small {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+  color: var(--colors-alpha-80);
 }
 
-@media(min-width:640px) {
-  .home-hero h1 br {
-    display:none;
+.pathway-card-acao {
+  padding: var(--spacing-2);
+  color: var(--colors-brand-primary-800);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+}
+
+@media (min-width: 48em) {
+  .pathway-list {
+    gap: var(--spacing-24);
+  }
+
+  .pathway-card {
+    flex: 1 0 17.5rem;
   }
 }
 
+/* ===== Profissionais (CardProfissionais variante="home") =====
+   O componente é o do resultado; aqui ele perde a faixa e a largura máxima de lá. */
 
-/* ===== vinha de viewport-overrides.css | corrigia os dois acima ===== */
-html,
-body {
-  overflow-x:hidden;
+.home-pagina .figma-result-band {
+  padding: 0;
+  background: transparent;
 }
 
-.app-shell {
-  width:100%!important;
-  max-width:none!important;
-  margin:0!important;
-  min-height:100svh;
-  background:var(--colors-neutral-50)!important;
+.home-pagina .figma-section-inner {
+  max-width: none;
+  padding: 0;
 }
 
-.app-shell>.app-header {
-  background:var(--colors-brand-primary-100);
+/* Sem o text-box trim dos outros títulos: o h2 do resultado corta com overflow hidden (reticências), e
+   o trim somado a isso comia as pernas do g e do j. */
+.home-profissionais .figma-section-heading h2 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-3xl);
+  color: var(--colors-alpha-88);
 }
 
-/* .home-hero era redefinido 4x nesta cascata (flow, home-overrides, viewport-overrides,
-   hero-radius), com um `border-bottom` que nunca chegava a aparecer porque o bloco seguinte
-   sempre resetava com `border:0!important`. Consolidado aqui na sessão de 18/09/2026, conferido
-   visualmente antes e depois: mesmo resultado, sem a declaração morta. */
-.home-hero {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:0;
-  padding:var(--spacing-32) var(--pagina-padding-lateral) var(--spacing-24);
-  width:100%!important;
-  max-width:none!important;
-  margin:0 0 var(--spacing-24)!important;
-  border:0!important;
-  border-bottom-right-radius:var(--radius-3xl);
-  background:var(--colors-brand-primary-100)!important;
-  background-clip:padding-box;
-  min-height:calc(100svh - 72px)!important;
-  position:relative;
-  isolation:auto;
+/* Figma: "valor sessao psicologos" (1438:341815), a faixa de preço numa caixa cinza. */
+.figma-session-price[data-variante="caixa"] {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  padding: var(--spacing-14) var(--spacing-10);
+  border: var(--border-width-hairline) solid color-mix(in srgb, var(--colors-alpha-8) var(--border-hairline-forca), transparent);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-100);
 }
 
-.home-hero::before {
-  display:none;
+.figma-session-price[data-variante="caixa"] .figma-session-price-text {
+  padding: 0 var(--spacing-10);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-lg);
+  color: var(--colors-alpha-64);
 }
 
-.home-hero>* {
-  position:relative;
-  z-index:auto;
+@media (min-width: 48em) {
+  .home-profissionais .figma-section-heading h2 {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-4xl);
+  }
+
+  .figma-session-price[data-variante="caixa"] {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .figma-session-price[data-variante="caixa"] .figma-session-price-text {
+    padding: 0;
+  }
+
+  /* No Figma os cards crescem com a tela: ~300 em 1080, ~390 em 1920. */
+  .home-profissionais .figma-professionals-row > .figma-professional-card {
+    width: clamp(17.5rem, 20vw, 27.25rem);
+  }
 }
 
+/* ===== Bloco Cannabis medicinal =====
+   Mobile: texto em cima, foto embaixo e o selo por cima da foto. O .bloco-cannabis-texto some do
+   layout (display: contents) pra o selo poder entrar na célula da foto. */
+
+.bloco-cannabis {
+  display: grid;
+  grid-template-areas: "copy" "foto";
+  gap: var(--spacing-10);
+  padding: var(--spacing-8);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-100);
+}
+
+.bloco-cannabis-texto {
+  display: contents;
+}
+
+.bloco-cannabis-copy {
+  display: flex;
+  flex-direction: column;
+  grid-area: copy;
+  align-items: flex-start;
+  gap: var(--spacing-10);
+  padding: var(--spacing-12);
+}
+
+.bloco-cannabis-cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-10);
+}
+
+.bloco-cannabis h2 {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-3xl);
+  color: var(--colors-alpha-88);
+  text-box: trim-both cap alphabetic;
+}
+
+.bloco-cannabis p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-80);
+}
+
+.bloco-cannabis strong {
+  font-weight: var(--font-weight-semi-bold);
+}
+
+/* 240 de altura no mobile. */
+.bloco-cannabis-foto {
+  position: relative;
+  grid-area: foto;
+  height: 15rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.bloco-cannabis-foto img {
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+/* Posição do selo sobre a foto no frame de 360: 23 da direita e 65 de baixo. */
+.bloco-cannabis .selo-giratorio {
+  grid-area: foto;
+  z-index: var(--z-index-raised);
+  align-self: end;
+  justify-self: end;
+  margin: 0 1.4375rem 4.0625rem 0;
+}
+
+@media (min-width: 48em) {
+  .bloco-cannabis {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .bloco-cannabis-texto {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-24);
+    min-width: 0;
+    padding: var(--spacing-12) var(--spacing-24);
+  }
+
+  .bloco-cannabis-copy {
+    gap: var(--spacing-12);
+    padding: 0;
+  }
+
+  /* Header/Large (.header-large em estilos-de-texto.css), quando o texto fica à esquerda da foto. */
+  .bloco-cannabis h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semi-bold);
+    line-height: var(--line-height-4xl);
+  }
+
+  .bloco-cannabis .selo-giratorio {
+    align-self: flex-start;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  /* 358 de altura em 1080 e 1920, 467 em 2800. */
+  .bloco-cannabis-foto {
+    flex: 1 1 0;
+    min-width: 0;
+    height: auto;
+    min-height: max(22.375rem, 16.7vw);
+  }
+}
+
+/* A partir de 86rem de bloco (tela de 1440), o selo vai para o lado do título, como no frame de 1920.
+   Container query porque a escala de breakpoints não tem esse degrau. 581 pixels: a largura do texto
+   ao lado do selo. */
+.bloco-cannabis {
+  container-type: inline-size;
+}
+
+@container (min-width: 86rem) {
+  .bloco-cannabis-texto {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-32);
+  }
+
+  .bloco-cannabis .selo-giratorio {
+    align-self: center;
+  }
+
+  .bloco-cannabis-copy {
+    flex: 0 1 36.3125rem;
+  }
+}
+
+/* ===== Selo giratório ===== 93 pixels de diâmetro, o miolo com 47, como no Figma. */
+
+.selo-giratorio {
+  position: relative;
+  flex: 0 0 auto;
+  width: 5.8125rem;
+  height: 5.8125rem;
+  border-radius: var(--radius-full);
+  background: var(--colors-brand-primary-200);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Caixa de 109 centralizada no selo, com o vetor de 80 girado -118.64deg, como no Figma. */
+.selo-giratorio-texto {
+  position: absolute;
+  top: calc(50% - 3.40625rem);
+  left: calc(50% - 3.40625rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6.8125rem;
+  height: 6.8125rem;
+  animation: selo-girar calc(var(--duration-6000) * 3) linear infinite;
+}
+
+.selo-giratorio-texto img {
+  display: block;
+  flex: none;
+  width: 5.0016rem;
+  height: 5.034rem;
+  max-width: none;
+  transform: rotate(-118.64deg);
+}
+
+.selo-giratorio-centro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.9375rem;
+  height: 2.9375rem;
+  border-radius: var(--radius-full);
+  background: var(--colors-brand-primary-300);
+  transform: translate(-50%, -50%);
+}
+
+@keyframes selo-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selo-giratorio-texto {
+    animation: none;
+  }
+}
+
+/* ===== Para quem é a Margem ===== */
+
+.home-publico-secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-20);
+}
+
+/* Os dois cards de foto dividem as linhas do grid (foto, texto): a foto tem a mesma altura nos dois e
+   a linha do texto assume a do maior, então título e descrição começam no mesmo ponto mesmo quando
+   um texto quebra em duas linhas e o outro não. */
+.home-publico {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 9.6875rem auto auto;
+  gap: 0 var(--spacing-16);
+}
+
+.home-publico .card-publico {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  background: var(--colors-neutral-100);
+}
+
+.home-publico .card-publico-foto {
+  height: auto;
+  min-height: 0;
+}
+
+.home-publico .card-publico-titulo {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-88);
+}
+
+.home-publico .card-publico-descricao {
+  color: var(--colors-alpha-80);
+}
+
+/* O Importante fica embaixo dos dois no mobile, a 20 de distância. */
+.home-importante {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1 / -1;
+  align-items: flex-start;
+  gap: var(--spacing-8);
+  margin-top: var(--spacing-20);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-100);
+}
+
+.home-importante-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.home-importante h3 {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-88);
+  text-box: trim-both cap alphabetic;
+}
+
+.home-importante p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-80);
+}
+
+/* O Figma tira o padding lateral do botão e usa 2 de padding vertical. */
+.home-importante .home-importante-dados.btn {
+  padding: var(--spacing-2) 0;
+}
+
+/* Desktop: os três lado a lado. 368 de altura em 1080 e 1920, 483 em 2800. No Figma os três dividem
+   a linha por igual e o padding do Importante soma por fora: as duas primeiras colunas valem um terço
+   do que sobra depois dos gaps e dos 48 de padding, e a terceira fica com o resto.
+   Os dois cards de foto dividem as linhas do grid (foto, texto): a linha do texto assume a altura do
+   maior, então a foto tem o mesmo tamanho nos dois e título e descrição começam no mesmo ponto,
+   mesmo quando um texto quebra em duas linhas e o outro não. */
+@media (min-width: 48em) {
+  .home-publico {
+    display: grid;
+    grid-template-columns: repeat(2, calc((100% - 4 * var(--spacing-24)) / 3)) 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 0 var(--spacing-24);
+    height: max(23rem, 17.25vw);
+  }
+
+  .home-publico .card-publico {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    height: auto;
+    min-width: 0;
+  }
+
+  .home-publico .card-publico-foto {
+    height: auto;
+  }
+
+  .home-publico .card-publico-texto {
+    gap: var(--spacing-10);
+  }
+
+  .home-publico .card-publico-titulo {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-2xl);
+  }
+
+  .home-publico .card-publico-descricao {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-xl);
+  }
+
+  .home-importante {
+    grid-column: 3;
+    grid-row: 1 / -1;
+    justify-content: center;
+    min-width: 0;
+    margin: 0;
+    padding: var(--spacing-24);
+  }
+
+  .home-importante-texto {
+    gap: var(--spacing-10);
+  }
+
+  .home-importante h3 {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-3xl);
+  }
+
+  .home-importante .home-importante-dados.btn {
+    font-size: var(--font-size-md);
+  }
+}
+
+/* ===== Rodapé ===== */
+
+.home-rodape {
+  padding: 0 var(--pagina-padding-lateral);
+}
+
+.home-rodape .app-footer {
+  align-items: flex-start;
+}
+
+.home-rodape .app-footer-title,
+.home-rodape .app-footer-list {
+  padding-inline: 0;
+}
+
+@media (min-width: 48em) {
+  .home-rodape {
+    padding-top: var(--spacing-16);
+  }
+}
+
+/* ===== Carregando (Figma 1438:365597) ===== */
+
+.home-osso-hero .figma-skeleton,
+.home-osso-foto {
+  background: linear-gradient(90deg, var(--colors-brand-primary-200) 25%, var(--colors-brand-primary-100) 50%, var(--colors-brand-primary-200) 75%);
+  background-size: 200% 100%;
+  animation: figma-skeleton-shimmer var(--duration-1500) ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-osso-hero .figma-skeleton,
+  .home-osso-foto {
+    animation: none;
+  }
+}
+
+.home-osso-hero {
+  gap: var(--spacing-14);
+}
+
+.home-osso-badge {
+  width: 62%;
+  height: 1.5625rem;
+  border-radius: var(--radius-full);
+}
+
+.home-osso-titulo {
+  width: 70%;
+  height: 1.5625rem;
+}
+
+.home-osso-campo {
+  width: 100%;
+  height: 2.75rem;
+  margin-top: var(--spacing-10);
+  border-radius: var(--radius-lg);
+}
+
+@media (min-width: 48em) {
+  .home-osso-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.home-osso-faixa {
+  display: flex;
+  gap: var(--spacing-16);
+  padding: 0 var(--pagina-padding-lateral);
+  overflow: hidden;
+}
+
+.home-osso-chip {
+  display: flex;
+  flex: 0 0 15rem;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-12);
+  border-radius: var(--radius-full);
+  background: var(--colors-neutral-100);
+}
+
+.home-osso-chip-numero {
+  flex: 0 0 auto;
+  width: var(--size-32);
+  height: var(--size-32);
+  border-radius: var(--radius-full);
+}
+
+.home-osso-chip-texto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.home-osso-chip-texto .figma-skeleton {
+  height: 0.75rem;
+}
+
+.home-osso-secao-titulo {
+  width: 12.625rem;
+  height: 1.5625rem;
+}
+
+.home-osso-caminho {
+  gap: var(--spacing-8);
+}
+
+.home-osso-caminho .figma-skeleton {
+  width: 100%;
+  height: 0.75rem;
+}
+
+.home-osso-caminho .home-osso-caminho-icone {
+  width: var(--size-24);
+  height: var(--size-24);
+  margin-bottom: var(--spacing-8);
+  border-radius: var(--radius-full);
+}
+
+.home-osso-caminho-titulo {
+  width: 70% !important;
+  height: 1.25rem !important;
+}
+
+.home-osso-caminho-acao {
+  width: 40% !important;
+  margin-top: var(--spacing-8);
+}
+
+.home-osso-publico .card-publico-foto {
+  background: var(--colors-neutral-0);
+}
+
+.home-osso-publico .card-publico-texto .figma-skeleton {
+  height: 0.75rem;
+}
+
+.home-osso-importante .figma-skeleton {
+  width: 100%;
+  height: 0.75rem;
+}

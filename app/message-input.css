@@ -1,20 +1,30 @@
+/* Default (Figma "message", home de 07/10/2026): branco, canto 12, sem sombra, 48 de altura. Focado e
+   preenchido continuam verde claro, canto 16 e com sombra. */
 .message-component {
   position:relative;
   display:flex;
   flex-direction:column;
+  /* Explícito: do "normal" o navegador não anima até o gap do estado focado. */
+  gap:var(--spacing-0);
   width:100%;
-  padding:var(--spacing-8);
-  border:var(--border-width-hairline) solid var(--colors-status-success-200);
-  border-radius:var(--radius-xl);
-  background:var(--colors-brand-primary-50);
-  box-shadow: var(--shadow-glow);
+  padding:var(--spacing-6) var(--spacing-8);
+  border:var(--border-width-hairline) solid color-mix(in srgb, var(--colors-status-success-200) var(--border-hairline-forca), transparent);
+  border-radius:var(--radius-lg);
+  background:var(--colors-neutral-0);
   cursor:text;
+  /* Ao abrir e fechar a tela cheia o campo vai virando o outro estado, junto com o deslize do HomeHero. */
+  transition-property:padding, gap, border-radius, background-color, box-shadow;
+  transition-duration:var(--duration-420);
+  transition-timing-function:var(--easing-out-expo);
 }
 
 .message-component-focused,
 .message-component-filed {
   gap:var(--spacing-10);
   padding:var(--spacing-4) var(--spacing-4) var(--spacing-4) var(--spacing-8);
+  border-radius:var(--radius-xl);
+  background:var(--colors-brand-primary-50);
+  box-shadow: var(--shadow-glow);
 }
 
 .message-component textarea {
@@ -70,7 +80,7 @@
 
 .message-component-placeholder {
   position:absolute;
-  inset:var(--spacing-8);
+  inset:var(--spacing-6) var(--spacing-8);
   padding:var(--spacing-8);
   display:flex;
   align-items:center;
@@ -78,6 +88,31 @@
   color:var(--colors-neutral-600);
   pointer-events:none;
   white-space:nowrap;
+  transition:opacity var(--duration-420) var(--easing-out-expo);
+}
+
+.message-component-focused .message-component-placeholder {
+  opacity:0;
+}
+
+/* "Conte do seu jeito" e Enviar: recolhidos no default, abrem a altura aos poucos nos outros estados.
+   O conteúdo de dentro precisa de min-height 0, senão o min-height do meta segura a linha aberta. */
+.message-component-gaveta {
+  display:grid;
+  grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows var(--duration-420) var(--easing-out-expo), opacity var(--duration-420) var(--easing-out-expo);
+}
+
+.message-component-focused .message-component-gaveta,
+.message-component-filed .message-component-gaveta {
+  grid-template-rows:1fr;
+  opacity:1;
+}
+
+.message-component-gaveta-conteudo {
+  min-height:0;
+  overflow:hidden;
 }
 
 /* O Chrome arredonda a barra para pixels inteiros da tela. Em tela de densidade 1, 1,5px vira 1px ou
@@ -140,5 +175,11 @@
 @media(prefers-reduced-motion:reduce) {
   .message-component-caret {
     animation:none;
+  }
+
+  .message-component,
+  .message-component-placeholder,
+  .message-component-gaveta {
+    transition:none;
   }
 }

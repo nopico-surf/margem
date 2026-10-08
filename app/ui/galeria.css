@@ -186,3 +186,10 @@
   visibility: visible;
   min-width: 20rem;
 }
+
+/* Faixa, cards de caminho e bloco de cannabis: ocupam a largura toda e rolam dentro do palco. */
+.galeria-palco-largo {
+  display: block;
+  overflow: hidden;
+  --pagina-padding-lateral: var(--spacing-8);
+}

@@ -1,12 +1,14 @@
 "use client";
 
 import { CARDS_HOME } from "@/lib/cards-home";
+import { ActionRow } from "@/components/conversa/ActionRow";
 import { CardHomeHeader } from "./CardHomeHeader";
 
-// Figma: "card home" (a lista dos seis caminhos).
+// Figma: "card home" (os seis caminhos). Uma fileira que rola de lado quando não cabe, e que no mouse
+// dá para arrastar, como a de profissionais.
 export function CardHome({ onSelect }: { onSelect: (indice: number) => void }) {
   return (
-    <div className="pathway-list">
+    <ActionRow className="pathway-list" origem="caminhos">
       {CARDS_HOME.map((card, indice) => (
         <CardHomeHeader
           key={card.titulo}
@@ -16,6 +18,6 @@ export function CardHome({ onSelect }: { onSelect: (indice: number) => void }) {
           onSelect={onSelect}
         />
       ))}
-    </div>
+    </ActionRow>
   );
 }

@@ -9,7 +9,7 @@ type Propriedades = Record<string, string | number | boolean | null>;
 const token = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
 const UTM_CHAVES = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 
-// Lido na carga do módulo, antes de qualquer redirect (/ -> /bem-vindo ou /app) apagar a query da URL.
+// Lido na carga do módulo, antes de qualquer redirect (/ -> /inicio) apagar a query da URL.
 const chegada = typeof window === "undefined" ? null : { busca: window.location.search, referrer: document.referrer };
 
 let iniciado = false;

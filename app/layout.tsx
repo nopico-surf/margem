@@ -47,13 +47,6 @@ const jsonLd = {
   description: DESCRICAO,
 };
 
-// Quem consentiu antes do cookie existir só tem o localStorage, então o proxy.ts manda pra /bem-vindo.
-// Este script grava o cookie pra que o próximo acesso a "/" já vá direto pra /inicio. Não redireciona:
-// quem está em /bem-vindo (recarregando a página, por exemplo) continua nela.
-// Mora aqui e não em app/bem-vindo/layout.tsx porque um <script> criado no cliente (ao voltar de
-// /privacidade, por exemplo) gera erro no React; o layout raiz nunca é recriado na navegação.
-const sincronizarCookieDeConsentimento = `try{if(location.pathname==="/bem-vindo"&&localStorage.getItem("margem-consentimento")==="true"){document.cookie="margem-consentimento=true; path=/; max-age=34560000; samesite=lax"}}catch(e){}`;
-
 export const viewport: Viewport = {
   interactiveWidget: "resizes-visual",
 };
@@ -63,7 +56,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="pt-BR" className={`${inter.variable} ${urbanist.variable}`}>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-        <script dangerouslySetInnerHTML={{ __html: sincronizarCookieDeConsentimento }} />
         <GoogleTagManager />
         <Suspense fallback={null}>
           <MixpanelPageView />

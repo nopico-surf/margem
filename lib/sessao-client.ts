@@ -1,6 +1,6 @@
-// Gravado pelo proxy.ts na primeira visita a /bem-vindo, pra o servidor sortear a variante do teste A/B
-// antes de a página ser montada. Quem ainda não tem id no localStorage adota o do cookie, e assim o
-// Mixpanel e o GrowthBook enxergam a mesma pessoa.
+// O cookie era gravado pelo proxy.ts na primeira visita a /bem-vindo, pro teste A/B do botão Continuar
+// (encerrado em 07/10/2026, quando a /bem-vindo se juntou à /inicio). Quem ainda tem o cookie e não tem
+// id no localStorage adota o dele, e assim a pessoa continua a mesma no Mixpanel.
 export const COOKIE_SESSAO = "margem-sessao-id";
 
 function lerCookieDeSessao(): string | undefined {
