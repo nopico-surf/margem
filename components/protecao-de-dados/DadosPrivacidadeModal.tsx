@@ -36,7 +36,7 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
 
         <ModalSection titulo="Armazenamento local e medição de uso">
           <p>A gente guarda no seu navegador a confirmação de que você aceitou a personalização. Isso permite que você não veja o aviso de novo toda vez que entra. Se você navegar sem personalização, a gente só lembra disso enquanto a aba estiver aberta, e o aviso volta na próxima visita.</p>
-          <p>A gente também mede de forma anônima como você usa o site: quais telas você abriu, quanto tempo ficou, se clicou em algo. Esses dados não deixam você identificável. A gente só quer saber se o que a gente tá fazendo tá ajudando ou se precisa mudar. Essa medição começa assim que você abre o site e continua mesmo se você navegar sem personalização. Se você aceitar a personalização, ela também registra qual card você escolheu e o tamanho do texto que você enviou, mas nunca o texto em si.</p>
+          <p>A gente também mede de forma anônima como você usa o site: quais telas você abriu, quanto tempo ficou, se clicou em algo, e de que cidade e país você acessa (a partir do endereço de rede, que a gente não guarda). Esses dados não deixam você identificável. A gente só quer saber se o que a gente tá fazendo tá ajudando ou se precisa mudar. Essa medição começa assim que você abre o site e continua mesmo se você navegar sem personalização. Se você aceitar a personalização, ela também registra qual card você escolheu e o tamanho do texto que você enviou, mas nunca o texto em si.</p>
         </ModalSection>
 
         <ModalSection titulo="Quem mais tem acesso">

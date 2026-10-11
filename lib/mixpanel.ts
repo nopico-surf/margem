@@ -44,7 +44,7 @@ function iniciar() {
   if (iniciado || !token || typeof window === "undefined") return iniciado;
   if (HOST_LOCAL.test(window.location.hostname)) return false;
   mixpanel.init(token, {
-    ip: false,
+    ip: true,
     autocapture: false,
     track_pageview: false,
     persistence: "localStorage",
