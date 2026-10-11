@@ -251,6 +251,18 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   }
 }
 
+/* Espaço entre o último bloco e o rodapé: 24 no mobile e 40 do tablet em diante, o mesmo gap das
+   seções (Figma: Frame 196 até o rodape, nos frames de 360, 1080, 1920 e 2800). */
+.home-pagina > .app-footer {
+  margin-top: var(--spacing-24);
+}
+
+@media (min-width: 48em) {
+  .home-pagina > .app-footer {
+    margin-top: var(--spacing-40);
+  }
+}
+
 /* ===== Faixa "Como funciona" ===== */
 
 .faixa-trilho {
@@ -895,27 +907,6 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   /* Figma: o CTA é x-small no mobile e small no desktop. */
   .home-importante .home-importante-dados.btn {
     font-size: var(--font-size-sm);
-  }
-}
-
-/* ===== Rodapé ===== */
-
-.home-rodape {
-  padding: 0 var(--pagina-padding-lateral);
-}
-
-.home-rodape .app-footer {
-  align-items: flex-start;
-}
-
-.home-rodape .app-footer-title,
-.home-rodape .app-footer-list {
-  padding-inline: 0;
-}
-
-@media (min-width: 48em) {
-  .home-rodape {
-    padding-top: var(--spacing-16);
   }
 }
 

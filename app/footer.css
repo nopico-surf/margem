@@ -1,44 +1,50 @@
+/* Rodapé. Figma: componente `rodape` da Home (Experiência do produto), frames de 360, 1080 e 1920.
+   Mobile: tudo em coluna, foto embaixo do texto. A partir de 48em as duas metades ficam lado a
+   lado. A partir de 86rem o card deita (texto ao lado da foto), como no frame de 1920. */
+
 .app-footer {
+  container-type:inline-size;
   display:flex;
   flex-direction:column;
-  align-items:center;
-  gap:var(--spacing-6);
-  padding:var(--spacing-24) 0;
-}
-
-.app-footer-title,
-.app-footer-list {
-  width:100%;
-  padding:0 var(--pagina-padding-lateral);
+  gap:var(--spacing-16);
+  padding:var(--spacing-24) var(--pagina-padding-lateral);
+  background:var(--colors-neutral-50);
   box-sizing:border-box;
 }
 
+.app-footer-contatos {
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-16);
+}
+
+.app-footer-logo {
+  display:block;
+  width:86.756px;
+  height:12px;
+}
+
+.app-footer-redes {
+  container-type:inline-size;
+  display:flex;
+  flex-direction:column;
+  gap:6px; /* Figma: 6, sem token */
+}
+
 .app-footer-title {
-  margin:0 auto;
+  margin:0;
   font-family:var(--font-inter),sans-serif;
   font-weight:500;
   font-size:var(--font-size-2xs);
   line-height:var(--line-height-xs);
-  color:var(--colors-neutral-950);
+  color:var(--colors-alpha-88);
 }
 
 .app-footer-list {
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:var(--spacing-4);
-}
-
-/* No desktop os contatos ficam todos em uma linha (Rodapé do Figma, 1301:7394). */
-@media (min-width: 48em) {
-  .app-footer-list {
-    flex-direction: row;
-    gap: var(--spacing-8);
-  }
-
-  .app-footer-item span {
-    white-space: nowrap;
-  }
+  gap:var(--spacing-10);
 }
 
 .app-footer-item {
@@ -61,9 +67,116 @@
   font-weight:500;
   font-size:var(--font-size-xs);
   line-height:var(--line-height-md);
-  color:var(--colors-alpha-88);
+  color:var(--colors-alpha-80);
+  white-space:nowrap;
 }
 
-.figma-result-page .app-footer {
-  background:var(--colors-neutral-50);
+/* Card do grupo do Facebook */
+
+.app-footer-card {
+  display:flex;
+  flex-direction:column;
+  gap:10px; /* Figma: 10, sem token */
+  padding:var(--spacing-8);
+  border-radius:var(--radius-xl);
+  background:var(--colors-neutral-100);
+}
+
+.app-footer-card-texto {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:var(--spacing-8);
+  padding:var(--spacing-8);
+}
+
+.app-footer-card-cabecalho {
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-8);
+}
+
+.app-footer-card-cabecalho h2 {
+  margin:0;
+  font-family:var(--font-urbanist),sans-serif;
+  font-weight:var(--font-weight-semi-bold);
+  font-size:var(--font-size-md);
+  line-height:var(--line-height-xl);
+  color:var(--colors-alpha-88);
+  text-box:trim-both cap alphabetic; /* Figma: text-box-trim, como o título das seções da home */
+}
+
+.app-footer-card-cabecalho p {
+  margin:0;
+  font-family:var(--font-inter),sans-serif;
+  font-weight:400;
+  font-size:var(--font-size-xs);
+  line-height:var(--line-height-lg);
+  color:var(--colors-alpha-80);
+  text-wrap:pretty;
+}
+
+/* O ícone do botão é 12 neste rodapé (o padrão do botão é 16). */
+.app-footer-card .btn img,
+.app-footer-card .btn svg {
+  width:12px;
+  height:12px;
+}
+
+.app-footer-card-foto {
+  position:relative;
+  height:188.425px; /* Figma: 188,425 */
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+}
+
+.app-footer-card-foto img {
+  object-fit:cover;
+  /* No mobile a foto é recortada na altura dos rostos. O Figma usa 62%, que corta o topo da cabeça do
+     homem à esquerda (a cabeça começa em 32% da altura da foto); 54% mostra a cabeça inteira. */
+  object-position:center 54%;
+}
+
+/* Duas metades iguais, como o `fill` do Figma: com grid o padding não desequilibra a divisão. */
+@media (min-width: 48em) {
+  .app-footer {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:var(--spacing-24);
+    align-items:start;
+  }
+
+  .app-footer-contatos {
+    gap:var(--spacing-32);
+  }
+
+  .app-footer-card-foto img {
+    object-position:center;
+  }
+}
+
+/* Os três contatos ficam todos numa linha ou todos um embaixo do outro, nunca quebrados. 28rem é a
+   largura dos três juntos mais os espaços; abaixo disso empilham. Container query porque a coluna
+   dos contatos é metade da tela e a escala de breakpoints não mede isso. */
+@container (min-width: 28rem) {
+  .app-footer-list {
+    flex-direction:row;
+    gap:var(--spacing-12);
+  }
+}
+
+/* Container query, como o bloco de cannabis da home: 86rem é o corte do Figma, fora da escala de breakpoints. */
+@container (min-width: 86rem) {
+  .app-footer-card {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    align-items:center;
+  }
+
+  /* O bloco de texto (com o texto alinhado à esquerda) fica no centro da sua metade, na vertical e
+     na horizontal, como no frame de 1920 e como o texto do bloco de cannabis. */
+  .app-footer-card-texto {
+    align-self:center;
+    justify-self:center;
+  }
 }

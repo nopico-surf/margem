@@ -8,6 +8,11 @@ export const CONTATOS: Array<{ tipo: TipoContato; href: string; texto: string; e
   { tipo: "email", href: "mailto:vitor@somosmargem.com.br", texto: "vitor@somosmargem.com.br", externo: false },
 ];
 
+// Botão "Fazer parte" do rodapé. Os parâmetros utm_ identificam a origem do clique nos relatórios
+// do GA; o evento `grupo_facebook_clicado` no dataLayer (Footer.tsx) é o que o GTM registra.
+export const LINK_GRUPO_FACEBOOK =
+  "https://www.facebook.com/share/g/1C6RLXy11o/?utm_source=margem&utm_medium=rodape&utm_campaign=grupo_facebook";
+
 // Banner e atalho "Cannabis medicinal" da home: o mesmo WhatsApp, já com a mensagem escrita.
 export const LINK_WHATSAPP_CANNABIS = `https://wa.me/5511968996977?text=${encodeURIComponent(
   "Acessei a Margem e quero saber mais sobre Cannabis Medicinal",

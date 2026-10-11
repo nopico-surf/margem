@@ -220,9 +220,7 @@ export function InicioCliente({ profissionais }: { profissionais: ProfissionalCa
         </div>
       </div>
 
-      <div className="home-rodape">
-        <Footer />
-      </div>
+      <Footer />
 
       <PainelInferior
         variante="cookies"

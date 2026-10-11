@@ -41,6 +41,8 @@ export const LogoMargem = icone("/icons/logo-margem.svg", "Margem");
 export const LogoMargemResultado = icone("/icons/logo-margem.svg", "Margem");
 export const LogoMargemModal = icone("/icons/logo-margem.svg", "Margem");
 // Figma: `logo` com Complete?=False, só o símbolo. É a variante do header com seta de voltar no mobile.
+export const IconeFavorito = icone("/icons/favorite.svg");
+
 export const LogoMargemIcone = icone("/icons/logo-margem-icone.svg", "Margem");
 
 /* Menu e fechar */

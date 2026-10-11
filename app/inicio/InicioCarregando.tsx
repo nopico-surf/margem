@@ -89,9 +89,7 @@ export function InicioCarregando() {
         </div>
       </div>
 
-      <div className="home-rodape">
-        <Footer />
-      </div>
+      <Footer />
     </main>
   );
 }
