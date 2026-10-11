@@ -319,6 +319,8 @@
   --easing-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --easing-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --easing-in-out: cubic-bezier(0.37, 0, 0.63, 1);
+  /* Não é variável do Figma: passa do alvo e volta, o repique do botão ao soltar (app/botao.css). */
+  --easing-spring: cubic-bezier(0.3, 2, 0.5, 1);
 
   /* Sombra. No Figma são estilos de efeito `shadow/shadow-*`, com a cor ligada à variável. */
   --shadow-glow: 0 0 32px var(--colors-alpha-16);

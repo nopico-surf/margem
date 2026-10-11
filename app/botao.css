@@ -4,14 +4,37 @@
    eixos: tamanho, variante e se o canto é redondo. Os outros eixos do Figma (`mode`, `padding`,
    `function=danger`) não aparecem em tela nenhuma e por isso não existem aqui.
 
-   Entre os estados muda só cor. O único que acrescenta alguma coisa é o focus, que ganha um stroke
-   de 2px por dentro, para não empurrar o layout. */
+   Entre os estados muda a cor, e o pressed afunda o botão. O focus ganha um stroke de 2px por
+   dentro, para não empurrar o layout. */
 
 /* [data-estado-forcado] existe para a galeria /ui poder mostrar hover, pressed e focus parados,
    lado a lado, sem depender do ponteiro. É um seletor a mais em cada regra de estado que já
    existe, nunca uma regra nova: a cor continua declarada num lugar só. Nenhuma tela usa.
    O forçado de hover mora dentro do @media (hover: hover), junto com o de verdade, então no
    touch aquela célula da galeria mostra o default. */
+
+/* Movimento. No hover a cor do Figma sobe de baixo como água (--btn-nivel vai de 0% a 100%); no
+   pressed o botão afunda rápido e, ao soltar, volta devagar com um repique. As cores viram
+   propriedades registradas porque só assim o navegador consegue interpolar o gradiente: cada pixel
+   é a cor de fundo ou a da água, nunca uma em cima da outra, o que importa nas cores alpha. */
+
+@property --btn-fundo {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --btn-agua {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --btn-nivel {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
 
 .btn {
   display: inline-flex;
@@ -26,6 +49,21 @@
   /* O retângulo azul que o Chrome do Android pinta no toque. Ele existe para cobrir a falta de
      hover no touch, e aqui o :active já faz esse papel, com a cor do Figma. */
   -webkit-tap-highlight-color: transparent;
+  background: linear-gradient(to top, var(--btn-agua) var(--btn-nivel), var(--btn-fundo) var(--btn-nivel));
+  transition:
+    --btn-nivel var(--duration-420) var(--easing-out-expo),
+    --btn-fundo var(--duration-350) var(--easing-out-expo),
+    --btn-agua var(--duration-350) var(--easing-out-expo),
+    color var(--duration-350) var(--easing-out-expo),
+    transform var(--duration-350) var(--easing-spring);
+}
+
+/* Afundar é rápido e sem repique; a volta usa os tempos de cima. */
+.btn:active:not(:disabled):not([data-carregando="true"]),
+[data-estado-forcado="pressed"] .btn {
+  transform: scale(0.96);
+  transition-duration: calc(var(--duration-260) / 2);
+  transition-timing-function: var(--easing-out-quart);
 }
 
 /* O conteúdo vive num span próprio para o estado de carregando poder escondê-lo sem tirar o botão
@@ -76,6 +114,12 @@
   padding: var(--spacing-2) 0;
 }
 
+/* O frame externo não tem padding lateral, mas o conteúdo por dentro tem 6px de cada lado, em
+   todos os tamanhos. É esse espaço que dá folga entre a borda do hover e o texto. */
+.btn[data-sem-padding="true"] .btn-conteudo {
+  padding: 0 var(--spacing-6);
+}
+
 /* No Figma o ícone do botão medium é 20 (control-icon-md); nos menores continua 16. */
 .btn[data-tamanho="medium"] img,
 .btn[data-tamanho="medium"] svg {
@@ -83,41 +127,49 @@
   height: var(--control-icon-md);
 }
 
-/* Variante: cor de fundo e de texto, por estado. */
+/* Variante: cor de fundo e de texto, por estado. A cor do hover é a da água, que já fica
+   declarada no default e só aparece quando o nível sobe. No pressed fundo e água viram a mesma
+   cor, então ela vale com ou sem o ponteiro em cima. */
 
 .btn[data-variante="primary"] {
-  background: var(--colors-brand-primary-800);
+  --btn-fundo: var(--colors-brand-primary-800);
+  --btn-agua: var(--colors-brand-primary-900);
   color: var(--colors-neutral-0);
 }
 
 .btn[data-variante="primary"]:active:not(:disabled):not([data-carregando="true"]),
 [data-estado-forcado="pressed"] .btn[data-variante="primary"] {
-  background: var(--colors-neutral-950);
+  --btn-fundo: var(--colors-neutral-950);
+  --btn-agua: var(--colors-neutral-950);
 }
 
 .btn[data-variante="primary"]:focus-visible,
 [data-estado-forcado="focus"] .btn[data-variante="primary"] {
-  background: var(--colors-neutral-950);
+  --btn-fundo: var(--colors-neutral-950);
 }
 
 .btn[data-variante="secondary"] {
-  background: var(--colors-alpha-8);
+  --btn-fundo: var(--colors-alpha-8);
+  --btn-agua: var(--colors-alpha-16);
   color: var(--colors-brand-primary-800);
 }
 
 .btn[data-variante="secondary"]:active:not(:disabled):not([data-carregando="true"]),
 [data-estado-forcado="pressed"] .btn[data-variante="secondary"] {
-  background: var(--colors-alpha-24);
+  --btn-fundo: var(--colors-alpha-24);
+  --btn-agua: var(--colors-alpha-24);
 }
 
 .btn[data-variante="transparent"] {
-  background: transparent;
+  --btn-fundo: transparent;
+  --btn-agua: var(--colors-alpha-8);
   color: var(--colors-brand-primary-800);
 }
 
 .btn[data-variante="transparent"]:active:not(:disabled):not([data-carregando="true"]),
 [data-estado-forcado="pressed"] .btn[data-variante="transparent"] {
-  background: var(--colors-alpha-16);
+  --btn-fundo: var(--colors-alpha-16);
+  --btn-agua: var(--colors-alpha-16);
   color: var(--colors-brand-primary-950);
 }
 
@@ -125,20 +177,28 @@
    elemento depois do toque, porque o dedo não tem como sair de cima. */
 
 @media (hover: hover) {
-  .btn[data-variante="primary"]:hover:not(:disabled):not([data-carregando="true"]),
-  [data-estado-forcado="hover"] .btn[data-variante="primary"] {
-    background: var(--colors-brand-primary-900);
-  }
-
-  .btn[data-variante="secondary"]:hover:not(:disabled):not([data-carregando="true"]),
-  [data-estado-forcado="hover"] .btn[data-variante="secondary"] {
-    background: var(--colors-alpha-16);
+  .btn:hover:not(:disabled):not([data-carregando="true"]),
+  [data-estado-forcado="hover"] .btn {
+    --btn-nivel: 100%;
   }
 
   .btn[data-variante="transparent"]:hover:not(:disabled):not([data-carregando="true"]),
   [data-estado-forcado="hover"] .btn[data-variante="transparent"] {
-    background: var(--colors-alpha-8);
     color: var(--colors-brand-primary-900);
+  }
+}
+
+/* Para quem pede menos movimento: sem afundar e sem a água subir. O hover vira uma troca de cor
+   em fade, a mesma mistura de fundo e água, só que no botão inteiro de uma vez. */
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    background: color-mix(in srgb, var(--btn-agua) var(--btn-nivel), var(--btn-fundo));
+  }
+
+  .btn:active:not(:disabled):not([data-carregando="true"]),
+  [data-estado-forcado="pressed"] .btn {
+    transform: none;
   }
 }
 
@@ -154,7 +214,8 @@
 
 .btn:disabled,
 .btn[data-carregando="true"] {
-  background: var(--colors-alpha-8);
+  --btn-fundo: var(--colors-alpha-8);
+  --btn-agua: var(--colors-alpha-8);
   color: var(--colors-alpha-24);
   cursor: not-allowed;
 }
