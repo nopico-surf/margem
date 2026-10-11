@@ -48,6 +48,8 @@
   width: 100%;
   max-width: calc(var(--breakpoint-lg) - var(--size-8));
   margin-inline: auto;
+  /* Mesmo espaço que separa os cards entre si, pro rodapé não colar no último. */
+  margin-bottom: var(--spacing-16);
 }
 
 .profissional-topo {
@@ -226,6 +228,10 @@
 
   .profissional-registro span {
     text-box: trim-both cap alphabetic;
+  }
+
+  .profissional-conteudo {
+    margin-bottom: var(--spacing-24);
   }
 
   .profissional-sobre {
