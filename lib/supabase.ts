@@ -39,9 +39,6 @@ export type ProfissionalCadastrado = {
   bio: string | null;
   tags: string[];
   whatsapp_link: string | null;
-  telefone: string | null;
-  email: string | null;
-  localizacao: string | null;
   status: "ativo" | "pago" | "gratuito";
   ativo: boolean;
   categoria_resposta_relevante: string | null;
@@ -98,12 +95,16 @@ function embaralharComSeed<T>(itens: T[], seedStr: string) {
   return resultado;
 }
 
+// Lista explícita: telefone, email e localizacao existem na tabela mas nunca podem chegar ao navegador.
+const COLUNAS_PROFISSIONAL =
+  "id, nome, especialidade, registro_profissional, ano_inicio_experiencia, foto_url, bio, tags, whatsapp_link, status, ativo, categoria_resposta_relevante, abordagem, formacoes";
+
 export async function buscarProfissionaisPorCategoria(categoria: string, sessaoId?: string) {
   const supabase = getServerClient();
   if (!supabase) return [];
   const { data, error } = await supabase
     .from("profissionais_cadastrados")
-    .select("*")
+    .select(COLUNAS_PROFISSIONAL)
     .eq("categoria_resposta_relevante", categoria)
     .eq("ativo", true);
   if (error) console.error("[supabase] buscarProfissionaisPorCategoria falhou:", error.message);
@@ -125,7 +126,7 @@ export async function buscarTodosProfissionaisAtivos() {
   try {
     const { data } = await supabase
       .from("profissionais_cadastrados")
-      .select("*")
+      .select(COLUNAS_PROFISSIONAL)
       .eq("ativo", true)
       .order("nome")
       .throwOnError();
