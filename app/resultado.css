@@ -340,6 +340,10 @@
 }
 
 .figma-badges span {
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
   padding:var(--spacing-4) var(--spacing-8);
   border-radius:var(--radius-full);
   background:var(--colors-alpha-8);
