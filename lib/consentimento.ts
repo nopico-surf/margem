@@ -11,9 +11,17 @@ export type ContextoConsentimento = {
   gatilho: "abertura" | "card" | "texto_livre";
 };
 
+const COOKIE_CONSENTIMENTO = "margem-consentimento=true; path=/; max-age=34560000; samesite=lax";
+
+// Quem aceitou antes de 24/09/2026 tem o aceite só no localStorage, sem o cookie que o /api/orientacao
+// exige. Regrava o cookie aqui pra essa pessoa não ser recusada pelo servidor.
 export function jaConsentiu(): boolean {
   try {
-    return window.localStorage.getItem("margem-consentimento") === "true";
+    const consentiu = window.localStorage.getItem("margem-consentimento") === "true";
+    if (consentiu && !document.cookie.split("; ").includes("margem-consentimento=true")) {
+      document.cookie = COOKIE_CONSENTIMENTO;
+    }
+    return consentiu;
   } catch {
     return false;
   }
@@ -25,7 +33,7 @@ export function conceder(contexto: ContextoConsentimento) {
   try {
     window.localStorage.setItem("margem-consentimento", "true");
   } catch {}
-  document.cookie = "margem-consentimento=true; path=/; max-age=34560000; samesite=lax";
+  document.cookie = COOKIE_CONSENTIMENTO;
   track("consentimento_concedido", contexto);
   const sessaoId = getOrCreateSessaoId();
   fetch("/api/sessao", {

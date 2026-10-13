@@ -237,8 +237,9 @@ export async function registrarInteracao(params: {
 }) {
   const supabase = getServerClient();
   if (!supabase) return;
-  // garante que a sessão existe mesmo se o consentimento não tiver sido gravado antes (ex: localStorage antigo)
-  const sessao = await supabase.from("sessoes").upsert({ id: params.sessaoId, consentimento_lgpd: true }, { onConflict: "id", ignoreDuplicates: true });
+  // garante que a sessão existe mesmo se o consentimento não tiver sido gravado antes (ex: localStorage antigo).
+  // Nasce com false: só registrarConsentimento (o clique em Aceitar) grava true, pra coluna valer como prova de aceite.
+  const sessao = await supabase.from("sessoes").upsert({ id: params.sessaoId, consentimento_lgpd: false }, { onConflict: "id", ignoreDuplicates: true });
   if (sessao.error) console.error("[supabase] registrarInteracao (sessoes) falhou:", sessao.error.message);
   const [historico, auditoria] = await Promise.all([
     supabase.from("historico_interacoes").insert({

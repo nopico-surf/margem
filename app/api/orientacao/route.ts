@@ -34,6 +34,11 @@ export async function POST(request: Request) {
       });
     }
 
+    // Conversar depende do aceite. A tela já impede, isto fecha o caso de bug no cliente: sem o cookie,
+    // nada é gravado nem enviado ao Gemini. buscarRecursos fica acima porque não leva o texto da pessoa.
+    const cookies = request.headers.get("cookie")?.split(/;\s*/) ?? [];
+    if (!cookies.includes("margem-consentimento=true")) return NextResponse.json({ error: "consentimento_ausente" }, { status: 403 });
+
     if (!texto && cardIndex === undefined) return NextResponse.json({ error: "Texto ou cardIndex obrigatório" }, { status: 400 });
     if (!sessaoId) return NextResponse.json({ error: "sessaoId obrigatório" }, { status: 400 });
 
