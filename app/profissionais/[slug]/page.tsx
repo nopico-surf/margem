@@ -34,11 +34,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const titulo = `${profissional.nome}, ${ESPECIALIDADE[profissional.especialidade]}`;
   const descricao = resumo(profissional.bio) ?? `${ESPECIALIDADE[profissional.especialidade]} parceira da Margem.`;
 
+  // SVG não serve de preview em WhatsApp e afins: sem foto de verdade, fica a imagem padrão.
+  const temFoto = profissional.foto_url && !profissional.foto_url.toLowerCase().endsWith(".svg");
+  const imagem = temFoto ? { url: profissional.foto_url!, alt: profissional.nome } : OG_IMAGE_PADRAO;
+
   return {
     title: titulo,
     description: descricao,
     alternates: { canonical: `/profissionais/${slug}` },
-    openGraph: { type: "profile", title: titulo, description: descricao, images: [OG_IMAGE_PADRAO], siteName: OG_SITE_NAME },
+    openGraph: { type: "profile", title: titulo, description: descricao, images: [imagem], siteName: OG_SITE_NAME },
   };
 }
 
