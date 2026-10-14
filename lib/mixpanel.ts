@@ -12,6 +12,28 @@ const UTM_CHAVES = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "
 // Lido na carga do módulo, antes de qualquer redirect (/ -> /inicio) apagar a query da URL.
 const chegada = typeof window === "undefined" ? null : { busca: window.location.search, referrer: document.referrer };
 
+// Exclusão por navegador: abrir qualquer página com ?sem_medicao=1 liga, ?sem_medicao=0 desliga.
+const CHAVE_SEM_MEDICAO = "margem-sem-medicao";
+
+function sincronizarSemMedicao() {
+  if (!chegada) return;
+  try {
+    const valor = new URLSearchParams(chegada.busca).get("sem_medicao");
+    if (valor === "1") window.localStorage.setItem(CHAVE_SEM_MEDICAO, "1");
+    if (valor === "0") window.localStorage.removeItem(CHAVE_SEM_MEDICAO);
+  } catch {}
+}
+
+function semMedicao() {
+  try {
+    return window.localStorage.getItem(CHAVE_SEM_MEDICAO) === "1";
+  } catch {
+    return false;
+  }
+}
+
+sincronizarSemMedicao();
+
 let iniciado = false;
 
 function registrarOrigem() {
@@ -43,6 +65,7 @@ function registrarOrigem() {
 function iniciar() {
   if (iniciado || !token || typeof window === "undefined") return iniciado;
   if (HOST_LOCAL.test(window.location.hostname)) return false;
+  if (semMedicao()) return false;
   mixpanel.init(token, {
     ip: true,
     autocapture: false,
