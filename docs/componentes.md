@@ -457,3 +457,35 @@ Em `/public/assets`: `dois-amigos-abracando.webp`, `homem-regata-verde.webp`, `m
 - [ ] Confirmar no Ícones os nomes `lock`, `healing`, `work`, `groups`.
 - [ ] `EmergencyPanel`, `IntroShell`, `IntroBubble`, `IntroCopy`, `IntroHeader`, `ConsentCard` e `LinkPoliticaDados` ficaram sem uso. Não foram apagados.
 - [x] O `track()` do Mixpanel não checa o consentimento, de propósito: a medição anônima de navegação continua depois da recusa (o painel avisa). Card e texto só chegam a ele depois do aceite.
+
+---
+
+## 11. A tela /redes-de-apoio, de 14/10/2026
+
+Implementada a partir do frame `Profissionais` (1478:12507, mobile) do arquivo Experiência do produto, com o menu `menu` (660:32) do Margem System. O desktop não tem frame: é o da `/conversa`, por isso a tela usa `ContainerConteudo` e `CardRecurso` e não tem CSS de desktop próprio.
+
+**Duas abas, uma rota.** `/redes-de-apoio?tipo=publicas|independentes`. A aba mora só na URL, como a especialidade na `/profissionais`. Públicas é `servicos_publicos` e Independentes é `instituicoes_apoio` (hoje AA e NA), as mesmas listas e a mesma ordem da `/conversa`, lidas do banco com cache (`buscarRedesPublicas`, `buscarRedesIndependentes` em `lib/supabase.ts`). Nada fica fixo no código.
+
+**Composição.** `Header`, `SideMenu`, `ContainerConteudo` com `CardHeader` (h1), o filtro, a lista de `CardRecurso`, o `BannerSugestaoRede` e o `Footer`. O rodapé desce pro fim da viewport quando o conteúdo é curto (`margin-top: auto`, sem `fixed`). O skeleton é o mesmo de `CardsServicosPublicos` e `CardsInstituicoes`.
+
+**`FiltroEspecialidade` virou genérico.** Recebe `opcoes`, e é o `button-select` do Figma. `OPCOES_ESPECIALIDADE` (profissionais) e `OPCOES_REDE` (`lib/redes-apoio.ts`) são as duas listas em uso. O nome do arquivo ficou, para não mexer em quem já importa.
+
+**Componente novo: `BannerSugestaoRede`** (`conversa/BannerSugestaoRede`). Não tinha equivalente: `app-footer-card` tem foto e outra escala de texto. No Figma é o "Frame 222", ainda sem nome de componente. Aparece em `/ui`. Pendente: nomear no Margem System.
+
+**Mixpanel** (anotação do frame: "saber que a pessoa veio daqui"):
+
+| Evento | Propriedades | Quando |
+|---|---|---|
+| `redes_apoio_menu_clicado` | `tipo`, `rota` | clique em Públicas ou Independentes no menu |
+| `filtro_rede_apoio_clicado` | `filtro` | clique no seletor da tela |
+| `contato_clicado`, `saiba_mais_clicado` | `origem: "redes_apoio"` | ações dos cards. Na `/conversa` o campo não existe |
+| `sugestao_rede_apoio_clicada` | `tipo` | botão do banner, com a aba de onde veio |
+
+**Texto do WhatsApp do banner** (`LINK_WHATSAPP_SUGESTAO_REDE`, `lib/contatos.ts`) vem da anotação do botão. O `**` do Figma virou `*`, que é o negrito do WhatsApp.
+
+**Ortografia.** O Figma diz "Publicas" e "Sugira uma rede apoio". No código: "Públicas" e "Sugira uma rede de apoio". O menu também ganhou "Contatos e redes" no lugar de "Contatos".
+
+### Pendências
+
+- [ ] Nomear no Margem System o "Frame 222" (`banner-sugestao-rede`) e corrigir os dois textos do Figma.
+- [ ] O skeleton do card de recurso está escrito em três lugares (`CardsServicosPublicos`, `CardsInstituicoes` e `RedesApoioCarregando`). Vale virar um componente `card-recurso` com `state=loading`.

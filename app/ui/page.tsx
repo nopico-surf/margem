@@ -11,6 +11,7 @@ import { PainelInferior } from "@/components/ui/PainelInferior";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardFormacoes } from "@/components/conversa/CardFormacoes";
+import { BannerSugestaoRede } from "@/components/conversa/BannerSugestaoRede";
 import { GlifoVerifiedUser } from "@/components/icons/glifos";
 import { IconeAgendarWhatsapp, IconeSetaResultado } from "@/components/icons";
 import { FaixaComoFunciona } from "@/components/app/FaixaComoFunciona";
@@ -375,6 +376,17 @@ export default async function GaleriaDeComponentes() {
         <div className="galeria-estado">
           <span className="label-xx-small galeria-nome">9 profissionais</span>
           <CardProfissionais profissionais={Array.from({ length: 9 }, (_, i) => profissionalMock(i + 1))} />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Banner sugestão de rede</h2>
+        <p className="text-small-regular galeria-nota">
+          Figma: Frame 222 (node 1478:43751), ainda sem nome como componente lá. Fecha as duas abas da
+          /redes-de-apoio. O botão é o primary small, então hover, pressed e focus são os do Button.
+        </p>
+        <div className="galeria-palco galeria-palco-cards">
+          <BannerSugestaoRede />
         </div>
       </section>
 

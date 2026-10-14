@@ -20,6 +20,7 @@
 @import url('./bem-vindo.css');
 @import url('./painel-inferior.css');
 @import url('./profissionais.css');
+@import url('./redes-de-apoio.css');
 @import url('./profissional-detalhe.css');
 
 /* Tokens da tela migrados para seu valor real do tokens.css em 18/09/2026.

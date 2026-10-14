@@ -1,0 +1,51 @@
+/* Tela /redes-de-apoio. Reaproveita header, filtro, card de recurso e rodapé de components/conversa e
+   components/layout. O desktop é o da /conversa: ContainerConteudo (1080 de largura máxima, lista de
+   cards com raio xl a partir de 1088) e nada de layout próprio aqui. */
+.redes-apoio-pagina {
+  display: flex;
+  flex-direction: column;
+  background: var(--colors-neutral-50);
+}
+
+/* .app-header vem branco por padrão (globals.css); aqui deixa a página cinza aparecer atrás. */
+.redes-apoio-pagina .app-header {
+  background: transparent;
+}
+
+/* Empurra o rodapé pro fim da tela quando o conteúdo não preenche o viewport; quando preenche, ele
+   simplesmente segue o conteúdo, porque não sobra espaço livre pra margin-top:auto consumir. */
+.redes-apoio-pagina > .app-footer {
+  margin-top: auto;
+}
+
+/* Título em header-medium (ver estilos-de-texto.css), maior que o padrão de CardHeader. */
+.redes-apoio-pagina .figma-section-heading h1 {
+  font: 600 var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
+}
+
+/* Figma: `Frame 222`. Fundo neutral-100, raio xl, padding 16; título e texto, e o botão 8 abaixo. */
+.banner-sugestao-rede {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-8);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-100);
+}
+
+/* No desktop o padding acompanha o dos cards da lista (.figma-resource-card, 24 a partir de 48em). */
+@media (min-width: 48em) {
+  .banner-sugestao-rede {
+    padding: var(--spacing-24);
+  }
+}
+
+.banner-sugestao-rede .figma-section-heading h2 {
+  font: 600 var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
+}
+
+/* O CardHeader do resultado separa título e texto por 4; neste card o Figma usa 10. */
+.banner-sugestao-rede .figma-section-heading p {
+  margin-top: var(--spacing-10);
+}

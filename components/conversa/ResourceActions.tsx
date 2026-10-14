@@ -9,9 +9,12 @@ import type { IconeAcao } from "@/components/icons";
 // ícone da ação -> kind salvo no banco (inverso de ICONE_POR_KIND em app/api/orientacao/route.ts)
 const KIND_POR_ICONE: Partial<Record<IconeAcao, string>> = { place: "nearby", link: "site" };
 
-type ResourceActionsProps = { resource: CardResource; tipoRecurso: TipoRecurso };
+// `origem` diz de qual tela o clique veio (ex: "redes_apoio"). Sem ela o evento sai como sempre saiu.
+type ResourceActionsProps = { resource: CardResource; tipoRecurso: TipoRecurso; origem?: string };
 
-export function ResourceActions({ resource, tipoRecurso }: ResourceActionsProps) {
+export function ResourceActions({ resource, tipoRecurso, origem }: ResourceActionsProps) {
+  const origemDoEvento: Record<string, string> = origem ? { origem } : {};
+
   return (
     <ActionRow origem="acoes">
       {resource.actions.map((action, index) => (
@@ -25,13 +28,14 @@ export function ResourceActions({ resource, tipoRecurso }: ResourceActionsProps)
               acao_tipo: action.icon ? KIND_POR_ICONE[action.icon] ?? action.icon : null,
               acao_label: action.label,
               posicao: index + 1,
+              ...origemDoEvento,
             })
           }
         />
       ))}
       <ActionButton
         label="Saiba mais"
-        onClick={() => track("saiba_mais_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title })}
+        onClick={() => track("saiba_mais_clicado", { tipo_recurso: tipoRecurso, recurso_nome: resource.title, ...origemDoEvento })}
       />
     </ActionRow>
   );

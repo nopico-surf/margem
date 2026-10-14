@@ -175,6 +175,63 @@ export async function buscarInstituicoesPorCategoria(categoria: string) {
   return (data ?? []) as InstituicaoApoio[];
 }
 
+// As duas listas da /redes-de-apoio. São as mesmas que a /conversa mostra (categoria padrão), com a
+// mesma ordem, só que em cache como a lista de profissionais: a tela entra no shell e não depende de
+// sessão. Edição no Supabase aparece em até 1h. Falha não pode ficar 1h no cache como lista vazia.
+export async function buscarRedesPublicas(categoria: string) {
+  "use cache";
+  const supabase = getServerClient();
+  if (!supabase) {
+    cacheLife("seconds");
+    return servicosPublicosPadrao.filter((servico) => servico.categoria_resposta_relevante === categoria);
+  }
+  try {
+    const { data } = await supabase
+      .from("servicos_publicos")
+      .select("*")
+      .eq("categoria_resposta_relevante", categoria)
+      .eq("ativo", true)
+      // natureza é enum: o Postgres ordena pela ordem de declaração dos valores, que é a ordem de exibição.
+      .order("natureza")
+      .order("ordem")
+      .order("id")
+      .throwOnError();
+    cacheLife({ stale: 300, revalidate: 1800, expire: 3300 });
+    return data as ServicoPublico[];
+  } catch (erro) {
+    unstable_rethrow(erro);
+    console.error("[supabase] buscarRedesPublicas falhou:", mensagemDoErro(erro));
+    cacheLife("seconds");
+    return [];
+  }
+}
+
+export async function buscarRedesIndependentes(categoria: string) {
+  "use cache";
+  const supabase = getServerClient();
+  if (!supabase) {
+    cacheLife("seconds");
+    return instituicoesPadrao.filter((instituicao) => instituicao.categoria_resposta_relevante === categoria);
+  }
+  try {
+    const { data } = await supabase
+      .from("instituicoes_apoio")
+      .select("*")
+      .eq("categoria_resposta_relevante", categoria)
+      .eq("ativo", true)
+      .order("ordem")
+      .order("id")
+      .throwOnError();
+    cacheLife({ stale: 300, revalidate: 1800, expire: 3300 });
+    return data as InstituicaoApoio[];
+  } catch (erro) {
+    unstable_rethrow(erro);
+    console.error("[supabase] buscarRedesIndependentes falhou:", mensagemDoErro(erro));
+    cacheLife("seconds");
+    return [];
+  }
+}
+
 export async function registrarConsentimento(sessaoId: string) {
   const supabase = getServerClient();
   if (!supabase) return;

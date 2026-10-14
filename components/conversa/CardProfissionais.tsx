@@ -6,7 +6,7 @@ import { ActionRow } from "./ActionRow";
 import { CardHeader } from "./CardHeader";
 import { CardProfissionaisCompleto } from "./CardProfissionaisCompleto";
 import { CardProfissionalSkeleton } from "./CardProfissionalSkeleton";
-import { FiltroEspecialidade, type Especialidade } from "./FiltroEspecialidade";
+import { FiltroEspecialidade, OPCOES_ESPECIALIDADE, type Especialidade } from "./FiltroEspecialidade";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoServicosPublicos } from "@/components/ui/BotaoServicosPublicos";
 import { rolarAteSecao } from "@/components/ui/SectionJump";
@@ -89,7 +89,7 @@ export function CardProfissionais({
         title="Profissionais que podem ajudar"
         description={naHome ? undefined : "É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"}
       />
-      <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
+      <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
       {especialidadeSelecionada === "psicologo" && (
         <ValorSessaoPsicologos />
       )}

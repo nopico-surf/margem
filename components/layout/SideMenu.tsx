@@ -6,6 +6,7 @@ import { BotaoFecharMenu } from "@/components/ui/BotaoFecharMenu";
 import { MenuContatos } from "./MenuContatos";
 import { track } from "@/lib/mixpanel";
 import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
+import { OPCOES_REDE, type TipoRede } from "@/lib/redes-apoio";
 
 type SideMenuProps = {
   open: boolean;
@@ -14,12 +15,14 @@ type SideMenuProps = {
   // Dentro da /profissionais a troca de especialidade é só no cliente: na mesma rota o router.push
   // mantém a tela antiga parada, sem skeleton, até o servidor responder.
   onSelecionarEspecialidade?: (especialidade: Especialidade) => void;
+  // Idem para a /redes-de-apoio e a troca entre públicas e independentes.
+  onSelecionarRede?: (tipo: TipoRede) => void;
 };
 
 // A saída tem animação, então o painel continua montado por mais 350ms depois de fechar.
 const DURACAO_FECHAMENTO = 350;
 
-export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade }: SideMenuProps) {
+export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSelecionarRede }: SideMenuProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(open);
   const [isClosing, setIsClosing] = useState(false);
@@ -35,6 +38,16 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade }: Sid
     router.push(`/profissionais?especialidade=${especialidade}`);
   }
 
+  function irParaRedesDeApoio(tipo: TipoRede) {
+    track("redes_apoio_menu_clicado", { tipo, rota });
+    onClose();
+    if (onSelecionarRede) {
+      onSelecionarRede(tipo);
+      return;
+    }
+    router.push(`/redes-de-apoio?tipo=${tipo}`);
+  }
+
   // Botão com router.push não tem o prefetch automático do <Link>, então sem isto a /profissionais só
   // começa a baixar no clique e a tela anterior fica parada até o servidor responder. Baixando quando
   // o menu abre, o clique já mostra o skeleton. As duas URLs são a mesma rota: o Next baixa uma vez só.
@@ -42,6 +55,8 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade }: Sid
     if (!open) return;
     router.prefetch("/profissionais?especialidade=psicologo");
     router.prefetch("/profissionais?especialidade=psiquiatra");
+    router.prefetch("/redes-de-apoio?tipo=publicas");
+    router.prefetch("/redes-de-apoio?tipo=independentes");
   }, [open, router]);
 
   useEffect(() => {
@@ -104,8 +119,14 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade }: Sid
           <button type="button" onClick={() => irParaProfissionais("psicologo")}>Psicólogos</button>
           <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Psiquiatras</button>
         </div>
-        <h2>Contatos</h2>
+        <h2>Contatos e redes</h2>
         <MenuContatos />
+        <h2>Redes de apoio</h2>
+        <div className="side-menu-professionals">
+          {OPCOES_REDE.map(({ valor, rotulo }) => (
+            <button key={valor} type="button" onClick={() => irParaRedesDeApoio(valor)}>{rotulo}</button>
+          ))}
+        </div>
       </aside>
     </div>
   );

@@ -5,9 +5,9 @@ import type { CardResource, TipoRecurso } from "./types";
 
 // Figma: "cards-instituições-completo", que é o card reaproveitado tanto pelos serviços públicos
 // quanto pelos espaços de apoio. Só muda o que é enviado no tracking.
-type CardRecursoProps = { resource: CardResource; tipoRecurso: TipoRecurso };
+type CardRecursoProps = { resource: CardResource; tipoRecurso: TipoRecurso; origem?: string };
 
-export function CardRecurso({ resource, tipoRecurso }: CardRecursoProps) {
+export function CardRecurso({ resource, tipoRecurso, origem }: CardRecursoProps) {
   return (
     <article className="figma-resource-card">
       <div className="figma-resource-heading">
@@ -16,7 +16,7 @@ export function CardRecurso({ resource, tipoRecurso }: CardRecursoProps) {
           <p>{resource.description}</p>
         </div>
       </div>
-      <ResourceActions resource={resource} tipoRecurso={tipoRecurso} />
+      <ResourceActions resource={resource} tipoRecurso={tipoRecurso} origem={origem} />
     </article>
   );
 }

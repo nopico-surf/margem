@@ -9,7 +9,7 @@ import { CardHeader } from "@/components/conversa/CardHeader";
 import { ContainerConteudo } from "@/components/conversa/ContainerConteudo";
 import { CardProfissionaisCompleto } from "@/components/conversa/CardProfissionaisCompleto";
 import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
-import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
+import { FiltroEspecialidade, OPCOES_ESPECIALIDADE, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { fotoPequena } from "@/lib/foto-pequena";
@@ -90,7 +90,7 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
 
       <div className="profissionais-cabecalho">
         <CardHeader as="h1" title="Profissionais que podem ajudar" />
-        <FiltroEspecialidade selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
+        <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
         {especialidadeSelecionada === "psicologo" && (
           <ValorSessaoPsicologos />
         )}

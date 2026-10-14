@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
-import { FiltroEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
+import { FiltroEspecialidade, OPCOES_ESPECIALIDADE, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 
 // Figma: Experiência do produto, frames 1369:50724 (mobile) e 1369:51516 (desktop). É o shell da
@@ -18,7 +18,7 @@ const QUANTIDADE_DE_SKELETONS = 6;
 function Filtro({ especialidade }: { especialidade: Especialidade }) {
   return (
     <>
-      <FiltroEspecialidade selecionada={especialidade} onChange={() => {}} />
+      <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidade} onChange={() => {}} />
       {especialidade === "psicologo" && (
         <ValorSessaoPsicologos />
       )}

@@ -82,7 +82,8 @@
   color: var(--colors-alpha-88);
 }
 
-.side-menu-professionals + h2 {
+.side-menu-professionals + h2,
+.side-menu-contacts + h2 {
   margin-top: var(--spacing-32);
 }
 

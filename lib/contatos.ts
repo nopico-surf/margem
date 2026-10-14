@@ -13,6 +13,18 @@ export const CONTATOS: Array<{ tipo: TipoContato; href: string; texto: string; e
 export const LINK_GRUPO_FACEBOOK =
   "https://www.facebook.com/share/g/1C6RLXy11o/?utm_source=margem&utm_medium=rodape&utm_campaign=grupo_facebook";
 
+// Banner "Sugira uma rede de apoio" da /redes-de-apoio: o mesmo WhatsApp, com o texto da anotação do
+// Figma (Experiência do produto, 1478:43714). O `*` é o negrito do WhatsApp; no Figma está como `**`.
+export const LINK_WHATSAPP_SUGESTAO_REDE = `https://wa.me/5511968996977?text=${encodeURIComponent(
+  [
+    "Olá! Quero sugerir uma rede de apoio para incluir na Margem.",
+    "• *Nome da rede:*",
+    "• *Perfil nas redes sociais ou site:*",
+    "• *Cidade/Estado ou Online:*",
+    "• *O que ela faz:*",
+  ].join("\n"),
+)}`;
+
 // Banner e atalho "Cannabis medicinal" da home: o mesmo WhatsApp, já com a mensagem escrita.
 export const LINK_WHATSAPP_CANNABIS = `https://wa.me/5511968996977?text=${encodeURIComponent(
   "Acessei a Margem e quero saber mais sobre Cannabis Medicinal",
