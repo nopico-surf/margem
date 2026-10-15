@@ -162,10 +162,18 @@ export function HomeHero({ text, onChangeText, onSubmit, onOpenMenu, onExpandir,
       // Na volta, o espelho da ida: o verde encolhe da tela cheia até a altura do hero, por cima da
       // página, que fica parada porque o lugar continua reservado até o fim. Sem isso o hero voltava
       // pequeno de uma vez e cortava o campo, que ainda vinha deslizando lá de baixo.
-      // Com texto, o campo cresceu e a gaveta do "Enviar" fica aberta: a altura de antes de abrir é
-      // pequena demais, e o verde pulava no fim. Vale a de agora, que já é a final (a gaveta não muda).
-      // Vazio, a gaveta ainda está recolhendo e a medida de agora sai alta: vale a de antes de abrir.
-      const altura = text ? ultimo.hero.height : parseFloat(lugar.style.height) || ultimo.hero.height;
+      // A altura de antes de abrir não serve: o texto pode ter crescido ou sido apagado lá dentro, e o
+      // verde pulava no fim. A de agora também não: o campo ainda está no começo das transições de volta
+      // (a gaveta do "Enviar" recolhendo, o padding mudando). Adianta essas transições pro fim só pra
+      // medir e devolve cada uma ao ponto onde estava.
+      const transicoes = hero.getAnimations({ subtree: true }).filter((animacao) => animacao instanceof CSSTransition);
+      const tempos = transicoes.map((animacao) => animacao.currentTime);
+      transicoes.forEach((animacao) => animacao.finish());
+      const altura = hero.getBoundingClientRect().height;
+      transicoes.forEach((animacao, i) => {
+        animacao.currentTime = tempos[i];
+        animacao.play();
+      });
       lugar.style.height = `${altura}px`;
       const canto = getComputedStyle(hero).borderBottomRightRadius;
       hero.style.position = "relative";
