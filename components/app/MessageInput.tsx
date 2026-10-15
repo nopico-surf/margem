@@ -53,6 +53,10 @@ export function MessageInput({ value, onChange, onSubmit, expandido = false }: M
     // chega, porque ligada ela impede o Chrome de encolher o visualViewport.
     const virtualKeyboard = (navigator as Navigator & { virtualKeyboard?: VirtualKeyboardApi }).virtualKeyboard;
     let virtualKeyboardInformou = false;
+    // O visualViewport (ou a janela) já encolheu com o teclado alguma vez. No Chrome do Android dá pra
+    // baixar o teclado sem tirar o foco do campo: sem isso, campo focado e teclado fechado caía na
+    // estimativa e o campo ficava preso no alto.
+    let viewportInformou = false;
     const aoMudarVirtualKeyboard = () => {
       if (virtualKeyboard && virtualKeyboard.boundingRect.height > 0) virtualKeyboardInformou = true;
       update();
@@ -82,12 +86,10 @@ export function MessageInput({ value, onChange, onSubmit, expandido = false }: M
 
       if (focado && tecladoReal > 120) {
         modo = "real";
+        viewportInformou = true;
       } else if (focado && alturaVirtualKeyboard > 0 && virtualKeyboard) {
         modo = "real";
         linhaDoTeclado = virtualKeyboard.boundingRect.top;
-      } else if (focado && virtualKeyboardInformou) {
-        // A API já provou que funciona e agora diz altura 0: o teclado foi fechado sem tirar o foco.
-        modo = "fechado";
       } else if (focado && touch && performance.now() - focoEm < TEMPO_SEM_SINAL) {
         // O teclado ainda está subindo e o navegador não informou nada. Reservar o espaço já no toque
         // faz o campo, que desliza pra tela cheia, ir direto pra perto do lugar final, em vez de ir até
@@ -95,6 +97,9 @@ export function MessageInput({ value, onChange, onSubmit, expandido = false }: M
         modo = "provisorio";
         const reserva = tecladoMedido?.largura === larguraAtual ? tecladoMedido.altura : alturaSemTeclado * ESTIMATIVA_TECLADO;
         linhaDoTeclado = window.innerHeight - reserva;
+      } else if (focado && (virtualKeyboardInformou || viewportInformou)) {
+        // O navegador já provou que informa o teclado e agora diz que não tem: foi fechado sem tirar o foco.
+        modo = "fechado";
       } else if (focado && touch) {
         modo = "estimado";
         linhaDoTeclado = window.innerHeight - alturaSemTeclado * ESTIMATIVA_TECLADO;

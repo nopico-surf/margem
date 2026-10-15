@@ -162,7 +162,11 @@ export function HomeHero({ text, onChangeText, onSubmit, onOpenMenu, onExpandir,
       // Na volta, o espelho da ida: o verde encolhe da tela cheia até a altura do hero, por cima da
       // página, que fica parada porque o lugar continua reservado até o fim. Sem isso o hero voltava
       // pequeno de uma vez e cortava o campo, que ainda vinha deslizando lá de baixo.
-      const altura = parseFloat(lugar.style.height) || ultimo.hero.height;
+      // Com texto, o campo cresceu e a gaveta do "Enviar" fica aberta: a altura de antes de abrir é
+      // pequena demais, e o verde pulava no fim. Vale a de agora, que já é a final (a gaveta não muda).
+      // Vazio, a gaveta ainda está recolhendo e a medida de agora sai alta: vale a de antes de abrir.
+      const altura = text ? ultimo.hero.height : parseFloat(lugar.style.height) || ultimo.hero.height;
+      lugar.style.height = `${altura}px`;
       const canto = getComputedStyle(hero).borderBottomRightRadius;
       hero.style.position = "relative";
       hero.style.zIndex = "calc(var(--z-index-panel) - 1)";
