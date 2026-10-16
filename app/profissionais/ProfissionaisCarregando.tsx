@@ -29,7 +29,7 @@ function FiltroDaUrl() {
   return <Filtro especialidade={especialidade} />;
 }
 
-export function ProfissionaisCarregando() {
+export function ProfissionaisCarregando({ especialidadeInicial }: { especialidadeInicial: Especialidade }) {
   return (
     <main className="figma-result-page profissionais-pagina" aria-busy="true">
       <Header onOpenMenu={() => {}} hrefDoLogo="/inicio" />
@@ -37,9 +37,9 @@ export function ProfissionaisCarregando() {
       <div className="profissionais-cabecalho">
         <CardHeader as="h1" title="Profissionais que podem ajudar" />
         {/* Vindo do menu (navegação no cliente), a URL já é conhecida e o filtro nasce certo, com
-            Psiquiatras marcado e com a faixa de preço deles. Só no HTML estático, que não conhece a query, vale o
-            fallback em Psicologos até a resposta chegar. */}
-        <Suspense fallback={<Filtro especialidade="psicologo" />}>
+            Psiquiatras marcado e com a faixa de preço deles. No HTML estático, que não conhece a query, vale a aba
+            da rota (o rewrite do next.config manda o link de psiquiatras pra /profissionais/aba-psiquiatras). */}
+        <Suspense fallback={<Filtro especialidade={especialidadeInicial} />}>
           <FiltroDaUrl />
         </Suspense>
       </div>

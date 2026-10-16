@@ -24,6 +24,20 @@ const nextConfig = {
       { source: "/bem-vindo", destination: "/inicio", permanent: false },
     ];
   },
+  // A /profissionais é HTML estático e não conhece a query: sem isso, o link da aba de psiquiatras
+  // nascia com Psicologos marcado até o JavaScript carregar. A URL que a pessoa vê não muda.
+  // beforeFiles porque a /profissionais existe como página e ganharia de um rewrite comum.
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/profissionais",
+          has: [{ type: "query", key: "especialidade", value: "(medicos-psiquiatras|psiquiatra)" }],
+          destination: "/profissionais/aba-psiquiatras",
+        },
+      ],
+    };
+  },
   async headers() {
     return [
       {
