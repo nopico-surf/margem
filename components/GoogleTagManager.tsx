@@ -22,9 +22,9 @@ export function GoogleTagManager() {
 function gtag(){window.dataLayer.push(arguments);}
 gtag('consent', 'default', {
   analytics_storage: 'granted',
-  ad_storage: 'denied',
-  ad_user_data: 'denied',
-  ad_personalization: 'denied',
+  ad_storage: 'granted',
+  ad_user_data: 'granted',
+  ad_personalization: 'granted',
   functionality_storage: 'denied',
   personalization_storage: 'denied',
   security_storage: 'granted'

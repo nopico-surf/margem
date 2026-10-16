@@ -100,7 +100,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
         label="Agendar por WhatsApp"
         href={whatsappHref}
         disabled={!whatsappHref}
-        onClick={() =>
+        onClick={() => {
           track("agendar_whatsapp_clicado", {
             rota: pathname,
             tipo_recurso: "profissional",
@@ -108,8 +108,11 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
             recurso_nome: profissional.nome,
             especialidade: profissional.especialidade,
             posicao: posicao ?? null,
-          })
-        }
+          });
+          // Conversão da Meta, configurada no GTM. Vai sem nenhum dado do profissional.
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: "agendar_whatsapp" });
+        }}
       />
     </article>
   );

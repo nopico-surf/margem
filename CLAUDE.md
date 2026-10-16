@@ -65,6 +65,8 @@ Não há mais card de emergência (CVV 188, SAMU 192, Polícia 190, Disque Socia
 
 **Medição.** O Mixpanel mede navegação mesmo depois da recusa (o painel avisa; legítimo interesse). Card e texto do campo livre só chegam a ele depois do aceite: `card_selecionado` e `card_titulo` levam o título do card, `texto_livre_enviado` só o tamanho do texto. `consentimento_concedido` e `consentimento_recusado` levam `rota` e `gatilho` (`abertura`, `card` ou `texto_livre`), nunca o card nem o texto. O `identify` usa o mesmo UUID de sessão do Supabase, de propósito.
 
+**Meta (pixel via GTM).** Decidido em 16/10/2026: mede todo mundo, sem depender do aceite, e a `/privacidade` avisa. A conversão é o evento `agendar_whatsapp` no `dataLayer`, disparado em qualquer botão "Agendar por WhatsApp" (card e página do profissional), sem nenhum parâmetro. Card e texto nunca vão pra Meta. A configuração das tags fica no GTM, não no código.
+
 **Tela principal.** Seis cards que representam estados emocionais distintos, mais um sétimo para familiares e pessoas próximas. Em paralelo, um campo de texto livre. A pessoa escolhe qualquer um dos caminhos, não é um funil.
 
 **Se clicou num card.** A resposta já está no banco (`cards_predefinidos` → `respostas`). Zero chamada de IA, zero token. Renderiza direto.
@@ -154,7 +156,7 @@ Nosso, não da IA. A IA não decide nada sobre reuso.
 - `termos_risco`: termo, tipo_emergencia, numero_contato, mensagem_escalacao
 - `auditoria_sessoes`: sessao_id, acao, timestamp
 
-Retenção indefinida. Nenhum dado pessoal identificável é coletado.
+Retenção indefinida. A Margem não coleta dado pessoal identificável; a Meta, pelo pixel, pode ligar a visita à conta da pessoa no Instagram ou no Facebook.
 
 ---
 

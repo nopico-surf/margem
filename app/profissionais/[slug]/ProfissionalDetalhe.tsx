@@ -125,6 +125,9 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
       especialidade: profissional.especialidade,
       posicao: null,
     });
+    // Conversão da Meta, configurada no GTM. Vai sem nenhum dado do profissional.
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "agendar_whatsapp" });
   }
 
   function botaoAgendar(className: string) {
