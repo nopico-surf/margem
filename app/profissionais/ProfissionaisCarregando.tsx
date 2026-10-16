@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
-import { FiltroEspecialidade, OPCOES_ESPECIALIDADE, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
+import { FiltroEspecialidade, OPCOES_ESPECIALIDADE, especialidadeDaUrl, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 
 // Figma: Experiência do produto, frames 1369:50724 (mobile) e 1369:51516 (desktop). É o shell da
@@ -25,7 +25,7 @@ function Filtro({ especialidade }: { especialidade: Especialidade }) {
 }
 
 function FiltroDaUrl() {
-  const especialidade = useSearchParams().get("especialidade") === "psiquiatra" ? "psiquiatra" : "psicologo";
+  const especialidade = especialidadeDaUrl(useSearchParams().get("especialidade"));
   return <Filtro especialidade={especialidade} />;
 }
 

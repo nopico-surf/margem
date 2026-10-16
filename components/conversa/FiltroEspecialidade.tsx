@@ -11,6 +11,21 @@ export const OPCOES_ESPECIALIDADE: OpcaoDoFiltro<Especialidade>[] = [
   { valor: "psiquiatra", rotulo: "Médicos/Psiquiatras" },
 ];
 
+// Na URL a aba de psiquiatras aparece como o rótulo dela, "Médicos/Psiquiatras". O valor de dentro
+// continua `psiquiatra`, que é o do banco. `?especialidade=psiquiatra` segue valendo pros links antigos.
+const VALOR_NA_URL: Record<Especialidade, string> = {
+  psicologo: "psicologo",
+  psiquiatra: "medicos-psiquiatras",
+};
+
+export function urlDaEspecialidade(especialidade: Especialidade) {
+  return `/profissionais?especialidade=${VALOR_NA_URL[especialidade]}`;
+}
+
+export function especialidadeDaUrl(valor: string | null): Especialidade {
+  return valor === VALOR_NA_URL.psiquiatra || valor === "psiquiatra" ? "psiquiatra" : "psicologo";
+}
+
 type FiltroEspecialidadeProps<T extends string> = {
   opcoes: OpcaoDoFiltro<T>[];
   selecionada: T;

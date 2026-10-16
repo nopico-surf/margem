@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
@@ -9,7 +9,13 @@ import { CardHeader } from "@/components/conversa/CardHeader";
 import { ContainerConteudo } from "@/components/conversa/ContainerConteudo";
 import { CardProfissionaisCompleto } from "@/components/conversa/CardProfissionaisCompleto";
 import { CardProfissionalSkeleton } from "@/components/conversa/CardProfissionalSkeleton";
-import { FiltroEspecialidade, OPCOES_ESPECIALIDADE, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
+import {
+  FiltroEspecialidade,
+  OPCOES_ESPECIALIDADE,
+  especialidadeDaUrl,
+  urlDaEspecialidade,
+  type Especialidade,
+} from "@/components/conversa/FiltroEspecialidade";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { fotoPequena } from "@/lib/foto-pequena";
@@ -22,10 +28,8 @@ type ProfissionaisClienteProps = {
 };
 
 export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProps) {
-  const pathname = usePathname();
   // A especialidade mora só na URL: o replaceState de trocarEspecialidade atualiza o useSearchParams.
-  const especialidadeSelecionada: Especialidade =
-    useSearchParams().get("especialidade") === "psiquiatra" ? "psiquiatra" : "psicologo";
+  const especialidadeSelecionada = especialidadeDaUrl(useSearchParams().get("especialidade"));
   const [menuOpen, setMenuOpen] = useState(false);
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
 
@@ -60,7 +64,7 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
   }
 
   function trocarEspecialidade(especialidade: Especialidade) {
-    window.history.replaceState(null, "", `${pathname}?especialidade=${especialidade}`);
+    window.history.replaceState(null, "", urlDaEspecialidade(especialidade));
   }
 
   function selecionarEspecialidade(especialidade: Especialidade) {

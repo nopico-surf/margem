@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { BotaoFecharMenu } from "@/components/ui/BotaoFecharMenu";
 import { MenuContatos } from "./MenuContatos";
 import { track } from "@/lib/mixpanel";
-import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
+import { urlDaEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import { OPCOES_REDE, type TipoRede } from "@/lib/redes-apoio";
 
 type SideMenuProps = {
@@ -35,7 +35,7 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
       onSelecionarEspecialidade(especialidade);
       return;
     }
-    router.push(`/profissionais?especialidade=${especialidade}`);
+    router.push(urlDaEspecialidade(especialidade));
   }
 
   function irParaRedesDeApoio(tipo: TipoRede) {
@@ -53,8 +53,8 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
   // o menu abre, o clique já mostra o skeleton. As duas URLs são a mesma rota: o Next baixa uma vez só.
   useEffect(() => {
     if (!open) return;
-    router.prefetch("/profissionais?especialidade=psicologo");
-    router.prefetch("/profissionais?especialidade=psiquiatra");
+    router.prefetch(urlDaEspecialidade("psicologo"));
+    router.prefetch(urlDaEspecialidade("psiquiatra"));
     router.prefetch("/redes-de-apoio?tipo=publicas");
     router.prefetch("/redes-de-apoio?tipo=independentes");
   }, [open, router]);
