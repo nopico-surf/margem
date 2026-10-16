@@ -8,7 +8,7 @@ export type OpcaoDoFiltro<T extends string> = { valor: T; rotulo: string };
 
 export const OPCOES_ESPECIALIDADE: OpcaoDoFiltro<Especialidade>[] = [
   { valor: "psicologo", rotulo: "Psicologos" },
-  { valor: "psiquiatra", rotulo: "Psiquiatras" },
+  { valor: "psiquiatra", rotulo: "Médicos/Psiquiatras" },
 ];
 
 type FiltroEspecialidadeProps<T extends string> = {

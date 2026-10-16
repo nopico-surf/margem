@@ -28,6 +28,7 @@ function profissionalMock(indice: number): ProfissionalCadastrado {
     id: `mock-${indice}`,
     nome: `Amanda Fernande de Bezerra ${indice}`,
     especialidade: "psicologo",
+    especialidade_rotulo: null,
     registro_profissional: "00/00000",
     ano_inicio_experiencia: 2015,
     foto_url: "/assets/professional-avatar.png",

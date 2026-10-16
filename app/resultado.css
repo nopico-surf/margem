@@ -242,6 +242,11 @@
   margin-right:auto;
 }
 
+/* Provisório, enquanto há poucos psiquiatras: a fileira deles começa na esquerda em vez de centralizar. */
+.figma-professionals-row--esquerda>:first-child {
+  margin-left:0;
+}
+
 .figma-professional-card-construction {
   gap:0;
 }
@@ -307,7 +312,6 @@
   -webkit-box-orient:vertical;
   -webkit-line-clamp:2;
   overflow:hidden;
-  min-height:calc(2 * var(--line-height-md));
   font-size:var(--font-size-sm);
   line-height:var(--line-height-md);
 }
@@ -607,14 +611,36 @@
   margin-top:var(--spacing-4);
 }
 
+/* Espaçamentos curtos pra o bloco (nome, especialidade, registro e experiência) terminar junto com a
+   foto de 96: 32 + 2 + 32 + 2 + 28. */
 .figma-professional-copy {
-  gap:var(--spacing-10)!important;
+  gap:var(--spacing-2)!important;
 }
 
+/* Nome e especialidade têm sempre duas linhas cada, quebrem ou não: a especialidade e o registro
+   começam na mesma altura em todos os cards. */
 .figma-professional-identity {
   display:flex;
   flex-direction:column;
-  gap:var(--spacing-4);
+  gap:var(--spacing-2);
+}
+
+.figma-professional-identity>strong {
+  min-height:calc(2 * var(--line-height-md));
+}
+
+/* Os cards de uma fileira têm a mesma altura; o botão vai pro pé pra ficar alinhado entre eles. */
+.figma-professional-card>:last-child {
+  margin-top:auto;
+}
+
+/* A especialidade vem do que a pessoa escreveu e pode ser longa: até duas linhas, com reticências. */
+.figma-professional-identity>span {
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+  min-height:calc(2 * var(--line-height-md));
 }
 
 .figma-professional-head strong,

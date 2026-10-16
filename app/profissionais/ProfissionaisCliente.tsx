@@ -91,9 +91,7 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
       <div className="profissionais-cabecalho">
         <CardHeader as="h1" title="Profissionais que podem ajudar" />
         <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
-        {especialidadeSelecionada === "psicologo" && (
-          <ValorSessaoPsicologos />
-        )}
+        <ValorSessaoPsicologos especialidade={especialidadeSelecionada} />
       </div>
 
       {profissionaisFiltrados.length === 0 ? (

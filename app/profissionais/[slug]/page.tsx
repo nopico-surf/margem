@@ -31,8 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const profissional = await buscarProfissionalPorSlug(slug);
   if (!profissional) return {};
 
-  const titulo = `${profissional.nome}, ${ESPECIALIDADE[profissional.especialidade]}`;
-  const descricao = resumo(profissional.bio) ?? `${ESPECIALIDADE[profissional.especialidade]} parceira da Margem.`;
+  const especialidade = profissional.especialidade_rotulo ?? ESPECIALIDADE[profissional.especialidade];
+  const titulo = `${profissional.nome}, ${especialidade}`;
+  const descricao = resumo(profissional.bio) ?? `${especialidade} parceira da Margem.`;
 
   // SVG não serve de preview em WhatsApp e afins: sem foto de verdade, fica a imagem padrão.
   const temFoto = profissional.foto_url && !profissional.foto_url.toLowerCase().endsWith(".svg");

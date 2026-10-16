@@ -14,14 +14,12 @@ import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 
 const QUANTIDADE_DE_SKELETONS = 6;
 
-// O preço é só de psicólogo, igual na tela pronta (ProfissionaisCliente).
+// A faixa de preço segue a especialidade, igual na tela pronta (ProfissionaisCliente).
 function Filtro({ especialidade }: { especialidade: Especialidade }) {
   return (
     <>
       <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidade} onChange={() => {}} />
-      {especialidade === "psicologo" && (
-        <ValorSessaoPsicologos />
-      )}
+      <ValorSessaoPsicologos especialidade={especialidade} />
     </>
   );
 }
@@ -39,7 +37,7 @@ export function ProfissionaisCarregando() {
       <div className="profissionais-cabecalho">
         <CardHeader as="h1" title="Profissionais que podem ajudar" />
         {/* Vindo do menu (navegação no cliente), a URL já é conhecida e o filtro nasce certo, com
-            Psiquiatras marcado e sem preço. Só no HTML estático, que não conhece a query, vale o
+            Psiquiatras marcado e com a faixa de preço deles. Só no HTML estático, que não conhece a query, vale o
             fallback em Psicologos até a resposta chegar. */}
         <Suspense fallback={<Filtro especialidade="psicologo" />}>
           <FiltroDaUrl />

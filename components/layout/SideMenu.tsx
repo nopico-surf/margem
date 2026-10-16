@@ -117,7 +117,7 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
         <h2>Profissionais</h2>
         <div className="side-menu-professionals">
           <button type="button" onClick={() => irParaProfissionais("psicologo")}>Psicólogos</button>
-          <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Psiquiatras</button>
+          <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Médicos/Psiquiatras</button>
         </div>
         <h2>Contatos e redes</h2>
         <MenuContatos />

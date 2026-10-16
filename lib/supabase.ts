@@ -33,6 +33,7 @@ export type ProfissionalCadastrado = {
   id: string;
   nome: string;
   especialidade: "psicologo" | "psiquiatra" | "assistente_social";
+  especialidade_rotulo: string | null;
   registro_profissional: string | null;
   ano_inicio_experiencia: number | null;
   foto_url: string | null;
@@ -97,7 +98,7 @@ function embaralharComSeed<T>(itens: T[], seedStr: string) {
 
 // Lista explícita: telefone, email e localizacao existem na tabela mas nunca podem chegar ao navegador.
 const COLUNAS_PROFISSIONAL =
-  "id, nome, especialidade, registro_profissional, ano_inicio_experiencia, foto_url, bio, tags, whatsapp_link, status, ativo, categoria_resposta_relevante, abordagem, formacoes";
+  "id, nome, especialidade, especialidade_rotulo, registro_profissional, ano_inicio_experiencia, foto_url, bio, tags, whatsapp_link, status, ativo, categoria_resposta_relevante, abordagem, formacoes";
 
 export async function buscarProfissionaisPorCategoria(categoria: string, sessaoId?: string) {
   const supabase = getServerClient();

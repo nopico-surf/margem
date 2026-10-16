@@ -7,7 +7,7 @@ import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardFormacoes } from "@/components/conversa/CardFormacoes";
-import { especialidadeLabel, hrefWhatsappProfissional, registroLabel } from "@/components/conversa/CardProfissionaisCompleto";
+import { hrefWhatsappProfissional, registroLabel, rotuloEspecialidade } from "@/components/conversa/CardProfissionaisCompleto";
 import { Avatar } from "@/components/ui/Avatar";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
@@ -167,15 +167,15 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
           <article className="profissional-card">
             <div className="profissional-identidade">
               <h1 className="profissional-nome">{profissional.nome}</h1>
-              <p className="profissional-especialidade">{especialidadeLabel[profissional.especialidade]}</p>
+              <p className="profissional-especialidade">{rotuloEspecialidade(profissional)}</p>
               <div className="profissional-registro">
                 <span>{profissional.registro_profissional && `${registroLabel[profissional.especialidade]}: ${profissional.registro_profissional}`}</span>
                 <span>{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia)}</span>
               </div>
             </div>
 
-            {profissional.especialidade === "psicologo" && (
-              <ValorSessaoPsicologos />
+            {profissional.especialidade !== "assistente_social" && (
+              <ValorSessaoPsicologos especialidade={profissional.especialidade} />
             )}
 
             {profissional.tags.length > 0 && (

@@ -18,6 +18,11 @@ export const especialidadeLabel: Record<ProfissionalCadastrado["especialidade"],
   assistente_social: "Assistência Social",
 };
 
+// O que a pessoa escreveu como especialidade no formulário; sem isso, o rótulo fixo da categoria.
+export function rotuloEspecialidade(profissional: Pick<ProfissionalCadastrado, "especialidade" | "especialidade_rotulo">) {
+  return profissional.especialidade_rotulo ?? especialidadeLabel[profissional.especialidade];
+}
+
 export const registroLabel: Record<ProfissionalCadastrado["especialidade"], string> = {
   psicologo: "CRP",
   psiquiatra: "CRM",
@@ -83,7 +88,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
                 {profissional.nome}
               </Link>
             </strong>
-            <span>{especialidadeLabel[profissional.especialidade]}</span>
+            <span>{rotuloEspecialidade(profissional)}</span>
           </div>
           <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia)}</small>
         </div>

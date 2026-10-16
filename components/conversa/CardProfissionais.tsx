@@ -90,15 +90,16 @@ export function CardProfissionais({
         description={naHome ? undefined : "É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"}
       />
       <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
-      {especialidadeSelecionada === "psicologo" && (
-        <ValorSessaoPsicologos />
-      )}
+      <ValorSessaoPsicologos especialidade={especialidadeSelecionada} />
       {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />
       ) : profissionaisFiltrados.length === 1 ? (
         <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} />
       ) : (
-        <ActionRow className="figma-professionals-row" origem="profissionais">
+        <ActionRow
+          className={especialidadeSelecionada === "psiquiatra" ? "figma-professionals-row figma-professionals-row--esquerda" : "figma-professionals-row"}
+          origem="profissionais"
+        >
           {profissionaisFiltrados.map((profissional, index) => (
             <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
           ))}
