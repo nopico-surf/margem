@@ -14,6 +14,8 @@ import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { fotoPequena } from "@/lib/foto-pequena";
 import { track } from "@/lib/mixpanel";
 import { carregarImagem } from "@/lib/carregar-imagem";
+import { embaralharComSeed } from "@/lib/embaralhar";
+import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // `variante="home"` é o card-profissionais da home (Figma 1434:302136): sem a descrição, com a faixa de
@@ -50,7 +52,12 @@ export function CardProfissionais({
 
   const fotosProntas = urlsDasFotos.length === 0 || urlsDasFotos.every((url) => fotosCarregadas.includes(url));
 
-  if (isLoading || !fotosProntas) {
+  // A ordem é aleatória por sessão em todo lugar (home, /profissionais e resposta). A sessão só existe no
+  // navegador, então o esqueleto fica até ela ser lida e os cards já nascem na ordem final.
+  const [sessaoId, setSessaoId] = useState<string | null>(null);
+  useEffect(() => setSessaoId(getOrCreateSessaoId()), []);
+
+  if (isLoading || !fotosProntas || !sessaoId) {
     return (
       <ContainerConteudo id="figma-section-professionals" className={naHome ? "home-profissionais" : undefined}>
         {naHome ? (
@@ -72,7 +79,12 @@ export function CardProfissionais({
     );
   }
 
-  const profissionaisFiltrados = profissionais.filter(
+  // Ordena por nome antes de embaralhar: a lista chega em ordens diferentes (por nome do cache, já
+  // embaralhada da resposta) e o resultado precisa ser o mesmo nas três telas.
+  const profissionaisFiltrados = embaralharComSeed(
+    [...profissionais].sort((a, b) => a.nome.localeCompare(b.nome)),
+    sessaoId,
+  ).filter(
     (profissional) => profissional.especialidade === especialidadeSelecionada,
   );
 

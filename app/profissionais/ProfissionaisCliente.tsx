@@ -21,6 +21,8 @@ import { URL_AVATAR_PADRAO } from "@/components/ui/Avatar";
 import { fotoPequena } from "@/lib/foto-pequena";
 import { track } from "@/lib/mixpanel";
 import { carregarImagem } from "@/lib/carregar-imagem";
+import { embaralharComSeed } from "@/lib/embaralhar";
+import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 type ProfissionaisClienteProps = {
@@ -51,7 +53,13 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
     return () => { cancelado = true; };
   }, [chaveDasFotos]);
 
-  const fotosProntas = urlsDasFotos.length === 0 || urlsDasFotos.every((url) => fotosCarregadas.includes(url));
+  // Mesma ordem aleatória por sessão da home e da resposta (ver CardProfissionais). O esqueleto fica até
+  // a sessão ser lida no navegador, então os cards já nascem na ordem final.
+  const [sessaoId, setSessaoId] = useState<string | null>(null);
+  useEffect(() => setSessaoId(getOrCreateSessaoId()), []);
+
+  const fotosProntas =
+    sessaoId !== null && (urlsDasFotos.length === 0 || urlsDasFotos.every((url) => fotosCarregadas.includes(url)));
 
   function abrirMenu() {
     setMenuOpen(true);
@@ -74,7 +82,11 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
     });
   }
 
-  const profissionaisFiltrados = profissionais.filter(
+  const profissionaisOrdenados = sessaoId
+    ? embaralharComSeed([...profissionais].sort((a, b) => a.nome.localeCompare(b.nome)), sessaoId)
+    : profissionais;
+
+  const profissionaisFiltrados = profissionaisOrdenados.filter(
     (profissional) => profissional.especialidade === especialidadeSelecionada,
   );
 
