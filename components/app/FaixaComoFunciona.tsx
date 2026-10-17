@@ -95,7 +95,7 @@ function Fileira({ copia }: { copia: boolean }) {
       <Atalho
         href="/profissionais"
         icone={<GlifoWork size={16} color={COR_DO_ICONE} />}
-        titulo="Psicólogos parceiros"
+        titulo="Psicólogos e psiquiatras"
         texto="Acesse para encontrar o seu apoio"
         atalho="psicologos_parceiros"
         copia={copia}
