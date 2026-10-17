@@ -78,7 +78,7 @@
   mask-size:100% 300%;
   -webkit-mask-repeat:no-repeat;
   mask-repeat:no-repeat;
-  animation:figma-fade-cima-pra-baixo 4000ms ease-out both;
+  animation:figma-fade-cima-pra-baixo 8000ms ease-out both;
 }
 
 @keyframes figma-fade-cima-pra-baixo {
