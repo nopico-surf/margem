@@ -130,6 +130,30 @@ export function FaixaComoFunciona() {
     let pararEm: number | undefined;
     let tocando = false;
     let arrastoMedido = false;
+    // A pessoa está arrastando os cards de baixo: a faixa para e, depois de um tempo sem rolagem, volta.
+    let pararDeVez = false;
+    let voltarCardsEm: number | undefined;
+    let segurandoCards = false;
+    const cards = document.querySelector<HTMLElement>("#pathways .pathway-list");
+    const voltarDepoisDosCards = () => {
+      window.clearTimeout(voltarCardsEm);
+      voltarCardsEm = window.setTimeout(() => {
+        posicao = trilho!.scrollLeft;
+        pararDeVez = false;
+      }, ESPERA_PARA_VOLTAR);
+    };
+    const aoRolarCards = () => {
+      pararDeVez = true;
+      if (!segurandoCards) voltarDepoisDosCards();
+    };
+    const aoSegurarCards = () => {
+      segurandoCards = true;
+      window.clearTimeout(voltarCardsEm);
+    };
+    const aoSoltarCards = () => {
+      segurandoCards = false;
+      if (pararDeVez) voltarDepoisDosCards();
+    };
 
     // Meia volta: a largura da primeira fileira mais o vão até a segunda.
     const meiaVolta = () => {
@@ -148,7 +172,7 @@ export function FaixaComoFunciona() {
     function passo(agora: number) {
       const dt = anterior ? Math.min(agora - anterior, 100) : 0;
       anterior = agora;
-      if (!parado && !semMovimento.matches && faixa!.dataset.cabe !== "true") {
+      if (!parado && !pararDeVez && !semMovimento.matches && faixa!.dataset.cabe !== "true") {
         const meia = meiaVolta();
         posicao += (VELOCIDADE * dt) / 1000;
         if (meia > 0 && posicao >= meia) posicao -= meia;
@@ -218,8 +242,17 @@ export function FaixaComoFunciona() {
     faixa.addEventListener("focusin", aoFocar);
     faixa.addEventListener("focusout", aoDesfocar);
     trilho.addEventListener("scroll", aoRolar, { passive: true });
+    cards?.addEventListener("scroll", aoRolarCards, { passive: true });
+    cards?.addEventListener("pointerdown", aoSegurarCards);
+    window.addEventListener("pointerup", aoSoltarCards);
+    window.addEventListener("pointercancel", aoSoltarCards);
 
     return () => {
+      cards?.removeEventListener("scroll", aoRolarCards);
+      cards?.removeEventListener("pointerdown", aoSegurarCards);
+      window.removeEventListener("pointerup", aoSoltarCards);
+      window.removeEventListener("pointercancel", aoSoltarCards);
+      window.clearTimeout(voltarCardsEm);
       cancelAnimationFrame(quadro);
       window.clearTimeout(voltarEm);
       window.clearTimeout(pararEm);
