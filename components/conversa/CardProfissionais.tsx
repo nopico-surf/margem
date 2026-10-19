@@ -93,6 +93,15 @@ export function CardProfissionais({
     track("filtro_profissional_clicado", {
       filtro: especialidade === "psicologo" ? "psicologos" : "psiquiatras",
     });
+
+    // Se o bloco não está todo na tela, rola pra deixá-lo visível. Espera a lista nova renderizar pra medir
+    // a altura final.
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      const secao = document.getElementById("figma-section-professionals");
+      if (!secao) return;
+      const { top, bottom } = secao.getBoundingClientRect();
+      if (top < 0 || bottom > window.innerHeight) rolarAteSecao("figma-section-professionals");
+    }));
   }
 
   return (
