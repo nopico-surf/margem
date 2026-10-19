@@ -91,6 +91,19 @@
 
 /* Tamanho: o que muda é padding e tipografia. */
 
+/* xx-small: o botão "Psicólogos e psiquiatras" do header. Canto 4 (radius-sm) e texto
+   status-success-900, só neste tamanho; a água e o fundo seguem a variante. */
+.btn[data-tamanho="xx-small"] {
+  padding: var(--spacing-6) var(--spacing-8);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-xs);
+}
+
+.btn[data-tamanho="xx-small"][data-variante="secondary"]:not(:disabled):not([data-carregando="true"]) {
+  color: var(--colors-status-success-900);
+}
+
 .btn[data-tamanho="x-small"] {
   padding: var(--spacing-6) var(--spacing-10);
   font-size: var(--font-size-xs);

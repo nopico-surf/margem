@@ -2,6 +2,7 @@
 
 import { IconeFecharHeader, IconeVoltar, LogoMargem, LogoMargemIcone } from "@/components/icons";
 import { BotaoMenu } from "@/components/ui/BotaoMenu";
+import { Button } from "@/components/ui/Button";
 
 // Figma: página Header, componente `header`.
 //
@@ -23,9 +24,13 @@ type HeaderProps = {
   onVoltar?: () => void;
   // Quando vem, o X fica no lugar do menu (Figma: header da home com o campo aberto em tela cheia).
   onFechar?: () => void;
+  // Botão "Psicólogos e psiquiatras" à esquerda do menu (Figma: header, psicologosEPsiquiatras).
+  // Só existe no estado padrão: some com a seta de voltar e com o X, e as telas de profissionais
+  // passam false.
+  mostrarProfissionais?: boolean;
 };
 
-export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar }: HeaderProps) {
+export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar, mostrarProfissionais = true }: HeaderProps) {
   const logo = onVoltar ? (
     <>
       <LogoMargem className="app-logo app-logo-completo" />
@@ -55,6 +60,13 @@ export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar
         <button className="menu-button" type="button" aria-label="Fechar" onClick={onFechar} onMouseDown={(event) => event.preventDefault()}>
           <IconeFecharHeader />
         </button>
+      ) : mostrarProfissionais && !onVoltar ? (
+        <div className="app-header-direita">
+          <Button variante="secondary" tamanho="xx-small" href="/profissionais">
+            Psicólogos e psiquiatras
+          </Button>
+          <BotaoMenu onClick={onOpenMenu} />
+        </div>
       ) : (
         <BotaoMenu onClick={onOpenMenu} />
       )}

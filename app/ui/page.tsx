@@ -52,7 +52,7 @@ export const instant = false;
 
 type PropsDeBotao = {
   variante?: "primary" | "secondary" | "transparent";
-  tamanho?: "x-small" | "small" | "medium";
+  tamanho?: "xx-small" | "x-small" | "small" | "medium";
   redondo?: boolean;
   larguraTotal?: boolean;
 };
@@ -62,6 +62,12 @@ type Combinacao = { titulo: string; usadaEm: string; props: PropsDeBotao; conteu
 // As 8 combinações que aparecem em tela hoje, com o texto e o ícone que cada uma usa de verdade.
 // O Figma tem 246 variantes; o resto não está em uso, então não está aqui.
 const COMBINACOES: Combinacao[] = [
+  {
+    titulo: "secondary / xx-small / canto 4",
+    usadaEm: "Header, botão Psicólogos e psiquiatras",
+    props: { variante: "secondary", tamanho: "xx-small" },
+    conteudo: "Psicólogos e psiquiatras",
+  },
   {
     titulo: "primary / x-small / redondo",
     usadaEm: "FiltroEspecialidade, opção selecionada",

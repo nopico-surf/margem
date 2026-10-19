@@ -92,6 +92,8 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Em tela muito estreita sobra pouco espaço: o gap garante 8 entre o logo e o que vem depois. */
+  gap: var(--spacing-8);
   /* Vinha do home.css antigo e valia em todas as telas. */
   width: 100%;
   padding: 12px 12px 12px 16px;
@@ -109,8 +111,30 @@ textarea {
   }
 
   .app-header {
+    gap: var(--spacing-16);
     padding-inline: var(--pagina-padding-lateral);
   }
+}
+
+/* Direita do header: botão de profissionais e menu. 8 no mobile e 16 no desktop (Figma: header). */
+.app-header-direita {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+  /* Deixa o botão encolher e quebrar em duas linhas quando faltar espaço. */
+  min-width: 0;
+}
+
+@media (min-width: 48em) {
+  .app-header-direita {
+    gap: var(--spacing-16);
+  }
+}
+
+/* Logo e menu nunca encolhem; quem cede é o botão. */
+.app-header-direita .menu-button,
+.app-header .app-logo {
+  flex-shrink: 0;
 }
 
 .app-header img,

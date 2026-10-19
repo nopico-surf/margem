@@ -32,7 +32,7 @@ function FiltroDaUrl() {
 export function ProfissionaisCarregando({ especialidadeInicial }: { especialidadeInicial: Especialidade }) {
   return (
     <main className="figma-result-page profissionais-pagina" aria-busy="true">
-      <Header onOpenMenu={() => {}} hrefDoLogo="/inicio" />
+      <Header onOpenMenu={() => {}} hrefDoLogo="/inicio" mostrarProfissionais={false} />
 
       <div className="profissionais-cabecalho">
         <CardHeader as="h1" title="Profissionais que podem ajudar" />

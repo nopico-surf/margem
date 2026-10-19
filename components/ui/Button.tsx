@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
 type ButtonProps = {
   children: ReactNode;
   variante?: "primary" | "secondary" | "transparent";
-  tamanho?: "x-small" | "small" | "medium";
+  tamanho?: "xx-small" | "x-small" | "small" | "medium";
   // Canto 999 em vez de 12. No Figma é a propriedade `radius-full`.
   redondo?: boolean;
   larguraTotal?: boolean;

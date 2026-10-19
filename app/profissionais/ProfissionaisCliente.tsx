@@ -96,6 +96,7 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
         onOpenMenu={abrirMenu}
         hrefDoLogo="/inicio"
         onLogoClick={() => track("logo_clicado", { rota: "/profissionais" })}
+        mostrarProfissionais={false}
       />
       <SideMenu
         open={menuOpen}

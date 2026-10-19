@@ -148,6 +148,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
         hrefDoLogo="/inicio"
         onLogoClick={() => track("logo_clicado", { rota: pathname })}
         onVoltar={voltar}
+        mostrarProfissionais={false}
       />
       <SideMenu
         open={menuOpen}
