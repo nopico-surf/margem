@@ -11,7 +11,7 @@ import { track } from "@/lib/mixpanel";
 // funciona, um aviso "Se preferir, navegue por aqui" e dois atalhos verdes.
 //
 // Anotação do Figma: anda devagar da direita para a esquerda, e a pessoa pode arrastar. Para andar
-// sem fim, a fileira aparece duas vezes e a rolagem volta meia volta quando chega na segunda cópia.
+// sem fim nos dois sentidos, a fileira aparece três vezes e a rolagem fica entre uma e duas voltas.
 // Para enquanto a pessoa encosta, passa o mouse ou navega pelo teclado, e não anda com
 // prefers-reduced-motion. Se tudo cabe na tela, não anda e fica centralizada.
 
@@ -166,7 +166,13 @@ export function FaixaComoFunciona() {
     };
 
     function aplicarCabe() {
-      faixa!.dataset.cabe = cabe() ? "true" : "false";
+      const cabendo = cabe();
+      faixa!.dataset.cabe = cabendo ? "true" : "false";
+      // Começa na segunda cópia, para dar espaço de arrastar para trás.
+      if (!cabendo && trilho!.scrollLeft < meiaVolta()) {
+        posicao = meiaVolta();
+        trilho!.scrollLeft = posicao;
+      }
     }
 
     function passo(agora: number) {
@@ -175,7 +181,7 @@ export function FaixaComoFunciona() {
       if (!parado && !pararDeVez && !semMovimento.matches && faixa!.dataset.cabe !== "true") {
         const meia = meiaVolta();
         posicao += (VELOCIDADE * dt) / 1000;
-        if (meia > 0 && posicao >= meia) posicao -= meia;
+        if (meia > 0 && posicao >= 2 * meia) posicao -= meia;
         trilho!.scrollLeft = posicao;
       }
       quadro = requestAnimationFrame(passo);
@@ -203,10 +209,13 @@ export function FaixaComoFunciona() {
       }, ESPERA_PARA_VOLTAR);
     }
 
-    // Arrastando para a frente, a fileira também dá a volta, senão a pessoa chegaria ao fim da cópia.
+    // Arrastando para qualquer lado, a fileira dá a volta: a rolagem fica entre uma e duas voltas.
     function aoRolar() {
       const meia = meiaVolta();
-      if (parado && meia > 0 && trilho!.scrollLeft >= meia) trilho!.scrollLeft -= meia;
+      if (parado && meia > 0 && faixa!.dataset.cabe !== "true") {
+        if (trilho!.scrollLeft >= 2 * meia) trilho!.scrollLeft -= meia;
+        else if (trilho!.scrollLeft < meia) trilho!.scrollLeft += meia;
+      }
       if (tocando && !arrastoMedido) {
         arrastoMedido = true;
         track("fileira_arrastada", { origem: "como_funciona" });
@@ -274,6 +283,7 @@ export function FaixaComoFunciona() {
     <div className="faixa-como-funciona" ref={faixaRef}>
       <ActionRow className="faixa-trilho" origem="como_funciona">
         <Fileira copia={false} />
+        <Fileira copia />
         <Fileira copia />
       </ActionRow>
     </div>
