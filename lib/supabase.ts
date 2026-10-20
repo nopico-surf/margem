@@ -8,7 +8,7 @@ import { slugsDosProfissionais } from "./slug-profissional";
 
 let client: SupabaseClient | null = null;
 
-function getServerClient() {
+export function getServerClient() {
   if (client) return client;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
