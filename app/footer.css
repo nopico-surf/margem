@@ -3,7 +3,7 @@
    lado. A partir de 86rem o card deita (texto ao lado da foto), como no frame de 1920. */
 
 .app-footer {
-  container-type:inline-size;
+  container:rodape / inline-size;
   display:flex;
   flex-direction:column;
   gap:var(--spacing-16);
@@ -137,17 +137,58 @@
   object-position:center 54%;
 }
 
-/* Duas metades iguais, como o `fill` do Figma: com grid o padding não desequilibra a divisão. */
+/* Título do card do Instagram: mobile e desk1 usam o "estreito", o desk 2 usa o "largo". */
+.app-footer-so-largo {
+  display:none;
+}
+
+/* Mesmas colunas da seção "Para quem é a Margem" da home (home.css): as duas primeiras valem um terço
+   do que sobra depois dos gaps e do padding de 24 do Importante, e a terceira fica com o resto. Assim
+   contatos, card do Instagram e card do Facebook ficam alinhados com os três cards de cima.
+   As linhas do grid (título e descrição, botão, foto) são compartilhadas entre os dois cards com
+   subgrid: mesmo que um texto quebre em mais linhas que o outro, os botões e as fotos ficam sempre
+   alinhados. Por isso o bloco de texto vira `display:contents` e o espaçamento dele passa pras margens. */
 @media (min-width: 48em) {
   .app-footer {
     display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    gap:var(--spacing-24);
+    grid-template-columns:repeat(2, calc((100% - 4 * var(--spacing-24)) / 3)) minmax(0, 1fr);
+    grid-template-rows:auto auto auto;
+    column-gap:var(--spacing-24);
+    row-gap:0;
     align-items:start;
   }
 
   .app-footer-contatos {
+    grid-row:1 / span 3;
     gap:var(--spacing-32);
+  }
+
+  .app-footer-card {
+    display:grid;
+    grid-row:1 / span 3;
+    grid-template-rows:subgrid;
+    row-gap:0;
+    align-self:stretch;
+  }
+
+  .app-footer-card-texto {
+    display:contents;
+  }
+
+  .app-footer-card-cabecalho {
+    grid-row:1;
+    margin:var(--spacing-8) var(--spacing-8) 0;
+  }
+
+  .app-footer-card .btn {
+    grid-row:2;
+    align-self:start;
+    justify-self:start;
+    margin:var(--spacing-8) var(--spacing-8) 18px; /* 18 = 8 do padding do texto + 10 do gap até a foto */
+  }
+
+  .app-footer-card-foto {
+    grid-row:3;
   }
 
   .app-footer-card-foto img {
@@ -155,8 +196,8 @@
   }
 }
 
-/* Os três contatos ficam todos numa linha ou todos um embaixo do outro, nunca quebrados. 28rem é a
-   largura dos três juntos mais os espaços; abaixo disso empilham. Container query porque a coluna
+/* Os contatos ficam todos numa linha ou todos um embaixo do outro, nunca quebrados. 28rem é a
+   largura deles juntos mais os espaços; abaixo disso empilham. Container query porque a coluna
    dos contatos é metade da tela e a escala de breakpoints não mede isso. */
 @container (min-width: 28rem) {
   .app-footer-list {
@@ -166,17 +207,46 @@
 }
 
 /* Container query, como o bloco de cannabis da home: 86rem é o corte do Figma, fora da escala de breakpoints. */
-@container (min-width: 86rem) {
-  .app-footer-card {
-    display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    align-items:center;
+@container rodape (min-width: 86rem) {
+  .app-footer-so-estreito {
+    display:none;
   }
 
-  /* O bloco de texto (com o texto alinhado à esquerda) fica no centro da sua metade, na vertical e
-     na horizontal, como no frame de 1920 e como o texto do bloco de cannabis. */
-  .app-footer-card-texto {
-    align-self:center;
-    justify-self:center;
+  .app-footer-so-largo {
+    display:inline;
+  }
+
+  /* O card deita: texto na primeira metade, foto na segunda. As linhas de cima e de baixo (1fr) mantêm o
+     texto no centro da altura do card, e as duas do meio continuam sendo as mesmas nos dois cards. */
+  .app-footer {
+    grid-template-rows:1fr auto auto 1fr;
+  }
+
+  .app-footer-contatos {
+    grid-row:1 / span 4;
+  }
+
+  .app-footer-card {
+    grid-row:1 / span 4;
+    /* A foto vale metade do primeiro card (a coluna de um terço) nos dois, pra os paddings e a foto
+       ficarem iguais mesmo com o card do Facebook mais largo; o texto fica com o que sobra. */
+    grid-template-columns:minmax(0, 1fr) calc((100cqw - 4 * var(--spacing-24)) / 6);
+  }
+
+  .app-footer-card-cabecalho {
+    grid-column:1;
+    grid-row:2;
+    margin:0 var(--spacing-24);
+  }
+
+  .app-footer-card .btn {
+    grid-column:1;
+    grid-row:3;
+    margin:var(--spacing-8) var(--spacing-24) 0;
+  }
+
+  .app-footer-card-foto {
+    grid-column:2;
+    grid-row:1 / span 4;
   }
 }

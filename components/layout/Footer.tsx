@@ -14,8 +14,15 @@ const ICONES: Record<TipoContato, ComponentType<{ className?: string }>> = {
   email: IconeEmailRodape,
 };
 
-// Figma: componente `rodape` da Home (Experiência do produto, 1472:9223 mobile, 1472:9293 desk1 e
-// 1433:182920 largo). Contatos e redes de um lado, card do grupo do Facebook do outro.
+// O Instagram tem card próprio no rodapé, então não repete na lista de contatos.
+const CONTATOS_RODAPE = CONTATOS.filter((contato) => contato.tipo !== "instagram");
+const LINK_INSTAGRAM = CONTATOS.find((contato) => contato.tipo === "instagram")!.href;
+const SIZES_FOTO = "(min-width: 86rem) 25vw, (min-width: 48em) 50vw, 100vw";
+
+// Figma: componente `rodape` (Margem System, 670:1425: mobile, desk1 e desk 2). Contatos e redes,
+// card do Instagram e card do grupo do Facebook. O título do Instagram troca no corte do desk 2
+// (86rem), como no Figma. Decidido com o usuário: o Instagram não aparece na lista de contatos e o
+// card do Facebook usa o texto novo em todas as larguras.
 export function Footer() {
   function aoClicarNoGrupo() {
     track("grupo_facebook_clicado", { origem: "rodape" });
@@ -28,9 +35,9 @@ export function Footer() {
       <div className="app-footer-contatos">
         <LogoMargem className="app-footer-logo" />
         <div className="app-footer-redes">
-          <p className="app-footer-title">Contatos e Redes</p>
+          <p className="app-footer-title">Contatos</p>
           <div className="app-footer-list">
-            {CONTATOS.map((contato) => {
+            {CONTATOS_RODAPE.map((contato) => {
               const Icone = ICONES[contato.tipo];
               return (
                 <ContatoLink
@@ -48,19 +55,38 @@ export function Footer() {
         </div>
       </div>
 
-      <section className="app-footer-card" aria-labelledby="app-footer-card-titulo">
+      <section className="app-footer-card" aria-labelledby="app-footer-instagram-titulo">
         <div className="app-footer-card-texto">
           <div className="app-footer-card-cabecalho">
-            <h2 id="app-footer-card-titulo">Um espaço pra bater papo de perto</h2>
-            <p>Grupo no Facebook pra aproximar a nossa comunidade</p>
+            <h2 id="app-footer-instagram-titulo">
+              <span className="app-footer-so-estreito">Conteúdo e presença no seu dia a dia</span>
+              <span className="app-footer-so-largo">Conteúdo para o seu dia a dia</span>
+            </h2>
+            <p>Informação, escuta e caminhos de cuidado sem julgamento para a sua rotina</p>
           </div>
-          <Button tamanho="x-small" href={LINK_GRUPO_FACEBOOK} alvoExterno onClick={aoClicarNoGrupo}>
-            Fazer parte
+          <Button tamanho="x-small" href={LINK_INSTAGRAM} alvoExterno>
+            Seguir no Instagram
             <IconeFavorito />
           </Button>
         </div>
         <div className="app-footer-card-foto">
-          <Image src="/assets/grupo-conversa-parque.webp" alt="" fill sizes="(min-width: 86rem) 25vw, (min-width: 48em) 50vw, 100vw" />
+          <Image src="/assets/grupo-conteudo-instagram.webp" alt="" fill sizes={SIZES_FOTO} />
+        </div>
+      </section>
+
+      <section className="app-footer-card" aria-labelledby="app-footer-card-titulo">
+        <div className="app-footer-card-texto">
+          <div className="app-footer-card-cabecalho">
+            <h2 id="app-footer-card-titulo">Um espaço pra bater papo de perto</h2>
+            <p>Troca de ideias, conversas de perto e acolhimento na comunidade</p>
+          </div>
+          <Button tamanho="x-small" href={LINK_GRUPO_FACEBOOK} alvoExterno onClick={aoClicarNoGrupo}>
+            Participar no Facebook
+            <IconeFavorito />
+          </Button>
+        </div>
+        <div className="app-footer-card-foto">
+          <Image src="/assets/grupo-conversa-parque.webp" alt="" fill sizes={SIZES_FOTO} />
         </div>
       </section>
     </footer>
