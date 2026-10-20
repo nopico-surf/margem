@@ -1,6 +1,7 @@
 "use client";
 
-import mixpanel from "mixpanel-browser";
+// Versão sem a gravação de sessão, que a Margem não usa: o pacote completo era o maior JS do site.
+import mixpanel from "mixpanel-browser/src/loaders/loader-module-core";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import { HOST_LOCAL } from "@/lib/host-local";
 
