@@ -30,6 +30,12 @@ export function Footer() {
     window.dataLayer.push({ event: "grupo_facebook_clicado", origem: "rodape" });
   }
 
+  function aoClicarNoInstagram() {
+    track("grupo_instagram_clicado", { origem: "rodape" });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "grupo_instagram_clicado", origem: "rodape" });
+  }
+
   return (
     <footer className="app-footer">
       <div className="app-footer-contatos">
@@ -64,7 +70,7 @@ export function Footer() {
             </h2>
             <p>Informação, escuta e caminhos de cuidado sem julgamento para a sua rotina</p>
           </div>
-          <Button tamanho="x-small" href={LINK_INSTAGRAM} alvoExterno>
+          <Button tamanho="x-small" href={LINK_INSTAGRAM} alvoExterno onClick={aoClicarNoInstagram}>
             Seguir no Instagram
             <IconeFavorito />
           </Button>
