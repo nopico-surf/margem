@@ -13,11 +13,14 @@ import { atualizarApoio, criarApoio } from "@/lib/apoio/registro";
 
 // Gera o Pix de um apoio: cobrança avulsa pra doação única, autorização de Pix Automático pra mensal.
 //
-// Nome e CPF/CNPJ só atravessam esta rota a caminho do Asaas: não são gravados, não vão pra log e não
+// Nome, CPF/CNPJ e e-mail só atravessam esta rota a caminho do Asaas: não são gravados, não vão pra log e não
 // voltam na resposta. O valor cobrado é o do catálogo (lib/apoio/planos.ts), nunca o que o navegador
 // mandou sem conferir. Nada aqui lê ou recebe o id de sessão da conversa.
 
 const SEM_CACHE = { "Cache-Control": "no-store" };
+
+// Só pra barrar o óbvio (sem @, sem domínio, com espaço); quem confirma que o e-mail existe é a nota chegando.
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function erro(codigo: string, status: number, extra?: Record<string, unknown>) {
   return NextResponse.json({ error: codigo, ...extra }, { status, headers: SEM_CACHE });
@@ -52,10 +55,18 @@ export async function POST(request: Request) {
   const cpfCnpj = normalizarCpfCnpj(corpo.cpfCnpj);
   if (!cpfCnpj) return erro("cpf_cnpj_invalido", 400);
 
+  // Profissional informa e-mail pra receber a nota fiscal. Do público geral (doação, sem nota) o
+  // e-mail não é pedido nem aceito.
+  let email: string | undefined;
+  if (ehServico(pedido.publico)) {
+    email = typeof corpo.email === "string" ? corpo.email.trim().toLowerCase() : "";
+    if (!email || email.length > 254 || !EMAIL.test(email)) return erro("email_invalido", 400);
+  }
+
   const apoioId = await criarApoio(pedido);
   if (!apoioId) return erro("pagamento_indisponivel", 503, { motivo: "banco" });
 
-  const cliente = await buscarOuCriarCliente(nome, cpfCnpj);
+  const cliente = await buscarOuCriarCliente(nome, cpfCnpj, email);
   if (!cliente.ok) {
     await atualizarApoio(apoioId, { status: "falhou" });
     return erroDoAsaas(cliente);

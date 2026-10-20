@@ -3,7 +3,7 @@
 // O ambiente sai do prefixo da própria chave ($aact_prod_ é produção, $aact_hmlg_ é sandbox), assim não
 // existe como apontar uma chave de teste pra produção ou o contrário.
 //
-// Nome e CPF de quem apoia passam por aqui só pra criar o cliente no Asaas. Não são gravados no nosso
+// Nome, CPF e e-mail (só de profissional) de quem apoia passam por aqui só pra criar o cliente no Asaas. Não são gravados no nosso
 // banco nem escritos em log: os erros registram status HTTP e código do Asaas, nunca o corpo enviado.
 
 export type MotivoFalhaAsaas = "sem_chave" | "tempo_esgotado" | "erro_asaas" | "resposta_invalida" | "erro_inesperado";
@@ -42,7 +42,7 @@ export function mesSeguinte(data: string) {
   return proxima.toISOString().slice(0, 10);
 }
 
-async function chamar<T>(metodo: "GET" | "POST", caminho: string, corpo?: unknown): Promise<ResultadoAsaas<T>> {
+async function chamar<T>(metodo: "GET" | "POST" | "PUT" | "DELETE", caminho: string, corpo?: unknown): Promise<ResultadoAsaas<T>> {
   const chave = process.env.ASAAS_API_KEY;
   const base = chave ? urlBase(chave) : null;
   if (!chave || !base) return { ok: false, motivo: "sem_chave" };
@@ -81,14 +81,24 @@ async function chamar<T>(metodo: "GET" | "POST", caminho: string, corpo?: unknow
 // Um cliente por pessoa no Asaas: procura pelo CPF/CNPJ antes de criar. A busca leva o CPF na URL, mas
 // é uma chamada do servidor direto pro Asaas, que já guarda esse CPF; o log acima corta tudo depois do "?".
 // Dois cliques quase simultâneos da mesma pessoa ainda podem criar dois clientes.
-export async function buscarOuCriarCliente(nome: string, cpfCnpj: string): Promise<ResultadoAsaas<{ id: string }>> {
+//
+// email só vem de profissional: é pra onde o Asaas manda a nota fiscal. Num cliente que já existe, o
+// e-mail só é preenchido se estiver vazio, nunca trocado: senão quem digitasse o CPF de outra pessoa
+// passaria a receber as notas e avisos dela.
+export async function buscarOuCriarCliente(nome: string, cpfCnpj: string, email?: string): Promise<ResultadoAsaas<{ id: string }>> {
   const busca = await chamar<{ data?: unknown }>("GET", `/customers?cpfCnpj=${encodeURIComponent(cpfCnpj)}&limit=1`);
   if (!busca.ok) return busca;
   if (!Array.isArray(busca.dados.data)) return { ok: false, motivo: "resposta_invalida" };
-  const existente = busca.dados.data[0] as { id?: unknown } | undefined;
-  if (typeof existente?.id === "string") return { ok: true, dados: { id: existente.id } };
+  const existente = busca.dados.data[0] as { id?: unknown; email?: unknown } | undefined;
+  if (typeof existente?.id === "string") {
+    if (email && !existente.email) {
+      const atualizacao = await chamar("PUT", `/customers/${encodeURIComponent(existente.id)}`, { email });
+      if (!atualizacao.ok) return atualizacao;
+    }
+    return { ok: true, dados: { id: existente.id } };
+  }
 
-  const resultado = await chamar<{ id?: unknown }>("POST", "/customers", { name: nome, cpfCnpj });
+  const resultado = await chamar<{ id?: unknown }>("POST", "/customers", { name: nome, cpfCnpj, ...(email ? { email } : {}) });
   if (!resultado.ok) return resultado;
   if (typeof resultado.dados.id !== "string") return { ok: false, motivo: "resposta_invalida" };
   return { ok: true, dados: { id: resultado.dados.id } };
@@ -118,10 +128,13 @@ export async function criarCobrancaPix(params: {
   const cobrancaId = cobranca.dados.id;
   if (typeof cobrancaId !== "string") return { ok: false, motivo: "resposta_invalida" };
 
+  // Sem QR code a pessoa não vê o Pix, então a cobrança não pode ficar pendente no painel do Asaas.
   const qr = await chamar<{ payload?: unknown; encodedImage?: unknown; expirationDate?: unknown }>("GET", `/payments/${encodeURIComponent(cobrancaId)}/pixQrCode`);
-  if (!qr.ok) return qr;
-  const qrCode = lerQrCode(qr.dados, qr.dados.expirationDate);
-  if (!qrCode) return { ok: false, motivo: "resposta_invalida" };
+  const qrCode = qr.ok ? lerQrCode(qr.dados, qr.dados.expirationDate) : null;
+  if (!qrCode) {
+    await chamar("DELETE", `/payments/${encodeURIComponent(cobrancaId)}`);
+    return qr.ok ? { ok: false, motivo: "resposta_invalida" } : qr;
+  }
   return { ok: true, dados: { cobrancaId, qrCode } };
 }
 
