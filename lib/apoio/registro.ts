@@ -1,4 +1,6 @@
 import { getServerClient } from "@/lib/supabase";
+import { CATEGORIA_PADRAO } from "@/lib/recursos";
+import type { CadastroProfissional } from "./cadastro";
 import type { PedidoApoio, PlanoProfissional } from "./planos";
 
 // Gravação da tabela apoios. Só ids do Asaas, plano, valor e status: nome e CPF nunca chegam aqui.
@@ -190,5 +192,39 @@ export async function marcarPrimeiraAtivacao(id: string, quando: string) {
   if (!supabase) return false;
   const { error } = await supabase.from("profissionais_cadastrados").update({ ativado_em: quando }).eq("id", id).is("ativado_em", null);
   if (error) console.error("[apoio] marcarPrimeiraAtivacao falhou:", error.message);
+  return !error;
+}
+
+// Grava o cadastro de "Quero fazer parte" como em_analise: não aparece no site até o primeiro pagamento.
+// O botão de WhatsApp do perfil leva ao número da Margem, como nos perfis que já existem (migração
+// 0015); o WhatsApp do profissional fica em telefone, que nunca vai pro navegador.
+//
+// Quem já tem cadastro com o mesmo e-mail ou registro não ganha outro, e a resposta é a mesma de um
+// cadastro novo: o formulário não serve pra descobrir quem está na Margem.
+export async function gravarCadastro(cadastro: CadastroProfissional, whatsappDaMargem: string): Promise<boolean> {
+  const supabase = getServerClient();
+  if (!supabase) return false;
+
+  // Duas buscas com .eq em vez de um .or montado com texto: o registro é digitado pela pessoa, e vírgula
+  // ou parêntese dentro dele mudaria o filtro do .or.
+  for (const [coluna, valor] of [["email", cadastro.email], ["registro_profissional", cadastro.registro_profissional]] as const) {
+    const { count, error: erroBusca } = await supabase
+      .from("profissionais_cadastrados")
+      .select("id", { count: "exact", head: true })
+      .eq(coluna, valor);
+    if (erroBusca) {
+      console.error("[apoio] gravarCadastro (busca) falhou:", erroBusca.message);
+      return false;
+    }
+    if ((count ?? 0) > 0) return true;
+  }
+
+  const { error } = await supabase.from("profissionais_cadastrados").insert({
+    ...cadastro,
+    status: "em_analise",
+    categoria_resposta_relevante: CATEGORIA_PADRAO,
+    whatsapp_link: whatsappDaMargem,
+  });
+  if (error) console.error("[apoio] gravarCadastro falhou:", error.message);
   return !error;
 }

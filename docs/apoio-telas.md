@@ -216,7 +216,23 @@ No celular, o código copia e cola fica em destaque (não dá para escanear a pr
 | `POST /api/apoio/link` | com `{ token }`, devolve `nome`, `profissao`, `planoEscolhido`, `precos` e `email` do cadastro, para a tela 4 do profissional. Erros: `link_invalido` (404), `plano_ja_ativo` (409). | pronta |
 | `GET /api/apoio/{id}/status` | status do apoio, para a tela 5 saber quando mudar | pronta |
 | `POST /api/apoio/webhook` | avisos do Asaas; atualiza o apoio e o profissional ligado a ele | pronta |
-| cadastro de profissional | grava o cadastro como `em_analise`, sem publicar nada | a construir |
+| `POST /api/profissionais/cadastro` | grava o cadastro como `em_analise`, sem publicar nada. Corpo: `profissao` (`psicologo` ou `medico`), `plano`, `nome`, `registro`, `whatsapp`, `email`; psicólogo manda `abordagem` (e `abordagemOutra` quando escolhe Outra); médico manda `especialidade` (e `especialidadeOutra`) e `rqe`. Devolve `{ ok: true }`, inclusive quando o e-mail ou o registro já têm cadastro (o formulário não revela quem está na Margem). | pronta |
+
+**Erros do cadastro (tela 3c)**
+
+| Código | Onde | Texto |
+|---|---|---|
+| `nome_invalido` | no campo | Escreva seu nome completo, com até 100 caracteres. |
+| `registro_invalido` | no campo | Confira o número do seu registro. |
+| `abordagem_invalida` | no campo | Escolha uma abordagem da lista. Se a sua não estiver lá, escolha Outra e escreva qual é. |
+| `especialidade_invalida` | no campo | Escolha uma especialidade da lista. Se a sua não estiver lá, escolha Outra e escreva qual é. |
+| `rqe_invalido` | no campo | Escreva o número do seu RQE. Sem ele, a especialidade não pode aparecer no seu perfil. |
+| `whatsapp_invalido` | no campo | Confira o número do WhatsApp, com DDD. |
+| `email_invalido` | no campo | Não conseguimos reconhecer esse e-mail. Confira se ele está completo, com @. |
+| `profissao_invalida`, `plano_invalido` | geral | Escolha sua profissão e um plano para enviar o cadastro. |
+| `cadastro_indisponivel` | geral | Não foi possível enviar seu cadastro agora. Tente de novo daqui a alguns minutos. |
+
+O WhatsApp do profissional fica em `telefone`, que nunca vai para o site. O botão "Agendar por WhatsApp" do perfil leva ao WhatsApp da Margem, como nos perfis que já existem.
 
 O link pessoal que o Vitor manda é a página do profissional com o código no fim (o código está em `profissionais_cadastrados.token_apoio`). O endereço da página é decisão de design.
 
