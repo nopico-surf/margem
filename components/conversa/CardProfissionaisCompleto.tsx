@@ -32,7 +32,7 @@ export const registroLabel: Record<ProfissionalCadastrado["especialidade"], stri
 export function hrefWhatsappProfissional(profissional: ProfissionalCadastrado) {
   const digitos = profissional.whatsapp_link?.replace(/\D/g, "");
   if (!digitos) return undefined;
-  const texto = encodeURIComponent(`Oi Vitor, achei o(a) ${profissional.nome} na Margem e gostaria de agendar uma sessão`);
+  const texto = encodeURIComponent(`Olá! Achei o(a) ${profissional.nome} na Margem e gostaria de agendar uma sessão`);
   return `https://wa.me/${digitos}?text=${texto}`;
 }
 
