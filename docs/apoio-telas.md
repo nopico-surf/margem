@@ -1,137 +1,255 @@
-# Apoiar a Margem: o que as telas precisam ter
+# Apoiar a Margem: fluxo, planos, campos e textos
 
-Especificação do fluxo de apoio para quem vai desenhar. Diz quais telas existem, que campos cada uma tem, que estados precisa cobrir e que regras valem. Não diz como fica: layout, componentes e todo texto de tela são decisão de design.
+Especificação do fluxo de apoio e de entrada de profissionais. Diz quais telas existem, que campos cada uma tem, que estados cobre, que textos usa e o que o backend espera. Layout e componentes são decisão de design.
 
-Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md). As regras da seção 7 do [`CLAUDE.md`](../CLAUDE.md) valem aqui sem exceção.
+Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de-voz.md`](tom-de-voz.md). As regras da seção 7 do [`CLAUDE.md`](../CLAUDE.md) valem aqui sem exceção.
 
-O backend já existe: `app/api/apoio/pix` gera o Pix, `app/api/apoio/[id]/status` diz se foi pago, `app/api/apoio/webhook` recebe os avisos do Asaas. Os planos e valores estão em `lib/apoio/planos.ts`.
-
----
-
-## Quem apoia e como
-
-Qualquer pessoa pode apoiar: profissional ou não, cadastrado na Margem ou não.
-
-| Público | Frequência | Valores | Natureza |
-|---|---|---|---|
-| Psicólogo | sempre mensal | R$ 20, R$ 40 ou R$ 80 | serviço (taxa de manutenção de software), com nota fiscal |
-| Médico ou psiquiatra | sempre mensal | R$ 40, R$ 80 ou R$ 160 | serviço, com nota fiscal |
-| Pessoa em geral | única ou mensal | aberto, a partir de R$ 5, com atalhos de R$ 10, 25, 50 e 100 | doação, sem nota |
-
-O pagamento é só por Pix. O mensal é Pix Automático: a pessoa autoriza uma vez no app do banco e os meses seguintes saem sozinhos.
-
-### O que cada plano de profissional significa
-
-- **Mínimo:** obrigatório para quem já recebeu pelo menos 3 clientes pela Margem.
-- **Intermediário:** obrigatório a partir de um número de clientes ativos (número ainda a definir).
-- **Mais alto:** para quem quer o plano de mídia.
-
-Quem tem menos de 3 clientes vindos da Margem continua na plataforma sem pagar, e pode apoiar se quiser.
-
-Hoje essa regra é aplicada na mão: a tela deixa o profissional escolher qualquer um dos três, e quem confere e avisa é o Vitor. A tela pode explicar a regra, mas não bloqueia nada com base nela.
+Última atualização: 21/10/2026.
 
 ---
 
-## As telas
+## Os dois caminhos
+
+**Quero fazer parte** (psicólogos, médicos e psiquiatras)
+
+1. Escolhe a profissão.
+2. Escolhe o plano.
+3. Envia o cadastro, já com o plano escolhido. Nada é pago nesta etapa.
+4. O Vitor analisa e aprova ou recusa, na mão.
+5. Aprovado, entra na lista de espera, se houver fila.
+6. Quando a vaga abre, recebe pelo WhatsApp o link pessoal de pagamento.
+7. Paga pelo Pix Automático.
+8. O perfil entra no ar sozinho quando o primeiro pagamento é confirmado.
+9. Nos 14 dias seguintes ao primeiro pagamento, pode cancelar e receber o valor de volta.
+
+**Quero apoiar** (qualquer pessoa)
+
+- Escolhe o valor (livre, a partir de R$ 5), se é uma vez ou todo mês, e paga pelo Pix.
+- Não se identifica como profissional. É doação, sem nota fiscal.
+
+---
+
+## Regras de negócio
+
+- **Manual até o pagamento.** Cadastro, aprovação e fila são manuais (status mudado no editor de tabelas do Supabase). O perfil só entra no ar com o primeiro pagamento.
+- **Link pessoal.** Só quem tem o link pessoal consegue pagar um plano de profissional. O preço sai do banco, nunca da tela.
+- **Mensalidade que falha.** O Asaas tenta de novo até 3 vezes em 7 dias. O perfil continua no ar durante 7 dias de tolerância. Se nenhuma tentativa der certo, sai do site sozinho. Se o pagamento cair depois, volta.
+- **Estorno dos 14 dias.** Feito na mão no Asaas. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
+- **Quem já está na plataforma** continua no ar sem pagar (`gratuito`) e recebe o link na mão, pelo Vitor.
+- **Ordem dos perfis** no site e nas orientações nunca depende do plano.
+- **Mínimo de R$ 5** por cobrança é regra do Asaas, não da Margem.
+
+---
+
+## Planos de profissional
+
+Preço fixo por profissão, sempre mensal, com nota fiscal, por Pix Automático.
+
+| Plano | Código | O que entrega | Psicólogo | Médico ou psiquiatra |
+|---|---|---|---|---|
+| Perfil | `perfil` | Perfil no site e nas orientações, nota fiscal todo mês | R$ 20 | R$ 40 |
+| Perfil + Destaque | `destaque` | Tudo do Perfil, mais story fixo no destaque "Quem atende" e presença no carrossel mensal coletivo | R$ 50 | R$ 90 |
+| Perfil + Divulgação | `divulgacao` | Tudo do Destaque, mais 1 conteúdo por mês em collab, impulsionado | R$ 160 (R$ 70 em anúncio) | R$ 260 (R$ 100 em anúncio) |
+| Perfil + Divulgação Plus | `divulgacao_plus` | Tudo do Destaque, mais 2 conteúdos por mês em collab, impulsionados | R$ 370 (R$ 200 em anúncio) | R$ 580 (R$ 300 em anúncio) |
+
+## Apoio de qualquer pessoa
+
+| Frequência | Valores | Natureza |
+|---|---|---|
+| Uma vez ou todo mês | aberto, a partir de R$ 5, com atalhos de R$ 10, 25, 50 e 100 | doação, sem nota |
+
+---
+
+## Telas e textos
+
+O que muda conforme o caso fica entre chaves. Botões e links no infinitivo, verbo + complemento. Carregamento dentro de botão mantém o texto e mostra o andamento só no visual.
 
 ### 1. Entrada
 
-- Onde fica é decisão de design (header, rodapé, menu, página do profissional).
-- Pode haver entradas diferentes por público, por exemplo uma na área de profissionais que já leva direto ao fluxo de profissional.
+| Onde | Caminho | Texto |
+|---|---|---|
+| Rodapé de todas as páginas | Quero apoiar | Link: Apoiar a Margem. Leva à tela 3b. |
+| Fim da página /profissionais | Quero fazer parte | Você é psicólogo, psicóloga, médico ou psiquiatra e quer atender pessoas pela Margem? · Botão: Cadastrar como profissional. Leva à tela 2. |
 
-### 2. Escolha do público
+### 2. Profissão (só "Quero fazer parte")
 
-- Três opções: psicólogo, médico ou psiquiatra, pessoa em geral.
-- Se a entrada já definiu o público, esta tela é pulada.
+| Elemento | Texto |
+|---|---|
+| Título | Qual é a sua profissão? |
+| Opção 1 | Psicólogo ou psicóloga · Planos mensais com nota fiscal |
+| Opção 2 | Médico ou psiquiatra · Planos mensais com nota fiscal |
 
 ### 3a. Plano do profissional
 
-- Três planos, com os valores da tabela acima. Sem campo de outro valor.
-- Sempre mensal: não existe opção de pagamento único para profissional.
-- Cada plano pode ter nome e explicação (mínimo, intermediário, mídia).
+| Elemento | Texto |
+|---|---|
+| Título | Escolha seu plano |
+| Apoio | Você escolhe o plano agora e só paga quando sua vaga abrir. Seu perfil entra no ar quando o primeiro pagamento for confirmado. |
+| Perfil | Perfil · R$ {20 ou 40} por mês · Seu perfil no site da Margem e nas orientações que as pessoas recebem. Quem procura apoio pode ver seu perfil e falar com você pelo WhatsApp. |
+| Destaque | Perfil + Destaque · R$ {50 ou 90} por mês · Tudo do Perfil, mais um story fixo nos destaques do Instagram da Margem, com link para o seu perfil, e presença no carrossel mensal de quem atende pela Margem. |
+| Divulgação | Perfil + Divulgação · R$ {160 ou 260} por mês · Tudo do Destaque, mais um conteúdo seu por mês no Instagram da Margem, em collab, impulsionado com R$ {70 ou 100} de anúncio e levando para o seu perfil. A gente propõe o tema, edita e revisa com a equipe clínica. |
+| Divulgação Plus | Perfil + Divulgação Plus · R$ {370 ou 580} por mês · Tudo do Destaque, mais dois conteúdos seus por mês, em collab, impulsionados com R$ {200 ou 300} de anúncio no total. |
+| Nota abaixo dos planos | Todos os planos têm nota fiscal e são cobrados todo mês por Pix Automático. A ordem dos perfis na Margem não muda conforme o plano. Você pode cancelar quando quiser, direto no app do banco. |
+| Botão | Escolher plano {nome} |
 
-### 3b. Valor da pessoa em geral
+### 3c. Cadastro do profissional
 
-- **Frequência:** única ou mensal. Qual vem marcada por padrão é decisão de design.
-- **Atalhos:** R$ 10, R$ 25, R$ 50, R$ 100.
-- **Outro valor:** campo em reais, até 2 casas decimais, mínimo R$ 5, sem máximo.
-- **Abaixo de R$ 5:** avisar na hora, antes de enviar. O mínimo é do Asaas, não da Margem.
+| Elemento | Texto |
+|---|---|
+| Título | Quer atender pela Margem? |
+| Plano escolhido | Plano {nome}, R$ {valor} por mês · Link: Trocar de plano |
+| Apoio | Cada cadastro passa por uma análise. Se for aprovado, você entra na lista de espera e a gente chama quando abrir vaga na sua especialidade. Nada é cobrado agora. |
+| Privacidade | Esses dados são usados para analisar seu cadastro e montar seu perfil. · Link: Ver como a gente cuida dos seus dados |
+| Botão | Enviar cadastro |
+| Sucesso | Título: Cadastro recebido · Texto: A gente analisa e responde pelo WhatsApp. |
+| Erro | Não foi possível enviar seu cadastro agora. Tente de novo daqui a alguns minutos. |
 
-### 4. Dados de quem paga
+**Campos**
 
-| Campo | Quem preenche | Regra |
+| Campo | Quem vê | Tipo | Rótulo e ajuda |
+|---|---|---|---|
+| Nome completo | todos | texto | Nome completo |
+| Registro | todos | texto | CRP (psicólogo) ou CRM (médico) |
+| Abordagem | só psicólogo | lista suspensa | Abordagem · Ajuda: Aparece no seu perfil |
+| Especialidade | só médico | lista suspensa | Especialidade · Ajuda: Aparece no seu perfil |
+| Outra abordagem / especialidade | quando escolhe "Outra" | texto | Qual abordagem? / Qual especialidade? |
+| RQE | médico, menos "Clínico geral, sem especialidade registrada" | texto | RQE · Ajuda: Registro de Qualificação de Especialista. Pelas regras do CFM, a especialidade só pode aparecer no seu perfil com o RQE. |
+| WhatsApp | todos | telefone | WhatsApp · Ajuda: É por aqui que a gente responde sobre o seu cadastro |
+| E-mail | todos | e-mail | E-mail · Ajuda: Para onde vai a nota fiscal, quando o plano começar |
+
+**Lista de abordagens (psicólogo):** Terapia Cognitivo Comportamental · Psicanálise · Análise do Comportamento · Terapia de Aceitação e Compromisso (ACT) · Terapia Comportamental Dialética (DBT) · Gestalt-terapia · Abordagem Centrada na Pessoa · Fenomenológico-existencial · Psicologia Analítica (junguiana) · Terapia Sistêmica · Psicodrama · Outra
+
+**Lista de especialidades (médico):** Psiquiatria · Medicina de Família e Comunidade · Clínica Médica · Neurologia · Medicina Preventiva e Social · Clínico geral, sem especialidade registrada · Outra
+
+A abordagem é gravada em `abordagem` e a especialidade em `especialidade_rotulo`, que o site já usa. Os nomes da lista batem com os que já estão no banco.
+
+### Mensagens que o Vitor envia pelo WhatsApp
+
+| Momento | Texto |
+|---|---|
+| Aprovado, com fila | Oi, {nome}! Seu cadastro na Margem foi aprovado e você está na lista de espera. Quando abrir vaga na sua especialidade, eu te mando o link para pagar o plano {nome do plano}. |
+| Não aprovado | Oi, {nome}. Obrigado pelo interesse na Margem. Neste momento, seu cadastro não entrou na rede. {motivo, se fizer sentido} |
+| Vaga aberta (ou aprovado sem fila) | Oi, {nome}! Abriu vaga na Margem. Por este link você paga o plano {nome do plano} pelo Pix. Seu perfil entra no ar quando o pagamento for confirmado, e se quiser cancelar em até 14 dias, a gente devolve o valor. {link} |
+
+O link pessoal abre a tela 4 já com o plano escolhido no cadastro.
+
+### 3b. Valor (só "Quero apoiar")
+
+| Elemento | Texto |
+|---|---|
+| Título | Quanto você quer apoiar? |
+| Apoio | O apoio ajuda a manter a Margem gratuita para quem procura cuidado e informação. A Margem é uma empresa, não uma ONG, por isso o apoio não gera nota fiscal nem recibo para o imposto de renda. |
+| Frequência | Uma vez · Todo mês (começa marcado em Uma vez) |
+| Atalhos | R$ 10 · R$ 25 · R$ 50 · R$ 100 |
+| Outro valor | Rótulo: Outro valor · Ajuda: A partir de R$ 5 · Valor em reais, até 2 casas decimais, sem máximo |
+| Botão | Apoiar com R$ {valor} · no mensal: Apoiar com R$ {valor} por mês |
+
+### 4. Dados para o Pix
+
+| Elemento | Texto |
+|---|---|
+| Título | Seus dados para o Pix |
+| Nome | Rótulo: Nome completo · Ajuda (só profissional): A nota fiscal sai nesse nome. · Até 100 caracteres. |
+| CPF ou CNPJ | Rótulo: CPF ou CNPJ · Ajuda: O Pix precisa do CPF ou CNPJ de quem paga. Ele vai só para a empresa que processa o pagamento e não fica guardado na Margem. · Profissional, a ajuda continua: Pode ser o CNPJ da sua empresa, e a nota sai nesse documento. · Aceita o CNPJ novo com letras; no celular, abrir o teclado numérico. |
+| E-mail (só profissional) | Rótulo: E-mail · Ajuda: Para onde vai a nota fiscal todo mês. Vem preenchido com o e-mail do cadastro. |
+| Nome no banco | No app do banco, o Pix aparece no nome de VITOR GAUDIO DESENVOLVIMENTO DE SOFTWARE LTDA, a empresa responsável pela Margem. |
+| Privacidade | Link: Ver como a gente cuida dos seus dados |
+| Botão | Gerar Pix (não aceita segundo clique enquanto carrega) |
+
+**Erros**
+
+| Código | Onde | Texto |
 |---|---|---|
-| Nome completo | todos | obrigatório, até 100 caracteres |
-| CPF ou CNPJ | todos | obrigatório, com dígito verificador válido. Aceita o CNPJ novo com letras: o campo precisa aceitar letras quando forem 14 caracteres. No celular, abrir o teclado numérico. |
-| E-mail | só profissional | obrigatório. É para onde vai a nota fiscal. A pessoa em geral não vê esse campo. |
+| `nome_invalido` | no campo | Escreva seu nome completo, com até 100 caracteres. |
+| `cpf_cnpj_invalido` | no campo | Não conseguimos conferir esse CPF ou CNPJ. Confira os números e tente de novo. |
+| `email_invalido` | no campo | Não conseguimos reconhecer esse e-mail. Confira se ele está completo, com @. |
+| `valor_abaixo_do_minimo` | no valor | Pelo Pix, o valor mínimo é R$ 5,00. |
+| `dados_recusados` | geral | O sistema de pagamento não aceitou esses dados. Confira o nome e o CPF ou CNPJ e tente de novo. |
+| `pagamento_indisponivel` | geral | Não foi possível gerar o Pix agora, porque o sistema de pagamento está fora do ar. Tente de novo daqui a alguns minutos. |
+| `link_invalido` | página inteira | Esse link de pagamento não está mais valendo. Fale com a gente pelo WhatsApp para receber um novo. · Botão: Falar com a Margem no WhatsApp |
+| `plano_ja_ativo` | página inteira | Seu plano já está ativo. · Botão: Voltar para o início |
 
-- O profissional pode pagar como pessoa física (CPF) ou pela empresa (CNPJ). A nota sai no nome e no documento informados.
-- **Aviso de privacidade:** uma linha dizendo que os dados vão para a empresa que processa o pagamento, com link para `/privacidade`. Não precisa de caixa de aceite: os dados são usados só para fazer o pagamento.
-- **Aviso sobre o nome que aparece no banco:** o app do banco mostra "VITOR GAUDIO DESENVOLVIMENTO DE SOFTWARE LTDA", não "Margem". Avisar antes, senão parece golpe. A tela também não pode dar a entender que a Margem é ONG ou entidade sem fins lucrativos.
-- **Botão:** gera o Pix. Enquanto espera a resposta, fica em estado carregando e não aceita segundo clique.
+### 5. Pix
 
-**Erros que o servidor devolve nesta etapa** (cada um precisa de um texto):
+| Elemento | Texto |
+|---|---|
+| Título | Seu Pix está pronto |
+| Valor | R$ {valor}, uma vez · no mensal: R$ {valor} por mês |
+| Celular | Copie o código e cole no app do seu banco, na opção Pix Copia e Cola. · Botão: Copiar código Pix · depois do toque: Código copiado |
+| Computador | Abra o app do seu banco, escolha pagar com Pix e aponte a câmera para o QR code. · Link: Copiar código Pix |
+| Mensal | No app do banco, você paga o primeiro mês e autoriza os próximos. Depois disso, o valor sai sozinho todo mês, e você pode cancelar quando quiser. |
+| Prazo (só mensal) | Este código vale por 30 minutos. · Contador: Vale por mais {mm:ss} |
+| Espera | Pode deixar esta tela aberta. Quando o pagamento chegar, ela muda sozinha. |
 
-| Código | Quando | Onde mostrar |
-|---|---|---|
-| `nome_invalido` | nome vazio ou longo demais | no campo |
-| `cpf_cnpj_invalido` | documento com dígito errado | no campo |
-| `email_invalido` | profissional sem e-mail ou e-mail sem formato de e-mail | no campo |
-| `valor_abaixo_do_minimo` | menos de R$ 5 | no valor (a tela já deveria ter barrado) |
-| `dados_recusados` | o Asaas recusou os dados (raro) | geral, pedindo para conferir |
-| `pagamento_indisponivel` | Asaas ou banco fora do ar | geral, pedindo para tentar de novo depois |
+No celular, o código copia e cola fica em destaque (não dá para escanear a própria tela). No computador, o QR code. A tela consulta o status a cada poucos segundos enquanto está aberta.
 
-### 5. QR code do Pix
+### 6. Pagamento confirmado
 
-A tela mais importante do fluxo.
-
-- **No celular:** o código copia e cola em destaque, com botão de copiar e estado de "copiado". Não dá para escanear um QR code na própria tela.
-- **No computador:** o QR code em destaque, com o copia e cola como alternativa.
-- Mostrar valor e frequência.
-- **Mensal:** explicar que no app do banco a pessoa paga o primeiro mês e autoriza os próximos, que saem sozinhos todo mês.
-- **Prazo:** o QR code do mensal vale 30 minutos (pode ter contador). O da doação única vale por muito tempo e não precisa de contador.
-- **A tela muda sozinha quando o pagamento cai.** O front consulta o status a cada poucos segundos enquanto ela está aberta. O texto de espera não pode narrar o sistema (nada de "verificando", "consultando").
-
-### 6. Sucesso
-
-Dois textos diferentes:
-
-- **Única:** pagamento recebido.
-- **Mensal:** apoio ativado, os próximos meses saem sozinhos. Incluir como cancelar (tela 8).
+| Caso | Título | Texto | Botão |
+|---|---|---|---|
+| Uma vez | Apoio recebido | Seus R$ {valor} chegaram. Obrigado por ajudar a manter a Margem gratuita para quem procura apoio. | Voltar para o início |
+| Todo mês, pessoa | Apoio mensal ativado | O primeiro mês chegou, e os próximos saem sozinhos pelo Pix Automático. | Voltar para o início |
+| Profissional | Plano {nome} ativado | Seu perfil já está no ar na Margem. Os próximos meses saem sozinhos pelo Pix Automático, e a nota fiscal chega no seu e-mail. Se quiser cancelar em até 14 dias, a gente devolve o valor. {Destaque e Divulgação:} Nos próximos dias, a gente chama você no WhatsApp para combinar o seu story. | Voltar para o início |
 
 ### 7. Não deu certo
 
-| Status | O que aconteceu | O que oferecer |
-|---|---|---|
-| `expirado` | o QR code do mensal passou dos 30 minutos sem pagamento | gerar outro Pix com os mesmos dados |
-| `recusado` | o banco recusou a autorização do mensal | gerar outro Pix com os mesmos dados |
+| Status | Título | Texto | Botões |
+|---|---|---|---|
+| `expirado` | Esse código expirou | O código do Pix mensal vale por 30 minutos. Seus dados continuam preenchidos, e você pode gerar outro. | Gerar novo Pix |
+| `recusado` | O banco não confirmou o Pix Automático | Isso pode acontecer quando a autorização não é concluída no app do banco. Se o primeiro mês já saiu da sua conta, fale com a gente antes de gerar outro Pix, para não pagar duas vezes. | Gerar novo Pix · Falar com a Margem no WhatsApp |
 
-Caso raro: a pessoa pagou o primeiro mês mas o banco não confirmou a autorização dos próximos. Hoje isso chega como `recusado`, igual a uma recusa comum. Ou o texto de recusa cobre os dois casos, ou o backend precisa passar a diferenciar.
+### 8. Como cancelar (trecho da tela 6, só no mensal)
 
-### 8. Como cancelar (mensal)
-
-- A pessoa cancela no app do banco, na área de Pix Automático, sem precisar falar com ninguém.
-- Pode ser um trecho da tela de sucesso, não precisa ser tela própria.
+| Elemento | Texto |
+|---|---|
+| Título | Como cancelar |
+| Texto | Você pode cancelar quando quiser no app do seu banco, na área de Pix Automático. Não precisa falar com ninguém. |
+| Só profissional, nos primeiros 14 dias | Para receber o valor de volta, fale com a gente pelo WhatsApp. Cancelar só no banco interrompe os próximos meses, mas não devolve o que já foi pago. |
 
 ---
 
-## Status que a tela recebe
+## Backend
 
-`GET /api/apoio/{id}/status` devolve só o status:
+| Rota | Para quê | Estado |
+|---|---|---|
+| `POST /api/apoio/pix` | gera o Pix. Pessoa: `frequencia`, `valor`, `nome`, `cpfCnpj`. Profissional: `token` do link, `plano` (opcional, senão o do cadastro), `nome`, `cpfCnpj`, `email`. Devolve `apoioId` e `qrCode` (`payload`, `imagemBase64`, `expiraEm`). | pronta |
+| `POST /api/apoio/link` | com `{ token }`, devolve `nome`, `profissao`, `planoEscolhido`, `precos` e `email` do cadastro, para a tela 4 do profissional. Erros: `link_invalido` (404), `plano_ja_ativo` (409). | pronta |
+| `GET /api/apoio/{id}/status` | status do apoio, para a tela 5 saber quando mudar | pronta |
+| `POST /api/apoio/webhook` | avisos do Asaas; atualiza o apoio e o profissional ligado a ele | pronta |
+| cadastro de profissional | grava o cadastro como `em_analise`, sem publicar nada | a construir |
+
+O link pessoal que o Vitor manda é a página do profissional com o código no fim (o código está em `profissionais_cadastrados.token_apoio`). O endereço da página é decisão de design.
+
+**Status que a tela recebe**
 
 | Status | Tela |
 |---|---|
-| `aguardando` | 5, QR code |
-| `pago` | 6, sucesso da única |
-| `ativo` | 6, sucesso do mensal |
+| `aguardando` | 5 |
+| `pago` | 6, uma vez |
+| `ativo` | 6, mensal |
 | `expirado`, `recusado` | 7 |
-| `inadimplente`, `cancelado` | não aparecem neste fluxo (acontecem meses depois) |
+| `inadimplente`, `cancelado`, `estornado` | não aparecem neste fluxo (acontecem depois) |
+
+**Status do profissional** (`profissionais_cadastrados.status`)
+
+| Status | Quando | Aparece no site |
+|---|---|---|
+| `em_analise` | enviou o cadastro | não |
+| `recusado` | não aprovado | não |
+| `lista_espera` | aprovado, sem vaga | não |
+| `aguardando_pagamento` | recebeu o link | não |
+| `ativo` | primeiro pagamento caiu | sim |
+| `gratuito` | já estava antes da cobrança | sim |
+| `inadimplente` | mensalidade falhou | sim por 7 dias |
+| `cancelado` | cancelou ou foi estornado | não |
+
+A coluna `ativo` continua como pausa manual (férias, por exemplo): com ela desligada, o perfil não aparece em nenhum status.
 
 ---
 
-## Decisões em aberto
+## Pendências fora do código
 
-1. Onde fica a entrada.
-2. Nome e explicação de cada plano de profissional, e o número de clientes ativos do intermediário.
-3. Se a frequência da pessoa em geral começa em única ou mensal.
-4. Todos os textos das telas, avisos e erros acima.
+- Avisar os profissionais que receberam a mensagem "sem taxas ou comissões" antes da primeira cobrança.
+- Validar o modelo com advogado de direito médico ou com orientação do CRP e do CRM. Cobrar a partir de número de contatos recebidos esbarra no Código de Ética do psicólogo (art. 2º, alínea p) e na Resolução CFM 2.460/2026.
+- Um perfil atual mostra "Cannabis Medicinal e Saúde mental" como especialidade, que não é especialidade do CFM (Resolução CFM 2.336/2023).
+- Nota fiscal automática: cadastrar os dados fiscais da LTDA no Asaas e pegar com o contador o código do serviço.

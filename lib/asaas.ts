@@ -147,6 +147,11 @@ export async function buscarAssinaturaDaAutorizacao(autorizacaoId: string): Prom
   return { ok: true, dados: { assinaturaId: typeof subscriptionId === "string" && subscriptionId ? subscriptionId : null } };
 }
 
+// Encerra o Pix Automático: nenhum mês novo é cobrado. Usado quando um pagamento é estornado.
+export async function cancelarAutorizacao(autorizacaoId: string): Promise<ResultadoAsaas<unknown>> {
+  return chamar("DELETE", `/pix/automatic/authorizations/${encodeURIComponent(autorizacaoId)}`);
+}
+
 // Apoio mensal: autorização de Pix Automático. O QR code paga o primeiro mês e autoriza os seguintes;
 // a partir daí o Asaas gera as cobranças sozinho (modo SUBSCRIPTION). contrato é o id do apoio sem
 // hífens (32 caracteres, o limite do Asaas é 35).
@@ -173,6 +178,9 @@ export async function criarAutorizacaoPixAutomatico(params: {
     value: params.valor,
     description: params.descricao,
     paymentCreationMode: "SUBSCRIPTION",
+    // Mês sem saldo: o Asaas tenta de novo até 3 vezes em 7 dias, os mesmos 7 dias de tolerância em
+    // que o profissional continua no ar.
+    retryPolicy: "ALLOW_THREE_IN_SEVEN_DAYS",
     immediateQrCode: {
       expirationSeconds: EXPIRACAO_QR_SEGUNDOS,
       originalValue: params.valor,

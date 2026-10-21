@@ -41,7 +41,6 @@ export type ProfissionalCadastrado = {
   bio: string | null;
   tags: string[];
   whatsapp_link: string | null;
-  status: "ativo" | "pago" | "gratuito";
   ativo: boolean;
   categoria_resposta_relevante: string | null;
 };
@@ -67,9 +66,19 @@ export type InstituicaoApoio = {
   contatos: AcaoContato[];
 };
 
-// Lista explícita: telefone, email e localizacao existem na tabela mas nunca podem chegar ao navegador.
+// Lista explícita: telefone, email, localizacao, token_apoio e o caminho do cadastro (status, datas,
+// observação) existem na tabela mas nunca podem chegar ao navegador.
 const COLUNAS_PROFISSIONAL =
-  "id, nome, especialidade, especialidade_rotulo, registro_profissional, ano_inicio_experiencia, foto_url, bio, tags, whatsapp_link, status, ativo, categoria_resposta_relevante, abordagem, formacoes";
+  "id, nome, especialidade, especialidade_rotulo, registro_profissional, ano_inicio_experiencia, foto_url, bio, tags, whatsapp_link, ativo, categoria_resposta_relevante, abordagem, formacoes";
+
+// Quem aparece no site (docs/apoio-telas.md): pagou o plano, já estava na Margem antes da cobrança, ou
+// está nos 7 dias de tolerância de uma mensalidade que falhou. A coluna "ativo" continua sendo a pausa
+// manual e vale junto. A ordem dos perfis nunca depende do plano.
+const DIAS_TOLERANCIA = 7;
+function filtroPerfilNoAr() {
+  const limite = new Date(Date.now() - DIAS_TOLERANCIA * 24 * 60 * 60 * 1000).toISOString();
+  return `status.in.(ativo,gratuito),and(status.eq.inadimplente,inadimplente_desde.gt.${limite})`;
+}
 
 export async function buscarProfissionaisPorCategoria(categoria: string, sessaoId?: string) {
   const supabase = getServerClient();
@@ -79,6 +88,7 @@ export async function buscarProfissionaisPorCategoria(categoria: string, sessaoI
     .select(COLUNAS_PROFISSIONAL)
     .eq("categoria_resposta_relevante", categoria)
     .eq("ativo", true)
+    .or(filtroPerfilNoAr())
     .order("nome");
   if (error) console.error("[supabase] buscarProfissionaisPorCategoria falhou:", error.message);
   const profissionais = (data ?? []) as ProfissionalCadastrado[];
@@ -101,6 +111,7 @@ export async function buscarTodosProfissionaisAtivos() {
       .from("profissionais_cadastrados")
       .select(COLUNAS_PROFISSIONAL)
       .eq("ativo", true)
+      .or(filtroPerfilNoAr())
       .order("nome")
       .throwOnError();
     cacheLife({ stale: 300, revalidate: 1800, expire: 3300 });

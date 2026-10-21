@@ -1,9 +1,11 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
-import { buscarAssinaturaDaAutorizacao } from "@/lib/asaas";
+import { buscarAssinaturaDaAutorizacao, cancelarAutorizacao } from "@/lib/asaas";
 import {
   atualizarApoioSeStatus,
+  atualizarProfissionalSeStatus,
   buscarApoioPor,
+  marcarPrimeiraAtivacao,
   registrarEvento,
   removerEvento,
   type ApoioEncontrado,
@@ -11,8 +13,9 @@ import {
   type StatusApoio,
 } from "@/lib/apoio/registro";
 
-// Recebe os avisos do Asaas e atualiza o status dos apoios. O painel do Asaas continua sendo onde se
-// acompanha quem pagou; aqui só se mantém o status que o site precisa (aguardando, pago, ativo...).
+// Recebe os avisos do Asaas e atualiza o status dos apoios e, quando o apoio é de um profissional, o
+// status dele (que decide se o perfil aparece no site). O painel do Asaas continua sendo onde se
+// acompanha quem pagou.
 //
 // O Asaas entrega cada evento "pelo menos uma vez": o id do evento é gravado antes de processar e um
 // evento repetido é ignorado. Evento que não interessa também recebe 200, senão o Asaas pausa a fila
@@ -100,9 +103,35 @@ function mudancaPara(tipo: string, apoio: ApoioEncontrado, assinaturaId: string 
     // Doação única não paga no dia. Ainda pode ser paga depois, e aí volta pra "pago".
     case "PAYMENT_OVERDUE":
       return apoio.frequencia === "unico" ? { de: ["aguardando"], campos: { status: "expirado" } } : null;
+    // Estorno feito no painel do Asaas (os 14 dias do profissional, por exemplo).
+    case "PAYMENT_REFUNDED":
+      return { de: ["pago", "ativo", "inadimplente", "cancelado"], campos: { status: "estornado", estornado_em: agora } };
     default:
       return null;
   }
+}
+
+// O que o novo status do apoio faz com o profissional que paga por ele:
+// - ativo: perfil no ar (e ativado_em gravado no primeiro pagamento, pros 14 dias);
+// - inadimplente: continua no ar por 7 dias desde inadimplente_desde (filtro em lib/supabase.ts);
+// - cancelado, expirado depois de ativo, estornado: sai do ar.
+// Os status de origem protegem o que o Vitor muda na mão (pausa, recusa, cancelamento).
+async function sincronizarProfissional(profissionalId: string, novoStatus: StatusApoio) {
+  const agora = new Date().toISOString();
+  if (novoStatus === "ativo") {
+    const ok = await atualizarProfissionalSeStatus(profissionalId, ["aguardando_pagamento", "gratuito", "inadimplente", "ativo"], {
+      status: "ativo",
+      inadimplente_desde: null,
+    });
+    return ok && (await marcarPrimeiraAtivacao(profissionalId, agora));
+  }
+  if (novoStatus === "inadimplente") {
+    return atualizarProfissionalSeStatus(profissionalId, ["ativo"], { status: "inadimplente", inadimplente_desde: agora });
+  }
+  if (novoStatus === "cancelado" || novoStatus === "expirado" || novoStatus === "estornado") {
+    return atualizarProfissionalSeStatus(profissionalId, ["ativo", "inadimplente"], { status: "cancelado", cancelado_em: agora });
+  }
+  return true;
 }
 
 export async function POST(request: Request) {
@@ -148,6 +177,26 @@ export async function POST(request: Request) {
 
   const mudanca = mudancaPara(tipo, apoio, assinaturaId);
   if (!mudanca || !mudanca.de.includes(apoio.status)) return NextResponse.json({ ok: true });
+
+  // Estorno de mensalidade encerra o Pix Automático, senão o mês seguinte seria cobrado. Erro 4xx do
+  // Asaas aqui é autorização que já estava cancelada (a pessoa cancelou no banco); só falha de rede ou
+  // do Asaas devolve o evento pra fila.
+  if (mudanca.campos.status === "estornado" && apoio.frequencia === "mensal" && apoio.asaas_autorizacao_id) {
+    const cancelamento = await cancelarAutorizacao(apoio.asaas_autorizacao_id);
+    if (!cancelamento.ok && !(cancelamento.status && cancelamento.status < 500)) {
+      await removerEvento(eventoId);
+      return NextResponse.json({ error: "indisponivel" }, { status: 503 });
+    }
+  }
+
+  // O profissional muda antes do apoio: se o apoio falhar, o evento volta pra fila e o profissional
+  // é atualizado de novo pro mesmo status, sem efeito. Na ordem inversa, o apoio já mudado faria o
+  // evento reentregue ser ignorado e o profissional ficaria pra trás.
+  if (apoio.profissional_id && mudanca.campos.status && !(await sincronizarProfissional(apoio.profissional_id, mudanca.campos.status))) {
+    await removerEvento(eventoId);
+    console.error(`[asaas-webhook] ${tipo}: profissional não atualizado, o Asaas vai reentregar`);
+    return NextResponse.json({ error: "indisponivel" }, { status: 503 });
+  }
 
   const atualizado = await atualizarApoioSeStatus(apoio.id, apoio.status, mudanca.campos);
   if (!atualizado) {

@@ -1,9 +1,9 @@
 import { getServerClient } from "@/lib/supabase";
-import type { PedidoApoio } from "./planos";
+import type { PedidoApoio, PlanoProfissional } from "./planos";
 
 // Gravação da tabela apoios. Só ids do Asaas, plano, valor e status: nome e CPF nunca chegam aqui.
 
-export type StatusApoio = "aguardando" | "pago" | "ativo" | "inadimplente" | "recusado" | "expirado" | "cancelado" | "falhou";
+export type StatusApoio = "aguardando" | "pago" | "ativo" | "inadimplente" | "recusado" | "expirado" | "cancelado" | "falhou" | "estornado";
 
 export type AtualizacaoApoio = {
   status?: StatusApoio;
@@ -12,6 +12,7 @@ export type AtualizacaoApoio = {
   asaas_autorizacao_id?: string;
   asaas_assinatura_id?: string | null;
   ultimo_pagamento_em?: string;
+  estornado_em?: string;
 };
 
 // Grava o apoio antes de falar com o Asaas: o id dele vai como referência pra cobrança e pra
@@ -21,7 +22,13 @@ export async function criarApoio(pedido: PedidoApoio): Promise<string | null> {
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("apoios")
-    .insert({ publico: pedido.publico, frequencia: pedido.frequencia, valor: pedido.valor })
+    .insert({
+      publico: pedido.publico,
+      frequencia: pedido.frequencia,
+      valor: pedido.valor,
+      plano: pedido.plano ?? null,
+      profissional_id: pedido.profissionalId ?? null,
+    })
     .select("id")
     .single();
   if (error) console.error("[apoio] criarApoio falhou:", error.message);
@@ -39,14 +46,20 @@ export async function atualizarApoio(id: string, campos: AtualizacaoApoio) {
   return !error;
 }
 
-export type ApoioEncontrado = { id: string; frequencia: "unico" | "mensal"; status: StatusApoio };
+export type ApoioEncontrado = {
+  id: string;
+  frequencia: "unico" | "mensal";
+  status: StatusApoio;
+  profissional_id: string | null;
+  asaas_autorizacao_id: string | null;
+};
 
 type CampoBusca = "id" | "asaas_cobranca_id" | "asaas_autorizacao_id" | "asaas_assinatura_id";
 
 export async function buscarApoioPor(campo: CampoBusca, valor: string): Promise<ApoioEncontrado | null> {
   const supabase = getServerClient();
   if (!supabase) return null;
-  const { data, error } = await supabase.from("apoios").select("id, frequencia, status").eq(campo, valor).maybeSingle();
+  const { data, error } = await supabase.from("apoios").select("id, frequencia, status, profissional_id, asaas_autorizacao_id").eq(campo, valor).maybeSingle();
   if (error) console.error("[apoio] buscarApoioPor falhou:", error.message);
   return (data as ApoioEncontrado | null) ?? null;
 }
@@ -90,4 +103,92 @@ export async function buscarStatusApoio(id: string): Promise<StatusApoio | null>
   const { data, error } = await supabase.from("apoios").select("status").eq("id", id).maybeSingle();
   if (error) console.error("[apoio] buscarStatusApoio falhou:", error.message);
   return (data?.status as StatusApoio | undefined) ?? null;
+}
+
+// --- Profissional -------------------------------------------------------------------------------
+
+export type StatusProfissional =
+  | "em_analise"
+  | "recusado"
+  | "lista_espera"
+  | "aguardando_pagamento"
+  | "ativo"
+  | "gratuito"
+  | "inadimplente"
+  | "cancelado";
+
+export type ProfissionalDoLink = {
+  id: string;
+  // "ja_ativo" quando o plano já está pago (ativo ou na tolerância): o link abre, mas não gera outro Pix.
+  situacao: "pode_pagar" | "ja_ativo";
+  nome: string;
+  profissao: "psicologo" | "medico";
+  plano_escolhido: PlanoProfissional | null;
+  email: string | null;
+};
+
+// Só quem recebeu o link de pagamento (aguardando_pagamento) ou já estava na Margem antes da cobrança
+// (gratuito) paga por ele. Quem já pagou (ativo, inadimplente) vê que o plano está ativo. Qualquer outro
+// status, ou código que não existe, é link inválido.
+const STATUS_QUE_PAGAM: StatusProfissional[] = ["aguardando_pagamento", "gratuito"];
+const STATUS_JA_ATIVOS: StatusProfissional[] = ["ativo", "inadimplente"];
+
+export async function buscarProfissionalPorToken(token: string): Promise<ProfissionalDoLink | null> {
+  const supabase = getServerClient();
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("profissionais_cadastrados")
+    .select("id, nome, especialidade, status, plano_escolhido, email")
+    .eq("token_apoio", token)
+    .in("status", [...STATUS_QUE_PAGAM, ...STATUS_JA_ATIVOS])
+    .maybeSingle();
+  if (error) console.error("[apoio] buscarProfissionalPorToken falhou:", error.message);
+  if (!data) return null;
+  // Assistente social não tem plano: o link dele não vale.
+  const profissao = data.especialidade === "psicologo" ? "psicologo" : data.especialidade === "psiquiatra" ? "medico" : null;
+  if (!profissao) return null;
+  const situacao = STATUS_JA_ATIVOS.includes(data.status) ? "ja_ativo" : "pode_pagar";
+  return { id: data.id, situacao, nome: data.nome, profissao, plano_escolhido: data.plano_escolhido, email: data.email };
+}
+
+// Profissional com plano ativo (ou dentro da tolerância) não gera outro Pix: seriam duas mensalidades.
+export async function temPlanoAtivo(profissionalId: string): Promise<boolean | null> {
+  const supabase = getServerClient();
+  if (!supabase) return null;
+  const { count, error } = await supabase
+    .from("apoios")
+    .select("id", { count: "exact", head: true })
+    .eq("profissional_id", profissionalId)
+    .in("status", ["ativo", "inadimplente"]);
+  if (error) {
+    console.error("[apoio] temPlanoAtivo falhou:", error.message);
+    return null;
+  }
+  return (count ?? 0) > 0;
+}
+
+export type AtualizacaoProfissional = {
+  status: StatusProfissional;
+  ativado_em?: string;
+  inadimplente_desde?: string | null;
+  cancelado_em?: string;
+};
+
+// Muda o profissional só a partir dos status esperados: o webhook nunca tira do ar alguém que o Vitor
+// pausou ou recusou na mão, nem reativa quem foi cancelado por outro motivo.
+export async function atualizarProfissionalSeStatus(id: string, de: StatusProfissional[], campos: AtualizacaoProfissional) {
+  const supabase = getServerClient();
+  if (!supabase) return false;
+  const { error } = await supabase.from("profissionais_cadastrados").update(campos).eq("id", id).in("status", de);
+  if (error) console.error("[apoio] atualizarProfissionalSeStatus falhou:", error.message);
+  return !error;
+}
+
+// ativado_em marca o primeiro pagamento (conta os 14 dias): só é gravado uma vez.
+export async function marcarPrimeiraAtivacao(id: string, quando: string) {
+  const supabase = getServerClient();
+  if (!supabase) return false;
+  const { error } = await supabase.from("profissionais_cadastrados").update({ ativado_em: quando }).eq("id", id).is("ativado_em", null);
+  if (error) console.error("[apoio] marcarPrimeiraAtivacao falhou:", error.message);
+  return !error;
 }

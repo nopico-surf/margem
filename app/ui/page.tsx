@@ -35,7 +35,6 @@ function profissionalMock(indice: number): ProfissionalCadastrado {
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
     tags: ["Recaídas", "Redução de danos", "Abstinência"],
     whatsapp_link: "5511999999999",
-    status: "ativo",
     ativo: true,
     categoria_resposta_relevante: null,
   };
