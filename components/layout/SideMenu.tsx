@@ -114,19 +114,19 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
       <div className="side-menu-backdrop" onClick={onClose} aria-hidden="true" />
       <BotaoFecharMenu onClick={onClose} ref={closeButtonRef} />
       <aside className="side-menu-panel">
-        <h2>Profissionais</h2>
+        <h2>Atendimento</h2>
         <div className="side-menu-professionals">
           <button type="button" onClick={() => irParaProfissionais("psicologo")}>Psicólogos</button>
-          <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Médicos/Psiquiatras</button>
+          <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Médicos e psiquiatras</button>
         </div>
-        <h2>Contatos e redes</h2>
-        <MenuContatos />
         <h2>Redes de apoio</h2>
         <div className="side-menu-professionals">
           {OPCOES_REDE.map(({ valor, rotulo }) => (
             <button key={valor} type="button" onClick={() => irParaRedesDeApoio(valor)}>{rotulo}</button>
           ))}
         </div>
+        <h2>Fale com a Margem</h2>
+        <MenuContatos />
       </aside>
     </div>
   );

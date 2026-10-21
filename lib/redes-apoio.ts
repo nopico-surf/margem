@@ -5,8 +5,8 @@ export type TipoRede = "publicas" | "independentes";
 
 // Rótulos do Figma (Experiência do produto, 1478:12507 e menu 660:32), com a ortografia corrigida.
 export const OPCOES_REDE: OpcaoDoFiltro<TipoRede>[] = [
-  { valor: "publicas", rotulo: "Públicas" },
-  { valor: "independentes", rotulo: "Independentes" },
+  { valor: "publicas", rotulo: "Serviços públicos" },
+  { valor: "independentes", rotulo: "Grupos e organizações" },
 ];
 
 export function tipoDeRedeDaUrl(valor: string | null): TipoRede {

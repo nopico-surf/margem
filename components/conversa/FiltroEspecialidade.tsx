@@ -7,8 +7,8 @@ export type Especialidade = "psicologo" | "psiquiatra";
 export type OpcaoDoFiltro<T extends string> = { valor: T; rotulo: string };
 
 export const OPCOES_ESPECIALIDADE: OpcaoDoFiltro<Especialidade>[] = [
-  { valor: "psicologo", rotulo: "Psicologos" },
-  { valor: "psiquiatra", rotulo: "Médicos/Psiquiatras" },
+  { valor: "psicologo", rotulo: "Psicólogos" },
+  { valor: "psiquiatra", rotulo: "Médicos e psiquiatras" },
 ];
 
 // Na URL a aba de psiquiatras aparece como o rótulo dela, "Médicos/Psiquiatras". O valor de dentro

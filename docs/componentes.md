@@ -483,7 +483,7 @@ Implementada a partir do frame `Profissionais` (1478:12507, mobile) do arquivo E
 
 **Texto do WhatsApp do banner** (`LINK_WHATSAPP_SUGESTAO_REDE`, `lib/contatos.ts`) vem da anotação do botão. O `**` do Figma virou `*`, que é o negrito do WhatsApp.
 
-**Ortografia.** O Figma diz "Publicas" e "Sugira uma rede apoio". No código: "Públicas" e "Sugira uma rede de apoio". O menu também ganhou "Contatos e redes" no lugar de "Contatos".
+**Ortografia.** O Figma diz "Publicas" e "Sugira uma rede apoio". No código: "Públicas" e "Sugira uma rede de apoio". Em 21/10/2026 o menu mudou além do Figma: "Profissionais" virou "Atendimento", "Médicos/Psiquiatras" virou "Médicos e psiquiatras" (também no filtro da `/profissionais`), "Públicas" e "Independentes" viraram "Serviços públicos" e "Grupos e organizações" (também nas abas da `/redes-de-apoio`), e "Contatos e redes" virou "Fale com a Margem", no fim do menu. O telefone aparece como `(11) 96628-9223` e o Instagram com `@`, no menu e no rodapé. Falta alinhar o Figma.
 
 ### Pendências
 
