@@ -41,7 +41,7 @@ export function Footer() {
       <div className="app-footer-contatos">
         <LogoMargem className="app-footer-logo" />
         <div className="app-footer-redes">
-          <p className="app-footer-title">Contatos</p>
+          <p className="app-footer-title">Fale com a Margem</p>
           <div className="app-footer-list">
             {CONTATOS_RODAPE.map((contato) => {
               const Icone = ICONES[contato.tipo];
