@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { PLANOS_BASE, PLANOS_OPCIONAIS } from "@/lib/apoio/planos";
+import { catalogoDaProfissao } from "@/lib/apoio/planos";
 import { buscarProfissionalPorToken, temPlanoAtivo } from "@/lib/apoio/registro";
 
 // Dados do link pessoal de pagamento, pra tela do profissional: nome, profissão, plano base e opcional
-// escolhidos no cadastro, o catálogo (preço em centavos e vagas) e o e-mail do cadastro (que preenche o
+// escolhidos no cadastro, o catálogo da profissão dele (preço em centavos e vagas) e o e-mail do cadastro (que preenche o
 // campo da nota fiscal).
 //
 // POST com o token no corpo, e não na URL, pra ele não ficar no log de acesso da rota. Quem tem o link
@@ -34,8 +34,7 @@ export async function POST(request: Request) {
       profissao: profissional.profissao,
       planoBaseEscolhido: profissional.plano_base_escolhido,
       opcionalEscolhido: profissional.opcional_escolhido,
-      planosBase: PLANOS_BASE,
-      planosOpcionais: PLANOS_OPCIONAIS,
+      ...catalogoDaProfissao(profissional.profissao),
       email: profissional.email,
     },
     { headers: SEM_CACHE },

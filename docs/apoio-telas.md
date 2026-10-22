@@ -45,25 +45,27 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 
 ## Planos de profissional
 
-Sempre mensal, com nota fiscal, por Pix Automático. Mesmo preço para psicólogo e médico. O valor cobrado é o plano base mais o opcional, se houver. O catálogo está em `lib/apoio/planos.ts`.
+Sempre mensal, com nota fiscal, por Pix Automático. O valor cobrado é o plano base mais o opcional, se houver. O catálogo está em `lib/apoio/planos.ts`.
+
+**Preço por profissão.** Médico (inclui psiquiatra) paga mais, pela mesma régua do modelo anterior: no plano base, o dobro (a mensalidade pesa um percentual maior da sessão média dele, R$ 200 contra R$ 130); no opcional, o acréscimo que já existia. Médico nunca paga mais pelo mesmo anúncio: quando o opcional dele custa mais, a verba do anúncio dele sobe junto. O Figma mostra os preços de psicólogo; a tela usa os da profissão (`catalogoDaProfissao` no cadastro, a rota do link no link pessoal).
 
 **Plano base** (obrigatório, define as vagas: pessoas em acompanhamento simultâneo que o profissional pode manter no perfil; por enquanto o limite é acompanhado na mão)
 
-| Plano | Código | Vagas | Preço |
-|---|---|---|---|
-| Prata | `prata` | 3 | R$ 19,99 por mês |
-| Ouro | `ouro` | 8 | R$ 39,99 por mês |
-| Diamante | `diamante` | ilimitadas | R$ 89,99 por mês |
+| Plano | Código | Vagas | Psicólogo | Médico ou psiquiatra |
+|---|---|---|---|---|
+| Prata | `prata` | 3 | R$ 19,99 por mês | R$ 39,99 por mês |
+| Ouro | `ouro` | 8 | R$ 39,99 por mês | R$ 79,99 por mês |
+| Diamante | `diamante` | ilimitadas | R$ 89,99 por mês | R$ 179,99 por mês |
 
 **Opcional** ("Turbine sua presença", no máximo um, sem combinar)
 
-| Opcional | Código | O que entrega | Preço |
-|---|---|---|---|
-| Destaque | `destaque` | Um story fixo nos destaques do Instagram da Margem, com link para o seu perfil, e presença no carrossel mensal de quem atende pela Margem | + R$ 159,99 por mês |
-| Divulgação | `divulgacao` | Tudo do destaque, mais 1 conteúdo por mês no Instagram da Margem, em collab, impulsionado com anúncio pago | + R$ 369,99 por mês |
-| Divulgação Plus | `divulgacao_plus` | Tudo do divulgação, mais 2 conteúdos por mês, em collab, impulsionados com anúncio pago | + R$ 559,99 por mês |
+| Opcional | Código | O que entrega | Psicólogo | Médico ou psiquiatra |
+|---|---|---|---|---|
+| Destaque | `destaque` | Um story fixo nos destaques do Instagram da Margem, com link para o seu perfil, e presença no carrossel mensal de quem atende pela Margem | + R$ 159,99 por mês | + R$ 289,99 por mês |
+| Divulgação | `divulgacao` | Tudo do destaque, mais 1 conteúdo por mês no Instagram da Margem, em collab, impulsionado com anúncio pago | + R$ 369,99 por mês | + R$ 599,99 por mês |
+| Divulgação Plus | `divulgacao_plus` | Tudo do divulgação, mais 2 conteúdos por mês, em collab, impulsionados com anúncio pago | + R$ 559,99 por mês | + R$ 879,99 por mês |
 
-Exemplo: Prata + Destaque = R$ 179,99 por mês.
+Exemplo: Prata + Destaque = R$ 179,99 por mês para psicólogo e R$ 329,98 para médico.
 
 ## Apoio de qualquer pessoa
 
@@ -223,7 +225,7 @@ No celular, o código copia e cola fica em destaque (não dá para escanear a pr
 | Rota | Para quê | Estado |
 |---|---|---|
 | `POST /api/apoio/pix` | gera o Pix. Pessoa: `frequencia`, `valor`, `nome`, `cpfCnpj`. Profissional: `token` do link, `planoBase` e `opcional` (`null` = sem turbinar; ausentes, valem os do cadastro), `nome`, `cpfCnpj`, `email`. Devolve `apoioId` e `qrCode` (`payload`, `imagemBase64`, `expiraEm`). | pronta |
-| `POST /api/apoio/link` | com `{ token }`, devolve `nome`, `profissao`, `planoBaseEscolhido`, `opcionalEscolhido`, o catálogo (`planosBase` e `planosOpcionais`, preço em centavos e vagas) e o `email` do cadastro, para a tela 4 do profissional. Erros: `link_invalido` (404), `plano_ja_ativo` (409). | pronta |
+| `POST /api/apoio/link` | com `{ token }`, devolve `nome`, `profissao`, `planoBaseEscolhido`, `opcionalEscolhido`, o catálogo da profissão do cadastro (`planosBase` e `planosOpcionais`, preço em centavos e vagas) e o `email` do cadastro, para a tela 4 do profissional. Erros: `link_invalido` (404), `plano_ja_ativo` (409). | pronta |
 | `GET /api/apoio/{id}/status` | status do apoio, para a tela 5 saber quando mudar | pronta |
 | `POST /api/apoio/webhook` | avisos do Asaas; atualiza o apoio e o profissional ligado a ele | pronta |
 | `POST /api/profissionais/cadastro` | grava o cadastro como `em_analise`, sem publicar nada. Corpo: `profissao` (`psicologo` ou `medico`), `planoBase`, `opcional` (`null` ou ausente = sem turbinar), `nome`, `registro`, `whatsapp`, `email`; psicólogo manda `abordagem` (e `abordagemOutra` quando escolhe Outra); médico manda `especialidade` (e `especialidadeOutra`) e `rqe`. Devolve `{ ok: true }`, inclusive quando o e-mail ou o registro já têm cadastro (o formulário não revela quem está na Margem). | pronta |

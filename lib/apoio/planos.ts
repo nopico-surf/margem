@@ -4,27 +4,53 @@
 // Profissional paga um plano mensal (serviço, com nota fiscal), pelo link pessoal que recebe depois de
 // aprovado: o cadastro sai do banco, nunca da tela. O plano é um plano base (define as vagas) mais, no
 // máximo, um opcional para turbinar a presença; o valor é a soma dos dois (Figma, Experiência do
-// produto, 1534:28280). O preço é o mesmo para psicólogo e médico. Qualquer pessoa pode fazer doação
+// produto, 1534:28280).
+//
+// Médico (inclui psiquiatra) paga mais, pela mesma régua de antes: no plano base, o dobro (a mensalidade
+// pesa um percentual maior da sessão média dele, R$ 200 contra R$ 130); no opcional, o acréscimo que já
+// existia (cerca de 80% no Destaque, 62% na Divulgação, 57% na Plus). Médico nunca paga mais pelo mesmo
+// anúncio: quando o opcional dele custa mais, a verba do anúncio dele sobe junto. Qualquer pessoa pode fazer doação
 // (sem nota), única ou mensal, com valor aberto a partir de R$ 5. Ver docs/apoio-telas.md.
 
 export type PublicoApoio = "psicologo" | "medico" | "geral";
 export type FrequenciaApoio = "unico" | "mensal";
+export type Profissao = "psicologo" | "medico";
 export type PlanoBase = "prata" | "ouro" | "diamante";
 export type PlanoOpcional = "destaque" | "divulgacao" | "divulgacao_plus";
 
 // Preços em centavos, pra soma não arredondar errado. vagas: pessoas em acompanhamento simultâneo que o
 // profissional pode manter no perfil; null é ilimitado. Por enquanto o limite é acompanhado na mão.
-export const PLANOS_BASE: Record<PlanoBase, { centavos: number; vagas: number | null }> = {
-  prata: { centavos: 1999, vagas: 3 },
-  ouro: { centavos: 3999, vagas: 8 },
-  diamante: { centavos: 8999, vagas: null },
+export const PLANOS_BASE: Record<Profissao, Record<PlanoBase, { centavos: number; vagas: number | null }>> = {
+  psicologo: {
+    prata: { centavos: 1999, vagas: 3 },
+    ouro: { centavos: 3999, vagas: 8 },
+    diamante: { centavos: 8999, vagas: null },
+  },
+  medico: {
+    prata: { centavos: 3999, vagas: 3 },
+    ouro: { centavos: 7999, vagas: 8 },
+    diamante: { centavos: 17999, vagas: null },
+  },
 };
 
-export const PLANOS_OPCIONAIS: Record<PlanoOpcional, { centavos: number }> = {
-  destaque: { centavos: 15999 },
-  divulgacao: { centavos: 36999 },
-  divulgacao_plus: { centavos: 55999 },
+export const PLANOS_OPCIONAIS: Record<Profissao, Record<PlanoOpcional, { centavos: number }>> = {
+  psicologo: {
+    destaque: { centavos: 15999 },
+    divulgacao: { centavos: 36999 },
+    divulgacao_plus: { centavos: 55999 },
+  },
+  medico: {
+    destaque: { centavos: 28999 },
+    divulgacao: { centavos: 59999 },
+    divulgacao_plus: { centavos: 87999 },
+  },
 };
+
+// Catálogo de uma profissão, para as telas: as do cadastro usam a profissão escolhida na tela, a do
+// link recebe o da profissão do cadastro. O valor cobrado é sempre recalculado no servidor.
+export function catalogoDaProfissao(profissao: Profissao) {
+  return { planosBase: PLANOS_BASE[profissao], planosOpcionais: PLANOS_OPCIONAIS[profissao] };
+}
 
 // Atalhos da tela. Qualquer outro valor a partir do mínimo também vale para a doação.
 export const SUGESTOES_DOACAO = [10, 25, 50, 100] as const;
@@ -44,16 +70,17 @@ export type PedidoApoio = {
 export type ResultadoPedido = { ok: true; pedido: PedidoApoio } | { ok: false; motivo: string };
 
 export function ehPlanoBase(valor: unknown): valor is PlanoBase {
-  return typeof valor === "string" && Object.hasOwn(PLANOS_BASE, valor);
+  return typeof valor === "string" && Object.hasOwn(PLANOS_BASE.psicologo, valor);
 }
 
 export function ehPlanoOpcional(valor: unknown): valor is PlanoOpcional {
-  return typeof valor === "string" && Object.hasOwn(PLANOS_OPCIONAIS, valor);
+  return typeof valor === "string" && Object.hasOwn(PLANOS_OPCIONAIS.psicologo, valor);
 }
 
-// Valor mensal em reais do plano base mais o opcional (se houver).
-export function valorDoPlano(base: PlanoBase, opcional: PlanoOpcional | null) {
-  return (PLANOS_BASE[base].centavos + (opcional ? PLANOS_OPCIONAIS[opcional].centavos : 0)) / 100;
+// Valor mensal em reais do plano base mais o opcional (se houver), pela profissão.
+export function valorDoPlano(profissao: Profissao, base: PlanoBase, opcional: PlanoOpcional | null) {
+  const centavos = PLANOS_BASE[profissao][base].centavos + (opcional ? PLANOS_OPCIONAIS[profissao][opcional].centavos : 0);
+  return centavos / 100;
 }
 
 // Valor em reais com no máximo dois decimais. Volta em centavos inteiros convertidos de novo pra
@@ -75,14 +102,14 @@ export function validarDoacao(entrada: unknown): ResultadoPedido {
   return { ok: true, pedido: { publico: "geral", frequencia, valor: reais } };
 }
 
-// Profissional: sempre mensal, valor do catálogo. A profissão (do cadastro) só decide o tipo de apoio.
+// Profissional: sempre mensal, valor do catálogo da profissão que está no cadastro.
 export function pedidoDoProfissional(
-  profissao: "psicologo" | "medico",
+  profissao: Profissao,
   base: PlanoBase,
   opcional: PlanoOpcional | null,
   profissionalId: string,
 ): PedidoApoio {
-  return { publico: profissao, frequencia: "mensal", valor: valorDoPlano(base, opcional), planoBase: base, planoOpcional: opcional, profissionalId };
+  return { publico: profissao, frequencia: "mensal", valor: valorDoPlano(profissao, base, opcional), planoBase: base, planoOpcional: opcional, profissionalId };
 }
 
 // Serviço tem nota fiscal; doação não.
