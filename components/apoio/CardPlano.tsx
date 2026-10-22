@@ -43,7 +43,8 @@ export function CardPlano({ arranjo, nome, descricao, complemento, centavos, des
         </div>
         <p className="card-plano-preco">
           <span>{arranjo === "opcional" ? "+ R$ " : "R$ "}</span>
-          <span className="card-plano-valor">{formatarCentavos(centavos)}</span>
+          <span className="card-plano-valor">{formatarCentavos(centavos).split(",")[0]}</span>
+          <span>,{formatarCentavos(centavos).split(",")[1]}</span>
           <span className="card-plano-por-mes"> por mês</span>
         </p>
       </div>
