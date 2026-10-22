@@ -2,7 +2,7 @@
 
 O que fazer fora do código para o pagamento funcionar em produção, e a rotina manual do dia a dia com os profissionais. O fluxo e as telas estão em [`apoio-telas.md`](apoio-telas.md).
 
-Última atualização: 21/10/2026.
+Última atualização: 22/10/2026.
 
 ---
 
@@ -114,12 +114,20 @@ update profissionais_cadastrados set status = 'recusado', observacao_interna = '
 
 ```sql
 update profissionais_cadastrados set status = 'aguardando_pagamento' where id = '{id}';
-select nome, telefone, token_apoio from profissionais_cadastrados where id = '{id}';
+select nome, telefone, 'https://www.somosmargem.com.br/plano#' || token_apoio as link
+from profissionais_cadastrados where id = '{id}';
 ```
 
-O link é o endereço da página de pagamento do profissional seguido do `token_apoio`. A página ainda vai ser desenhada.
+O link é `https://www.somosmargem.com.br/plano#` seguido do `token_apoio`. O código vai depois do `#` para não chegar ao servidor nem às ferramentas de medição (a página `/plano` não carrega Mixpanel nem GTM). Cada profissional tem um código só, criado sozinho no cadastro; o link vale enquanto o status for `aguardando_pagamento` ou `gratuito`, sem prazo. Com o plano já pago, ele mostra "Seu plano já está ativo".
 
-Para quem já está no ar sem pagar (`gratuito`), o link funciona sem mudar o status. O perfil continua no ar até o primeiro pagamento e depois vira `ativo`.
+Para quem já está no ar sem pagar (`gratuito`), o link funciona sem mudar o status. O perfil continua no ar até o primeiro pagamento e depois vira `ativo`. Os links de todos de uma vez:
+
+```sql
+select nome, telefone, 'https://www.somosmargem.com.br/plano#' || token_apoio as link
+from profissionais_cadastrados where status = 'gratuito' and ativo order by nome;
+```
+
+Para conferir as telas sem pagar, em desenvolvimento: `https://localhost:3000/plano#previa-{tela}`, com `{tela}` entre `base`, `opcional`, `resumo`, `dados`, `pix`, `expirado`, `recusado`, `pago_sem_autorizacao`, `tudo_feito`, `link_invalido` e `plano_ja_ativo`.
 
 ### Depois do pagamento
 

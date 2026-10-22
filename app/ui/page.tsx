@@ -17,6 +17,7 @@ import { IconeAgendarWhatsapp, IconeSetaResultado } from "@/components/icons";
 import { FaixaComoFunciona } from "@/components/app/FaixaComoFunciona";
 import { BlocoCannabis, SeloGiratorio } from "@/components/app/BlocoCannabis";
 import { CardHomeGroupGaleria } from "./CardHomeGaleria";
+import { CardPlanoGaleria, ContadorPixGaleria, InputTextGaleria } from "./ApoioGaleria";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import "./galeria.css";
@@ -365,7 +366,44 @@ export default async function GaleriaDeComponentes() {
             </div>
             <span className="label-xx-small galeria-nome">continuar</span>
           </div>
+          <div className="galeria-estado">
+            <div className="galeria-palco galeria-palco-painel">
+              <PainelInferior variante="pix" visivel texto="Valor total: R$ 179,99 por mês" />
+            </div>
+            <span className="label-xx-small galeria-nome">pix</span>
+          </div>
+          <div className="galeria-estado">
+            <div className="galeria-palco galeria-palco-painel">
+              <PainelInferior variante="pix" visivel texto="Valor total: R$ 179,99 por mês" carregando />
+            </div>
+            <span className="label-xx-small galeria-nome">pix, carregando</span>
+          </div>
         </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Input text</h2>
+        <p className="text-small-regular galeria-nota">
+          Figma: input-text (Margem System, 5:2372), size small. Sem foco e vazio, o rótulo ocupa o lugar do
+          texto; com foco ou valor, sobe pequeno. O primeiro aceita digitação.
+        </p>
+        <InputTextGaleria />
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Card plano</h2>
+        <p className="text-small-regular galeria-nota">
+          Figma: conjunto Planos (Experiência do produto, 1537:29643). Arranjo base (Prata, Ouro, Diamante) e
+          opcional (Destaque, Divulgação, Divulgação Plus). O card do meio de cada grupo (Ouro e Divulgação) tem
+          o botão primary, como destaque fixo.
+        </p>
+        <CardPlanoGaleria />
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Contador do Pix</h2>
+        <p className="text-small-regular galeria-nota">Figma: faixa do topo da tela do Pix (1538:39329).</p>
+        <ContadorPixGaleria />
       </section>
 
       <section className="galeria-secao">

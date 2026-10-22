@@ -100,12 +100,15 @@ export async function removerEvento(id: string) {
   if (error) console.error("[apoio] removerEvento falhou:", error.message);
 }
 
-export async function buscarStatusApoio(id: string): Promise<StatusApoio | null> {
+// `pago`: o primeiro pagamento caiu. No mensal ele chega antes (ou sem) a autorização do Pix Automático,
+// e o apoio continua `aguardando` até ela; é isso que separa "Pix pago" de "tudo feito" na tela.
+export async function buscarStatusApoio(id: string): Promise<{ status: StatusApoio; pago: boolean } | null> {
   const supabase = getServerClient();
   if (!supabase) return null;
-  const { data, error } = await supabase.from("apoios").select("status").eq("id", id).maybeSingle();
+  const { data, error } = await supabase.from("apoios").select("status, ultimo_pagamento_em").eq("id", id).maybeSingle();
   if (error) console.error("[apoio] buscarStatusApoio falhou:", error.message);
-  return (data?.status as StatusApoio | undefined) ?? null;
+  if (!data) return null;
+  return { status: data.status as StatusApoio, pago: data.ultimo_pagamento_em !== null };
 }
 
 // --- Profissional -------------------------------------------------------------------------------

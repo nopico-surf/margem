@@ -14,9 +14,15 @@ import { Button } from "@/components/ui/Button";
 // Os handlers são opcionais só para a galeria /ui, que é componente de servidor e não passa função.
 //
 // O `continuar` só existe no mobile: no desktop o botão está dentro da própria página.
+//
+// O `pix` é a barra da tela "Seus dados para o Pix" (Figma: Experiência do produto, 1537:36746):
+// uma linha de texto com o valor total e o botão Gerar Pix, que carrega sem aceitar segundo clique.
+// Como o `continuar`, só existe no mobile: no desktop o valor e o botão ficam dentro da página
+// (1545:40601).
 type PainelInferiorProps = { visivel: boolean } & (
   | { variante: "cookies"; onAceitar?: () => void; onRecusar?: () => void; onVerDados?: () => void }
   | { variante: "continuar"; onContinuar?: () => void; texto?: string }
+  | { variante: "pix"; texto: string; onGerar?: () => void; carregando?: boolean }
 );
 
 export function PainelInferior(props: PainelInferiorProps) {
@@ -55,6 +61,13 @@ export function PainelInferior(props: PainelInferiorProps) {
                 </Button>
               </div>
             </div>
+          </>
+        ) : props.variante === "pix" ? (
+          <>
+            <p className="painel-inferior-total">{props.texto}</p>
+            <Button tamanho="medium" larguraTotal onClick={props.onGerar} carregando={props.carregando}>
+              Gerar Pix
+            </Button>
           </>
         ) : (
           <Button tamanho="medium" larguraTotal onClick={props.onContinuar}>

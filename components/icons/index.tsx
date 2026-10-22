@@ -16,7 +16,7 @@ import {
   GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoArrowBack, GlifoDoubleArrowDown, GlifoCheckBox,
   GlifoQuestionAnswer, GlifoPanTool, GlifoLink, GlifoPlace, GlifoPhone, GlifoMessageFlye,
   GlifoInfo, GlifoLock, GlifoCached, GlifoSick, GlifoSentimentDissatisfied,
-  GlifoPersonAddAlt1, GlifoSupport, GlifoMotionPhotosPaused,
+  GlifoPersonAddAlt1, GlifoSupport, GlifoMotionPhotosPaused, GlifoCheckCircle, GlifoMode,
 } from "./glifos";
 // O caminho da foto padrão mora no `avatar`, em components/ui. Aqui ele serve só à chave `avatar`
 // de ICONES_ACAO, que vem do banco, e ao preload de URLS_DE_ICONE.
@@ -96,6 +96,8 @@ export const IconeInfo = (p: IconProps) => <GlifoInfo {...p} {...SUAVE} />;
 // Segue a cor do botão: branco quando ativo, apagado quando desabilitado.
 export const IconeAgendarWhatsapp = (p: IconProps) => <GlifoWhatsapp {...p} />;
 export const IconeCheckboxSelecionado = (p: IconProps) => <GlifoCheckBox {...p} color="var(--colors-brand-primary-800)" />;
+export const IconeConfirmado = (p: IconProps) => <GlifoCheckCircle {...p} color="var(--colors-status-success-900)" />;
+export const IconeEditar = (p: IconProps) => <GlifoMode {...p} color="var(--colors-status-success-900)" />;
 
 /* Contatos
    Menu e rodapé usam o mesmo desenho na mesma cor, mudando só o tamanho: 20 no menu, 16 no rodapé.

@@ -1,0 +1,130 @@
+/* Campo de texto. Figma: Margem System, componente `input-text` (5:2372), `size=small`.
+
+   Caixa de 64 de altura, borda fina e canto 4. Sem foco e sem valor, o rótulo ocupa o lugar do texto
+   (16/20, neutral-700) e o campo fica fechado; com foco ou valor, o rótulo sobe em 14/16 medium e o
+   campo aparece embaixo, 8 abaixo. O foco do Figma é uma moldura border-width-strong
+   brand-secondary-400 por fora da borda neutral-600: aqui é outline, para não empurrar o layout. */
+
+.input-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  width: 100%;
+}
+
+.input-text-caixa {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: var(--size-64);
+  padding: 0 var(--spacing-8);
+  border: var(--border-width-thin) solid var(--colors-neutral-400);
+  border-radius: var(--radius-sm);
+  background: var(--colors-neutral-50);
+  cursor: text;
+  transition:
+    background-color var(--duration-350) ease,
+    border-color var(--duration-350) ease,
+    outline-color var(--duration-350) ease;
+}
+
+.input-text label {
+  color: var(--colors-neutral-700);
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-xl);
+  cursor: text;
+}
+
+.input-text input {
+  width: 100%;
+  height: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--colors-neutral-950);
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
+  opacity: 0;
+}
+
+/* `hover`: só com ponteiro de verdade e com o campo vazio e sem foco. */
+@media (hover: hover) {
+  .input-text[data-preenchido="false"] .input-text-caixa:not(:focus-within):hover,
+  .input-text[data-estado-forcado="hover"] .input-text-caixa {
+    border-color: var(--colors-neutral-500);
+    background: var(--colors-brand-primary-50);
+  }
+}
+
+/* `focus`, `texting` e `filled`: rótulo pequeno em cima, campo aberto embaixo. O espaço de 8 entre os
+   dois só existe com o campo aberto; fechado, o rótulo fica no meio da caixa. */
+.input-text .input-text-caixa:focus-within,
+.input-text[data-preenchido="true"] .input-text-caixa,
+.input-text[data-estado-forcado="focus"] .input-text-caixa {
+  gap: var(--spacing-8);
+}
+
+.input-text .input-text-caixa:focus-within label,
+.input-text[data-preenchido="true"] label,
+.input-text[data-estado-forcado="focus"] label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+}
+
+.input-text .input-text-caixa:focus-within input,
+.input-text[data-preenchido="true"] input,
+.input-text[data-estado-forcado="focus"] input {
+  height: var(--line-height-xl);
+  opacity: 1;
+}
+
+.input-text[data-preenchido="true"] .input-text-caixa {
+  border-color: var(--colors-neutral-600);
+}
+
+.input-text .input-text-caixa:focus-within,
+.input-text[data-estado-forcado="focus"] .input-text-caixa {
+  border-color: var(--colors-neutral-600);
+  outline: var(--border-width-strong) solid var(--colors-brand-secondary-400);
+}
+
+.input-text-descricao {
+  margin: 0;
+  color: var(--colors-neutral-700);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
+/* `error`: borda média status-error-600, texto e descrição em status-error-900. O foco continua
+   mostrando a moldura, por cima da borda de erro. */
+.input-text[data-erro="true"] .input-text-caixa {
+  border: var(--border-width-medium) solid var(--colors-status-error-600);
+  padding: 0 calc(var(--spacing-8) - var(--border-width-thin));
+}
+
+.input-text[data-erro="true"] input,
+.input-text[data-erro="true"] .input-text-descricao {
+  color: var(--colors-status-error-900);
+}
+
+/* `success`: o mesmo desenho do erro, em status-success-600 e status-success-900. */
+.input-text[data-sucesso="true"] .input-text-caixa {
+  border: var(--border-width-medium) solid var(--colors-status-success-600);
+  padding: 0 calc(var(--spacing-8) - var(--border-width-thin));
+}
+
+.input-text[data-sucesso="true"] input,
+.input-text[data-sucesso="true"] .input-text-descricao {
+  color: var(--colors-status-success-900);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input-text-caixa {
+    transition: none;
+  }
+}

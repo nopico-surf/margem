@@ -1,5 +1,5 @@
-/* Painel fixo embaixo. Figma: `painel-inferior`, variantes cookies e continuar. Usado em /bem-vindo
-   e em /inicio. Entra subindo e sai descendo. O elemento raiz é só o invólucro transparente do
+/* Painel fixo embaixo. Figma: `painel-inferior`, variantes cookies, continuar e pix. Usado em
+   /bem-vindo, em /inicio e em /plano. Entra subindo e sai descendo. O elemento raiz é só o invólucro transparente do
    cartão branco. */
 
 .painel-inferior {
@@ -48,6 +48,14 @@
   margin: 0;
 }
 
+/* `pix`: o valor total em cima do botão, em 14/20. */
+.painel-inferior-total {
+  margin: 0;
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
 .painel-inferior-acoes {
   display: flex;
   flex-direction: column;
@@ -55,8 +63,8 @@
 }
 
 @media (min-width: 48em) {
-  /* No desktop o painel vira um cartão no canto, e o Continuar da barra não existe (o botão está
-     dentro da página). */
+  /* No desktop o painel vira um cartão no canto, e as barras do Continuar e do Gerar Pix não existem
+     (o botão está dentro da página). */
   .painel-inferior {
     left: auto;
     right: var(--layout-page-padding-desktop);
@@ -67,7 +75,8 @@
     padding: var(--spacing-24);
   }
 
-  .painel-inferior[data-variante="continuar"] {
+  .painel-inferior[data-variante="continuar"],
+  .painel-inferior[data-variante="pix"] {
     display: none;
   }
 }

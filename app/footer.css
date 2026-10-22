@@ -148,8 +148,32 @@
    As linhas do grid (título e descrição, botão, foto) são compartilhadas entre os dois cards com
    subgrid: mesmo que um texto quebre em mais linhas que o outro, os botões e as fotos ficam sempre
    alinhados. Por isso o bloco de texto vira `display:contents` e o espaçamento dele passa pras margens. */
+/* Compacto no desktop (Figma 1545:40627): uma linha só, logo, título e contatos lado a lado. */
 @media (min-width: 48em) {
-  .app-footer {
+  .app-footer[data-compacto="true"] .app-footer-contatos {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--spacing-32);
+  }
+
+  /* Sem o container de largura: em linha ele encolheria até o título quebrar palavra por palavra. */
+  .app-footer[data-compacto="true"] .app-footer-redes {
+    container-type: normal;
+    flex-direction: row;
+  }
+
+  .app-footer[data-compacto="true"] .app-footer-title {
+    white-space: nowrap;
+  }
+
+  .app-footer[data-compacto="true"] .app-footer-list {
+    flex-direction: row;
+    gap: var(--spacing-12);
+  }
+}
+
+@media (min-width: 48em) {
+  .app-footer:not([data-compacto="true"]) {
     display:grid;
     grid-template-columns:repeat(2, calc((100% - 4 * var(--spacing-24)) / 3)) minmax(0, 1fr);
     grid-template-rows:auto auto auto;

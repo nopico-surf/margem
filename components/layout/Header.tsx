@@ -28,9 +28,11 @@ type HeaderProps = {
   // Só existe no estado padrão: some com a seta de voltar e com o X, e as telas de profissionais
   // passam false.
   mostrarProfissionais?: boolean;
+  // Só o logo, sem menu (Figma: telas do Pix e do código vencido, 1537:36169 e 1542:40036).
+  semMenu?: boolean;
 };
 
-export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar, mostrarProfissionais = true }: HeaderProps) {
+export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar, mostrarProfissionais = true, semMenu = false }: HeaderProps) {
   const logo = onVoltar ? (
     <>
       <LogoMargem className="app-logo app-logo-completo" />
@@ -54,7 +56,7 @@ export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar
       ) : (
         logo
       )}
-      {onFechar ? (
+      {semMenu ? null : onFechar ? (
         // Sem o onMouseDown, o toque tira o foco do campo antes do clique: o teclado começa a fechar, o
         // campo cai pro pé da tela e só então o fechamento anima. Quem tira o foco é o próprio onFechar.
         <button className="menu-button" type="button" aria-label="Fechar" onClick={onFechar} onMouseDown={(event) => event.preventDefault()}>

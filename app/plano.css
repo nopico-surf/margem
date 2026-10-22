@@ -1,0 +1,490 @@
+/* Página /plano: pagamento do plano do profissional pelo link pessoal. Figma: Experiência do produto,
+   seção "Fluxo - Serviços publicos e redes de apoio" (1534:28280). Mobile primeiro; o desktop segue os
+   frames de 1920 (1538:39338 e 1538:39902), dentro do ContainerConteudo de 1080. */
+
+.plano-pagina {
+  display: flex;
+  flex-direction: column;
+  background: var(--colors-neutral-50);
+}
+
+.plano-pagina .app-header {
+  background: transparent;
+}
+
+.plano-pagina > .app-footer {
+  margin-top: auto;
+}
+
+/* A barra fixa do Gerar Pix cobre o fim da página: o espaço embaixo deixa o rodapé aparecer. */
+.plano-pagina[data-etapa="dados"],
+.plano-pagina[data-etapa="resumo"] {
+  padding-bottom: var(--spacing-128);
+}
+
+/* Títulos em header-medium (20/28), como nas telas do Figma. */
+/* O CardHeader corta o título em uma linha; aqui ele quebra (o do Pix tem duas no Figma), e sem o
+   overflow escondido o corte do text-box não come a perna do "ç". */
+.plano-pagina .figma-section-heading h1 {
+  overflow: visible;
+  white-space: normal;
+  text-box: trim-both cap alphabetic;
+  font: var(--font-weight-semi-bold) var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
+  color: var(--colors-alpha-88);
+}
+
+.plano-pagina .figma-section-heading p {
+  margin-top: var(--spacing-10);
+  color: var(--colors-alpha-80);
+  -webkit-line-clamp: unset;
+}
+
+.plano-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+/* Notas abaixo dos cards: Text/Medium-semibold. */
+.plano-nota {
+  margin: 0;
+  color: var(--colors-alpha-80);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-xl);
+}
+
+/* Mobile: só o "Por que pedimos esses dados?", na largura toda; o valor e o Gerar Pix ficam na barra fixa. */
+.plano-dados-acoes .btn {
+  width: 100%;
+}
+
+.plano-dados-gerar {
+  display: none;
+}
+
+.plano-erro {
+  margin: 0;
+  color: var(--colors-status-error-900);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
+/* ===== card-plano (Figma: conjunto "Planos", 1537:29643) ===== */
+
+.card-plano {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-16);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-plano[data-arranjo="opcional"] {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.card-plano-info,
+.card-plano-cabecalho {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-plano-info {
+  gap: var(--spacing-16);
+}
+
+.card-plano-cabecalho {
+  gap: var(--spacing-8);
+}
+
+/* Título e preço com o corte do Figma (text-box-trim), que tira o respiro acima da maiúscula e abaixo
+   da linha de base. */
+.card-plano h2,
+.card-plano-preco {
+  text-box: trim-both cap alphabetic;
+}
+
+.card-plano h2 {
+  margin: 0;
+  color: var(--colors-alpha-88);
+  font: var(--font-weight-semi-bold) var(--font-size-lg) / var(--line-height-2xl) var(--font-urbanist), sans-serif;
+}
+
+.card-plano-cabecalho p {
+  margin: 0;
+  color: var(--colors-alpha-80);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+/* Divulgação e Divulgação Plus: a segunda linha em semibold, na cor cheia. */
+.card-plano-cabecalho .card-plano-complemento {
+  margin-top: calc(-1 * var(--spacing-8));
+  color: var(--colors-neutral-950);
+  font-weight: var(--font-weight-semi-bold);
+}
+
+/* "R$" e "por mês" em Header/Small (18/24); o valor em Header/Large (24/32). */
+.card-plano-preco {
+  margin: 0;
+  white-space: nowrap;
+  color: var(--colors-alpha-88);
+  font: var(--font-weight-semi-bold) var(--font-size-lg) / var(--line-height-2xl) var(--font-urbanist), sans-serif;
+}
+
+.card-plano-valor {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-4xl);
+}
+
+.card-plano-por-mes {
+  color: var(--colors-alpha-64);
+}
+
+/* O "Selecionar" do Figma tem canto 8 (radius-md), não o 12 padrão do button. */
+.card-plano .btn {
+  flex: 0 0 auto;
+  border-radius: var(--radius-md);
+}
+
+/* ===== contador-pix (Figma: 1538:39329) ===== */
+
+.contador-pix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-10);
+  padding: var(--spacing-4) var(--spacing-16);
+  border-radius: var(--radius-xs);
+  background: var(--colors-brand-secondary-400);
+}
+
+.contador-pix p {
+  margin: 0;
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+  white-space: nowrap;
+}
+
+.contador-pix-tempo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--colors-brand-secondary-950);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.contador-pix-tempo span:not(.contador-pix-separador) {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-xs);
+  background: var(--colors-neutral-0);
+}
+
+/* ===== cartões da tela do Pix (Figma: 1537:36290, 1537:36416, 1538:39278, 1542:40049) ===== */
+
+.cartao-pix {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.cartao-pix h2 {
+  margin: 0;
+  text-box: trim-both cap alphabetic;
+  color: var(--colors-alpha-88);
+  font: var(--font-weight-semi-bold) var(--font-size-md) / var(--line-height-xl) var(--font-urbanist), sans-serif;
+}
+
+.cartao-pix-texto,
+.cartao-pix ol {
+  margin: 0;
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
+.cartao-pix ol {
+  padding-left: calc(var(--spacing-16) + var(--spacing-2)); /* Figma: 18 */
+}
+
+.cartao-pix-codigo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14);
+  min-width: 0;
+}
+
+/* O código Pix numa linha só, cortado com reticências. */
+.cartao-pix-codigo p {
+  overflow: hidden;
+  margin: 0;
+  color: var(--colors-alpha-80);
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cartao-pix-qr-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.cartao-pix-qr-imagem {
+  display: flex;
+  justify-content: center;
+}
+
+.cartao-pix-qr-imagem img {
+  display: block;
+  width: 125px; /* Figma: 125,21, sem token */
+  height: 125px;
+}
+
+/* "Nome no banco" usa o card-header: título em 16/20 e texto em 12/18. */
+.cartao-pix .figma-section-heading h2 {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
+}
+
+.cartao-pix .figma-section-heading p {
+  color: var(--colors-alpha-80);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
+/* ===== Planos selecionados (Figma: 1537:30190) ===== */
+
+.plano-resumo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.plano-resumo-itens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14);
+}
+
+/* Linha: nome em Label/Medium-regular à esquerda; valor em Label/Medium-medium, "por mês" em 14/16 e o
+   lápis de 12 à direita, 4 entre eles. */
+.plano-resumo-linha,
+.plano-resumo-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-8);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
+  white-space: nowrap;
+}
+
+.plano-resumo-linha {
+  color: var(--colors-alpha-88);
+}
+
+.plano-resumo-valor {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  font-weight: var(--font-weight-medium);
+}
+
+.plano-resumo small {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-md);
+}
+
+.plano-resumo-valor button {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Total em status-success-700: rótulo medium, valor bold. */
+.plano-resumo-total {
+  color: var(--colors-status-success-700);
+  font-weight: var(--font-weight-medium);
+}
+
+.plano-resumo-total strong {
+  font-weight: var(--font-weight-bold);
+}
+
+/* O Continuar fica na barra fixa no mobile e dentro da página no desktop (1538:39750). */
+.plano-resumo-acoes {
+  display: none;
+}
+
+/* ===== Pagamento confirmado (Figma: 1543:40495 e 1543:40505) ===== */
+
+/* check_circle de 20 e o título em Header/Medium, os dois em status-success-900, 8 entre eles. */
+.plano-confirmacao {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.plano-confirmacao svg {
+  flex: 0 0 auto;
+}
+
+.plano-confirmacao h1,
+.plano-confirmacao h2 {
+  margin: 0;
+  color: var(--colors-status-success-900);
+  font: var(--font-weight-semi-bold) var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
+  text-box: trim-both cap alphabetic;
+}
+
+/* Aviso de autorizar o Pix Automático: cartão brand-secondary-400, título 16/20 e texto 12/18. */
+.plano-autorizar {
+  padding: var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-brand-secondary-400);
+}
+
+.plano-autorizar .figma-section-heading h2 {
+  color: var(--colors-alpha-88);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-xl);
+  text-box: trim-both cap alphabetic;
+}
+
+.plano-autorizar .figma-section-heading p {
+  margin-top: var(--spacing-10);
+  color: var(--colors-alpha-80);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+  -webkit-line-clamp: unset;
+}
+
+/* ===== "Por que pedimos esses dados" (Figma: 1538:39092) ===== */
+
+.dados-pix-modal .dados-modal-body {
+  flex: 1 0 auto;
+}
+
+/* O Fechar fica preso embaixo, no cartão branco com sombra do painel inferior. */
+.dados-pix-modal-rodape {
+  position: sticky;
+  bottom: 0;
+}
+
+@media (min-width: 48em) {
+  /* Sem a barra fixa no desktop, a página não precisa do espaço embaixo. */
+  .plano-pagina[data-etapa="dados"],
+  .plano-pagina[data-etapa="resumo"] {
+    padding-bottom: 0;
+  }
+
+  .plano-resumo-acoes {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .plano-resumo-acoes .btn {
+    width: 250px; /* Figma: 250, sem token */
+  }
+
+  /* Figma 1545:40734: o link à esquerda, sem padding, e o valor total com o Gerar Pix à direita. */
+  .plano-dados-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-16);
+  }
+
+  .plano-dados-acoes > .btn {
+    width: auto;
+    padding: var(--spacing-2);
+  }
+
+  .plano-dados-gerar {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-16);
+  }
+
+  .plano-dados-gerar p {
+    margin: 0;
+    color: var(--colors-alpha-88);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-xl);
+    white-space: nowrap;
+  }
+
+  .plano-dados-gerar .btn {
+    width: 303px; /* Figma: 303, sem token */
+  }
+
+  .plano-cards {
+    flex-direction: row;
+  }
+
+  .plano-cards .card-plano {
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-20);
+    padding: var(--spacing-24);
+  }
+
+  /* A descrição ocupa a sobra, para os preços e os botões ficarem na mesma linha nos três cards. */
+  .plano-cards .card-plano-info,
+  .plano-cards .card-plano-cabecalho {
+    flex: 1 1 auto;
+  }
+
+  .cartao-pix {
+    padding: var(--spacing-24);
+  }
+
+  /* Desktop: o código e o botão lado a lado; o texto do QR à esquerda e a imagem à direita. */
+  .cartao-pix-codigo {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .cartao-pix-codigo p {
+    flex: 1 1 auto;
+  }
+
+  .cartao-pix-codigo .btn {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .cartao-pix-qr {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cartao-pix-qr-imagem img {
+    width: 194px; /* Figma: 194,12, sem token */
+    height: 194px;
+  }
+}

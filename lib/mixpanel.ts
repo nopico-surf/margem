@@ -4,6 +4,7 @@
 import mixpanel from "mixpanel-browser/src/loaders/loader-module-core";
 import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import { HOST_LOCAL } from "@/lib/host-local";
+import { ROTA_SEM_MEDICAO } from "@/lib/sem-medicao";
 
 type Propriedades = Record<string, string | number | boolean | null>;
 
@@ -66,6 +67,7 @@ function registrarOrigem() {
 function iniciar() {
   if (iniciado || !token || typeof window === "undefined") return iniciado;
   if (HOST_LOCAL.test(window.location.hostname)) return false;
+  if (ROTA_SEM_MEDICAO.test(window.location.pathname)) return false;
   if (semMedicao()) return false;
   mixpanel.init(token, {
     ip: true,

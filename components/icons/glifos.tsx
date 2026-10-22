@@ -35,6 +35,8 @@
 //   GlifoMotionPhotosPaused  motion_photos_paused  (AV)
 //   GlifoCannabis         cannabis
 //   GlifoExpandLess       expand_less         (Navigation)
+//   GlifoCheckCircle      check_circle        (Action)
+//   GlifoMode             mode                (Editor)
 //
 // Não há divergência entre os dois lados: todo componente aqui tem o nome do componente no Figma.
 //
@@ -444,6 +446,24 @@ export function GlifoExpandLess({ className, color = "currentColor", opacity = 1
   return (
     <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M8 5.33333L4 9.33333L4.94 10.2733L8 7.22L11.06 10.2733L12 9.33333L8 5.33333Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+// Telas de pagamento confirmado do /plano (Experiência do produto, 1543:40495 e 1543:40505). 20x20.
+export function GlifoCheckCircle({ className, color = "currentColor", opacity = 1, size = 20 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M10 1.66667C5.4 1.66667 1.66667 5.4 1.66667 10C1.66667 14.6 5.4 18.3333 10 18.3333C14.6 18.3333 18.3333 14.6 18.3333 10C18.3333 5.4 14.6 1.66667 10 1.66667ZM10 16.6667C6.325 16.6667 3.33333 13.675 3.33333 10C3.33333 6.325 6.325 3.33333 10 3.33333C13.675 3.33333 16.6667 6.325 16.6667 10C16.6667 13.675 13.675 16.6667 10 16.6667ZM13.825 6.31667L8.33333 11.8083L6.175 9.65833L5 10.8333L8.33333 14.1667L15 7.5L13.825 6.31667Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+// Lápis do "Planos selecionados" do /plano (Experiência do produto, 1537:30190): leva de volta à escolha. 12x12.
+export function GlifoMode({ className, color = "currentColor", opacity = 1, size = 12 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M1.5 8.73V10.25C1.5 10.39 1.61 10.5 1.75 10.5H3.27C3.335 10.5 3.4 10.475 3.445 10.425L8.905 4.97L7.03 3.095L1.575 8.55C1.525 8.6 1.5 8.66 1.5 8.73ZM10.355 3.52C10.55 3.325 10.55 3.01 10.355 2.815L9.185 1.645C8.99 1.45 8.675 1.45 8.48 1.645L7.565 2.56L9.44 4.435L10.355 3.52V3.52Z" fill={color} fillOpacity={opacity} />
     </svg>
   );
 }

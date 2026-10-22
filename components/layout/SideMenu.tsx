@@ -17,12 +17,14 @@ type SideMenuProps = {
   onSelecionarEspecialidade?: (especialidade: Especialidade) => void;
   // Idem para a /redes-de-apoio e a troca entre públicas e independentes.
   onSelecionarRede?: (tipo: TipoRede) => void;
+  // Só o bloco "Fale com a Margem" (Figma: anotação 1538:39869, nas telas de pagamento do profissional).
+  soContatos?: boolean;
 };
 
 // A saída tem animação, então o painel continua montado por mais 350ms depois de fechar.
 const DURACAO_FECHAMENTO = 350;
 
-export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSelecionarRede }: SideMenuProps) {
+export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSelecionarRede, soContatos = false }: SideMenuProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(open);
   const [isClosing, setIsClosing] = useState(false);
@@ -52,12 +54,12 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
   // começa a baixar no clique e a tela anterior fica parada até o servidor responder. Baixando quando
   // o menu abre, o clique já mostra o skeleton. As duas URLs são a mesma rota: o Next baixa uma vez só.
   useEffect(() => {
-    if (!open) return;
+    if (!open || soContatos) return;
     router.prefetch(urlDaEspecialidade("psicologo"));
     router.prefetch(urlDaEspecialidade("psiquiatra"));
     router.prefetch("/redes-de-apoio?tipo=publicas");
     router.prefetch("/redes-de-apoio?tipo=independentes");
-  }, [open, router]);
+  }, [open, router, soContatos]);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -114,17 +116,21 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
       <div className="side-menu-backdrop" onClick={onClose} aria-hidden="true" />
       <BotaoFecharMenu onClick={onClose} ref={closeButtonRef} />
       <aside className="side-menu-panel">
-        <h2>Atendimento</h2>
-        <div className="side-menu-professionals">
-          <button type="button" onClick={() => irParaProfissionais("psicologo")}>Psicólogos</button>
-          <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Médicos e psiquiatras</button>
-        </div>
-        <h2>Redes de apoio</h2>
-        <div className="side-menu-professionals">
-          {OPCOES_REDE.map(({ valor, rotulo }) => (
-            <button key={valor} type="button" onClick={() => irParaRedesDeApoio(valor)}>{rotulo}</button>
-          ))}
-        </div>
+        {!soContatos && (
+          <>
+            <h2>Atendimento</h2>
+            <div className="side-menu-professionals">
+              <button type="button" onClick={() => irParaProfissionais("psicologo")}>Psicólogos</button>
+              <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Médicos e psiquiatras</button>
+            </div>
+            <h2>Redes de apoio</h2>
+            <div className="side-menu-professionals">
+              {OPCOES_REDE.map(({ valor, rotulo }) => (
+                <button key={valor} type="button" onClick={() => irParaRedesDeApoio(valor)}>{rotulo}</button>
+              ))}
+            </div>
+          </>
+        )}
         <h2>Fale com a Margem</h2>
         <MenuContatos />
       </aside>

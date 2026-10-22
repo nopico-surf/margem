@@ -50,10 +50,22 @@
   inset: 0;
   z-index: var(--z-index-modal);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--spacing-24);
   padding: var(--spacing-16);
   background: var(--colors-neutral-0);
+}
+
+/* Com texto (Figma 1546:40761): Header/Medium centralizado, 24 abaixo do loader, 32 dos lados. */
+.loader-tela-texto {
+  margin: 0;
+  padding: 0 var(--spacing-16);
+  color: var(--colors-alpha-88);
+  font: var(--font-weight-semi-bold) var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
+  text-align: center;
+  text-box: trim-both cap alphabetic;
 }
 
 @media (prefers-reduced-motion: reduce) {
