@@ -232,7 +232,9 @@ export async function estenderPagoAte(id: string, ate: string) {
 // Último recurso para achar de qual apoio é um pagamento que chegou sem nenhum id nosso (o primeiro mês do
 // Pix Automático é criado pelo Asaas, e a documentação não diz se traz a referência): o apoio mensal mais
 // recente do mesmo cliente do Asaas, com o mesmo valor, em qualquer status em que ainda pode receber um
-// pagamento ou um estorno (de fora ficam só falhou e estornado).
+// pagamento ou um estorno (de fora ficam só falhou e estornado). Só apoio de profissional: é o único
+// caso em que o primeiro mês chega sem id nosso, e sem esse limite uma doação mensal criada com o CPF
+// do profissional e o mesmo valor do plano poderia ficar com o pagamento dele.
 export async function buscarApoioMensalDoCliente(clienteId: string, valor: number): Promise<ApoioEncontrado | null> {
   const supabase = getServerClient();
   if (!supabase) return null;
@@ -241,6 +243,7 @@ export async function buscarApoioMensalDoCliente(clienteId: string, valor: numbe
     .select("id, frequencia, status, profissional_id, asaas_autorizacao_id")
     .eq("asaas_cliente_id", clienteId)
     .eq("frequencia", "mensal")
+    .not("profissional_id", "is", null)
     .eq("valor", valor)
     .in("status", ["aguardando", "ativo", "inadimplente", "recusado", "expirado", "cancelado"])
     .order("criado_em", { ascending: false })
