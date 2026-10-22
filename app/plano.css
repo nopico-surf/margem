@@ -18,7 +18,8 @@
 
 /* A barra fixa do Gerar Pix cobre o fim da página: o espaço embaixo deixa o rodapé aparecer. */
 .plano-pagina[data-etapa="dados"],
-.plano-pagina[data-etapa="resumo"] {
+.plano-pagina[data-etapa="resumo"],
+.plano-pagina[data-etapa="resumo_troca"] {
   padding-bottom: var(--spacing-128);
 }
 
@@ -322,6 +323,14 @@
   cursor: pointer;
 }
 
+/* Vagas do plano, embaixo das linhas do "Seu plano". */
+.plano-resumo-detalhe {
+  margin: 0;
+  color: var(--colors-alpha-80);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
 /* Total em status-success-700: rótulo medium, valor bold. */
 .plano-resumo-total {
   color: var(--colors-status-success-700);
@@ -395,7 +404,8 @@
 @media (min-width: 48em) {
   /* Sem a barra fixa no desktop, a página não precisa do espaço embaixo. */
   .plano-pagina[data-etapa="dados"],
-  .plano-pagina[data-etapa="resumo"] {
+  .plano-pagina[data-etapa="resumo"],
+  .plano-pagina[data-etapa="resumo_troca"] {
     padding-bottom: 0;
   }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { formatarCentavos } from "@/lib/apoio/formatar";
 
@@ -14,6 +15,8 @@ import { formatarCentavos } from "@/lib/apoio/formatar";
 // plano que já tinha escolhido em primary, com "Selecionado", e os outros em secondary (anotação do
 // Figma, 1537:36150); tocar nele de novo também avança.
 //
+// Na troca de plano, o plano que a pessoa já tem mostra o `badge` "Plano atual" no lugar do botão.
+//
 // O card inteiro é clicável: o clique no botão sobe até ele, e o botão continua lá para quem navega
 // pelo teclado.
 type CardPlanoProps = {
@@ -25,10 +28,11 @@ type CardPlanoProps = {
   centavos: number;
   destaque?: boolean;
   selecionado?: boolean;
+  atual?: boolean;
   onSelecionar?: () => void;
 };
 
-export function CardPlano({ arranjo, nome, descricao, complemento, centavos, destaque = false, selecionado = false, onSelecionar }: CardPlanoProps) {
+export function CardPlano({ arranjo, nome, descricao, complemento, centavos, destaque = false, selecionado = false, atual = false, onSelecionar }: CardPlanoProps) {
   return (
     <article className="card-plano" data-arranjo={arranjo} onClick={onSelecionar}>
       <div className="card-plano-info">
@@ -43,13 +47,17 @@ export function CardPlano({ arranjo, nome, descricao, complemento, centavos, des
           <span className="card-plano-por-mes"> por mês</span>
         </p>
       </div>
-      <Button
-        variante={destaque || selecionado ? "primary" : "secondary"}
-        tamanho="x-small"
-        aria-label={`Selecionar ${nome}`}
-      >
-        {selecionado ? "Selecionado" : "Selecionar"}
-      </Button>
+      {atual ? (
+        <Badge color="secondary">Plano atual</Badge>
+      ) : (
+        <Button
+          variante={destaque || selecionado ? "primary" : "secondary"}
+          tamanho="x-small"
+          aria-label={`Selecionar ${nome}`}
+        >
+          {selecionado ? "Selecionado" : "Selecionar"}
+        </Button>
+      )}
     </article>
   );
 }

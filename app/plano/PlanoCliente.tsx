@@ -92,6 +92,9 @@ type DadosDoLink = {
   planosBase: Record<PlanoBase, { centavos: number; vagas: number | null }>;
   planosOpcionais: Record<PlanoOpcional, { centavos: number }>;
   email: string | null;
+  // Só para quem já pagou: o plano de hoje e o próximo vencimento, para a troca de plano.
+  planoAtual?: { planoBase: PlanoBase; opcional: PlanoOpcional | null } | null;
+  proximoVencimento?: string | null;
 };
 
 type Pix = { apoioId: string; payload: string; imagemBase64: string; expiraEm: number };
@@ -108,9 +111,17 @@ type Etapa =
   | "expirado"
   | "recusado"
   | "pago_sem_autorizacao"
-  | "tudo_feito";
+  | "tudo_feito"
+  // Troca de plano, para quem já pagou (regra do Vitor: upgrade paga só a diferença na hora, downgrade
+  // começa no próximo vencimento, sem devolução).
+  | "meu_plano"
+  | "resumo_troca"
+  | "troca_confirmada";
+
+const ETAPAS_DA_TROCA: Etapa[] = ["meu_plano", "resumo_troca", "troca_confirmada"];
 
 const ETAPAS_DA_PREVIA: Etapa[] = [
+  ...ETAPAS_DA_TROCA,
   "link_invalido",
   "plano_ja_ativo",
   "base",
@@ -148,13 +159,29 @@ function etapaDaPrevia(endereco: string): Etapa | null {
   return ETAPAS_DA_PREVIA.includes(etapa) ? etapa : null;
 }
 
+// Na prévia da troca, quem já paga o Prata e escolhe o Ouro.
+const PLANO_ATUAL_DA_PREVIA = { planoBase: "prata" as PlanoBase, opcional: null };
+
 function textoDasVagas(vagas: number | null) {
   return vagas === null ? "Vagas ilimitadas" : `${vagas} vagas abertas`;
 }
 
+// "Prata", "Ouro + Destaque": o nome do plano com o opcional, para o resumo e a confirmação da troca.
+function nomeDoPlano(planoBase: PlanoBase, opcional: PlanoOpcional | null) {
+  return opcional ? `${NOMES_BASE[planoBase]} + ${OPCIONAIS[opcional].nome}` : NOMES_BASE[planoBase];
+}
+
+// Data do próximo vencimento em dd/mm, no fuso de Brasília.
+function diaEMes(iso: string | null | undefined) {
+  if (!iso) return "";
+  const data = new Date(iso);
+  if (Number.isNaN(data.getTime())) return "";
+  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" }).format(data);
+}
+
 // O Asaas devolve a validade como data sem fuso ("2026-10-22 16:30:00", horário de Brasília). Sem data
-// legível, ou com uma fora do razoável, vale a regra dos 30 minutos a partir de agora.
-const VALIDADE_PADRAO = 30 * 60 * 1000;
+// legível, ou com uma fora do razoável, vale a regra dos 10 minutos a partir de agora.
+const VALIDADE_PADRAO = 10 * 60 * 1000;
 
 function momentoDeExpirar(expiraEm: unknown) {
   const padrao = Date.now() + VALIDADE_PADRAO;
@@ -186,6 +213,8 @@ export function PlanoCliente() {
   const [painelVisivel, setPainelVisivel] = useState(false);
   // Voltou pelo lápis do "Planos selecionados": a escolha leva de volta ao resumo, sem passar pela outra tela.
   const [editando, setEditando] = useState(false);
+  // Quem já pagou tocou em "Trocar de plano": as telas de escolha levam ao resumo da troca.
+  const [trocando, setTrocando] = useState(false);
   const gerandoRef = useRef(false);
 
   // Trocar só o que vem depois do "#" não recarrega a página: recarrega aqui, para o código novo valer.
@@ -202,9 +231,15 @@ export function PlanoCliente() {
 
     const previa = etapaDaPrevia(doEndereco);
     if (previa) {
-      setLink(LINK_DA_PREVIA);
-      setPlanoBase(LINK_DA_PREVIA.planoBaseEscolhido);
-      setOpcional(LINK_DA_PREVIA.opcionalEscolhido);
+      const daTroca = ETAPAS_DA_TROCA.includes(previa);
+      setLink(
+        daTroca
+          ? { ...LINK_DA_PREVIA, planoAtual: PLANO_ATUAL_DA_PREVIA, proximoVencimento: new Date(Date.now() + 15 * 864e5).toISOString() }
+          : LINK_DA_PREVIA,
+      );
+      setTrocando(daTroca && previa !== "meu_plano");
+      setPlanoBase(daTroca ? (previa === "meu_plano" ? "prata" : "ouro") : LINK_DA_PREVIA.planoBaseEscolhido);
+      setOpcional(daTroca ? null : LINK_DA_PREVIA.opcionalEscolhido);
       setEmail(LINK_DA_PREVIA.email ?? "");
       setPix({
         apoioId: "previa",
@@ -228,9 +263,16 @@ export function PlanoCliente() {
         if (!resposta.ok || !corpo) return setEtapa("link_invalido");
         const dados = corpo as DadosDoLink;
         setLink(dados);
+        setEmail(dados.email ?? "");
+        // Quem já pagou abre no "Seu plano"; quem ainda não pagou, na escolha do plano.
+        if (dados.planoAtual) {
+          setPlanoBase(dados.planoAtual.planoBase);
+          setOpcional(dados.planoAtual.opcional);
+          setEtapa("meu_plano");
+          return;
+        }
         setPlanoBase(dados.planoBaseEscolhido);
         setOpcional(dados.opcionalEscolhido);
-        setEmail(dados.email ?? "");
         setEtapa("base");
       })
       .catch(() => setEtapa("link_invalido"));
@@ -244,7 +286,7 @@ export function PlanoCliente() {
   // A barra do Continuar e a do Gerar Pix entram subindo quando o resumo e a tela de dados abrem
   // (anotações do Figma, 1537:35224 e 1537:36746).
   useEffect(() => {
-    if (etapa !== "resumo" && etapa !== "dados") {
+    if (etapa !== "resumo" && etapa !== "resumo_troca" && etapa !== "dados") {
       setPainelVisivel(false);
       return;
     }
@@ -277,7 +319,7 @@ export function PlanoCliente() {
         if (!resposta.ok || !ativo) return;
         const { status, pago } = (await resposta.json()) as { status?: string; pago?: boolean };
         if (!ativo) return;
-        if (status === "ativo") setEtapa("tudo_feito");
+        if (status === "ativo") setEtapa(trocando ? "troca_confirmada" : "tudo_feito");
         else if (pago) setEtapa("pago_sem_autorizacao");
         else if (status === "expirado") setEtapa("expirado");
         else if (status === "recusado") setEtapa("recusado");
@@ -290,7 +332,7 @@ export function PlanoCliente() {
       ativo = false;
       clearInterval(intervalo);
     };
-  }, [consultandoStatus, pix]);
+  }, [consultandoStatus, pix, trocando]);
 
   const gerarPix = useCallback(async () => {
     if (gerandoRef.current || !planoBase) return;
@@ -315,14 +357,20 @@ export function PlanoCliente() {
       const resposta = await fetch("/api/apoio/pix", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, planoBase, opcional, nome, cpfCnpj, email }),
+        body: JSON.stringify({ token, planoBase, opcional, nome, cpfCnpj, email, ...(trocando ? { troca: true } : {}) }),
       });
       const corpo = (await resposta.json().catch(() => null)) as
-        | { apoioId: string; qrCode: { payload: string; imagemBase64: string; expiraEm: unknown } }
+        | { apoioId: string; qrCode: { payload: string; imagemBase64: string; expiraEm: unknown } | null }
         | { error?: string }
         | null;
 
-      if (resposta.ok && corpo && "apoioId" in corpo) {
+      // Downgrade sem nada a pagar nem autorizar hoje: a troca já fica marcada para o próximo vencimento.
+      if (resposta.ok && corpo && "apoioId" in corpo && !corpo.qrCode) {
+        setEtapa("troca_confirmada");
+        return;
+      }
+
+      if (resposta.ok && corpo && "apoioId" in corpo && corpo.qrCode) {
         setPix({
           apoioId: corpo.apoioId,
           payload: corpo.qrCode.payload,
@@ -357,7 +405,7 @@ export function PlanoCliente() {
       gerandoRef.current = false;
       setGerando(false);
     }
-  }, [token, planoBase, opcional, nome, cpfCnpj, email]);
+  }, [token, planoBase, opcional, nome, cpfCnpj, email, trocando]);
 
   async function copiarCodigo() {
     if (!pix) return;
@@ -388,8 +436,13 @@ export function PlanoCliente() {
 
   function selecionarOpcional(plano: PlanoOpcional | null) {
     setOpcional(plano);
-    setEtapa("resumo");
+    setEtapa(trocando ? "resumo_troca" : "resumo");
     setEditando(false);
+  }
+
+  function trocarDePlano() {
+    setTrocando(true);
+    setEtapa("base");
   }
 
   function editar(tela: "base" | "opcional") {
@@ -423,16 +476,54 @@ export function PlanoCliente() {
       : 0;
   const total = formatarCentavos(totalCentavos);
 
-  const VOLTA: Partial<Record<Etapa, Etapa>> = { opcional: "base", resumo: "opcional", dados: "resumo" };
+  // Troca de plano: quanto o plano novo custa por mês contra o atual, e quanto se paga hoje (só a
+  // diferença, quando o novo é maior; o servidor recalcula, aqui é só o que a tela mostra).
+  const planoAtual = link?.planoAtual ?? null;
+  const centavosAtual =
+    link && planoAtual
+      ? link.planosBase[planoAtual.planoBase].centavos + (planoAtual.opcional ? link.planosOpcionais[planoAtual.opcional].centavos : 0)
+      : 0;
+  const centavosHoje = Math.max(0, totalCentavos - centavosAtual);
+  const ehUpgrade = totalCentavos > centavosAtual;
+  const mesmoPlano = !!planoAtual && planoAtual.planoBase === planoBase && planoAtual.opcional === opcional;
+  const vencimento = diaEMes(link?.proximoVencimento);
+  const nomeNovo = planoBase ? nomeDoPlano(planoBase, opcional).toLowerCase() : "";
+  const textoDoBotaoDaTroca = mesmoPlano
+    ? "Escolher outro plano"
+    : ehUpgrade
+      ? "Continuar para o pagamento"
+      : "Confirmar a troca de plano";
+  const continuarDaTroca = () => setEtapa(mesmoPlano ? "base" : "dados");
+  const textoDoValor = trocando ? `Hoje você paga R$ ${formatarCentavos(centavosHoje)}` : `Valor total: R$ ${total} por mês`;
+  const tituloDoPix = !trocando
+    ? `Pague o seu plano de R$ ${total} para ativar seu perfil na Margem`
+    : ehUpgrade
+      ? `Pague R$ ${formatarCentavos(centavosHoje)} para ativar o plano ${nomeNovo}`
+      : `Autorize o plano ${nomeNovo} no seu banco`;
+
+  const VOLTA: Partial<Record<Etapa, Etapa>> = {
+    base: trocando ? "meu_plano" : undefined,
+    opcional: "base",
+    resumo: "opcional",
+    resumo_troca: "opcional",
+    dados: trocando ? "resumo_troca" : "resumo",
+  };
   const destinoDoVoltar = editando && (etapa === "base" || etapa === "opcional") ? "resumo" : VOLTA[etapa];
   const voltar = destinoDoVoltar
     ? () => {
         setEditando(false);
+        if (destinoDoVoltar === "meu_plano") {
+          setTrocando(false);
+          if (planoAtual) {
+            setPlanoBase(planoAtual.planoBase);
+            setOpcional(planoAtual.opcional);
+          }
+        }
         setEtapa(destinoDoVoltar);
       }
     : undefined;
   const telaDoPix = etapa === "pix" || etapa === "expirado" || etapa === "recusado";
-  const confirmado = etapa === "pago_sem_autorizacao" || etapa === "tudo_feito";
+  const confirmado = etapa === "pago_sem_autorizacao" || etapa === "tudo_feito" || etapa === "troca_confirmada";
 
   return (
     <main className="figma-result-page plano-pagina" data-etapa={etapa}>
@@ -457,6 +548,39 @@ export function PlanoCliente() {
         </ContainerConteudo>
       )}
 
+      {/* Troca de plano: entrada de quem já pagou. Mesmo cartão do "Planos selecionados". */}
+      {etapa === "meu_plano" && link && planoAtual && (
+        <ContainerConteudo id="plano-meu">
+          <CardHeader
+            as="h1"
+            title="Seu plano"
+            description={vencimento ? `Próximo pagamento em ${vencimento}, pelo Pix Automático.` : undefined}
+          />
+          <section className="plano-resumo">
+            <div className="plano-resumo-itens">
+              <div className="plano-resumo-linha">
+                <span>Plano {NOMES_BASE[planoAtual.planoBase].toLowerCase()}</span>
+                <span className="plano-resumo-valor">
+                  R$ {formatarCentavos(link.planosBase[planoAtual.planoBase].centavos)} <small>por mês</small>
+                </span>
+              </div>
+              {planoAtual.opcional && (
+                <div className="plano-resumo-linha">
+                  <span>{OPCIONAIS[planoAtual.opcional].nome}</span>
+                  <span className="plano-resumo-valor">
+                    R$ {formatarCentavos(link.planosOpcionais[planoAtual.opcional].centavos)} <small>por mês</small>
+                  </span>
+                </div>
+              )}
+              <p className="plano-resumo-detalhe">{textoDasVagas(link.planosBase[planoAtual.planoBase].vagas)}</p>
+            </div>
+          </section>
+          <Button tamanho="medium" larguraTotal onClick={trocarDePlano}>
+            Trocar de plano
+          </Button>
+        </ContainerConteudo>
+      )}
+
       {etapa === "base" && link && (
         <ContainerConteudo id="plano-base">
           <CardHeader as="h1" title="Escolha seu plano" />
@@ -468,8 +592,9 @@ export function PlanoCliente() {
                 nome={NOMES_BASE[plano]}
                 descricao={textoDasVagas(link.planosBase[plano].vagas)}
                 centavos={link.planosBase[plano].centavos}
-                destaque={!editando && plano === "ouro"}
+                destaque={!editando && !trocando && plano === "ouro"}
                 selecionado={editando && plano === planoBase}
+                atual={trocando && plano === planoAtual?.planoBase}
                 onSelecionar={() => selecionarBase(plano)}
               />
             ))}
@@ -493,8 +618,9 @@ export function PlanoCliente() {
                 descricao={OPCIONAIS[plano].descricao}
                 complemento={OPCIONAIS[plano].complemento}
                 centavos={link.planosOpcionais[plano].centavos}
-                destaque={!editando && plano === "divulgacao"}
+                destaque={!editando && !trocando && plano === "divulgacao"}
                 selecionado={editando && plano === opcional}
+                atual={trocando && plano === planoAtual?.opcional}
                 onSelecionar={() => selecionarOpcional(plano)}
               />
             ))}
@@ -549,6 +675,50 @@ export function PlanoCliente() {
         </ContainerConteudo>
       )}
 
+      {/* Resumo da troca: o mesmo cartão do "Planos selecionados", com o que se paga hoje. */}
+      {etapa === "resumo_troca" && link && planoBase && planoAtual && (
+        <ContainerConteudo id="plano-resumo-troca">
+          <CardHeader as="h1" title="Troca de plano" />
+          <section className="plano-resumo">
+            <div className="plano-resumo-itens">
+              <div className="plano-resumo-linha">
+                <span>Plano atual: {nomeDoPlano(planoAtual.planoBase, planoAtual.opcional).toLowerCase()}</span>
+                <span className="plano-resumo-valor">
+                  R$ {formatarCentavos(centavosAtual)} <small>por mês</small>
+                </span>
+              </div>
+              <div className="plano-resumo-linha">
+                <span>Novo plano: {nomeNovo}</span>
+                <span className="plano-resumo-valor">
+                  R$ {total} <small>por mês</small>
+                  <button type="button" aria-label="Escolher outro plano" onClick={() => setEtapa("base")}>
+                    <IconeEditar />
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div className="plano-resumo-total">
+              <span>Hoje você paga</span>
+              <span>
+                <strong>R$ {formatarCentavos(centavosHoje)}</strong>
+              </span>
+            </div>
+          </section>
+          <p className="plano-nota">
+            {mesmoPlano
+              ? "Esse já é o seu plano."
+              : ehUpgrade
+                ? `O plano novo vale assim que o pagamento for confirmado.${vencimento ? ` A partir de ${vencimento}, o Pix Automático cobra R$ ${total} por mês.` : ""}`
+                : `Você continua com o plano atual${vencimento ? ` até ${vencimento}` : ""}. A partir daí, o plano ${nomeNovo} começa, por R$ ${total} por mês.`}
+          </p>
+          <div className="plano-resumo-acoes">
+            <Button tamanho="medium" larguraTotal onClick={continuarDaTroca}>
+              {textoDoBotaoDaTroca}
+            </Button>
+          </div>
+        </ContainerConteudo>
+      )}
+
       {etapa === "dados" && (
         <ContainerConteudo id="plano-dados">
           <CardHeader as="h1" title="Seus dados para o Pix" />
@@ -598,7 +768,7 @@ export function PlanoCliente() {
               Por que pedimos esses dados?
             </Button>
             <div className="plano-dados-gerar">
-              <p>{`Valor total: R$ ${total} por mês`}</p>
+              <p>{textoDoValor}</p>
               <Button tamanho="medium" larguraTotal onClick={gerarPix}>
                 Gerar Pix
               </Button>
@@ -610,7 +780,7 @@ export function PlanoCliente() {
       {telaDoPix && pix && (
         <ContainerConteudo id="plano-pix">
           {etapa !== "recusado" && <ContadorPix segundos={etapa === "expirado" ? 0 : segundosRestantes} />}
-          <CardHeader as="h1" title={`Pague o seu plano de R$ ${total} para ativar seu perfil na Margem`} />
+          <CardHeader as="h1" title={tituloDoPix} />
 
           {/* Recusado reaproveita o card do código vencido (decidido com o Vitor), com o título e o texto
               da tela 7 do docs/apoio-telas.md. Sem o contador: o código não venceu, o banco recusou. */}
@@ -676,7 +846,22 @@ export function PlanoCliente() {
       )}
 
       {/* Figma: "Pix pago - sem autorizar automatico" (1543:40495) e "Tudo feito" (1543:40505). */}
-      {confirmado && (
+      {/* Troca confirmada: o mesmo desenho do "Tudo feito", com o texto da troca. */}
+      {etapa === "troca_confirmada" && (
+        <ContainerConteudo id="plano-troca-confirmada">
+          <div className="plano-confirmacao">
+            <IconeConfirmado />
+            <h1>{ehUpgrade ? `Plano ${nomeNovo} ativado` : "Troca de plano confirmada"}</h1>
+          </div>
+          <p className="plano-nota">
+            {ehUpgrade
+              ? `O plano novo já vale.${vencimento ? ` A partir de ${vencimento}, o Pix Automático cobra R$ ${total} por mês.` : ""}`
+              : `O plano ${nomeNovo} começa${vencimento ? ` em ${vencimento}` : " no próximo vencimento"}, por R$ ${total} por mês.`}
+          </p>
+        </ContainerConteudo>
+      )}
+
+      {confirmado && etapa !== "troca_confirmada" && (
         <ContainerConteudo id="plano-confirmado">
           <div className="plano-confirmacao">
             <IconeConfirmado />
@@ -700,15 +885,20 @@ export function PlanoCliente() {
 
       <Footer compacto />
 
-      {etapa === "resumo" && (
-        <PainelInferior variante="continuar" visivel={painelVisivel} onContinuar={() => setEtapa("dados")} />
+      {(etapa === "resumo" || etapa === "resumo_troca") && (
+        <PainelInferior
+          variante="continuar"
+          visivel={painelVisivel}
+          onContinuar={etapa === "resumo_troca" ? continuarDaTroca : () => setEtapa("dados")}
+          texto={etapa === "resumo_troca" ? textoDoBotaoDaTroca : undefined}
+        />
       )}
 
       {etapa === "dados" && (
         <PainelInferior
           variante="pix"
           visivel={painelVisivel && !dadosAbertos}
-          texto={`Valor total: R$ ${total} por mês`}
+          texto={textoDoValor}
           onGerar={gerarPix}
         />
       )}

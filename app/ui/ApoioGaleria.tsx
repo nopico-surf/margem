@@ -65,6 +65,9 @@ export function CardPlanoGaleria() {
       <Estado nome="base, Ouro (destaque)">
         <CardPlano arranjo="base" nome="Ouro" descricao="8 vagas abertas" centavos={3999} destaque onSelecionar={nada} />
       </Estado>
+      <Estado nome="base, Prata (plano atual, na troca)">
+        <CardPlano arranjo="base" nome="Prata" descricao="3 vagas abertas" centavos={1999} atual onSelecionar={nada} />
+      </Estado>
       <Estado nome="opcional, Destaque">
         <CardPlano
           arranjo="opcional"
