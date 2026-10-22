@@ -671,7 +671,7 @@ export function PlanoCliente() {
           </section>
           <div className="plano-resumo-acoes">
             <Button tamanho="medium" onClick={() => setEtapa("dados")}>
-              Continuar
+              Continuar para o pagamento
             </Button>
           </div>
         </ContainerConteudo>
@@ -892,7 +892,7 @@ export function PlanoCliente() {
           variante="continuar"
           visivel={painelVisivel}
           onContinuar={etapa === "resumo_troca" ? continuarDaTroca : etapa === "meu_plano" ? trocarDePlano : () => setEtapa("dados")}
-          texto={etapa === "resumo_troca" ? textoDoBotaoDaTroca : etapa === "meu_plano" ? "Trocar de plano" : undefined}
+          texto={etapa === "resumo_troca" ? textoDoBotaoDaTroca : etapa === "meu_plano" ? "Trocar de plano" : "Continuar para o pagamento"}
         />
       )}
 
