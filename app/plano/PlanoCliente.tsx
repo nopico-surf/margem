@@ -334,14 +334,19 @@ export function PlanoCliente() {
     };
   }, [consultandoStatus, pix, trocando]);
 
-  const gerarPix = useCallback(async () => {
+  // `downgrade` só vale quando chamado como gerarPix(true): no onClick o primeiro argumento é o evento.
+  const gerarPix = useCallback(async (downgrade?: unknown) => {
     if (gerandoRef.current || !planoBase) return;
+    // Downgrade não cobra nada hoje, então o servidor não pede nome, CPF nem e-mail.
+    const semDados = downgrade === true;
 
     // O botão nunca fica desabilitado: com algum campo vazio ou inválido, o toque mostra os erros na hora,
     // sem ir ao servidor.
-    const invalidos = (["nome", "cpfCnpj", "email"] as const).filter(
-      (campo) => !campoValido(campo, campo === "nome" ? nome : campo === "cpfCnpj" ? cpfCnpj : email),
-    );
+    const invalidos = semDados
+      ? []
+      : (["nome", "cpfCnpj", "email"] as const).filter(
+          (campo) => !campoValido(campo, campo === "nome" ? nome : campo === "cpfCnpj" ? cpfCnpj : email),
+        );
     if (invalidos.length > 0) {
       setErrosDeCampo(Object.fromEntries(invalidos.map((campo) => [campo, ERRO_DO_CAMPO[campo]])));
       setEtapa("dados");
@@ -357,10 +362,14 @@ export function PlanoCliente() {
       const resposta = await fetch("/api/apoio/pix", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, planoBase, opcional, nome, cpfCnpj, email, ...(trocando ? { troca: true } : {}) }),
+        body: JSON.stringify(
+          semDados
+            ? { token, planoBase, opcional, troca: true }
+            : { token, planoBase, opcional, nome, cpfCnpj, email, ...(trocando ? { troca: true } : {}) },
+        ),
       });
       const corpo = (await resposta.json().catch(() => null)) as
-        | { apoioId: string; qrCode: { payload: string; imagemBase64: string; expiraEm: unknown } | null }
+        | { apoioId: string | null; qrCode: { payload: string; imagemBase64: string; expiraEm: unknown } | null }
         | { error?: string }
         | null;
 
@@ -370,7 +379,7 @@ export function PlanoCliente() {
         return;
       }
 
-      if (resposta.ok && corpo && "apoioId" in corpo && corpo.qrCode) {
+      if (resposta.ok && corpo && "apoioId" in corpo && corpo.apoioId && corpo.qrCode) {
         setPix({
           apoioId: corpo.apoioId,
           payload: corpo.qrCode.payload,
@@ -392,7 +401,11 @@ export function PlanoCliente() {
         setEtapa("link_invalido");
       } else if (codigo === "plano_ja_ativo") {
         setEtapa("plano_ja_ativo");
-      } else if (codigo === "plano_invalido") {
+      } else if (codigo === "troca_indisponivel") {
+        // Sem mês pago valendo: não há o que trocar, a pessoa paga pelo fluxo normal.
+        setTrocando(false);
+        setEtapa("base");
+      } else if (codigo === "plano_invalido" || codigo === "mesmo_plano") {
         setEtapa("base");
       } else {
         setErroGeral(codigo === "dados_recusados" ? ERRO_DADOS_RECUSADOS : ERRO_PAGAMENTO_INDISPONIVEL);
@@ -493,7 +506,15 @@ export function PlanoCliente() {
     : ehUpgrade
       ? "Continuar para o pagamento"
       : "Confirmar a troca de plano";
-  const continuarDaTroca = () => setEtapa(mesmoPlano ? "base" : "dados");
+  // Upgrade vai para os dados do Pix; downgrade confirma direto, sem dado pessoal (nada é cobrado hoje).
+  const continuarDaTroca = () => {
+    if (mesmoPlano) setEtapa("base");
+    else if (ehUpgrade) setEtapa("dados");
+    else if (etapaDaPrevia(token)) setEtapa("troca_confirmada");
+    else gerarPix(true);
+  };
+  // O link volta a cobrar 7 dias antes do vencimento: é quando o plano menor é pago, pelo mesmo link.
+  const reabreEm = diaEMes(link?.proximoVencimento ? new Date(new Date(link.proximoVencimento).getTime() - 7 * 864e5).toISOString() : null);
   const textoDoValor = trocando ? `Hoje você paga R$ ${formatarCentavos(centavosHoje)}` : `Valor total: R$ ${total} por mês`;
   const tituloDoPix = !trocando
     ? `Pague o seu plano de R$ ${total} para ativar seu perfil na Margem`
@@ -712,7 +733,7 @@ export function PlanoCliente() {
                 ? "Esse já é o seu plano."
                 : ehUpgrade
                   ? `O plano novo vale assim que o pagamento for confirmado.${vencimento ? ` A partir de ${vencimento}, o Pix Automático cobra R$ ${total} por mês.` : ""}`
-                  : `Você continua com o plano atual${vencimento ? ` até ${vencimento}` : ""}. A partir daí, o plano ${nomeNovo} começa, por R$ ${total} por mês.`}
+                  : `Você continua com o plano atual${vencimento ? ` até ${vencimento}` : ""}, e o Pix Automático dele é encerrado agora. O plano ${nomeNovo} custa R$ ${total} por mês e é pago por este mesmo link${reabreEm ? `, a partir de ${reabreEm}` : ""}.`}
             </p>
             <Button tamanho="medium" onClick={continuarDaTroca}>
               {textoDoBotaoDaTroca}
@@ -858,7 +879,7 @@ export function PlanoCliente() {
           <p className="plano-nota">
             {ehUpgrade
               ? `O plano novo já vale.${vencimento ? ` A partir de ${vencimento}, o Pix Automático cobra R$ ${total} por mês.` : ""}`
-              : `O plano ${nomeNovo} começa${vencimento ? ` em ${vencimento}` : " no próximo vencimento"}, por R$ ${total} por mês.`}
+              : `O plano ${nomeNovo} começa${vencimento ? ` em ${vencimento}` : " no próximo vencimento"}. Para pagar os R$ ${total} por mês, abra este mesmo link${reabreEm ? ` a partir de ${reabreEm}` : " perto dessa data"}.`}
           </p>
         </ContainerConteudo>
       )}
