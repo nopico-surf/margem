@@ -33,9 +33,11 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 
 ## Regras de negócio
 
-- **Manual até o pagamento.** Cadastro, aprovação e fila são manuais (status mudado no editor de tabelas do Supabase). O perfil só entra no ar com o primeiro pagamento.
+- **Manual até o pagamento.** Cadastro, aprovação e fila são manuais (status mudado no editor de tabelas do Supabase). O perfil só entra no ar com o primeiro pagamento, mesmo que a pessoa não autorize o Pix Automático (o Vitor lembra a autorização na mão).
 - **Link pessoal.** Só quem tem o link pessoal consegue pagar um plano de profissional. O preço sai do banco, nunca da tela.
-- **Mensalidade que falha.** O Asaas tenta de novo até 3 vezes em 7 dias. O perfil continua no ar durante 7 dias de tolerância. Se nenhuma tentativa der certo, sai do site sozinho. Se o pagamento cair depois, volta.
+- **O mês pago fica no ar inteiro.** Cada pagamento estende `pago_ate` até o mesmo dia do mês seguinte, e o perfil fica no ar até `pago_ate` mais 7 dias de tolerância. Cancelar ou não autorizar o Pix Automático não tira do ar antes disso. Se o mês seguinte não for pago, sai do site sozinho; se o pagamento cair depois, volta.
+- **Mensalidade que falha.** O Asaas tenta de novo até 3 vezes em 7 dias, dentro da mesma tolerância.
+- **Pagar de novo pelo link.** Faltando 7 dias ou menos para o fim do mês pago, ou depois dele, o link pessoal volta a cobrar. Quem tem o Pix Automático autorizado vê `plano_ja_ativo`, porque o Asaas cobra sozinho.
 - **Estorno dos 7 dias.** Feito na mão no Asaas. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
 - **Quem já está na plataforma** continua no ar sem pagar (`gratuito`) e recebe o link na mão, pelo Vitor.
 - **Ordem dos perfis** no site e nas orientações nunca depende do plano.
@@ -266,10 +268,10 @@ O link pessoal que o Vitor manda é a página do profissional com o código no f
 | `recusado` | não aprovado | não |
 | `lista_espera` | aprovado, sem vaga | não |
 | `aguardando_pagamento` | recebeu o link | não |
-| `ativo` | primeiro pagamento caiu | sim |
+| `ativo` | pagou (com ou sem Pix Automático autorizado) | enquanto `pago_ate` mais 7 dias não passou |
 | `gratuito` | já estava antes da cobrança | sim |
-| `inadimplente` | mensalidade falhou | sim por 7 dias |
-| `cancelado` | cancelou ou foi estornado | não |
+| `inadimplente` | mês do Pix Automático recusado | enquanto `pago_ate` mais 7 dias não passou |
+| `cancelado` | estornado, ou cancelado na mão | não |
 
 A coluna `ativo` continua como pausa manual (férias, por exemplo): com ela desligada, o perfil não aparece em nenhum status.
 

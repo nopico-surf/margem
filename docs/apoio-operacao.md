@@ -131,7 +131,24 @@ Para conferir as telas sem pagar, em desenvolvimento: `https://localhost:3000/pl
 
 ### Depois do pagamento
 
-Nada é manual. Quando o pagamento cai, o perfil entra no ar sozinho.
+Quando o pagamento cai, o perfil entra no ar sozinho, mesmo que a pessoa não tenha autorizado o Pix Automático. Cada pagamento estende `pago_ate` até o mesmo dia do mês seguinte, e o perfil fica no ar até `pago_ate` mais 7 dias. Cancelar ou não autorizar o Pix Automático não tira ninguém do ar antes disso; só o estorno tira na hora.
+
+Faltando 7 dias ou menos para o fim do mês pago, o mesmo link pessoal volta a cobrar. Quem tem o Pix Automático autorizado não precisa: o Asaas cobra sozinho.
+
+### Régua: quem pagou e não autorizou o Pix Automático
+
+Essas pessoas saem do ar quando o mês pago acaba, a menos que paguem de novo pelo link ou autorizem. Para lembrar cada uma:
+
+```sql
+select p.nome, p.telefone, p.pago_ate, p.pago_ate + interval '7 days' as sai_do_ar_em
+from profissionais_cadastrados p
+where p.pago_ate is not null
+  and not exists (
+    select 1 from apoios a
+    where a.profissional_id = p.id and a.status in ('ativo', 'inadimplente')
+  )
+order by p.pago_ate;
+```
 
 ### Estorno nos 7 dias
 
@@ -153,8 +170,10 @@ Para voltar, `ativo = true`. A pausa não mexe na cobrança: se for longa, combi
 
 ### Quem está em atraso
 
+Mês do Pix Automático recusado (sem saldo, por exemplo). O Asaas tenta de novo até 3 vezes em 7 dias; o perfil fica no ar até `pago_ate` mais 7 dias.
+
 ```sql
-select nome, inadimplente_desde, inadimplente_desde + interval '7 days' as sai_do_ar_em
+select nome, inadimplente_desde, pago_ate, pago_ate + interval '7 days' as sai_do_ar_em
 from profissionais_cadastrados
 where status = 'inadimplente';
 ```

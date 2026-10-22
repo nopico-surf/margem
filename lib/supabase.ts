@@ -71,13 +71,14 @@ export type InstituicaoApoio = {
 const COLUNAS_PROFISSIONAL =
   "id, nome, especialidade, especialidade_rotulo, registro_profissional, ano_inicio_experiencia, foto_url, bio, tags, whatsapp_link, ativo, categoria_resposta_relevante, abordagem, formacoes";
 
-// Quem aparece no site (docs/apoio-telas.md): pagou o plano, já estava na Margem antes da cobrança, ou
-// está nos 7 dias de tolerância de uma mensalidade que falhou. A coluna "ativo" continua sendo a pausa
-// manual e vale junto. A ordem dos perfis nunca depende do plano.
+// Quem aparece no site (docs/apoio-telas.md): quem já estava na Margem antes da cobrança (gratuito), ou
+// quem tem mês pago (pago_ate) e ainda está dentro dele mais 7 dias de tolerância. O mês pago fica no ar
+// inteiro mesmo sem o Pix Automático autorizado; estorno zera pago_ate. A coluna "ativo" continua sendo a
+// pausa manual e vale junto. A ordem dos perfis nunca depende do plano.
 const DIAS_TOLERANCIA = 7;
 function filtroPerfilNoAr() {
   const limite = new Date(Date.now() - DIAS_TOLERANCIA * 24 * 60 * 60 * 1000).toISOString();
-  return `status.in.(ativo,gratuito),and(status.eq.inadimplente,inadimplente_desde.gt.${limite})`;
+  return `status.eq.gratuito,pago_ate.gt.${limite}`;
 }
 
 export async function buscarProfissionaisPorCategoria(categoria: string, sessaoId?: string) {

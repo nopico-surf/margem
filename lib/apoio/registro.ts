@@ -125,7 +125,9 @@ export type StatusProfissional =
 
 export type ProfissionalDoLink = {
   id: string;
-  // "ja_ativo" quando o plano já está pago (ativo ou na tolerância): o link abre, mas não gera outro Pix.
+  // "ja_ativo" quando o mês pago ainda está longe de acabar (mais de 7 dias): o link abre, mas não gera
+  // outro Pix. Perto do fim do mês pago, ou depois, o link volta a cobrar (quem pagou sem autorizar o
+  // Pix Automático paga o mês seguinte por ele). Quem tem o Pix Automático ativo é barrado na rota.
   situacao: "pode_pagar" | "ja_ativo";
   nome: string;
   profissao: "psicologo" | "medico";
@@ -134,27 +136,30 @@ export type ProfissionalDoLink = {
   email: string | null;
 };
 
-// Só quem recebeu o link de pagamento (aguardando_pagamento) ou já estava na Margem antes da cobrança
-// (gratuito) paga por ele. Quem já pagou (ativo, inadimplente) vê que o plano está ativo. Qualquer outro
-// status, ou código que não existe, é link inválido.
-const STATUS_QUE_PAGAM: StatusProfissional[] = ["aguardando_pagamento", "gratuito"];
-const STATUS_JA_ATIVOS: StatusProfissional[] = ["ativo", "inadimplente"];
+// O link vale para quem recebeu o link de pagamento (aguardando_pagamento), já estava na Margem antes
+// da cobrança (gratuito) ou já pagou alguma vez (ativo, inadimplente). Recusado, cancelado e os status
+// de antes da aprovação, ou código que não existe, são link inválido.
+const STATUS_DO_LINK: StatusProfissional[] = ["aguardando_pagamento", "gratuito", "ativo", "inadimplente"];
+
+// Antecedência com que o link volta a cobrar antes de o mês pago acabar; os mesmos 7 dias de tolerância.
+const DIAS_ANTES_DO_FIM = 7;
 
 export async function buscarProfissionalPorToken(token: string): Promise<ProfissionalDoLink | null> {
   const supabase = getServerClient();
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("profissionais_cadastrados")
-    .select("id, nome, especialidade, status, plano_base_escolhido, opcional_escolhido, email")
+    .select("id, nome, especialidade, plano_base_escolhido, opcional_escolhido, email, pago_ate")
     .eq("token_apoio", token)
-    .in("status", [...STATUS_QUE_PAGAM, ...STATUS_JA_ATIVOS])
+    .in("status", STATUS_DO_LINK)
     .maybeSingle();
   if (error) console.error("[apoio] buscarProfissionalPorToken falhou:", error.message);
   if (!data) return null;
   // Assistente social não tem plano: o link dele não vale.
   const profissao = data.especialidade === "psicologo" ? "psicologo" : data.especialidade === "psiquiatra" ? "medico" : null;
   if (!profissao) return null;
-  const situacao = STATUS_JA_ATIVOS.includes(data.status) ? "ja_ativo" : "pode_pagar";
+  const reabreEm = Date.now() + DIAS_ANTES_DO_FIM * 24 * 60 * 60 * 1000;
+  const situacao = data.pago_ate && new Date(data.pago_ate).getTime() > reabreEm ? "ja_ativo" : "pode_pagar";
   return {
     id: data.id,
     situacao,
@@ -166,7 +171,8 @@ export async function buscarProfissionalPorToken(token: string): Promise<Profiss
   };
 }
 
-// Profissional com plano ativo (ou dentro da tolerância) não gera outro Pix: seriam duas mensalidades.
+// Profissional com Pix Automático autorizado (ativo, ou com o mês em nova tentativa) não gera outro Pix:
+// o Asaas já cobra sozinho, seriam duas mensalidades.
 export async function temPlanoAtivo(profissionalId: string): Promise<boolean | null> {
   const supabase = getServerClient();
   if (!supabase) return null;
@@ -187,6 +193,7 @@ export type AtualizacaoProfissional = {
   ativado_em?: string;
   inadimplente_desde?: string | null;
   cancelado_em?: string;
+  pago_ate?: string | null;
 };
 
 // Muda o profissional só a partir dos status esperados: o webhook nunca tira do ar alguém que o Vitor
@@ -206,6 +213,41 @@ export async function marcarPrimeiraAtivacao(id: string, quando: string) {
   const { error } = await supabase.from("profissionais_cadastrados").update({ ativado_em: quando }).eq("id", id).is("ativado_em", null);
   if (error) console.error("[apoio] marcarPrimeiraAtivacao falhou:", error.message);
   return !error;
+}
+
+// Estende o mês pago até "ate", nunca para trás: um aviso atrasado ou repetido não encurta o que já foi
+// pago. "ate" é calculado no servidor, nunca vem do aviso.
+export async function estenderPagoAte(id: string, ate: string) {
+  const supabase = getServerClient();
+  if (!supabase) return false;
+  const { error } = await supabase
+    .from("profissionais_cadastrados")
+    .update({ pago_ate: ate })
+    .eq("id", id)
+    .or(`pago_ate.is.null,pago_ate.lt.${ate}`);
+  if (error) console.error("[apoio] estenderPagoAte falhou:", error.message);
+  return !error;
+}
+
+// Último recurso para achar de qual apoio é um pagamento que chegou sem nenhum id nosso (o primeiro mês do
+// Pix Automático é criado pelo Asaas, e a documentação não diz se traz a referência): o apoio mensal mais
+// recente do mesmo cliente do Asaas, com o mesmo valor, em qualquer status em que ainda pode receber um
+// pagamento ou um estorno (de fora ficam só falhou e estornado).
+export async function buscarApoioMensalDoCliente(clienteId: string, valor: number): Promise<ApoioEncontrado | null> {
+  const supabase = getServerClient();
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("apoios")
+    .select("id, frequencia, status, profissional_id, asaas_autorizacao_id")
+    .eq("asaas_cliente_id", clienteId)
+    .eq("frequencia", "mensal")
+    .eq("valor", valor)
+    .in("status", ["aguardando", "ativo", "inadimplente", "recusado", "expirado", "cancelado"])
+    .order("criado_em", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) console.error("[apoio] buscarApoioMensalDoCliente falhou:", error.message);
+  return (data as ApoioEncontrado | null) ?? null;
 }
 
 // Grava o cadastro de "Quero fazer parte" como em_analise: não aparece no site até o primeiro pagamento.

@@ -1,16 +1,19 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
-import { buscarAssinaturaDaAutorizacao, cancelarAutorizacao } from "@/lib/asaas";
+import { buscarAssinaturaDaAutorizacao, cancelarAutorizacao, hojeEmBrasilia, mesSeguinte } from "@/lib/asaas";
 import {
   atualizarApoioSeStatus,
   atualizarProfissionalSeStatus,
+  buscarApoioMensalDoCliente,
   buscarApoioPor,
+  estenderPagoAte,
   marcarPrimeiraAtivacao,
   registrarEvento,
   removerEvento,
   type ApoioEncontrado,
   type AtualizacaoApoio,
   type StatusApoio,
+  type StatusProfissional,
 } from "@/lib/apoio/registro";
 
 // Recebe os avisos do Asaas e atualiza o status dos apoios e, quando o apoio é de um profissional, o
@@ -24,7 +27,7 @@ import {
 type Evento = {
   id?: unknown;
   event?: unknown;
-  payment?: { id?: unknown; externalReference?: unknown; subscription?: unknown } | null;
+  payment?: { id?: unknown; externalReference?: unknown; subscription?: unknown; customer?: unknown; value?: unknown } | null;
   authorization?: { id?: unknown; contractId?: unknown; subscriptionId?: unknown } | null;
   paymentInstruction?: { authorization?: { id?: unknown } | null } | null;
 };
@@ -75,7 +78,19 @@ async function encontrarApoio(evento: Evento): Promise<ApoioEncontrado | null> {
     if (porAssinatura) return porAssinatura;
   }
   const cobranca = texto(pagamento.id);
-  return cobranca ? buscarApoioPor("asaas_cobranca_id", cobranca) : null;
+  const porCobranca = cobranca ? await buscarApoioPor("asaas_cobranca_id", cobranca) : null;
+  if (porCobranca) return porCobranca;
+
+  // Pagamento sem nenhum id nosso (provavelmente o primeiro mês do Pix Automático, que o Asaas cria):
+  // procura pelo cliente e pelo valor. O log diz só que referências o aviso trazia, sem dado pessoal,
+  // pra o primeiro pagamento real mostrar se isto é necessário.
+  const cliente = texto(pagamento.customer);
+  const valor = typeof pagamento.value === "number" ? pagamento.value : null;
+  const porCliente = cliente && valor !== null ? await buscarApoioMensalDoCliente(cliente, valor) : null;
+  console.warn(
+    `[asaas-webhook] ${evento.event} sem id nosso: ref=${referencia ? "sim" : "não"} assinatura=${assinatura ? "sim" : "não"} achado_pelo_cliente=${porCliente ? "sim" : "não"}`,
+  );
+  return porCliente;
 }
 
 // O que cada evento faz com o apoio, e a partir de quais status. Fora da lista, o evento só é registrado.
@@ -105,31 +120,51 @@ function mudancaPara(tipo: string, apoio: ApoioEncontrado, assinaturaId: string 
       return apoio.frequencia === "unico" ? { de: ["aguardando"], campos: { status: "expirado" } } : null;
     // Estorno feito no painel do Asaas (os 7 dias do profissional, por exemplo).
     case "PAYMENT_REFUNDED":
-      return { de: ["pago", "ativo", "inadimplente", "cancelado"], campos: { status: "estornado", estornado_em: agora } };
+      // Inclui quem pagou o primeiro mês sem a autorização se completar (aguardando, recusado, expirado).
+      return {
+        de: ["pago", "ativo", "inadimplente", "cancelado", "aguardando", "recusado", "expirado"],
+        campos: { status: "estornado", estornado_em: agora },
+      };
     default:
       return null;
   }
 }
 
-// O que o novo status do apoio faz com o profissional que paga por ele:
-// - ativo: perfil no ar (e ativado_em gravado no primeiro pagamento, pros 7 dias);
-// - inadimplente: continua no ar por 7 dias desde inadimplente_desde (filtro em lib/supabase.ts);
-// - cancelado, expirado depois de ativo, estornado: sai do ar.
+// Até quando um pagamento confirmado hoje deixa o perfil no ar: o mesmo dia do mês seguinte, fim do dia
+// em Brasília. O site soma mais 7 dias de tolerância (lib/supabase.ts).
+function pagoAteDeUmPagamentoHoje() {
+  return new Date(`${mesSeguinte(hojeEmBrasilia())}T23:59:59-03:00`).toISOString();
+}
+
+const PAGAMENTO_CONFIRMADO = ["PAYMENT_RECEIVED", "PAYMENT_CONFIRMED"];
+
+// O que cada aviso faz com o profissional que paga pelo apoio (decisões de 22/10/2026):
+// - pagamento confirmado (o primeiro mês, autorizado ou não, e cada mês seguinte): perfil no ar, status
+//   ativo e o mês pago estendido; ativado_em gravado no primeiro, pros 7 dias de estorno;
+// - Pix Automático ativado: garante o perfil no ar, caso o primeiro pagamento não tenha sido reconhecido;
+// - mês recusado: status inadimplente, só informativo (o Asaas tenta de novo; o perfil fica até o fim do
+//   mês pago mais a tolerância);
+// - autorização cancelada, expirada ou recusada: nada muda, o mês pago fica no ar inteiro;
+// - estorno: sai do ar na hora.
 // Os status de origem protegem o que o Vitor muda na mão (pausa, recusa, cancelamento).
-async function sincronizarProfissional(profissionalId: string, novoStatus: StatusApoio) {
+async function sincronizarProfissional(profissionalId: string, tipo: string, novoStatus: StatusApoio | undefined) {
   const agora = new Date().toISOString();
-  if (novoStatus === "ativo") {
-    const ok = await atualizarProfissionalSeStatus(profissionalId, ["aguardando_pagamento", "gratuito", "inadimplente", "ativo"], {
-      status: "ativo",
-      inadimplente_desde: null,
-    });
-    return ok && (await marcarPrimeiraAtivacao(profissionalId, agora));
+  const podeAtivar: StatusProfissional[] = ["aguardando_pagamento", "gratuito", "inadimplente", "ativo"];
+
+  if (PAGAMENTO_CONFIRMADO.includes(tipo)) {
+    const ok = await atualizarProfissionalSeStatus(profissionalId, podeAtivar, { status: "ativo", inadimplente_desde: null });
+    return ok && (await estenderPagoAte(profissionalId, pagoAteDeUmPagamentoHoje())) && (await marcarPrimeiraAtivacao(profissionalId, agora));
+  }
+  if (tipo === "PIX_AUTOMATIC_RECURRING_AUTHORIZATION_ACTIVATED") {
+    // estenderPagoAte nunca encurta: se o pagamento já foi reconhecido, não muda nada.
+    const ok = await atualizarProfissionalSeStatus(profissionalId, podeAtivar, { status: "ativo" });
+    return ok && (await estenderPagoAte(profissionalId, pagoAteDeUmPagamentoHoje())) && (await marcarPrimeiraAtivacao(profissionalId, agora));
   }
   if (novoStatus === "inadimplente") {
     return atualizarProfissionalSeStatus(profissionalId, ["ativo"], { status: "inadimplente", inadimplente_desde: agora });
   }
-  if (novoStatus === "cancelado" || novoStatus === "expirado" || novoStatus === "estornado") {
-    return atualizarProfissionalSeStatus(profissionalId, ["ativo", "inadimplente"], { status: "cancelado", cancelado_em: agora });
+  if (novoStatus === "estornado") {
+    return atualizarProfissionalSeStatus(profissionalId, ["ativo", "inadimplente"], { status: "cancelado", cancelado_em: agora, pago_ate: null });
   }
   return true;
 }
@@ -192,7 +227,7 @@ export async function POST(request: Request) {
   // O profissional muda antes do apoio: se o apoio falhar, o evento volta pra fila e o profissional
   // é atualizado de novo pro mesmo status, sem efeito. Na ordem inversa, o apoio já mudado faria o
   // evento reentregue ser ignorado e o profissional ficaria pra trás.
-  if (apoio.profissional_id && mudanca.campos.status && !(await sincronizarProfissional(apoio.profissional_id, mudanca.campos.status))) {
+  if (apoio.profissional_id && !(await sincronizarProfissional(apoio.profissional_id, tipo, mudanca.campos.status))) {
     await removerEvento(eventoId);
     console.error(`[asaas-webhook] ${tipo}: profissional não atualizado, o Asaas vai reentregar`);
     return NextResponse.json({ error: "indisponivel" }, { status: 503 });
