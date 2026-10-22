@@ -34,11 +34,11 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 ## Regras de negócio
 
 - **Manual até o pagamento.** Cadastro, aprovação e fila são manuais (status mudado no editor de tabelas do Supabase). O perfil só entra no ar com o primeiro pagamento, mesmo que a pessoa não autorize o Pix Automático (o Vitor lembra a autorização na mão).
-- **Link pessoal.** Só quem tem o link pessoal consegue pagar um plano de profissional. O preço sai do banco, nunca da tela.
+- **Link pessoal.** Só quem tem o link pessoal consegue pagar um plano de profissional. O link curto é `/plano#{primeiro-nome}-{ultimo-nome}-{4 aleatórios}` (por exemplo `queila-duarte-k7m2`); o longo continua valendo. Gerar um Pix novo cancela os Pix anteriores ainda não pagos do mesmo profissional, pra só o último QR valer. O preço sai do banco, nunca da tela.
 - **O mês pago fica no ar inteiro.** Cada pagamento estende `pago_ate` até o mesmo dia do mês seguinte, e o perfil fica no ar até `pago_ate` mais 7 dias de tolerância. Cancelar ou não autorizar o Pix Automático não tira do ar antes disso. Se o mês seguinte não for pago, sai do site sozinho; se o pagamento cair depois, volta.
 - **Mensalidade que falha.** O Asaas tenta de novo até 3 vezes em 7 dias, dentro da mesma tolerância.
 - **Pagar de novo pelo link.** Faltando 7 dias ou menos para o fim do mês pago, ou depois dele, o link pessoal volta a cobrar. Quem tem o Pix Automático autorizado vê `plano_ja_ativo`, porque o Asaas cobra sozinho.
-- **Estorno dos 7 dias.** Feito na mão no Asaas. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
+- **Estorno dos 7 dias.** Feito na mão no Asaas. Estorno parcial vale igual ao total. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
 - **Quem já está na plataforma** continua no ar sem pagar (`gratuito`) e recebe o link na mão, pelo Vitor.
 - **Ordem dos perfis** no site e nas orientações nunca depende do plano.
 - **Mínimo de R$ 5** por cobrança é regra do Asaas, não da Margem.
@@ -192,7 +192,7 @@ O link pessoal abre a tela 4 já com o plano escolhido no cadastro.
 | Celular | Copie o código e cole no app do seu banco, na opção Pix Copia e Cola. · Botão: Copiar código Pix · depois do toque: Código copiado |
 | Computador | Abra o app do seu banco, escolha pagar com Pix e aponte a câmera para o QR code. · Link: Copiar código Pix |
 | Mensal | No app do banco, você paga o primeiro mês e autoriza os próximos. Depois disso, o valor sai sozinho todo mês, e você pode cancelar quando quiser. |
-| Prazo (só mensal) | Este código vale por 30 minutos. · Contador: Vale por mais {mm:ss} |
+| Prazo (só mensal) | Este código vale por 10 minutos. · Contador: Vale por mais {mm:ss} |
 | Espera | Pode deixar esta tela aberta. Quando o pagamento chegar, ela muda sozinha. |
 
 No celular, o código copia e cola fica em destaque (não dá para escanear a própria tela). No computador, o QR code. A tela consulta o status a cada poucos segundos enquanto está aberta.
@@ -209,7 +209,7 @@ No celular, o código copia e cola fica em destaque (não dá para escanear a pr
 
 | Status | Título | Texto | Botões |
 |---|---|---|---|
-| `expirado` | Esse código expirou | O código do Pix mensal vale por 30 minutos. Seus dados continuam preenchidos, e você pode gerar outro. | Gerar novamente |
+| `expirado` | Esse código expirou | O código do Pix mensal vale por 10 minutos. Seus dados continuam preenchidos, e você pode gerar outro. | Gerar novamente |
 | `recusado` | O banco não confirmou o Pix Automático | Isso pode acontecer quando a autorização não é concluída no app do banco. Se o primeiro mês já saiu da sua conta, fale com a gente antes de gerar outro Pix, para não pagar duas vezes. | Gerar novo Pix · Falar com a Margem no WhatsApp |
 
 ### 8. Como cancelar (trecho da tela 6, só no mensal)

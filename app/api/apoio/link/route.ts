@@ -10,7 +10,9 @@ import { buscarProfissionalPorToken, temPlanoAtivo } from "@/lib/apoio/registro"
 // vê o próprio e-mail; o link só existe no WhatsApp do profissional.
 
 const SEM_CACHE = { "Cache-Control": "no-store" };
-const TOKEN = /^[0-9a-f]{64}$/;
+// Código do link pessoal: o longo (token_apoio, 64 hex) ou o curto (codigo_link, nome-sobrenome-4
+// caracteres do alfabeto sem 0, o, 1 e l; migração 0031).
+const TOKEN = /^(?:[0-9a-f]{64}|[a-z]+(?:-[a-z]+)?-[a-km-np-z2-9]{4})$/;
 
 export async function POST(request: Request) {
   let token = "";

@@ -3,13 +3,21 @@ import {
   DESCRICAO_DOACAO,
   DESCRICAO_SERVICO,
   buscarOuCriarCliente,
+  cancelarAutorizacao,
   criarAutorizacaoPixAutomatico,
   criarCobrancaPix,
   type ResultadoAsaas,
 } from "@/lib/asaas";
 import { normalizarCpfCnpj } from "@/lib/apoio/documento";
 import { ehPlanoBase, ehPlanoOpcional, ehServico, pedidoDoProfissional, validarDoacao, type PedidoApoio } from "@/lib/apoio/planos";
-import { atualizarApoio, buscarProfissionalPorToken, criarApoio, temPlanoAtivo } from "@/lib/apoio/registro";
+import {
+  atualizarApoio,
+  atualizarApoioSeStatus,
+  buscarPixPendentesDoProfissional,
+  buscarProfissionalPorToken,
+  criarApoio,
+  temPlanoAtivo,
+} from "@/lib/apoio/registro";
 
 // Gera o Pix de um apoio: cobrança avulsa pra doação única, autorização de Pix Automático pra mensal.
 //
@@ -26,8 +34,9 @@ const SEM_CACHE = { "Cache-Control": "no-store" };
 // Só pra barrar o óbvio (sem @, sem domínio, com espaço); quem confirma que o e-mail existe é a nota chegando.
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// O token do link é hex de 64 caracteres (migração 0027).
-const TOKEN = /^[0-9a-f]{64}$/;
+// Código do link pessoal: o longo (token_apoio, 64 hex) ou o curto (codigo_link, nome-sobrenome-4
+// caracteres do alfabeto sem 0, o, 1 e l; migração 0031).
+const TOKEN = /^(?:[0-9a-f]{64}|[a-z]+(?:-[a-z]+)?-[a-km-np-z2-9]{4})$/;
 
 function erro(codigo: string, status: number, extra?: Record<string, unknown>) {
   return NextResponse.json({ error: codigo, ...extra }, { status, headers: SEM_CACHE });
@@ -64,6 +73,22 @@ async function pedidoPeloLink(corpo: Record<string, unknown>): Promise<{ pedido:
   return { pedido: pedidoDoProfissional(profissional.profissao, base, opcional, profissional.id) };
 }
 
+// Cancela no Asaas os Pix do profissional que ainda não foram pagos, pra só o novo valer. Erro 4xx do
+// Asaas é autorização que já não vale (expirou ou foi recusada); falha de rede ou do Asaas impede gerar o
+// Pix novo, porque deixaria dois QR pagáveis.
+async function cancelarPixPendentes(profissionalId: string) {
+  const pendentes = await buscarPixPendentesDoProfissional(profissionalId);
+  if (pendentes === null) return false;
+  for (const pendente of pendentes) {
+    if (pendente.asaas_autorizacao_id) {
+      const cancelamento = await cancelarAutorizacao(pendente.asaas_autorizacao_id);
+      if (!cancelamento.ok && !(cancelamento.status && cancelamento.status < 500)) return false;
+    }
+    await atualizarApoioSeStatus(pendente.id, "aguardando", { status: "cancelado" });
+  }
+  return true;
+}
+
 export async function POST(request: Request) {
   let corpo: Record<string, unknown>;
   try {
@@ -98,6 +123,10 @@ export async function POST(request: Request) {
   if (ehServico(pedido.publico)) {
     email = typeof corpo.email === "string" ? corpo.email.trim().toLowerCase() : "";
     if (!email || email.length > 254 || !EMAIL.test(email)) return erro("email_invalido", 400);
+  }
+
+  if (pedido.profissionalId && !(await cancelarPixPendentes(pedido.profissionalId))) {
+    return erro("pagamento_indisponivel", 503, { motivo: "pix_anterior" });
   }
 
   const apoioId = await criarApoio(pedido);

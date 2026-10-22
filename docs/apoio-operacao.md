@@ -114,16 +114,15 @@ update profissionais_cadastrados set status = 'recusado', observacao_interna = '
 
 ```sql
 update profissionais_cadastrados set status = 'aguardando_pagamento' where id = '{id}';
-select nome, telefone, 'https://www.somosmargem.com.br/plano#' || token_apoio as link
-from profissionais_cadastrados where id = '{id}';
+select nome, telefone, link_pagamento from profissionais_cadastrados where id = '{id}';
 ```
 
-O link é `https://www.somosmargem.com.br/plano#` seguido do `token_apoio`. O código vai depois do `#` para não chegar ao servidor nem às ferramentas de medição (a página `/plano` não carrega Mixpanel nem GTM). Cada profissional tem um código só, criado sozinho no cadastro; o link vale enquanto o status for `aguardando_pagamento` ou `gratuito`, sem prazo. Com o plano já pago, ele mostra "Seu plano já está ativo".
+O link fica pronto na coluna `link_pagamento`, para copiar direto do editor de tabelas: `https://www.somosmargem.com.br/plano#` seguido do código curto (`codigo_link`, como `queila-duarte-k7m2`), gerado sozinho para cada cadastro. Os links longos (`token_apoio`) que já foram mandados continuam valendo. O código vai depois do `#` para não chegar ao servidor nem às ferramentas de medição (a página `/plano` não carrega Mixpanel nem GTM). Cada profissional tem um código só, criado sozinho no cadastro; o link vale enquanto o status for `aguardando_pagamento` ou `gratuito`, sem prazo. Com o plano já pago, ele mostra "Seu plano já está ativo".
 
 Para quem já está no ar sem pagar (`gratuito`), o link funciona sem mudar o status. O perfil continua no ar até o primeiro pagamento e depois vira `ativo`. Os links de todos de uma vez:
 
 ```sql
-select nome, telefone, 'https://www.somosmargem.com.br/plano#' || token_apoio as link
+select nome, telefone, link_pagamento
 from profissionais_cadastrados where status = 'gratuito' and ativo order by nome;
 ```
 
@@ -152,7 +151,7 @@ order by p.pago_ate;
 
 ### Estorno nos 7 dias
 
-No painel do Asaas, estornar a cobrança. O sistema marca o apoio como estornado, tira o perfil do ar e encerra o Pix Automático.
+No painel do Asaas, estornar a cobrança. Estorno parcial (quando falta saldo para devolver tudo, por exemplo) tem o mesmo efeito do total. O sistema marca o apoio como estornado, tira o perfil do ar e encerra o Pix Automático.
 
 O prazo conta a partir de `ativado_em`:
 

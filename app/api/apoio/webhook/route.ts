@@ -119,7 +119,10 @@ function mudancaPara(tipo: string, apoio: ApoioEncontrado, assinaturaId: string 
     case "PAYMENT_OVERDUE":
       return apoio.frequencia === "unico" ? { de: ["aguardando"], campos: { status: "expirado" } } : null;
     // Estorno feito no painel do Asaas (os 7 dias do profissional, por exemplo).
+    // Parcial vale igual (decisão de 22/10/2026): o Asaas desconta a taxa, e o estorno de Pix pode chegar
+    // como parcial mesmo quando a intenção era devolver tudo.
     case "PAYMENT_REFUNDED":
+    case "PAYMENT_PARTIALLY_REFUNDED":
       // Inclui quem pagou o primeiro mês sem a autorização se completar (aguardando, recusado, expirado).
       return {
         de: ["pago", "ativo", "inadimplente", "cancelado", "aguardando", "recusado", "expirado"],

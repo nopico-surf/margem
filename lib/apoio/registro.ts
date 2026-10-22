@@ -150,7 +150,8 @@ export async function buscarProfissionalPorToken(token: string): Promise<Profiss
   const { data, error } = await supabase
     .from("profissionais_cadastrados")
     .select("id, nome, especialidade, plano_base_escolhido, opcional_escolhido, email, pago_ate")
-    .eq("token_apoio", token)
+    // O link longo é hex de 64; o curto tem hífen e nunca bate com o formato do longo.
+    .eq(token.includes("-") ? "codigo_link" : "token_apoio", token)
     .in("status", STATUS_DO_LINK)
     .maybeSingle();
   if (error) console.error("[apoio] buscarProfissionalPorToken falhou:", error.message);
@@ -213,6 +214,24 @@ export async function marcarPrimeiraAtivacao(id: string, quando: string) {
   const { error } = await supabase.from("profissionais_cadastrados").update({ ativado_em: quando }).eq("id", id).is("ativado_em", null);
   if (error) console.error("[apoio] marcarPrimeiraAtivacao falhou:", error.message);
   return !error;
+}
+
+// Pix do profissional gerados e ainda não pagos (aguardando, sem pagamento). Um Pix novo cancela estes,
+// pra só o último QR valer: pagar dois QR deixaria duas autorizações de Pix Automático cobrando todo mês.
+export async function buscarPixPendentesDoProfissional(profissionalId: string): Promise<Array<{ id: string; asaas_autorizacao_id: string | null }> | null> {
+  const supabase = getServerClient();
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("apoios")
+    .select("id, asaas_autorizacao_id")
+    .eq("profissional_id", profissionalId)
+    .eq("status", "aguardando")
+    .is("ultimo_pagamento_em", null);
+  if (error) {
+    console.error("[apoio] buscarPixPendentesDoProfissional falhou:", error.message);
+    return null;
+  }
+  return data ?? [];
 }
 
 // Estende o mês pago até "ate", nunca para trás: um aviso atrasado ou repetido não encurta o que já foi

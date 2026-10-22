@@ -17,7 +17,7 @@ export type QrCodePix = { payload: string; imagemBase64: string; expiraEm: strin
 const TIMEOUT_MS = 15000;
 
 // Tempo pra pagar o QR code da primeira cobrança do Pix Automático.
-const EXPIRACAO_QR_SEGUNDOS = 30 * 60;
+const EXPIRACAO_QR_SEGUNDOS = 10 * 60;
 
 // Texto que aparece no app do banco de quem paga (máximo 35 caracteres no Pix Automático).
 export const DESCRICAO_SERVICO = "Taxa de manutenção de software";
