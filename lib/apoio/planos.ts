@@ -65,6 +65,9 @@ export type PedidoApoio = {
   planoBase?: PlanoBase;
   planoOpcional?: PlanoOpcional | null;
   profissionalId?: string;
+  // Troca de plano (upgrade): valor é o mensal novo; valorImediato, a diferença cobrada hoje.
+  troca?: boolean;
+  valorImediato?: number;
 };
 
 export type ResultadoPedido = { ok: true; pedido: PedidoApoio } | { ok: false; motivo: string };
@@ -75,6 +78,11 @@ export function ehPlanoBase(valor: unknown): valor is PlanoBase {
 
 export function ehPlanoOpcional(valor: unknown): valor is PlanoOpcional {
   return typeof valor === "string" && Object.hasOwn(PLANOS_OPCIONAIS.psicologo, valor);
+}
+
+// Mensal em centavos do plano base mais o opcional (se houver), pela profissão.
+export function centavosDoPlano(profissao: Profissao, base: PlanoBase, opcional: PlanoOpcional | null) {
+  return PLANOS_BASE[profissao][base].centavos + (opcional ? PLANOS_OPCIONAIS[profissao][opcional].centavos : 0);
 }
 
 // Valor mensal em reais do plano base mais o opcional (se houver), pela profissão.

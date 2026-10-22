@@ -31,6 +31,8 @@ export async function criarApoio(pedido: PedidoApoio): Promise<string | null> {
       plano_base: pedido.planoBase ?? null,
       plano_opcional: pedido.planoOpcional ?? null,
       profissional_id: pedido.profissionalId ?? null,
+      troca: pedido.troca ?? false,
+      valor_imediato: pedido.valorImediato ?? null,
     })
     .select("id")
     .single();
@@ -55,14 +57,17 @@ export type ApoioEncontrado = {
   status: StatusApoio;
   profissional_id: string | null;
   asaas_autorizacao_id: string | null;
+  troca: boolean;
 };
+
+const COLUNAS_APOIO_ENCONTRADO = "id, frequencia, status, profissional_id, asaas_autorizacao_id, troca";
 
 type CampoBusca = "id" | "asaas_cobranca_id" | "asaas_autorizacao_id" | "asaas_assinatura_id";
 
 export async function buscarApoioPor(campo: CampoBusca, valor: string): Promise<ApoioEncontrado | null> {
   const supabase = getServerClient();
   if (!supabase) return null;
-  const { data, error } = await supabase.from("apoios").select("id, frequencia, status, profissional_id, asaas_autorizacao_id").eq(campo, valor).maybeSingle();
+  const { data, error } = await supabase.from("apoios").select(COLUNAS_APOIO_ENCONTRADO).eq(campo, valor).maybeSingle();
   if (error) console.error("[apoio] buscarApoioPor falhou:", error.message);
   return (data as ApoioEncontrado | null) ?? null;
 }
@@ -134,6 +139,7 @@ export type ProfissionalDoLink = {
   plano_base_escolhido: PlanoBase | null;
   opcional_escolhido: PlanoOpcional | null;
   email: string | null;
+  pago_ate: string | null;
 };
 
 // O link vale para quem recebeu o link de pagamento (aguardando_pagamento), já estava na Margem antes
@@ -169,7 +175,58 @@ export async function buscarProfissionalPorToken(token: string): Promise<Profiss
     plano_base_escolhido: data.plano_base_escolhido,
     opcional_escolhido: data.opcional_escolhido,
     email: data.email,
+    pago_ate: data.pago_ate,
   };
+}
+
+// Plano que o profissional paga hoje: o do apoio pago mais recente (o upgrade pago passa a ser o atual).
+export async function buscarPlanoAtual(profissionalId: string): Promise<{ planoBase: PlanoBase; planoOpcional: PlanoOpcional | null } | null> {
+  const supabase = getServerClient();
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("apoios")
+    .select("plano_base, plano_opcional")
+    .eq("profissional_id", profissionalId)
+    .not("ultimo_pagamento_em", "is", null)
+    .not("plano_base", "is", null)
+    .not("status", "in", "(estornado,falhou)")
+    .order("ultimo_pagamento_em", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) console.error("[apoio] buscarPlanoAtual falhou:", error.message);
+  if (!data) return null;
+  return { planoBase: data.plano_base, planoOpcional: data.plano_opcional };
+}
+
+// Autorizações de Pix Automático em vigor do profissional (apoio ativo ou com o mês em nova tentativa),
+// menos a de "exceto". A troca de plano encerra estas quando a nova ativa (upgrade) ou na hora (downgrade).
+export async function buscarAutorizacoesEmVigor(profissionalId: string, exceto?: string): Promise<Array<{ id: string; status: StatusApoio; asaas_autorizacao_id: string | null }> | null> {
+  const supabase = getServerClient();
+  if (!supabase) return null;
+  let consulta = supabase
+    .from("apoios")
+    .select("id, status, asaas_autorizacao_id")
+    .eq("profissional_id", profissionalId)
+    .in("status", ["ativo", "inadimplente"]);
+  if (exceto) consulta = consulta.neq("id", exceto);
+  const { data, error } = await consulta;
+  if (error) {
+    console.error("[apoio] buscarAutorizacoesEmVigor falhou:", error.message);
+    return null;
+  }
+  return (data ?? []) as Array<{ id: string; status: StatusApoio; asaas_autorizacao_id: string | null }>;
+}
+
+// Plano escolhido para o próximo pagamento pelo link (downgrade agendado, ou o upgrade pedido).
+export async function escolherPlano(profissionalId: string, base: PlanoBase, opcional: PlanoOpcional | null) {
+  const supabase = getServerClient();
+  if (!supabase) return false;
+  const { error } = await supabase
+    .from("profissionais_cadastrados")
+    .update({ plano_base_escolhido: base, opcional_escolhido: opcional })
+    .eq("id", profissionalId);
+  if (error) console.error("[apoio] escolherPlano falhou:", error.message);
+  return !error;
 }
 
 // Profissional com Pix Automático autorizado (ativo, ou com o mês em nova tentativa) não gera outro Pix:
@@ -250,7 +307,8 @@ export async function estenderPagoAte(id: string, ate: string) {
 
 // Último recurso para achar de qual apoio é um pagamento que chegou sem nenhum id nosso (o primeiro mês do
 // Pix Automático é criado pelo Asaas, e a documentação não diz se traz a referência): o apoio mensal mais
-// recente do mesmo cliente do Asaas, com o mesmo valor, em qualquer status em que ainda pode receber um
+// recente do mesmo cliente do Asaas, com o mesmo valor (o mensal, ou a diferença cobrada hoje numa troca
+// de plano), em qualquer status em que ainda pode receber um
 // pagamento ou um estorno (de fora ficam só falhou e estornado). Só apoio de profissional: é o único
 // caso em que o primeiro mês chega sem id nosso, e sem esse limite uma doação mensal criada com o CPF
 // do profissional e o mesmo valor do plano poderia ficar com o pagamento dele.
@@ -259,11 +317,12 @@ export async function buscarApoioMensalDoCliente(clienteId: string, valor: numbe
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("apoios")
-    .select("id, frequencia, status, profissional_id, asaas_autorizacao_id")
+    .select(COLUNAS_APOIO_ENCONTRADO)
     .eq("asaas_cliente_id", clienteId)
     .eq("frequencia", "mensal")
     .not("profissional_id", "is", null)
-    .eq("valor", valor)
+    // valor vem do aviso autenticado do Asaas e é conferido como número antes de chegar aqui.
+    .or(`valor.eq.${valor},valor_imediato.eq.${valor}`)
     .in("status", ["aguardando", "ativo", "inadimplente", "recusado", "expirado", "cancelado"])
     .order("criado_em", { ascending: false })
     .limit(1)

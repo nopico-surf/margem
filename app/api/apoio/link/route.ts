@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { catalogoDaProfissao } from "@/lib/apoio/planos";
-import { buscarProfissionalPorToken, temPlanoAtivo } from "@/lib/apoio/registro";
+import { buscarPlanoAtual, buscarProfissionalPorToken, temPlanoAtivo } from "@/lib/apoio/registro";
 
 // Dados do link pessoal de pagamento, pra tela do profissional: nome, profissão, plano base e opcional
 // escolhidos no cadastro, o catálogo da profissão dele (preço em centavos e vagas) e o e-mail do cadastro (que preenche o
@@ -27,11 +27,24 @@ export async function POST(request: Request) {
   const profissional = await buscarProfissionalPorToken(token);
   if (!profissional) return NextResponse.json({ error: "link_invalido" }, { status: 404, headers: SEM_CACHE });
 
+  // Quem já pagou (mês pago longe do fim, ou Pix Automático em vigor) não paga de novo: recebe o plano
+  // atual e o próximo vencimento, e pode trocar de plano (situacao "pode_trocar"). Sem plano pago
+  // identificável, não há troca possível: plano_ja_ativo.
+  let troca: { planoAtual: { planoBase: string; opcional: string | null }; proximoVencimento: string } | null = null;
   const ativo = profissional.situacao === "ja_ativo" || (await temPlanoAtivo(profissional.id));
-  if (ativo) return NextResponse.json({ error: "plano_ja_ativo" }, { status: 409, headers: SEM_CACHE });
+  if (ativo) {
+    const atual = await buscarPlanoAtual(profissional.id);
+    const vencimento = profissional.pago_ate;
+    if (!atual || !vencimento || new Date(vencimento).getTime() <= Date.now()) {
+      return NextResponse.json({ error: "plano_ja_ativo" }, { status: 409, headers: SEM_CACHE });
+    }
+    troca = { planoAtual: { planoBase: atual.planoBase, opcional: atual.planoOpcional }, proximoVencimento: vencimento };
+  }
 
   return NextResponse.json(
     {
+      situacao: troca ? "pode_trocar" : "pode_pagar",
+      ...(troca ?? {}),
       nome: profissional.nome,
       profissao: profissional.profissao,
       planoBaseEscolhido: profissional.plano_base_escolhido,

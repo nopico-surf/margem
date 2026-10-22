@@ -6,17 +6,32 @@ import {
   cancelarAutorizacao,
   criarAutorizacaoPixAutomatico,
   criarCobrancaPix,
+  hojeEmBrasilia,
   type ResultadoAsaas,
 } from "@/lib/asaas";
+import { encerrarAutorizacoesEmVigor } from "@/lib/apoio/autorizacoes";
 import { normalizarCpfCnpj } from "@/lib/apoio/documento";
-import { ehPlanoBase, ehPlanoOpcional, ehServico, pedidoDoProfissional, validarDoacao, type PedidoApoio } from "@/lib/apoio/planos";
+import {
+  centavosDoPlano,
+  ehPlanoBase,
+  ehPlanoOpcional,
+  ehServico,
+  pedidoDoProfissional,
+  validarDoacao,
+  type PedidoApoio,
+  type PlanoBase,
+  type PlanoOpcional,
+} from "@/lib/apoio/planos";
 import {
   atualizarApoio,
   atualizarApoioSeStatus,
   buscarPixPendentesDoProfissional,
+  buscarPlanoAtual,
   buscarProfissionalPorToken,
   criarApoio,
+  escolherPlano,
   temPlanoAtivo,
+  type ProfissionalDoLink,
 } from "@/lib/apoio/registro";
 
 // Gera o Pix de um apoio: cobrança avulsa pra doação única, autorização de Pix Automático pra mensal.
@@ -25,6 +40,9 @@ import {
 // - doação de qualquer pessoa: frequencia e valor vêm da tela e são conferidos contra o catálogo;
 // - profissional: só pelo link pessoal (token). O cadastro sai do banco; da tela vêm só o plano base e
 //   o opcional (os escolhidos no cadastro valem quando a tela não manda), e o valor é o do catálogo.
+// - troca de plano de quem já pagou (troca: true): upgrade cobra hoje só a diferença, num QR que já
+//   autoriza o mensal novo a partir do próximo vencimento; downgrade não cobra nada, encerra o Pix
+//   Automático atual e deixa o plano menor escolhido para o link cobrar no vencimento.
 //
 // Nome, CPF/CNPJ e e-mail só atravessam esta rota a caminho do Asaas: não são gravados, não vão pra log
 // e não voltam na resposta. Nada aqui lê ou recebe o id de sessão da conversa.
@@ -51,13 +69,61 @@ function erroDoAsaas(resultado: Extract<ResultadoAsaas<unknown>, { ok: false }>)
   return erro("pagamento_indisponivel", 503, { motivo: resultado.motivo });
 }
 
+type Troca = { inicio: string; comecaEm: string; valorHojeCentavos: number; valorMensalCentavos: number };
+type Downgrade = { profissionalId: string; base: PlanoBase; opcional: PlanoOpcional | null; valorMensalCentavos: number; comecaEm: string };
+
+// Troca de plano: só para quem tem mês pago valendo. O valor de hoje é a diferença cheia entre o mensal
+// novo e o atual (sem proporcional ao dia), e o mês não reinicia: o mensal novo começa em pago_ate.
+async function pedidoDeTroca(
+  corpo: Record<string, unknown>,
+  profissional: ProfissionalDoLink,
+): Promise<{ pedido: PedidoApoio; troca: Troca } | { downgrade: Downgrade } | { resposta: NextResponse }> {
+  if (!profissional.pago_ate || new Date(profissional.pago_ate).getTime() <= Date.now()) {
+    return { resposta: erro("troca_indisponivel", 409) };
+  }
+  const atual = await buscarPlanoAtual(profissional.id);
+  if (!atual) return { resposta: erro("troca_indisponivel", 409) };
+
+  const base = corpo.planoBase;
+  const opcional = corpo.opcional ?? null;
+  if (!ehPlanoBase(base) || (opcional !== null && !ehPlanoOpcional(opcional))) return { resposta: erro("plano_invalido", 400) };
+
+  const atualCentavos = centavosDoPlano(profissional.profissao, atual.planoBase, atual.planoOpcional);
+  const novoCentavos = centavosDoPlano(profissional.profissao, base, opcional);
+  const comecaEm = profissional.pago_ate;
+  if (novoCentavos === atualCentavos) {
+    // Voltar ao plano atual depois de um downgrade agendado desfaz o agendamento (nada é cobrado hoje;
+    // o plano atual é pago pelo link no vencimento). Sem agendamento, é o mesmo plano.
+    const agendado = profissional.plano_base_escolhido !== atual.planoBase || profissional.opcional_escolhido !== atual.planoOpcional;
+    if (!agendado) return { resposta: erro("mesmo_plano", 400) };
+    return { downgrade: { profissionalId: profissional.id, base, opcional, valorMensalCentavos: novoCentavos, comecaEm } };
+  }
+
+  if (novoCentavos < atualCentavos) {
+    return { downgrade: { profissionalId: profissional.id, base, opcional, valorMensalCentavos: novoCentavos, comecaEm } };
+  }
+
+  // O mensal novo começa no dia do vencimento (em Brasília), e nunca antes de amanhã.
+  const vencimento = hojeEmBrasilia(new Date(comecaEm));
+  const amanha = hojeEmBrasilia(new Date(Date.now() + 24 * 60 * 60 * 1000));
+  const inicio = vencimento > amanha ? vencimento : amanha;
+  const diferenca = novoCentavos - atualCentavos;
+  return {
+    pedido: { ...pedidoDoProfissional(profissional.profissao, base, opcional, profissional.id), troca: true, valorImediato: diferenca / 100 },
+    troca: { inicio, comecaEm, valorHojeCentavos: diferenca, valorMensalCentavos: novoCentavos },
+  };
+}
+
 // Monta o pedido do profissional a partir do link. Devolve a resposta de erro quando não dá.
-async function pedidoPeloLink(corpo: Record<string, unknown>): Promise<{ pedido: PedidoApoio } | { resposta: NextResponse }> {
+async function pedidoPeloLink(
+  corpo: Record<string, unknown>,
+): Promise<{ pedido: PedidoApoio; troca?: Troca } | { downgrade: Downgrade } | { resposta: NextResponse }> {
   const token = typeof corpo.token === "string" ? corpo.token : "";
   if (!TOKEN.test(token)) return { resposta: erro("link_invalido", 404) };
 
   const profissional = await buscarProfissionalPorToken(token);
   if (!profissional) return { resposta: erro("link_invalido", 404) };
+  if (corpo.troca === true) return pedidoDeTroca(corpo, profissional);
   if (profissional.situacao === "ja_ativo") return { resposta: erro("plano_ja_ativo", 409) };
 
   const base = corpo.planoBase === undefined ? profissional.plano_base_escolhido : corpo.planoBase;
@@ -71,6 +137,22 @@ async function pedidoPeloLink(corpo: Record<string, unknown>): Promise<{ pedido:
   if (ativo) return { resposta: erro("plano_ja_ativo", 409) };
 
   return { pedido: pedidoDoProfissional(profissional.profissao, base, opcional, profissional.id) };
+}
+
+// Downgrade: nada é cobrado nem devolvido hoje. O Pix Automático atual é encerrado (senão continuaria
+// cobrando o plano maior) e o plano menor fica escolhido; o perfil segue no ar até o fim do mês pago, e
+// faltando 7 dias para o vencimento o link volta a cobrar, já com o plano menor.
+async function aplicarDowngrade(downgrade: Downgrade) {
+  if (!(await cancelarPixPendentes(downgrade.profissionalId)) || !(await encerrarAutorizacoesEmVigor(downgrade.profissionalId))) {
+    return erro("pagamento_indisponivel", 503, { motivo: "autorizacao_atual" });
+  }
+  if (!(await escolherPlano(downgrade.profissionalId, downgrade.base, downgrade.opcional))) {
+    return erro("pagamento_indisponivel", 503, { motivo: "banco" });
+  }
+  return NextResponse.json(
+    { apoioId: null, qrCode: null, valorHojeCentavos: 0, valorMensalCentavos: downgrade.valorMensalCentavos, comecaEm: downgrade.comecaEm },
+    { headers: SEM_CACHE },
+  );
 }
 
 // Cancela no Asaas os Pix do profissional que ainda não foram pagos, pra só o novo valer. Erro 4xx do
@@ -99,23 +181,27 @@ export async function POST(request: Request) {
     return erro("pedido_invalido", 400);
   }
 
-  const nome = typeof corpo.nome === "string" ? corpo.nome.trim().replace(/\s+/g, " ") : "";
-  if (!nome || nome.length > 100) return erro("nome_invalido", 400);
-
-  const cpfCnpj = normalizarCpfCnpj(corpo.cpfCnpj);
-  if (!cpfCnpj) return erro("cpf_cnpj_invalido", 400);
-
-  // Com token é profissional; sem token é doação, mesmo que a tela mande outro público.
+  // Com token é profissional; sem token é doação, mesmo que a tela mande outro público. O downgrade não
+  // cobra nada, então não pede nome nem documento.
   let pedido: PedidoApoio;
+  let troca: Troca | undefined;
   if (corpo.token !== undefined) {
     const resultado = await pedidoPeloLink(corpo);
     if ("resposta" in resultado) return resultado.resposta;
+    if ("downgrade" in resultado) return aplicarDowngrade(resultado.downgrade);
     pedido = resultado.pedido;
+    troca = resultado.troca;
   } else {
     const validacao = validarDoacao(corpo);
     if (!validacao.ok) return erro(validacao.motivo, 400);
     pedido = validacao.pedido;
   }
+
+  const nome = typeof corpo.nome === "string" ? corpo.nome.trim().replace(/\s+/g, " ") : "";
+  if (!nome || nome.length > 100) return erro("nome_invalido", 400);
+
+  const cpfCnpj = normalizarCpfCnpj(corpo.cpfCnpj);
+  if (!cpfCnpj) return erro("cpf_cnpj_invalido", 400);
 
   // Profissional informa e-mail pra receber a nota fiscal. Da doação (sem nota) o e-mail não é pedido
   // nem aceito.
@@ -155,6 +241,7 @@ export async function POST(request: Request) {
     valor: pedido.valor,
     descricao,
     contrato: apoioId.replaceAll("-", ""),
+    ...(troca ? { valorImediato: pedido.valorImediato, inicio: troca.inicio } : {}),
   });
   if (!autorizacao.ok) {
     await atualizarApoio(apoioId, { status: "falhou", asaas_cliente_id: cliente.dados.id });
@@ -165,5 +252,19 @@ export async function POST(request: Request) {
     asaas_autorizacao_id: autorizacao.dados.autorizacaoId,
     asaas_assinatura_id: autorizacao.dados.assinaturaId,
   });
+  if (troca && pedido.profissionalId && pedido.planoBase) {
+    // O próximo pagamento pelo link já sai com o plano novo marcado.
+    await escolherPlano(pedido.profissionalId, pedido.planoBase, pedido.planoOpcional ?? null);
+    return NextResponse.json(
+      {
+        apoioId,
+        qrCode: autorizacao.dados.qrCode,
+        valorHojeCentavos: troca.valorHojeCentavos,
+        valorMensalCentavos: troca.valorMensalCentavos,
+        comecaEm: troca.comecaEm,
+      },
+      { headers: SEM_CACHE },
+    );
+  }
   return NextResponse.json({ apoioId, qrCode: autorizacao.dados.qrCode }, { headers: SEM_CACHE });
 }

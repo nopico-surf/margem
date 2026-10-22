@@ -158,11 +158,17 @@ export async function cancelarAutorizacao(autorizacaoId: string): Promise<Result
 //
 // startDate fica no mês seguinte porque o primeiro mês já é pago pelo QR code. A confirmar no sandbox
 // antes de produção: que isso não gera cobrança dupla nem atrasa o primeiro mês.
+//
+// Troca de plano (upgrade): o QR cobra hoje só a diferença (valorImediato) e autoriza o mensal novo a
+// partir de "inicio", o próximo vencimento. O Asaas aceita valor imediato diferente do mensal (testado no
+// sandbox em 22/10/2026).
 export async function criarAutorizacaoPixAutomatico(params: {
   clienteId: string;
   valor: number;
   descricao: string;
   contrato: string;
+  valorImediato?: number;
+  inicio?: string;
 }): Promise<ResultadoAsaas<{ autorizacaoId: string; assinaturaId: string | null; qrCode: QrCodePix }>> {
   const resultado = await chamar<{
     id?: unknown;
@@ -174,7 +180,7 @@ export async function criarAutorizacaoPixAutomatico(params: {
     customerId: params.clienteId,
     frequency: "MONTHLY",
     contractId: params.contrato,
-    startDate: mesSeguinte(hojeEmBrasilia()),
+    startDate: params.inicio ?? mesSeguinte(hojeEmBrasilia()),
     value: params.valor,
     description: params.descricao,
     paymentCreationMode: "SUBSCRIPTION",
@@ -183,7 +189,7 @@ export async function criarAutorizacaoPixAutomatico(params: {
     retryPolicy: "ALLOW_THREE_IN_SEVEN_DAYS",
     immediateQrCode: {
       expirationSeconds: EXPIRACAO_QR_SEGUNDOS,
-      originalValue: params.valor,
+      originalValue: params.valorImediato ?? params.valor,
       description: params.descricao,
     },
   });

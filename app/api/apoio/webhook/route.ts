@@ -1,5 +1,6 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
+import { encerrarAutorizacoesEmVigor } from "@/lib/apoio/autorizacoes";
 import { buscarAssinaturaDaAutorizacao, cancelarAutorizacao, hojeEmBrasilia, mesSeguinte } from "@/lib/asaas";
 import {
   atualizarApoioSeStatus,
@@ -85,7 +86,7 @@ async function encontrarApoio(evento: Evento): Promise<ApoioEncontrado | null> {
   // procura pelo cliente e pelo valor. O log diz só que referências o aviso trazia, sem dado pessoal,
   // pra o primeiro pagamento real mostrar se isto é necessário.
   const cliente = texto(pagamento.customer);
-  const valor = typeof pagamento.value === "number" ? pagamento.value : null;
+  const valor = typeof pagamento.value === "number" && Number.isFinite(pagamento.value) ? pagamento.value : null;
   const porCliente = cliente && valor !== null ? await buscarApoioMensalDoCliente(cliente, valor) : null;
   console.warn(
     `[asaas-webhook] ${evento.event} sem id nosso: ref=${referencia ? "sim" : "não"} assinatura=${assinatura ? "sim" : "não"} achado_pelo_cliente=${porCliente ? "sim" : "não"}`,
@@ -149,11 +150,19 @@ const PAGAMENTO_CONFIRMADO = ["PAYMENT_RECEIVED", "PAYMENT_CONFIRMED"];
 //   mês pago mais a tolerância);
 // - autorização cancelada, expirada ou recusada: nada muda, o mês pago fica no ar inteiro;
 // - estorno: sai do ar na hora.
+// Troca de plano (apoio com troca): o pagamento da diferença não reinicia o mês (pago_ate fica como
+// está), e quando a autorização nova ativa, a antiga é encerrada no Asaas.
 // Os status de origem protegem o que o Vitor muda na mão (pausa, recusa, cancelamento).
-async function sincronizarProfissional(profissionalId: string, tipo: string, novoStatus: StatusApoio | undefined) {
+async function sincronizarProfissional(profissionalId: string, tipo: string, novoStatus: StatusApoio | undefined, apoio: ApoioEncontrado) {
   const agora = new Date().toISOString();
   const podeAtivar: StatusProfissional[] = ["aguardando_pagamento", "gratuito", "inadimplente", "ativo"];
 
+  if (apoio.troca && PAGAMENTO_CONFIRMADO.includes(tipo)) {
+    return atualizarProfissionalSeStatus(profissionalId, podeAtivar, { status: "ativo", inadimplente_desde: null });
+  }
+  if (apoio.troca && tipo === "PIX_AUTOMATIC_RECURRING_AUTHORIZATION_ACTIVATED") {
+    return encerrarAutorizacoesEmVigor(profissionalId, apoio.id);
+  }
   if (PAGAMENTO_CONFIRMADO.includes(tipo)) {
     const ok = await atualizarProfissionalSeStatus(profissionalId, podeAtivar, { status: "ativo", inadimplente_desde: null });
     return ok && (await estenderPagoAte(profissionalId, pagoAteDeUmPagamentoHoje())) && (await marcarPrimeiraAtivacao(profissionalId, agora));
@@ -230,7 +239,7 @@ export async function POST(request: Request) {
   // O profissional muda antes do apoio: se o apoio falhar, o evento volta pra fila e o profissional
   // é atualizado de novo pro mesmo status, sem efeito. Na ordem inversa, o apoio já mudado faria o
   // evento reentregue ser ignorado e o profissional ficaria pra trás.
-  if (apoio.profissional_id && !(await sincronizarProfissional(apoio.profissional_id, tipo, mudanca.campos.status))) {
+  if (apoio.profissional_id && !(await sincronizarProfissional(apoio.profissional_id, tipo, mudanca.campos.status, apoio))) {
     await removerEvento(eventoId);
     console.error(`[asaas-webhook] ${tipo}: profissional não atualizado, o Asaas vai reentregar`);
     return NextResponse.json({ error: "indisponivel" }, { status: 503 });
