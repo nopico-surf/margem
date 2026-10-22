@@ -19,7 +19,8 @@
 /* A barra fixa do Gerar Pix cobre o fim da página: o espaço embaixo deixa o rodapé aparecer. */
 .plano-pagina[data-etapa="dados"],
 .plano-pagina[data-etapa="resumo"],
-.plano-pagina[data-etapa="resumo_troca"] {
+.plano-pagina[data-etapa="resumo_troca"],
+.plano-pagina[data-etapa="meu_plano"] {
   padding-bottom: var(--spacing-128);
 }
 
@@ -341,8 +342,15 @@
   font-weight: var(--font-weight-bold);
 }
 
-/* O Continuar fica na barra fixa no mobile e dentro da página no desktop (1538:39750). */
+/* Telas de um botão só (Figma: "Planos selecionados", 1537:30190 e 1538:39750): no mobile o botão fica
+   na barra fixa que sobe, e aqui só aparece o texto, se houver; no desktop o texto fica à esquerda e o
+   botão à direita, sem quebrar linha. */
 .plano-resumo-acoes {
+  display: flex;
+  flex-direction: column;
+}
+
+.plano-resumo-acoes .btn {
   display: none;
 }
 
@@ -405,17 +413,28 @@
   /* Sem a barra fixa no desktop, a página não precisa do espaço embaixo. */
   .plano-pagina[data-etapa="dados"],
   .plano-pagina[data-etapa="resumo"],
-  .plano-pagina[data-etapa="resumo_troca"] {
+  .plano-pagina[data-etapa="resumo_troca"],
+  .plano-pagina[data-etapa="meu_plano"] {
     padding-bottom: 0;
   }
 
   .plano-resumo-acoes {
-    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-end;
+    gap: var(--spacing-16);
+  }
+
+  .plano-resumo-acoes .plano-nota {
+    flex: 1 1 auto;
   }
 
   .plano-resumo-acoes .btn {
-    width: 250px; /* Figma: 250, sem token */
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 250px; /* Figma: 250, sem token */
+    white-space: nowrap;
   }
 
   /* Figma 1545:40734: o link à esquerda, sem padding, e o valor total com o Gerar Pix à direita. */

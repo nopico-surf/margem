@@ -286,7 +286,7 @@ export function PlanoCliente() {
   // A barra do Continuar e a do Gerar Pix entram subindo quando o resumo e a tela de dados abrem
   // (anotações do Figma, 1537:35224 e 1537:36746).
   useEffect(() => {
-    if (etapa !== "resumo" && etapa !== "resumo_troca" && etapa !== "dados") {
+    if (etapa !== "resumo" && etapa !== "resumo_troca" && etapa !== "meu_plano" && etapa !== "dados") {
       setPainelVisivel(false);
       return;
     }
@@ -575,9 +575,11 @@ export function PlanoCliente() {
               <p className="plano-resumo-detalhe">{textoDasVagas(link.planosBase[planoAtual.planoBase].vagas)}</p>
             </div>
           </section>
-          <Button tamanho="medium" larguraTotal onClick={trocarDePlano}>
-            Trocar de plano
-          </Button>
+          <div className="plano-resumo-acoes">
+            <Button tamanho="medium" onClick={trocarDePlano}>
+              Trocar de plano
+            </Button>
+          </div>
         </ContainerConteudo>
       )}
 
@@ -668,7 +670,7 @@ export function PlanoCliente() {
             </div>
           </section>
           <div className="plano-resumo-acoes">
-            <Button tamanho="medium" larguraTotal onClick={() => setEtapa("dados")}>
+            <Button tamanho="medium" onClick={() => setEtapa("dados")}>
               Continuar
             </Button>
           </div>
@@ -704,15 +706,15 @@ export function PlanoCliente() {
               </span>
             </div>
           </section>
-          <p className="plano-nota">
-            {mesmoPlano
-              ? "Esse já é o seu plano."
-              : ehUpgrade
-                ? `O plano novo vale assim que o pagamento for confirmado.${vencimento ? ` A partir de ${vencimento}, o Pix Automático cobra R$ ${total} por mês.` : ""}`
-                : `Você continua com o plano atual${vencimento ? ` até ${vencimento}` : ""}. A partir daí, o plano ${nomeNovo} começa, por R$ ${total} por mês.`}
-          </p>
           <div className="plano-resumo-acoes">
-            <Button tamanho="medium" larguraTotal onClick={continuarDaTroca}>
+            <p className="plano-nota">
+              {mesmoPlano
+                ? "Esse já é o seu plano."
+                : ehUpgrade
+                  ? `O plano novo vale assim que o pagamento for confirmado.${vencimento ? ` A partir de ${vencimento}, o Pix Automático cobra R$ ${total} por mês.` : ""}`
+                  : `Você continua com o plano atual${vencimento ? ` até ${vencimento}` : ""}. A partir daí, o plano ${nomeNovo} começa, por R$ ${total} por mês.`}
+            </p>
+            <Button tamanho="medium" onClick={continuarDaTroca}>
               {textoDoBotaoDaTroca}
             </Button>
           </div>
@@ -885,12 +887,12 @@ export function PlanoCliente() {
 
       <Footer compacto />
 
-      {(etapa === "resumo" || etapa === "resumo_troca") && (
+      {(etapa === "resumo" || etapa === "resumo_troca" || etapa === "meu_plano") && (
         <PainelInferior
           variante="continuar"
           visivel={painelVisivel}
-          onContinuar={etapa === "resumo_troca" ? continuarDaTroca : () => setEtapa("dados")}
-          texto={etapa === "resumo_troca" ? textoDoBotaoDaTroca : undefined}
+          onContinuar={etapa === "resumo_troca" ? continuarDaTroca : etapa === "meu_plano" ? trocarDePlano : () => setEtapa("dados")}
+          texto={etapa === "resumo_troca" ? textoDoBotaoDaTroca : etapa === "meu_plano" ? "Trocar de plano" : undefined}
         />
       )}
 
