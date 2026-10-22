@@ -38,7 +38,7 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 - **O mês pago fica no ar inteiro.** Cada pagamento estende `pago_ate` até o mesmo dia do mês seguinte, e o perfil fica no ar até `pago_ate` mais 7 dias de tolerância. Cancelar ou não autorizar o Pix Automático não tira do ar antes disso. Se o mês seguinte não for pago, sai do site sozinho; se o pagamento cair depois, volta.
 - **Mensalidade que falha.** O Asaas tenta de novo até 3 vezes em 7 dias, dentro da mesma tolerância.
 - **Pagar de novo pelo link.** Faltando 7 dias ou menos para o fim do mês pago, ou depois dele, o link pessoal volta a cobrar. Quem tem o Pix Automático autorizado vê `plano_ja_ativo`, porque o Asaas cobra sozinho.
-- **Estorno dos 7 dias.** Feito na mão no Asaas. Estorno parcial vale igual ao total. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
+- **Estorno dos 7 dias.** Feito na mão no Asaas. Estorno parcial vale igual ao total. Vale também para quem estava no ar como `gratuito` antes de pagar: depois do estorno, sai da plataforma e não volta a ser gratuito. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
 - **Quem já está na plataforma** continua no ar sem pagar (`gratuito`) e recebe o link na mão, pelo Vitor.
 - **Ordem dos perfis** no site e nas orientações nunca depende do plano.
 - **Mínimo de R$ 5** por cobrança é regra do Asaas, não da Margem.
