@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { PRECOS_PLANOS } from "@/lib/apoio/planos";
+import { PLANOS_BASE, PLANOS_OPCIONAIS } from "@/lib/apoio/planos";
 import { buscarProfissionalPorToken, temPlanoAtivo } from "@/lib/apoio/registro";
 
-// Dados do link pessoal de pagamento, pra tela do profissional: nome, profissão, plano escolhido no
-// cadastro, preços da profissão e o e-mail do cadastro (que preenche o campo da nota fiscal).
+// Dados do link pessoal de pagamento, pra tela do profissional: nome, profissão, plano base e opcional
+// escolhidos no cadastro, o catálogo (preço em centavos e vagas) e o e-mail do cadastro (que preenche o
+// campo da nota fiscal).
 //
 // POST com o token no corpo, e não na URL, pra ele não ficar no log de acesso da rota. Quem tem o link
 // vê o próprio e-mail; o link só existe no WhatsApp do profissional.
@@ -31,8 +32,10 @@ export async function POST(request: Request) {
     {
       nome: profissional.nome,
       profissao: profissional.profissao,
-      planoEscolhido: profissional.plano_escolhido,
-      precos: PRECOS_PLANOS[profissional.profissao],
+      planoBaseEscolhido: profissional.plano_base_escolhido,
+      opcionalEscolhido: profissional.opcional_escolhido,
+      planosBase: PLANOS_BASE,
+      planosOpcionais: PLANOS_OPCIONAIS,
       email: profissional.email,
     },
     { headers: SEM_CACHE },

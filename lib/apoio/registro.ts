@@ -1,7 +1,7 @@
 import { getServerClient } from "@/lib/supabase";
 import { CATEGORIA_PADRAO } from "@/lib/recursos";
 import type { CadastroProfissional } from "./cadastro";
-import type { PedidoApoio, PlanoProfissional } from "./planos";
+import type { PedidoApoio, PlanoBase, PlanoOpcional } from "./planos";
 
 // Gravação da tabela apoios. Só ids do Asaas, plano, valor e status: nome e CPF nunca chegam aqui.
 
@@ -28,7 +28,8 @@ export async function criarApoio(pedido: PedidoApoio): Promise<string | null> {
       publico: pedido.publico,
       frequencia: pedido.frequencia,
       valor: pedido.valor,
-      plano: pedido.plano ?? null,
+      plano_base: pedido.planoBase ?? null,
+      plano_opcional: pedido.planoOpcional ?? null,
       profissional_id: pedido.profissionalId ?? null,
     })
     .select("id")
@@ -125,7 +126,8 @@ export type ProfissionalDoLink = {
   situacao: "pode_pagar" | "ja_ativo";
   nome: string;
   profissao: "psicologo" | "medico";
-  plano_escolhido: PlanoProfissional | null;
+  plano_base_escolhido: PlanoBase | null;
+  opcional_escolhido: PlanoOpcional | null;
   email: string | null;
 };
 
@@ -140,7 +142,7 @@ export async function buscarProfissionalPorToken(token: string): Promise<Profiss
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("profissionais_cadastrados")
-    .select("id, nome, especialidade, status, plano_escolhido, email")
+    .select("id, nome, especialidade, status, plano_base_escolhido, opcional_escolhido, email")
     .eq("token_apoio", token)
     .in("status", [...STATUS_QUE_PAGAM, ...STATUS_JA_ATIVOS])
     .maybeSingle();
@@ -150,7 +152,15 @@ export async function buscarProfissionalPorToken(token: string): Promise<Profiss
   const profissao = data.especialidade === "psicologo" ? "psicologo" : data.especialidade === "psiquiatra" ? "medico" : null;
   if (!profissao) return null;
   const situacao = STATUS_JA_ATIVOS.includes(data.status) ? "ja_ativo" : "pode_pagar";
-  return { id: data.id, situacao, nome: data.nome, profissao, plano_escolhido: data.plano_escolhido, email: data.email };
+  return {
+    id: data.id,
+    situacao,
+    nome: data.nome,
+    profissao,
+    plano_base_escolhido: data.plano_base_escolhido,
+    opcional_escolhido: data.opcional_escolhido,
+    email: data.email,
+  };
 }
 
 // Profissional com plano ativo (ou dentro da tolerância) não gera outro Pix: seriam duas mensalidades.

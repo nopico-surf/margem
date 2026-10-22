@@ -4,7 +4,9 @@ Especificação do fluxo de apoio e de entrada de profissionais. Diz quais telas
 
 Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de-voz.md`](tom-de-voz.md). As regras da seção 7 do [`CLAUDE.md`](../CLAUDE.md) valem aqui sem exceção.
 
-Última atualização: 21/10/2026.
+Última atualização: 22/10/2026.
+
+**O Figma é a referência das telas** (Experiência do produto, seção "Fluxo - Serviços publicos e redes de apoio", nó 1534:28280). Onde o Figma e este documento divergirem, vale o Figma. As telas de espera do pagamento, sucesso, código expirado e banco recusou ainda vão ser desenhadas; os textos delas aqui são provisórios.
 
 ---
 
@@ -13,8 +15,8 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 **Quero fazer parte** (psicólogos, médicos e psiquiatras)
 
 1. Escolhe a profissão.
-2. Escolhe o plano.
-3. Envia o cadastro, já com o plano escolhido. Nada é pago nesta etapa.
+2. Escolhe o plano base e, se quiser, um opcional para turbinar.
+3. Envia o cadastro, já com os planos escolhidos. Nada é pago nesta etapa.
 4. O Vitor analisa e aprova ou recusa, na mão.
 5. Aprovado, entra na lista de espera, se houver fila.
 6. Quando a vaga abre, recebe pelo WhatsApp o link pessoal de pagamento.
@@ -43,14 +45,25 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 
 ## Planos de profissional
 
-Preço fixo por profissão, sempre mensal, com nota fiscal, por Pix Automático.
+Sempre mensal, com nota fiscal, por Pix Automático. Mesmo preço para psicólogo e médico. O valor cobrado é o plano base mais o opcional, se houver. O catálogo está em `lib/apoio/planos.ts`.
 
-| Plano | Código | O que entrega | Psicólogo | Médico ou psiquiatra |
-|---|---|---|---|---|
-| Perfil | `perfil` | Perfil no site e nas orientações, nota fiscal todo mês | R$ 20 | R$ 40 |
-| Perfil + Destaque | `destaque` | Tudo do Perfil, mais story fixo no destaque "Quem atende" e presença no carrossel mensal coletivo | R$ 50 | R$ 90 |
-| Perfil + Divulgação | `divulgacao` | Tudo do Destaque, mais 1 conteúdo por mês em collab, impulsionado | R$ 160 (R$ 70 em anúncio) | R$ 260 (R$ 100 em anúncio) |
-| Perfil + Divulgação Plus | `divulgacao_plus` | Tudo do Destaque, mais 2 conteúdos por mês em collab, impulsionados | R$ 370 (R$ 200 em anúncio) | R$ 580 (R$ 300 em anúncio) |
+**Plano base** (obrigatório, define as vagas: pessoas em acompanhamento simultâneo que o profissional pode manter no perfil; por enquanto o limite é acompanhado na mão)
+
+| Plano | Código | Vagas | Preço |
+|---|---|---|---|
+| Prata | `prata` | 3 | R$ 19,99 por mês |
+| Ouro | `ouro` | 8 | R$ 39,99 por mês |
+| Diamante | `diamante` | ilimitadas | R$ 89,99 por mês |
+
+**Opcional** ("Turbine sua presença", no máximo um, sem combinar)
+
+| Opcional | Código | O que entrega | Preço |
+|---|---|---|---|
+| Destaque | `destaque` | Um story fixo nos destaques do Instagram da Margem, com link para o seu perfil, e presença no carrossel mensal de quem atende pela Margem | + R$ 159,99 por mês |
+| Divulgação | `divulgacao` | Tudo do destaque, mais 1 conteúdo por mês no Instagram da Margem, em collab, impulsionado com anúncio pago | + R$ 369,99 por mês |
+| Divulgação Plus | `divulgacao_plus` | Tudo do divulgação, mais 2 conteúdos por mês, em collab, impulsionados com anúncio pago | + R$ 559,99 por mês |
+
+Exemplo: Prata + Destaque = R$ 179,99 por mês.
 
 ## Apoio de qualquer pessoa
 
@@ -79,18 +92,15 @@ O que muda conforme o caso fica entre chaves. Botões e links no infinitivo, ver
 | Opção 1 | Psicólogo ou psicóloga · Planos mensais com nota fiscal |
 | Opção 2 | Médico ou psiquiatra · Planos mensais com nota fiscal |
 
-### 3a. Plano do profissional
+### 3a. Plano base, turbinar e resumo
 
-| Elemento | Texto |
-|---|---|
-| Título | Escolha seu plano |
-| Apoio | Você escolhe o plano agora e só paga quando sua vaga abrir. Seu perfil entra no ar quando o primeiro pagamento for confirmado. |
-| Perfil | Perfil · R$ {20 ou 40} por mês · Seu perfil no site da Margem e nas orientações que as pessoas recebem. Quem procura apoio pode ver seu perfil e falar com você pelo WhatsApp. |
-| Destaque | Perfil + Destaque · R$ {50 ou 90} por mês · Tudo do Perfil, mais um story fixo nos destaques do Instagram da Margem, com link para o seu perfil, e presença no carrossel mensal de quem atende pela Margem. |
-| Divulgação | Perfil + Divulgação · R$ {160 ou 260} por mês · Tudo do Destaque, mais um conteúdo seu por mês no Instagram da Margem, em collab, impulsionado com R$ {70 ou 100} de anúncio e levando para o seu perfil. A gente propõe o tema, edita e revisa com a equipe clínica. |
-| Divulgação Plus | Perfil + Divulgação Plus · R$ {370 ou 580} por mês · Tudo do Destaque, mais dois conteúdos seus por mês, em collab, impulsionados com R$ {200 ou 300} de anúncio no total. |
-| Nota abaixo dos planos | Todos os planos têm nota fiscal e são cobrados todo mês por Pix Automático. A ordem dos perfis na Margem não muda conforme o plano. Você pode cancelar quando quiser, direto no app do banco. |
-| Botão | Escolher plano {nome} |
+Textos e layout no Figma. Telas, na ordem:
+
+1. **Escolha seu plano** (Prata, Ouro, Diamante). O subtítulo "Você escolhe o plano agora e só paga após a aprovação na plataforma" aparece só no fluxo de cadastro; para quem chega pelo link pessoal, não aparece.
+2. **Turbine sua presença** (Destaque, Divulgação, Divulgação Plus), com "Continuar sem turbinar".
+3. **Planos selecionados** (só no cadastro): plano base, opcional e valor total, com o aviso de que o link de pagamento chega quando o perfil for aprovado.
+
+Quem chega pelo link pessoal vai da tela 2 direto para os dados do Pix (tela 4), com os planos escolhidos no cadastro já marcados e podendo trocar.
 
 ### 3c. Cadastro do profissional
 
@@ -195,7 +205,7 @@ No celular, o código copia e cola fica em destaque (não dá para escanear a pr
 
 | Status | Título | Texto | Botões |
 |---|---|---|---|
-| `expirado` | Esse código expirou | O código do Pix mensal vale por 30 minutos. Seus dados continuam preenchidos, e você pode gerar outro. | Gerar novo Pix |
+| `expirado` | Esse código expirou | O código do Pix mensal vale por 30 minutos. Seus dados continuam preenchidos, e você pode gerar outro. | Gerar novamente |
 | `recusado` | O banco não confirmou o Pix Automático | Isso pode acontecer quando a autorização não é concluída no app do banco. Se o primeiro mês já saiu da sua conta, fale com a gente antes de gerar outro Pix, para não pagar duas vezes. | Gerar novo Pix · Falar com a Margem no WhatsApp |
 
 ### 8. Como cancelar (trecho da tela 6, só no mensal)
@@ -212,11 +222,11 @@ No celular, o código copia e cola fica em destaque (não dá para escanear a pr
 
 | Rota | Para quê | Estado |
 |---|---|---|
-| `POST /api/apoio/pix` | gera o Pix. Pessoa: `frequencia`, `valor`, `nome`, `cpfCnpj`. Profissional: `token` do link, `plano` (opcional, senão o do cadastro), `nome`, `cpfCnpj`, `email`. Devolve `apoioId` e `qrCode` (`payload`, `imagemBase64`, `expiraEm`). | pronta |
-| `POST /api/apoio/link` | com `{ token }`, devolve `nome`, `profissao`, `planoEscolhido`, `precos` e `email` do cadastro, para a tela 4 do profissional. Erros: `link_invalido` (404), `plano_ja_ativo` (409). | pronta |
+| `POST /api/apoio/pix` | gera o Pix. Pessoa: `frequencia`, `valor`, `nome`, `cpfCnpj`. Profissional: `token` do link, `planoBase` e `opcional` (`null` = sem turbinar; ausentes, valem os do cadastro), `nome`, `cpfCnpj`, `email`. Devolve `apoioId` e `qrCode` (`payload`, `imagemBase64`, `expiraEm`). | pronta |
+| `POST /api/apoio/link` | com `{ token }`, devolve `nome`, `profissao`, `planoBaseEscolhido`, `opcionalEscolhido`, o catálogo (`planosBase` e `planosOpcionais`, preço em centavos e vagas) e o `email` do cadastro, para a tela 4 do profissional. Erros: `link_invalido` (404), `plano_ja_ativo` (409). | pronta |
 | `GET /api/apoio/{id}/status` | status do apoio, para a tela 5 saber quando mudar | pronta |
 | `POST /api/apoio/webhook` | avisos do Asaas; atualiza o apoio e o profissional ligado a ele | pronta |
-| `POST /api/profissionais/cadastro` | grava o cadastro como `em_analise`, sem publicar nada. Corpo: `profissao` (`psicologo` ou `medico`), `plano`, `nome`, `registro`, `whatsapp`, `email`; psicólogo manda `abordagem` (e `abordagemOutra` quando escolhe Outra); médico manda `especialidade` (e `especialidadeOutra`) e `rqe`. Devolve `{ ok: true }`, inclusive quando o e-mail ou o registro já têm cadastro (o formulário não revela quem está na Margem). | pronta |
+| `POST /api/profissionais/cadastro` | grava o cadastro como `em_analise`, sem publicar nada. Corpo: `profissao` (`psicologo` ou `medico`), `planoBase`, `opcional` (`null` ou ausente = sem turbinar), `nome`, `registro`, `whatsapp`, `email`; psicólogo manda `abordagem` (e `abordagemOutra` quando escolhe Outra); médico manda `especialidade` (e `especialidadeOutra`) e `rqe`. Devolve `{ ok: true }`, inclusive quando o e-mail ou o registro já têm cadastro (o formulário não revela quem está na Margem). | pronta |
 
 **Erros do cadastro (tela 3c)**
 
@@ -269,3 +279,5 @@ A coluna `ativo` continua como pausa manual (férias, por exemplo): com ela desl
 - Validar o modelo com advogado de direito médico ou com orientação do CRP e do CRM. Cobrar a partir de número de contatos recebidos esbarra no Código de Ética do psicólogo (art. 2º, alínea p) e na Resolução CFM 2.460/2026.
 - Um perfil atual mostra "Cannabis Medicinal e Saúde mental" como especialidade, que não é especialidade do CFM (Resolução CFM 2.336/2023).
 - Nota fiscal automática: cadastrar os dados fiscais da LTDA no Asaas e pegar com o contador o código do serviço.
+
+**Gerar novamente.** Quando o código expira, a tela chama `POST /api/apoio/pix` de novo com os mesmos dados (guardados na própria tela) e mostra o QR code novo. O apoio antigo fica como `expirado`; não há cobrança dupla.

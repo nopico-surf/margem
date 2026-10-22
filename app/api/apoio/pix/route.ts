@@ -8,15 +8,15 @@ import {
   type ResultadoAsaas,
 } from "@/lib/asaas";
 import { normalizarCpfCnpj } from "@/lib/apoio/documento";
-import { ehPlano, ehServico, pedidoDoProfissional, validarDoacao, type PedidoApoio } from "@/lib/apoio/planos";
+import { ehPlanoBase, ehPlanoOpcional, ehServico, pedidoDoProfissional, validarDoacao, type PedidoApoio } from "@/lib/apoio/planos";
 import { atualizarApoio, buscarProfissionalPorToken, criarApoio, temPlanoAtivo } from "@/lib/apoio/registro";
 
 // Gera o Pix de um apoio: cobrança avulsa pra doação única, autorização de Pix Automático pra mensal.
 //
 // Dois caminhos (ver docs/apoio-telas.md):
 // - doação de qualquer pessoa: frequencia e valor vêm da tela e são conferidos contra o catálogo;
-// - profissional: só pelo link pessoal (token). Profissão e cadastro saem do banco; da tela só vem o
-//   plano, e o preço dele é o do catálogo pra profissão do cadastro.
+// - profissional: só pelo link pessoal (token). O cadastro sai do banco; da tela vêm só o plano base e
+//   o opcional (os escolhidos no cadastro valem quando a tela não manda), e o valor é o do catálogo.
 //
 // Nome, CPF/CNPJ e e-mail só atravessam esta rota a caminho do Asaas: não são gravados, não vão pra log
 // e não voltam na resposta. Nada aqui lê ou recebe o id de sessão da conversa.
@@ -51,14 +51,17 @@ async function pedidoPeloLink(corpo: Record<string, unknown>): Promise<{ pedido:
   if (!profissional) return { resposta: erro("link_invalido", 404) };
   if (profissional.situacao === "ja_ativo") return { resposta: erro("plano_ja_ativo", 409) };
 
-  const plano = ehPlano(corpo.plano) ? corpo.plano : profissional.plano_escolhido;
-  if (!plano) return { resposta: erro("plano_invalido", 400) };
+  const base = corpo.planoBase === undefined ? profissional.plano_base_escolhido : corpo.planoBase;
+  if (!ehPlanoBase(base)) return { resposta: erro("plano_invalido", 400) };
+  // opcional ausente: o do cadastro; null: sem turbinar.
+  const opcional = corpo.opcional === undefined ? profissional.opcional_escolhido : corpo.opcional;
+  if (opcional !== null && !ehPlanoOpcional(opcional)) return { resposta: erro("plano_invalido", 400) };
 
   const ativo = await temPlanoAtivo(profissional.id);
   if (ativo === null) return { resposta: erro("pagamento_indisponivel", 503, { motivo: "banco" }) };
   if (ativo) return { resposta: erro("plano_ja_ativo", 409) };
 
-  return { pedido: pedidoDoProfissional(profissional.profissao, plano, profissional.id) };
+  return { pedido: pedidoDoProfissional(profissional.profissao, base, opcional, profissional.id) };
 }
 
 export async function POST(request: Request) {

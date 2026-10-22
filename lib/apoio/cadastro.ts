@@ -1,4 +1,4 @@
-import { ehPlano, type PlanoProfissional } from "./planos";
+import { ehPlanoBase, ehPlanoOpcional, type PlanoBase, type PlanoOpcional } from "./planos";
 
 // Cadastro de profissional ("Quero fazer parte", docs/apoio-telas.md). As listas são as da tela; o
 // servidor confere contra elas, e "Outra" exige o texto digitado. Os nomes batem com os que já estão
@@ -35,7 +35,8 @@ export const OUTRA = "Outra";
 export type CadastroProfissional = {
   nome: string;
   especialidade: "psicologo" | "psiquiatra";
-  plano_escolhido: PlanoProfissional;
+  plano_base_escolhido: PlanoBase;
+  opcional_escolhido: PlanoOpcional | null;
   registro_profissional: string;
   abordagem: string | null;
   especialidade_rotulo: string | null;
@@ -76,7 +77,10 @@ export function validarCadastro(entrada: unknown): ResultadoCadastro {
   if (corpo.profissao !== "psicologo" && corpo.profissao !== "medico") return { ok: false, motivo: "profissao_invalida" };
   const medico = corpo.profissao === "medico";
 
-  if (!ehPlano(corpo.plano)) return { ok: false, motivo: "plano_invalido" };
+  // Plano base obrigatório; opcional ausente ou null quer dizer "Continuar sem turbinar".
+  if (!ehPlanoBase(corpo.planoBase)) return { ok: false, motivo: "plano_invalido" };
+  const opcional = corpo.opcional ?? null;
+  if (opcional !== null && !ehPlanoOpcional(opcional)) return { ok: false, motivo: "plano_invalido" };
 
   const nome = textoLimpo(corpo.nome, 100);
   if (!nome || nome.length < 3) return { ok: false, motivo: "nome_invalido" };
@@ -112,7 +116,8 @@ export function validarCadastro(entrada: unknown): ResultadoCadastro {
     cadastro: {
       nome,
       especialidade: medico ? "psiquiatra" : "psicologo",
-      plano_escolhido: corpo.plano,
+      plano_base_escolhido: corpo.planoBase,
+      opcional_escolhido: opcional,
       registro_profissional: registro,
       abordagem,
       especialidade_rotulo: especialidadeRotulo,

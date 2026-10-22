@@ -76,7 +76,7 @@ A chave do sandbox passou pelo chat em 20/10/2026. Gerar outra no painel do sand
 ### 7. Primeiro teste real
 
 1. Doação única de R$ 5, com os seus dados.
-2. Plano Perfil de psicólogo (R$ 20), com um cadastro de teste seu, pelo link pessoal.
+2. Plano Prata sem opcional (R$ 19,99), com um cadastro de teste seu, pelo link pessoal.
 3. Conferir se o perfil de teste entrou no ar e se o painel do Asaas mostra os dois pagamentos.
 4. Estornar o plano no Asaas e conferir se o perfil saiu do ar e se o Pix Automático foi encerrado.
 5. Apagar o cadastro de teste.
@@ -92,7 +92,7 @@ As mudanças são feitas no editor de tabelas do Supabase (`profissionais_cadast
 ### Ver quem pediu para entrar
 
 ```sql
-select id, nome, especialidade, abordagem, especialidade_rotulo, rqe, registro_profissional, plano_escolhido, telefone, email, cadastrado_em
+select id, nome, especialidade, abordagem, especialidade_rotulo, rqe, registro_profissional, plano_base_escolhido, opcional_escolhido, telefone, email, cadastrado_em
 from profissionais_cadastrados
 where status = 'em_analise'
 order by cadastrado_em;
@@ -156,7 +156,7 @@ where status = 'inadimplente';
 O painel do Asaas é a referência. No banco:
 
 ```sql
-select p.nome, a.plano, a.valor, a.status, a.ultimo_pagamento_em
+select p.nome, a.plano_base, a.plano_opcional, a.valor, a.status, a.ultimo_pagamento_em
 from apoios a join profissionais_cadastrados p on p.id = a.profissional_id
 order by a.criado_em desc;
 ```

@@ -2,17 +2,28 @@
 // escolheu, e isso é conferido contra este catálogo antes de qualquer chamada ao Asaas.
 //
 // Profissional paga um plano mensal (serviço, com nota fiscal), pelo link pessoal que recebe depois de
-// aprovado: a profissão sai do cadastro dele no banco, nunca da tela. Qualquer pessoa pode fazer doação
+// aprovado: o cadastro sai do banco, nunca da tela. O plano é um plano base (define as vagas) mais, no
+// máximo, um opcional para turbinar a presença; o valor é a soma dos dois (Figma, Experiência do
+// produto, 1534:28280). O preço é o mesmo para psicólogo e médico. Qualquer pessoa pode fazer doação
 // (sem nota), única ou mensal, com valor aberto a partir de R$ 5. Ver docs/apoio-telas.md.
 
 export type PublicoApoio = "psicologo" | "medico" | "geral";
 export type FrequenciaApoio = "unico" | "mensal";
-export type PlanoProfissional = "perfil" | "destaque" | "divulgacao" | "divulgacao_plus";
+export type PlanoBase = "prata" | "ouro" | "diamante";
+export type PlanoOpcional = "destaque" | "divulgacao" | "divulgacao_plus";
 
-// "medico" cobre médicos e psiquiatras (especialidade "psiquiatra" no cadastro).
-export const PRECOS_PLANOS: Record<"psicologo" | "medico", Record<PlanoProfissional, number>> = {
-  psicologo: { perfil: 20, destaque: 50, divulgacao: 160, divulgacao_plus: 370 },
-  medico: { perfil: 40, destaque: 90, divulgacao: 260, divulgacao_plus: 580 },
+// Preços em centavos, pra soma não arredondar errado. vagas: pessoas em acompanhamento simultâneo que o
+// profissional pode manter no perfil; null é ilimitado. Por enquanto o limite é acompanhado na mão.
+export const PLANOS_BASE: Record<PlanoBase, { centavos: number; vagas: number | null }> = {
+  prata: { centavos: 1999, vagas: 3 },
+  ouro: { centavos: 3999, vagas: 8 },
+  diamante: { centavos: 8999, vagas: null },
+};
+
+export const PLANOS_OPCIONAIS: Record<PlanoOpcional, { centavos: number }> = {
+  destaque: { centavos: 15999 },
+  divulgacao: { centavos: 36999 },
+  divulgacao_plus: { centavos: 55999 },
 };
 
 // Atalhos da tela. Qualquer outro valor a partir do mínimo também vale para a doação.
@@ -25,14 +36,24 @@ export type PedidoApoio = {
   publico: PublicoApoio;
   frequencia: FrequenciaApoio;
   valor: number;
-  plano?: PlanoProfissional;
+  planoBase?: PlanoBase;
+  planoOpcional?: PlanoOpcional | null;
   profissionalId?: string;
 };
 
 export type ResultadoPedido = { ok: true; pedido: PedidoApoio } | { ok: false; motivo: string };
 
-export function ehPlano(valor: unknown): valor is PlanoProfissional {
-  return valor === "perfil" || valor === "destaque" || valor === "divulgacao" || valor === "divulgacao_plus";
+export function ehPlanoBase(valor: unknown): valor is PlanoBase {
+  return typeof valor === "string" && Object.hasOwn(PLANOS_BASE, valor);
+}
+
+export function ehPlanoOpcional(valor: unknown): valor is PlanoOpcional {
+  return typeof valor === "string" && Object.hasOwn(PLANOS_OPCIONAIS, valor);
+}
+
+// Valor mensal em reais do plano base mais o opcional (se houver).
+export function valorDoPlano(base: PlanoBase, opcional: PlanoOpcional | null) {
+  return (PLANOS_BASE[base].centavos + (opcional ? PLANOS_OPCIONAIS[opcional].centavos : 0)) / 100;
 }
 
 // Valor em reais com no máximo dois decimais. Volta em centavos inteiros convertidos de novo pra
@@ -54,9 +75,14 @@ export function validarDoacao(entrada: unknown): ResultadoPedido {
   return { ok: true, pedido: { publico: "geral", frequencia, valor: reais } };
 }
 
-// Profissional: sempre mensal, preço do catálogo pela profissão que está no cadastro.
-export function pedidoDoProfissional(profissao: "psicologo" | "medico", plano: PlanoProfissional, profissionalId: string): PedidoApoio {
-  return { publico: profissao, frequencia: "mensal", valor: PRECOS_PLANOS[profissao][plano], plano, profissionalId };
+// Profissional: sempre mensal, valor do catálogo. A profissão (do cadastro) só decide o tipo de apoio.
+export function pedidoDoProfissional(
+  profissao: "psicologo" | "medico",
+  base: PlanoBase,
+  opcional: PlanoOpcional | null,
+  profissionalId: string,
+): PedidoApoio {
+  return { publico: profissao, frequencia: "mensal", valor: valorDoPlano(base, opcional), planoBase: base, planoOpcional: opcional, profissionalId };
 }
 
 // Serviço tem nota fiscal; doação não.
