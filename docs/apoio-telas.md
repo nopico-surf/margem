@@ -22,7 +22,7 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 6. Quando a vaga abre, recebe pelo WhatsApp o link pessoal de pagamento.
 7. Paga pelo Pix Automático.
 8. O perfil entra no ar sozinho quando o primeiro pagamento é confirmado.
-9. Nos 14 dias seguintes ao primeiro pagamento, pode cancelar e receber o valor de volta.
+9. Nos 7 dias seguintes ao primeiro pagamento, pode cancelar e receber o valor de volta.
 
 **Quero apoiar** (qualquer pessoa)
 
@@ -36,7 +36,7 @@ Antes de desenhar, ler [`instrucoes-design.md`](instrucoes-design.md) e [`tom-de
 - **Manual até o pagamento.** Cadastro, aprovação e fila são manuais (status mudado no editor de tabelas do Supabase). O perfil só entra no ar com o primeiro pagamento.
 - **Link pessoal.** Só quem tem o link pessoal consegue pagar um plano de profissional. O preço sai do banco, nunca da tela.
 - **Mensalidade que falha.** O Asaas tenta de novo até 3 vezes em 7 dias. O perfil continua no ar durante 7 dias de tolerância. Se nenhuma tentativa der certo, sai do site sozinho. Se o pagamento cair depois, volta.
-- **Estorno dos 14 dias.** Feito na mão no Asaas. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
+- **Estorno dos 7 dias.** Feito na mão no Asaas. O sistema marca o apoio como estornado e tira o perfil do ar sozinho.
 - **Quem já está na plataforma** continua no ar sem pagar (`gratuito`) e recebe o link na mão, pelo Vitor.
 - **Ordem dos perfis** no site e nas orientações nunca depende do plano.
 - **Mínimo de R$ 5** por cobrança é regra do Asaas, não da Margem.
@@ -141,7 +141,7 @@ A abordagem é gravada em `abordagem` e a especialidade em `especialidade_rotulo
 |---|---|
 | Aprovado, com fila | Oi, {nome}! Seu cadastro na Margem foi aprovado e você está na lista de espera. Quando abrir vaga na sua especialidade, eu te mando o link para pagar o plano {nome do plano}. |
 | Não aprovado | Oi, {nome}. Obrigado pelo interesse na Margem. Neste momento, seu cadastro não entrou na rede. {motivo, se fizer sentido} |
-| Vaga aberta (ou aprovado sem fila) | Oi, {nome}! Abriu vaga na Margem. Por este link você paga o plano {nome do plano} pelo Pix. Seu perfil entra no ar quando o pagamento for confirmado, e se quiser cancelar em até 14 dias, a gente devolve o valor. {link} |
+| Vaga aberta (ou aprovado sem fila) | Oi, {nome}! Abriu vaga na Margem. Por este link você paga o plano {nome do plano} pelo Pix. Seu perfil entra no ar quando o pagamento for confirmado, e se quiser cancelar em até 7 dias, a gente devolve o valor. {link} |
 
 O link pessoal abre a tela 4 já com o plano escolhido no cadastro.
 
@@ -201,7 +201,7 @@ No celular, o código copia e cola fica em destaque (não dá para escanear a pr
 |---|---|---|---|
 | Uma vez | Apoio recebido | Seus R$ {valor} chegaram. Obrigado por ajudar a manter a Margem gratuita para quem procura apoio. | Voltar para o início |
 | Todo mês, pessoa | Apoio mensal ativado | O primeiro mês chegou, e os próximos saem sozinhos pelo Pix Automático. | Voltar para o início |
-| Profissional | Plano {nome} ativado | Seu perfil já está no ar na Margem. Os próximos meses saem sozinhos pelo Pix Automático, e a nota fiscal chega no seu e-mail. Se quiser cancelar em até 14 dias, a gente devolve o valor. {Destaque e Divulgação:} Nos próximos dias, a gente chama você no WhatsApp para combinar o seu story. | Voltar para o início |
+| Profissional | Plano {nome} ativado | Seu perfil já está no ar na Margem. Os próximos meses saem sozinhos pelo Pix Automático, e a nota fiscal chega no seu e-mail. Se quiser cancelar em até 7 dias, a gente devolve o valor. {Destaque e Divulgação:} Nos próximos dias, a gente chama você no WhatsApp para combinar o seu story. | Voltar para o início |
 
 ### 7. Não deu certo
 
@@ -216,7 +216,7 @@ No celular, o código copia e cola fica em destaque (não dá para escanear a pr
 |---|---|
 | Título | Como cancelar |
 | Texto | Você pode cancelar quando quiser no app do seu banco, na área de Pix Automático. Não precisa falar com ninguém. |
-| Só profissional, nos primeiros 14 dias | Para receber o valor de volta, fale com a gente pelo WhatsApp. Cancelar só no banco interrompe os próximos meses, mas não devolve o que já foi pago. |
+| Só profissional, nos primeiros 7 dias | Para receber o valor de volta, fale com a gente pelo WhatsApp. Cancelar só no banco interrompe os próximos meses, mas não devolve o que já foi pago. |
 
 ---
 

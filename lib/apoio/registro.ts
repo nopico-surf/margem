@@ -196,7 +196,7 @@ export async function atualizarProfissionalSeStatus(id: string, de: StatusProfis
   return !error;
 }
 
-// ativado_em marca o primeiro pagamento (conta os 14 dias): só é gravado uma vez.
+// ativado_em marca o primeiro pagamento (conta os 7 dias): só é gravado uma vez.
 export async function marcarPrimeiraAtivacao(id: string, quando: string) {
   const supabase = getServerClient();
   if (!supabase) return false;

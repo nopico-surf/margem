@@ -103,7 +103,7 @@ function mudancaPara(tipo: string, apoio: ApoioEncontrado, assinaturaId: string 
     // Doação única não paga no dia. Ainda pode ser paga depois, e aí volta pra "pago".
     case "PAYMENT_OVERDUE":
       return apoio.frequencia === "unico" ? { de: ["aguardando"], campos: { status: "expirado" } } : null;
-    // Estorno feito no painel do Asaas (os 14 dias do profissional, por exemplo).
+    // Estorno feito no painel do Asaas (os 7 dias do profissional, por exemplo).
     case "PAYMENT_REFUNDED":
       return { de: ["pago", "ativo", "inadimplente", "cancelado"], campos: { status: "estornado", estornado_em: agora } };
     default:
@@ -112,7 +112,7 @@ function mudancaPara(tipo: string, apoio: ApoioEncontrado, assinaturaId: string 
 }
 
 // O que o novo status do apoio faz com o profissional que paga por ele:
-// - ativo: perfil no ar (e ativado_em gravado no primeiro pagamento, pros 14 dias);
+// - ativo: perfil no ar (e ativado_em gravado no primeiro pagamento, pros 7 dias);
 // - inadimplente: continua no ar por 7 dias desde inadimplente_desde (filtro em lib/supabase.ts);
 // - cancelado, expirado depois de ativo, estornado: sai do ar.
 // Os status de origem protegem o que o Vitor muda na mão (pausa, recusa, cancelamento).

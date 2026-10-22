@@ -125,14 +125,14 @@ Para quem já está no ar sem pagar (`gratuito`), o link funciona sem mudar o st
 
 Nada é manual. Quando o pagamento cai, o perfil entra no ar sozinho.
 
-### Estorno nos 14 dias
+### Estorno nos 7 dias
 
 No painel do Asaas, estornar a cobrança. O sistema marca o apoio como estornado, tira o perfil do ar e encerra o Pix Automático.
 
 O prazo conta a partir de `ativado_em`:
 
 ```sql
-select nome, ativado_em, ativado_em + interval '14 days' as estorno_ate from profissionais_cadastrados where id = '{id}';
+select nome, ativado_em, ativado_em + interval '7 days' as estorno_ate from profissionais_cadastrados where id = '{id}';
 ```
 
 ### Pausar um perfil (férias, por exemplo)
