@@ -242,6 +242,12 @@
   margin-right:auto;
 }
 
+/* Os psiquiatras começam na esquerda, no mesmo ponto em que a fileira dos psicólogos começa quando passa
+   da tela, em vez de centralizar. */
+.figma-professionals-row--esquerda>:first-child {
+  margin-left:0;
+}
+
 .figma-professional-card-construction {
   gap:0;
 }
