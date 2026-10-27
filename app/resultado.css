@@ -242,19 +242,6 @@
   margin-right:auto;
 }
 
-/* Provisório, enquanto há poucos psiquiatras: a fileira deles começa na esquerda em vez de centralizar. */
-.figma-professionals-row--esquerda>:first-child {
-  margin-left:0;
-}
-
-/* Na /conversa, com a fileira em 100vw, o primeiro psiquiatra começa na borda do container e não na
-   lateral da tela. O 50% do padding é a largura do container. A home fica como está. */
-@media(min-width:1088px) {
-  .figma-result-band:not(.home-profissionais) .figma-professionals-row--esquerda {
-    padding-left:calc(50vw - 50%);
-  }
-}
-
 .figma-professional-card-construction {
   gap:0;
 }
