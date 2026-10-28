@@ -242,8 +242,7 @@
   margin-right:auto;
 }
 
-/* Os psiquiatras começam na esquerda, no mesmo ponto em que a fileira dos psicólogos começa quando passa
-   da tela, em vez de centralizar. */
+/* Psicólogos e psiquiatras começam na esquerda, em vez de centralizar quando os cards cabem. */
 .figma-professionals-row--esquerda>:first-child {
   margin-left:0;
 }
