@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { catalogoDaProfissao } from "@/lib/apoio/planos";
-import { buscarPlanoAtual, buscarProfissionalPorToken, temPlanoAtivo } from "@/lib/apoio/registro";
+import { STATUS_QUE_PODEM_BRONZE, buscarPlanoAtual, buscarProfissionalPorToken, temPlanoAtivo } from "@/lib/apoio/registro";
 
 // Dados do link pessoal de pagamento, pra tela do profissional: nome, profissão, plano base e opcional
 // escolhidos no cadastro, o catálogo da profissão dele (preço em centavos e vagas) e o e-mail do cadastro (que preenche o
@@ -50,6 +50,8 @@ export async function POST(request: Request) {
       planoBaseEscolhido: profissional.plano_base_escolhido,
       opcionalEscolhido: profissional.opcional_escolhido,
       ...catalogoDaProfissao(profissional.profissao),
+      // Bronze só aparece para quem ainda não pagou nenhum plano (ir para ele depois é downgrade).
+      bronzeDisponivel: !troca && STATUS_QUE_PODEM_BRONZE.includes(profissional.status),
       email: profissional.email,
     },
     { headers: SEM_CACHE },

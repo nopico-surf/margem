@@ -10,6 +10,8 @@ import { formatarCentavos } from "@/lib/apoio/formatar";
 // `opcional` (Destaque, Divulgação, Divulgação Plus): tudo em coluna, com "+" antes do preço.
 // No desktop os dois viram coluna (frame 1538:39338).
 //
+// Plano gratuito (Bronze, `Property 1=bronze`, 1552:40948): "Gratuito" em Header/Small no lugar do preço.
+//
 // "Selecionar" é o `button` x-small: primary no card do meio de cada grupo (Ouro e Divulgação), que é o
 // destaque fixo do Figma, e secondary nos outros. Quem volta pelo lápis do "Planos selecionados" vê o
 // plano que já tinha escolhido em primary, com "Selecionado", e os outros em secondary (anotação do
@@ -41,12 +43,16 @@ export function CardPlano({ arranjo, nome, descricao, complemento, centavos, des
           <p>{descricao}</p>
           {complemento && <p className="card-plano-complemento">{complemento}</p>}
         </div>
-        <p className="card-plano-preco">
-          <span>{arranjo === "opcional" ? "+ R$ " : "R$ "}</span>
-          <span className="card-plano-valor">{formatarCentavos(centavos).split(",")[0]}</span>
-          <span>,{formatarCentavos(centavos).split(",")[1]}</span>
-          <span className="card-plano-por-mes"> por mês</span>
-        </p>
+        {centavos === 0 ? (
+          <p className="card-plano-preco card-plano-gratuito">Gratuito</p>
+        ) : (
+          <p className="card-plano-preco">
+            <span>{arranjo === "opcional" ? "+ R$ " : "R$ "}</span>
+            <span className="card-plano-valor">{formatarCentavos(centavos).split(",")[0]}</span>
+            <span>,{formatarCentavos(centavos).split(",")[1]}</span>
+            <span className="card-plano-por-mes"> por mês</span>
+          </p>
+        )}
       </div>
       {atual ? (
         <Badge color="secondary">Plano atual</Badge>

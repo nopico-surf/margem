@@ -467,3 +467,48 @@ export function GlifoMode({ className, color = "currentColor", opacity = 1, size
     </svg>
   );
 }
+
+// Mochila do Rolê (29/10/2026): volume_up, volume_off e visibility_off, do arquivo Ícones
+// (Material Symbols, mesmo desenho, viewBox original de 24).
+
+export function GlifoVolumeUp({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 -960 960 960" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320ZM400-606l-86 86H200v80h114l86 86v-252ZM300-480Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoVolumeOff({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 -960 960 960" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q14-5 27.5-10t25.5-12L480-368v208L280-360H120v-240h128L56-792l56-56 736 736-56 56Zm-8-232-58-58q17-31 25.5-65t8.5-70q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 53-14.5 102T784-288ZM650-422l-90-90v-130q47 22 73.5 66t26.5 96q0 15-2.5 29.5T650-422ZM480-592 376-696l104-104v208Zm-80 194v-94l-72-72H200v80h114l86 86Zm-36-130Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoVisibilityOff({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 -960 960 960" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+// Mochila do Rolê: save_alt (Figma Ícones 1:1725) e content_copy (1:1588), viewBox original de 24.
+
+export function GlifoSaveAlt({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M19 13V18C19 18.55 18.55 19 18 19H6C5.45 19 5 18.55 5 18V13C5 12.45 4.55 12 4 12C3.45 12 3 12.45 3 13V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V13C21 12.45 20.55 12 20 12C19.45 12 19 12.45 19 13ZM13 12.67L14.88 10.79C15.27 10.4 15.9 10.4 16.29 10.79C16.68 11.18 16.68 11.81 16.29 12.2L12.7 15.79C12.31 16.18 11.68 16.18 11.29 15.79L7.7 12.2C7.31 11.81 7.31 11.18 7.7 10.79C8.09 10.4 8.72 10.4 9.11 10.79L11 12.67V4C11 3.45 11.45 3 12 3C12.55 3 13 3.45 13 4V12.67Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoContentCopy({ className, color = "currentColor", opacity = 1, size = 16 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path transform="translate(2 1)" d="M13 0H2C0.9 0 0 0.9 0 2V15C0 15.55 0.45 16 1 16C1.55 16 2 15.55 2 15V3C2 2.45 2.45 2 3 2H13C13.55 2 14 1.55 14 1C14 0.45 13.55 0 13 0ZM17 4H6C4.9 4 4 4.9 4 6V20C4 21.1 4.9 22 6 22H17C18.1 22 19 21.1 19 20V6C19 4.9 18.1 4 17 4ZM16 20H7C6.45 20 6 19.55 6 19V7C6 6.45 6.45 6 7 6H16C16.55 6 17 6.45 17 7V19C17 19.55 16.55 20 16 20Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}

@@ -134,6 +134,7 @@ export type ProfissionalDoLink = {
   // outro Pix. Perto do fim do mês pago, ou depois, o link volta a cobrar (quem pagou sem autorizar o
   // Pix Automático paga o mês seguinte por ele). Quem tem o Pix Automático ativo é barrado na rota.
   situacao: "pode_pagar" | "ja_ativo";
+  status: StatusProfissional;
   nome: string;
   profissao: "psicologo" | "medico";
   plano_base_escolhido: PlanoBase | null;
@@ -155,7 +156,7 @@ export async function buscarProfissionalPorToken(token: string): Promise<Profiss
   if (!supabase) return null;
   const { data, error } = await supabase
     .from("profissionais_cadastrados")
-    .select("id, nome, especialidade, plano_base_escolhido, opcional_escolhido, email, pago_ate")
+    .select("id, status, nome, especialidade, plano_base_escolhido, opcional_escolhido, email, pago_ate")
     // O link longo é hex de 64; o curto tem hífen e nunca bate com o formato do longo.
     .eq(token.includes("-") ? "codigo_link" : "token_apoio", token)
     .in("status", STATUS_DO_LINK)
@@ -170,6 +171,7 @@ export async function buscarProfissionalPorToken(token: string): Promise<Profiss
   return {
     id: data.id,
     situacao,
+    status: data.status,
     nome: data.nome,
     profissao,
     plano_base_escolhido: data.plano_base_escolhido,
@@ -227,6 +229,24 @@ export async function escolherPlano(profissionalId: string, base: PlanoBase, opc
     .eq("id", profissionalId);
   if (error) console.error("[apoio] escolherPlano falhou:", error.message);
   return !error;
+}
+
+// Bronze sem opcional não tem o que pagar: o perfil entra no ar como gratuito, com o Bronze escolhido.
+// Só para quem recebeu o link e ainda não pagou (aguardando_pagamento) ou já está como gratuito; quem já
+// pagou alguma vez e vai para o Bronze está fazendo downgrade, que passa pela aprovação do Vitor.
+export const STATUS_QUE_PODEM_BRONZE: StatusProfissional[] = ["aguardando_pagamento", "gratuito"];
+
+export async function ativarBronze(profissionalId: string) {
+  const supabase = getServerClient();
+  if (!supabase) return false;
+  const { data, error } = await supabase
+    .from("profissionais_cadastrados")
+    .update({ status: "gratuito", plano_base_escolhido: "bronze", opcional_escolhido: null })
+    .eq("id", profissionalId)
+    .in("status", STATUS_QUE_PODEM_BRONZE)
+    .select("id");
+  if (error) console.error("[apoio] ativarBronze falhou:", error.message);
+  return !error && (data?.length ?? 0) > 0;
 }
 
 // Profissional com Pix Automático autorizado (ativo, ou com o mês em nova tentativa) não gera outro Pix:

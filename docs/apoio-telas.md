@@ -55,6 +55,7 @@ Sempre mensal, com nota fiscal, por Pix Automático. O valor cobrado é o plano 
 
 | Plano | Código | Vagas | Psicólogo | Médico ou psiquiatra |
 |---|---|---|---|---|
+| Bronze | `bronze` | 1 | Gratuito | Gratuito |
 | Prata | `prata` | 3 | R$ 19,99 por mês | R$ 39,99 por mês |
 | Ouro | `ouro` | 8 | R$ 39,99 por mês | R$ 79,99 por mês |
 | Diamante | `diamante` | ilimitadas | R$ 89,99 por mês | R$ 179,99 por mês |
@@ -68,6 +69,8 @@ Sempre mensal, com nota fiscal, por Pix Automático. O valor cobrado é o plano 
 | Divulgação Plus | `divulgacao_plus` | Tudo do divulgação, mais 2 conteúdos por mês, em collab, impulsionados com anúncio pago | + R$ 559,99 por mês | + R$ 879,99 por mês |
 
 Exemplo: Prata + Destaque = R$ 179,99 por mês para psicólogo e R$ 329,98 para médico.
+
+**Bronze.** Gratuito, com 1 vaga. Sozinho, não tem Pix (o Asaas recusa abaixo de R$ 5): pelo link pessoal, o resumo mostra "Gratuito" e o botão "Ativar meu perfil", que põe o perfil no ar como `gratuito`, com o Bronze escolhido, e abre a confirmação "Perfil ativado". Com um opcional, o valor é só o do opcional, pago pelo Pix como os outros planos. O Bronze só aparece para quem ainda não pagou nenhum plano (`aguardando_pagamento` ou `gratuito`): ir para ele depois é downgrade, que o Vitor aprova na mão para conferir as vagas em uso, e por isso ele não aparece na troca de plano.
 
 ## Apoio de qualquer pessoa
 
@@ -100,7 +103,7 @@ O que muda conforme o caso fica entre chaves. Botões e links no infinitivo, ver
 
 Textos e layout no Figma. Telas, na ordem:
 
-1. **Escolha seu plano** (Prata, Ouro, Diamante). O subtítulo "Você escolhe o plano agora e só paga após a aprovação na plataforma" aparece só no fluxo de cadastro; para quem chega pelo link pessoal, não aparece.
+1. **Escolha seu plano** (Bronze, Prata, Ouro, Diamante). O subtítulo "Você escolhe o plano agora e só paga após a aprovação na plataforma" aparece só no fluxo de cadastro; para quem chega pelo link pessoal, não aparece.
 2. **Turbine sua presença** (Destaque, Divulgação, Divulgação Plus), com "Continuar sem turbinar".
 3. **Planos selecionados** (só no cadastro): plano base, opcional e valor total, com o aviso de que o link de pagamento chega quando o perfil for aprovado.
 
@@ -269,7 +272,7 @@ O link pessoal que o Vitor manda é a página do profissional com o código no f
 | `lista_espera` | aprovado, sem vaga | não |
 | `aguardando_pagamento` | recebeu o link | não |
 | `ativo` | pagou (com ou sem Pix Automático autorizado) | enquanto `pago_ate` mais 7 dias não passou |
-| `gratuito` | já estava antes da cobrança | sim |
+| `gratuito` | já estava antes da cobrança, ou ativou o Bronze sem opcional | sim |
 | `inadimplente` | mês do Pix Automático recusado | enquanto `pago_ate` mais 7 dias não passou |
 | `cancelado` | estornado, ou cancelado na mão | não |
 

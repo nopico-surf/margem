@@ -95,3 +95,23 @@
   min-height:100svh;
   overflow:visible;
 }
+
+.dados-page .dados-modal-body {
+  flex:1 0 auto;
+}
+
+/* No mobile o Fechar fica preso embaixo, no cartão branco com sombra do painel inferior; no desktop
+   ele fica no fim do conteúdo, sem cartão. */
+.dados-modal-rodape {
+  position:sticky;
+  bottom:0;
+}
+
+@media (min-width: 48em) {
+  .dados-modal-rodape {
+    position:static;
+    border-radius:0;
+    box-shadow:none;
+    padding:16px;
+  }
+}

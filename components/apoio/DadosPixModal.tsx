@@ -29,7 +29,7 @@ export function DadosPixModal({ onClose }: { onClose: () => void }) {
           </p>
         </ModalSection>
       </div>
-      <div className="dados-pix-modal-rodape painel-inferior-cartao">
+      <div className="dados-modal-rodape painel-inferior-cartao">
         <ModalFooter onClose={onClose} />
       </div>
     </div>

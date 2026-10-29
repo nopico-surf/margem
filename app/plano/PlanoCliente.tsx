@@ -30,8 +30,8 @@ const ROTA = "/plano";
 const INTERVALO_STATUS = 4000;
 const LINK_WHATSAPP = CONTATOS.find((contato) => contato.tipo === "whatsapp")!.href;
 
-const NOMES_BASE: Record<PlanoBase, string> = { prata: "Prata", ouro: "Ouro", diamante: "Diamante" };
-const ORDEM_BASE: PlanoBase[] = ["prata", "ouro", "diamante"];
+const NOMES_BASE: Record<PlanoBase, string> = { bronze: "Bronze", prata: "Prata", ouro: "Ouro", diamante: "Diamante" };
+const ORDEM_BASE: PlanoBase[] = ["bronze", "prata", "ouro", "diamante"];
 
 const OPCIONAIS: Record<PlanoOpcional, { nome: string; descricao: string; complemento?: string }> = {
   destaque: {
@@ -83,6 +83,7 @@ const ERRO_DADOS_RECUSADOS =
   "O sistema de pagamento não aceitou esses dados. Confira o nome e o CPF ou CNPJ e tente de novo.";
 const ERRO_PAGAMENTO_INDISPONIVEL =
   "Não foi possível gerar o Pix agora, porque o sistema de pagamento está fora do ar. Tente de novo daqui a alguns minutos.";
+const ERRO_ATIVACAO = "Não foi possível ativar seu perfil agora. Tente de novo daqui a alguns minutos.";
 
 type DadosDoLink = {
   nome: string;
@@ -91,6 +92,8 @@ type DadosDoLink = {
   opcionalEscolhido: PlanoOpcional | null;
   planosBase: Record<PlanoBase, { centavos: number; vagas: number | null }>;
   planosOpcionais: Record<PlanoOpcional, { centavos: number }>;
+  // O Bronze só aparece para quem ainda não pagou nenhum plano (ir para ele depois é downgrade).
+  bronzeDisponivel?: boolean;
   email: string | null;
   // Só para quem já pagou: o plano de hoje e o próximo vencimento, para a troca de plano.
   planoAtual?: { planoBase: PlanoBase; opcional: PlanoOpcional | null } | null;
@@ -112,6 +115,8 @@ type Etapa =
   | "recusado"
   | "pago_sem_autorizacao"
   | "tudo_feito"
+  // Bronze sem opcional: nada a pagar, o perfil entra no ar.
+  | "perfil_ativado"
   // Troca de plano, para quem já pagou (regra do Vitor: upgrade paga só a diferença na hora, downgrade
   // começa no próximo vencimento, sem devolução).
   | "meu_plano"
@@ -133,6 +138,7 @@ const ETAPAS_DA_PREVIA: Etapa[] = [
   "recusado",
   "pago_sem_autorizacao",
   "tudo_feito",
+  "perfil_ativado",
 ];
 
 // Só em desenvolvimento: /plano#previa-{etapa} abre a tela com dados de exemplo, sem link e sem
@@ -143,11 +149,13 @@ const LINK_DA_PREVIA: DadosDoLink = {
   planoBaseEscolhido: "ouro",
   opcionalEscolhido: "destaque",
   planosBase: {
+    bronze: { centavos: 0, vagas: 1 },
     prata: { centavos: 1999, vagas: 3 },
     ouro: { centavos: 3999, vagas: 8 },
     diamante: { centavos: 8999, vagas: null },
   },
   planosOpcionais: { destaque: { centavos: 15999 }, divulgacao: { centavos: 36999 }, divulgacao_plus: { centavos: 55999 } },
+  bronzeDisponivel: true,
   email: "profissional@exemplo.com.br",
 };
 const QR_DA_PREVIA =
@@ -163,7 +171,18 @@ function etapaDaPrevia(endereco: string): Etapa | null {
 const PLANO_ATUAL_DA_PREVIA = { planoBase: "prata" as PlanoBase, opcional: null };
 
 function textoDasVagas(vagas: number | null) {
-  return vagas === null ? "Vagas ilimitadas" : `${vagas} vagas abertas`;
+  if (vagas === null) return "Vagas ilimitadas";
+  return vagas === 1 ? "1 vaga aberta" : `${vagas} vagas abertas`;
+}
+
+// Valor de uma linha do resumo: "R$ 19,99 por mês", ou "Gratuito" para o Bronze.
+function valorPorMes(centavos: number) {
+  if (centavos === 0) return "Gratuito";
+  return (
+    <>
+      R$ {formatarCentavos(centavos)} <small>por mês</small>
+    </>
+  );
 }
 
 // "Prata", "Ouro + Destaque": o nome do plano com o opcional, para o resumo e a confirmação da troca.
@@ -204,6 +223,7 @@ export function PlanoCliente() {
   const [errosDeCampo, setErrosDeCampo] = useState<Partial<Record<Campo, string>>>({});
   const [erroGeral, setErroGeral] = useState("");
   const [gerando, setGerando] = useState(false);
+  const [ativando, setAtivando] = useState(false);
   const [pix, setPix] = useState<Pix | null>(null);
   // Começa em 0 e só ganha o relógio quando o Pix é gerado: Date.now() no render quebra o prerender.
   const [agora, setAgora] = useState(0);
@@ -482,6 +502,15 @@ export function PlanoCliente() {
   if (etapa === "carregando") return <LoaderTela />;
   // Enquanto o Pix é gerado, a tela inteira vira o loader (Figma: 1546:40761).
   if (gerando) return <LoaderTela texto="Fazendo a validação dos dados" />;
+  if (ativando) return <LoaderTela />;
+  // "Por que pedimos esses dados?" abre como a /privacidade: página própria, sem header, menu nem rodapé.
+  if (dadosAbertos) {
+    return (
+      <main className="dados-page">
+        <DadosPixModal onClose={() => setDadosAbertos(false)} />
+      </main>
+    );
+  }
 
   const totalCentavos =
     link && planoBase
@@ -513,6 +542,38 @@ export function PlanoCliente() {
     else if (etapaDaPrevia(token)) setEtapa("troca_confirmada");
     else gerarPix(true);
   };
+  // Bronze sem opcional não tem Pix: o resumo ativa o perfil direto, sem pedir dados.
+  const semPagamento = !!planoBase && totalCentavos === 0;
+  const textoDoBotaoDoResumo = semPagamento ? "Ativar meu perfil" : "Continuar para o pagamento";
+  const continuarDoResumo = () => {
+    setErroGeral("");
+    if (!semPagamento) setEtapa("dados");
+    else if (etapaDaPrevia(token)) setEtapa("perfil_ativado");
+    else ativarSemPagamento();
+  };
+  async function ativarSemPagamento() {
+    if (gerandoRef.current) return;
+    gerandoRef.current = true;
+    setAtivando(true);
+    try {
+      const resposta = await fetch("/api/apoio/pix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, planoBase, opcional: null }),
+      });
+      const corpo = (await resposta.json().catch(() => null)) as { gratuito?: boolean; error?: string } | null;
+      if (resposta.ok && corpo?.gratuito) setEtapa("perfil_ativado");
+      else if (corpo?.error === "link_invalido") setEtapa("link_invalido");
+      else if (corpo?.error === "plano_ja_ativo") setEtapa("plano_ja_ativo");
+      else if (corpo?.error === "plano_invalido") setEtapa("base");
+      else setErroGeral(ERRO_ATIVACAO);
+    } catch {
+      setErroGeral(ERRO_ATIVACAO);
+    } finally {
+      gerandoRef.current = false;
+      setAtivando(false);
+    }
+  }
   // O link volta a cobrar 7 dias antes do vencimento: é quando o plano menor é pago, pelo mesmo link.
   const reabreEm = diaEMes(link?.proximoVencimento ? new Date(new Date(link.proximoVencimento).getTime() - 7 * 864e5).toISOString() : null);
   const textoDoValor = trocando ? `Hoje você paga R$ ${formatarCentavos(centavosHoje)}` : `Valor total: R$ ${total} por mês`;
@@ -548,7 +609,7 @@ export function PlanoCliente() {
 
   return (
     <main className="figma-result-page plano-pagina" data-etapa={etapa}>
-      <Header onOpenMenu={() => setMenuAberto(true)} onVoltar={voltar} mostrarProfissionais={false} semMenu={telaDoPix || confirmado} />
+      <Header onOpenMenu={() => setMenuAberto(true)} onVoltar={voltar} mostrarProfissionais={false} semMenu={telaDoPix || confirmado || etapa === "perfil_ativado"} />
       <SideMenu open={menuAberto} onClose={() => setMenuAberto(false)} rota={ROTA} soContatos />
 
       {etapa === "link_invalido" && (
@@ -581,9 +642,7 @@ export function PlanoCliente() {
             <div className="plano-resumo-itens">
               <div className="plano-resumo-linha">
                 <span>Plano {NOMES_BASE[planoAtual.planoBase].toLowerCase()}</span>
-                <span className="plano-resumo-valor">
-                  R$ {formatarCentavos(link.planosBase[planoAtual.planoBase].centavos)} <small>por mês</small>
-                </span>
+                <span className="plano-resumo-valor">{valorPorMes(link.planosBase[planoAtual.planoBase].centavos)}</span>
               </div>
               {planoAtual.opcional && (
                 <div className="plano-resumo-linha">
@@ -608,7 +667,7 @@ export function PlanoCliente() {
         <ContainerConteudo id="plano-base">
           <CardHeader as="h1" title="Escolha seu plano" />
           <div className="plano-cards">
-            {ORDEM_BASE.map((plano) => (
+            {ORDEM_BASE.filter((plano) => plano !== "bronze" || (link.bronzeDisponivel && !trocando)).map((plano) => (
               <CardPlano
                 key={plano}
                 arranjo="base"
@@ -665,7 +724,7 @@ export function PlanoCliente() {
               <div className="plano-resumo-linha">
                 <span>Plano {NOMES_BASE[planoBase].toLowerCase()}</span>
                 <span className="plano-resumo-valor">
-                  R$ {formatarCentavos(link.planosBase[planoBase].centavos)} <small>por mês</small>
+                  {valorPorMes(link.planosBase[planoBase].centavos)}
                   <button type="button" aria-label="Trocar o plano" onClick={() => editar("base")}>
                     <IconeEditar />
                   </button>
@@ -686,13 +745,24 @@ export function PlanoCliente() {
             <div className="plano-resumo-total">
               <span>Valor total</span>
               <span>
-                <strong>R$ {total}</strong> <small>por mês</small>
+                {totalCentavos === 0 ? (
+                  <strong>Gratuito</strong>
+                ) : (
+                  <>
+                    <strong>R$ {total}</strong> <small>por mês</small>
+                  </>
+                )}
               </span>
             </div>
           </section>
+          {erroGeral && (
+            <p className="plano-erro" role="alert">
+              {erroGeral}
+            </p>
+          )}
           <div className="plano-resumo-acoes">
-            <Button tamanho="medium" onClick={() => setEtapa("dados")}>
-              Continuar para o pagamento
+            <Button tamanho="medium" onClick={continuarDoResumo}>
+              {textoDoBotaoDoResumo}
             </Button>
           </div>
         </ContainerConteudo>
@@ -884,6 +954,16 @@ export function PlanoCliente() {
         </ContainerConteudo>
       )}
 
+      {/* Bronze sem opcional: o mesmo desenho do "Tudo feito". */}
+      {etapa === "perfil_ativado" && (
+        <ContainerConteudo id="plano-perfil-ativado">
+          <div className="plano-confirmacao">
+            <IconeConfirmado />
+            <h1>Perfil ativado</h1>
+          </div>
+        </ContainerConteudo>
+      )}
+
       {confirmado && etapa !== "troca_confirmada" && (
         <ContainerConteudo id="plano-confirmado">
           <div className="plano-confirmacao">
@@ -912,8 +992,8 @@ export function PlanoCliente() {
         <PainelInferior
           variante="continuar"
           visivel={painelVisivel}
-          onContinuar={etapa === "resumo_troca" ? continuarDaTroca : etapa === "meu_plano" ? trocarDePlano : () => setEtapa("dados")}
-          texto={etapa === "resumo_troca" ? textoDoBotaoDaTroca : etapa === "meu_plano" ? "Trocar de plano" : "Continuar para o pagamento"}
+          onContinuar={etapa === "resumo_troca" ? continuarDaTroca : etapa === "meu_plano" ? trocarDePlano : continuarDoResumo}
+          texto={etapa === "resumo_troca" ? textoDoBotaoDaTroca : etapa === "meu_plano" ? "Trocar de plano" : textoDoBotaoDoResumo}
         />
       )}
 
@@ -925,8 +1005,6 @@ export function PlanoCliente() {
           onGerar={gerarPix}
         />
       )}
-
-      {dadosAbertos && <DadosPixModal onClose={() => setDadosAbertos(false)} />}
     </main>
   );
 }

@@ -59,6 +59,9 @@ export function CardPlanoGaleria() {
 
   return (
     <div className="galeria-estados">
+      <Estado nome="base, Bronze (gratuito)">
+        <CardPlano arranjo="base" nome="Bronze" descricao="1 vaga aberta" centavos={0} onSelecionar={nada} />
+      </Estado>
       <Estado nome="base, Prata">
         <CardPlano arranjo="base" nome="Prata" descricao="3 vagas abertas" centavos={1999} onSelecionar={nada} />
       </Estado>

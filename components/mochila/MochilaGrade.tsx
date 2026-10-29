@@ -1,0 +1,64 @@
+"use client";
+
+import { CAPACIDADE, ITENS, spriteDe } from "@/lib/mochila/conteudo";
+import { encaixar, espacosUsados } from "@/lib/mochila/encaixe";
+
+// Componente novo (sem equivalente no Figma): a grade 3x3 da mochila, telas B-Montagem e
+// B-Resultado do Claude Design. Na montagem tem o contador e cada item sai com um toque; no
+// resultado só mostra.
+export function MochilaGrade({
+  itens,
+  contador = false,
+  aoTirar,
+}: {
+  itens: string[];
+  contador?: boolean;
+  aoTirar?: (id: string) => void;
+}) {
+  const posicoes = encaixar(itens) ?? [];
+  const usados = espacosUsados(itens);
+  const vazias = Array.from({ length: CAPACIDADE }, (_, i) => i).filter(
+    (i) => !posicoes.some((p) => p.linha === Math.floor(i / 3) && (p.coluna === i % 3 || (p.espacos === 2 && p.coluna + 1 === i % 3))),
+  );
+
+  return (
+    <div className="mochila-moldura">
+      <div className="mochila-miolo">
+        {contador && (
+          <div className="mochila-contador">
+            <span aria-hidden="true">{usados} de {CAPACIDADE} espaços</span>
+            <span className="mochila-so-leitor" role="status">
+              {usados} de {CAPACIDADE} espaços ocupados.
+            </span>
+          </div>
+        )}
+        <div className="mochila-grade">
+          {posicoes.map((p) => {
+            const item = ITENS[p.id];
+            const estilo = { gridRow: p.linha + 1, gridColumn: `${p.coluna + 1} / span ${p.espacos}` };
+            const imagem = <img className="mochila-sprite" src={spriteDe(p.id)} alt="" data-espacos={p.espacos} />;
+            return aoTirar ? (
+              <button
+                key={p.id}
+                type="button"
+                className="mochila-celula"
+                style={estilo}
+                aria-label={`${item.nome}, na mochila. Toque pra tirar.`}
+                onClick={() => aoTirar(p.id)}
+              >
+                {imagem}
+              </button>
+            ) : (
+              <div key={p.id} className="mochila-celula" style={estilo} role="img" aria-label={item.nome}>
+                {imagem}
+              </div>
+            );
+          })}
+          {vazias.map((i) => (
+            <div key={`v${i}`} className="mochila-celula-vazia" style={{ gridRow: Math.floor(i / 3) + 1, gridColumn: (i % 3) + 1 }} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

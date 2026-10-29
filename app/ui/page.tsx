@@ -393,7 +393,7 @@ export default async function GaleriaDeComponentes() {
       <section className="galeria-secao">
         <h2 className="header-medium">Card plano</h2>
         <p className="text-small-regular galeria-nota">
-          Figma: conjunto Planos (Experiência do produto, 1537:29643). Arranjo base (Prata, Ouro, Diamante) e
+          Figma: conjunto Planos (Experiência do produto, 1537:29643). Arranjo base (Bronze, Prata, Ouro, Diamante; o Bronze mostra "Gratuito" no lugar do preço) e
           opcional (Destaque, Divulgação, Divulgação Plus). O card do meio de cada grupo (Ouro e Divulgação) tem
           o botão primary, como destaque fixo.
         </p>

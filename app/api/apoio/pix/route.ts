@@ -23,6 +23,8 @@ import {
   type PlanoOpcional,
 } from "@/lib/apoio/planos";
 import {
+  STATUS_QUE_PODEM_BRONZE,
+  ativarBronze,
   atualizarApoio,
   atualizarApoioSeStatus,
   buscarPixPendentesDoProfissional,
@@ -43,6 +45,7 @@ import {
 // - troca de plano de quem já pagou (troca: true): upgrade cobra hoje só a diferença, num QR que já
 //   autoriza o mensal novo a partir do próximo vencimento; downgrade não cobra nada, encerra o Pix
 //   Automático atual e deixa o plano menor escolhido para o link cobrar no vencimento.
+// - Bronze sem opcional não tem Pix: o perfil entra no ar como gratuito (resposta com gratuito: true).
 //
 // Nome, CPF/CNPJ e e-mail só atravessam esta rota a caminho do Asaas: não são gravados, não vão pra log
 // e não voltam na resposta. Nada aqui lê ou recebe o id de sessão da conversa.
@@ -87,6 +90,8 @@ async function pedidoDeTroca(
   const base = corpo.planoBase;
   const opcional = corpo.opcional ?? null;
   if (!ehPlanoBase(base) || (opcional !== null && !ehPlanoOpcional(opcional))) return { resposta: erro("plano_invalido", 400) };
+  // Ir para o Bronze é downgrade que passa pela aprovação do Vitor (vagas em uso): não sai pela troca.
+  if (base === "bronze") return { resposta: erro("plano_invalido", 400) };
 
   const atualCentavos = centavosDoPlano(profissional.profissao, atual.planoBase, atual.planoOpcional);
   const novoCentavos = centavosDoPlano(profissional.profissao, base, opcional);
@@ -131,6 +136,7 @@ async function pedidoPeloLink(
   // opcional ausente: o do cadastro; null: sem turbinar.
   const opcional = corpo.opcional === undefined ? profissional.opcional_escolhido : corpo.opcional;
   if (opcional !== null && !ehPlanoOpcional(opcional)) return { resposta: erro("plano_invalido", 400) };
+  if (base === "bronze" && !STATUS_QUE_PODEM_BRONZE.includes(profissional.status)) return { resposta: erro("plano_invalido", 400) };
 
   const ativo = await temPlanoAtivo(profissional.id);
   if (ativo === null) return { resposta: erro("pagamento_indisponivel", 503, { motivo: "banco" }) };
@@ -153,6 +159,15 @@ async function aplicarDowngrade(downgrade: Downgrade) {
     { apoioId: null, qrCode: null, valorHojeCentavos: 0, valorMensalCentavos: downgrade.valorMensalCentavos, comecaEm: downgrade.comecaEm },
     { headers: SEM_CACHE },
   );
+}
+
+// Bronze sem opcional: nada a cobrar (e o Asaas recusa abaixo de R$ 5). Os Pix antigos ainda não pagos
+// são cancelados, pra nenhum QR velho continuar valendo, e o perfil entra no ar como gratuito. Não pede
+// nome nem documento.
+async function ativarSemPix(profissionalId: string) {
+  if (!(await cancelarPixPendentes(profissionalId))) return erro("pagamento_indisponivel", 503, { motivo: "pix_anterior" });
+  if (!(await ativarBronze(profissionalId))) return erro("pagamento_indisponivel", 503, { motivo: "banco" });
+  return NextResponse.json({ apoioId: null, qrCode: null, gratuito: true }, { headers: SEM_CACHE });
 }
 
 // Cancela no Asaas os Pix do profissional que ainda não foram pagos, pra só o novo valer. Erro 4xx do
@@ -189,6 +204,7 @@ export async function POST(request: Request) {
     const resultado = await pedidoPeloLink(corpo);
     if ("resposta" in resultado) return resultado.resposta;
     if ("downgrade" in resultado) return aplicarDowngrade(resultado.downgrade);
+    if (resultado.pedido.valor === 0 && resultado.pedido.profissionalId) return ativarSemPix(resultado.pedido.profissionalId);
     pedido = resultado.pedido;
     troca = resultado.troca;
   } else {

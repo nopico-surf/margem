@@ -4,7 +4,8 @@
 // Profissional paga um plano mensal (serviço, com nota fiscal), pelo link pessoal que recebe depois de
 // aprovado: o cadastro sai do banco, nunca da tela. O plano é um plano base (define as vagas) mais, no
 // máximo, um opcional para turbinar a presença; o valor é a soma dos dois (Figma, Experiência do
-// produto, 1534:28280).
+// produto, 1534:28280). O Bronze é gratuito: sozinho não gera Pix (o perfil entra no ar como gratuito,
+// app/api/apoio/pix); com um opcional, o valor é só o do opcional.
 //
 // Médico (inclui psiquiatra) paga mais, pela mesma régua de antes: no plano base, o dobro (a mensalidade
 // pesa um percentual maior da sessão média dele, R$ 200 contra R$ 130); no opcional, o acréscimo que já
@@ -15,18 +16,20 @@
 export type PublicoApoio = "psicologo" | "medico" | "geral";
 export type FrequenciaApoio = "unico" | "mensal";
 export type Profissao = "psicologo" | "medico";
-export type PlanoBase = "prata" | "ouro" | "diamante";
+export type PlanoBase = "bronze" | "prata" | "ouro" | "diamante";
 export type PlanoOpcional = "destaque" | "divulgacao" | "divulgacao_plus";
 
 // Preços em centavos, pra soma não arredondar errado. vagas: pessoas em acompanhamento simultâneo que o
 // profissional pode manter no perfil; null é ilimitado. Por enquanto o limite é acompanhado na mão.
 export const PLANOS_BASE: Record<Profissao, Record<PlanoBase, { centavos: number; vagas: number | null }>> = {
   psicologo: {
+    bronze: { centavos: 0, vagas: 1 },
     prata: { centavos: 1999, vagas: 3 },
     ouro: { centavos: 3999, vagas: 8 },
     diamante: { centavos: 8999, vagas: null },
   },
   medico: {
+    bronze: { centavos: 0, vagas: 1 },
     prata: { centavos: 3999, vagas: 3 },
     ouro: { centavos: 7999, vagas: 8 },
     diamante: { centavos: 17999, vagas: null },

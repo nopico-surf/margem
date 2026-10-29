@@ -69,6 +69,8 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
           <p>Responsável pelos dados na Margem: Vitor Gaudio</p>
         </ModalSection>
 
+      </div>
+      <div className="dados-modal-rodape painel-inferior-cartao">
         <ModalFooter onClose={onClose} />
       </div>
     </div>

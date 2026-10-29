@@ -150,6 +150,11 @@
   color: var(--colors-alpha-64);
 }
 
+/* Bronze: "Gratuito" em Header/Small, num frame com spacing-2 em cima e embaixo (Figma: 1552:40960). */
+.card-plano-gratuito {
+  padding-block: var(--spacing-2);
+}
+
 /* O "Selecionar" do Figma tem canto 8 (radius-md), não o 12 padrão do button. */
 .card-plano .btn {
   flex: 0 0 auto;
@@ -399,16 +404,6 @@
 
 /* ===== "Por que pedimos esses dados" (Figma: 1538:39092) ===== */
 
-.dados-pix-modal .dados-modal-body {
-  flex: 1 0 auto;
-}
-
-/* O Fechar fica preso embaixo, no cartão branco com sombra do painel inferior. */
-.dados-pix-modal-rodape {
-  position: sticky;
-  bottom: 0;
-}
-
 @media (min-width: 48em) {
   /* Sem a barra fixa no desktop, a página não precisa do espaço embaixo. */
   .plano-pagina[data-etapa="dados"],
@@ -488,6 +483,7 @@
   }
 
   .cartao-pix {
+    --pix-qr-lado: 194px; /* Figma: 194,12, sem token */
     padding: var(--spacing-24);
   }
 
@@ -503,7 +499,7 @@
 
   .cartao-pix-codigo .btn {
     flex: 0 0 auto;
-    width: auto;
+    width: var(--pix-qr-lado); /* mesma largura do QR */
   }
 
   .cartao-pix-qr {
@@ -513,7 +509,7 @@
   }
 
   .cartao-pix-qr-imagem img {
-    width: 194px; /* Figma: 194,12, sem token */
-    height: 194px;
+    width: var(--pix-qr-lado);
+    height: var(--pix-qr-lado);
   }
 }
