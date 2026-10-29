@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, Suspense, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
@@ -220,7 +220,9 @@ export function PartidaProvider({ children }: { children: React.ReactNode }) {
   return (
     <Contexto.Provider value={partida}>
       <div className="mochila" ref={partida.raiz}>
-        <HeaderMochila />
+        <Suspense fallback={null}>
+          <HeaderMochila />
+        </Suspense>
         <main className="mochila-tela">
           {children}
         </main>
