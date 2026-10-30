@@ -535,15 +535,6 @@ body:has(.mochila-painel-montagem) {
   width: var(--m-cel);
   height: var(--m-cel);
   border-radius: var(--radius-md);
-  background: var(--colors-neutral-100);
-}
-
-.mochila-opcao[data-marcada="true"] .mochila-opcao-tile {
-  background: var(--colors-neutral-0);
-}
-
-.mochila-opcoes[data-colunas="2"] .mochila-opcao-tile {
-  background: none;
 }
 
 .mochila-opcao-nome {
