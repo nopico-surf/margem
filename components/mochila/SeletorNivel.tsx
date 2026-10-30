@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { rolarAteSecao } from "@/components/ui/SectionJump";
 import { GlifoVisibilityOff } from "@/components/icons/glifos";
 import { NIVEIS, type Nivel } from "@/lib/mochila/conteudo";
 import { track } from "@/lib/mixpanel";
@@ -27,6 +28,13 @@ export function SeletorNivel({
     if (n === 2) {
       track("mochila_confirmacao_tudo_aberta", { cenario: cenarioId, nivel_anterior: nivel, origem });
       aoConfirmar(true);
+      // Se o aviso com os botões não está todo na tela, rola pra deixá-lo visível. Espera renderizar pra medir.
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+        const aviso = document.getElementById("mochila-confirmacao");
+        if (!aviso) return;
+        const { top, bottom } = aviso.getBoundingClientRect();
+        if (top < 0 || bottom > window.innerHeight) rolarAteSecao("mochila-confirmacao");
+      }));
       return;
     }
     track("mochila_nivel_escolhido", { cenario: cenarioId, nivel: n, de_confirmacao: confirmando, origem });
@@ -53,7 +61,7 @@ export function SeletorNivel({
       </fieldset>
 
       {confirmando && (
-        <div role="alertdialog" aria-labelledby="mochila-conf" className="mochila-caixa mochila-caixa-forte mochila-confirmacao">
+        <div id="mochila-confirmacao" role="alertdialog" aria-labelledby="mochila-conf" className="mochila-caixa mochila-caixa-forte mochila-confirmacao">
           <p id="mochila-conf" className="mochila-confirmacao-texto">
             Quem abrir seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
           </p>
