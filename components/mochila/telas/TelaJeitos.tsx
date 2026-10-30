@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { JEITOS, QTD_JEITOS, spriteDe } from "@/lib/mochila/conteudo";
 import { track } from "@/lib/mixpanel";
@@ -10,18 +11,26 @@ import { TelaCarregando } from "../TelaCarregando";
 // marcados um terceiro toque não faz nada até desmarcar um.
 export function TelaJeitos() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenarioId, jeitos, setJeitos, ir } = usePartida();
+  const { cenarioId, jeitos, setJeitos, bip, ir } = usePartida();
+  const [naoCabe, setNaoCabe] = useState<string | null>(null);
   if (!liberada) return <TelaCarregando />;
 
   function alternar(id: string) {
-    setJeitos((atual) => (atual.includes(id) ? atual.filter((j) => j !== id) : atual.length < QTD_JEITOS ? [...atual, id] : atual));
+    if (!jeitos.includes(id) && jeitos.length >= QTD_JEITOS) {
+      track("mochila_jeito_nao_coube", { cenario: cenarioId, jeito: id });
+      setNaoCabe(id);
+      bip(140);
+      return;
+    }
+    setNaoCabe(null);
+    setJeitos((atual) => (atual.includes(id) ? atual.filter((j) => j !== id) : [...atual, id]));
   }
 
   return (
     <>
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
-          <h1 className="mochila-titulo">E tem coisa que não cabe em mochila</h1>
+          <h1 className="mochila-titulo">E qual é o seu jeito no rolê?</h1>
           <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} alt="" />
         </div>
         <p className="mochila-instrucao">Escolhe dois jeitos que combinam com você.</p>
@@ -32,15 +41,15 @@ export function TelaJeitos() {
             {jeitos.length} de {QTD_JEITOS} escolhidos
           </p>
           {jeitos.length >= QTD_JEITOS && (
-            <p role="status" className="mochila-aviso" data-tipo="cheia">
-              Dois jeitos escolhidos. Dá pra seguir ou trocar algum.
+            <p role="status" className="mochila-aviso" data-tipo={naoCabe ? "nao-cabe" : "cheia"}>
+              {naoCabe ? "Já são dois jeitos. Desmarque um pra escolher outro." : "Dois jeitos escolhidos. Dá pra seguir ou trocar algum."}
             </p>
           )}
           <div role="group" aria-label="Escolhe dois jeitos" className="mochila-opcoes" data-colunas="2">
             {JEITOS.map((j) => {
               const marcado = jeitos.includes(j.id);
               return (
-                <button key={j.id} type="button" aria-pressed={marcado} className="mochila-opcao" data-marcada={marcado} onClick={() => alternar(j.id)}>
+                <button key={j.id} type="button" aria-pressed={marcado} className="mochila-opcao" data-marcada={marcado} data-nao-cabe={naoCabe === j.id} onClick={() => alternar(j.id)}>
                   <span className="mochila-opcao-tile">
                     <img className="mochila-sprite" src={spriteDe(`jeito-${j.id}`)} alt="" />
                   </span>

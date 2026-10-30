@@ -20,7 +20,7 @@ export function textoDesafio(opcoes: { cenario: Cenario; rotulo: Rotulo; tribo: 
     "",
     "No caminho, você ainda aprende umas coisas sobre redução de danos.",
     "",
-    "E você, levaria o quê? Monta a sua pro mesmo rolê e vê o que a gente leva igual e o que uma mochila completa na outra:",
+    "E você, levaria o quê? Monta a sua pro mesmo rolê e compara com a minha:",
     url,
   ].join("\n");
 }

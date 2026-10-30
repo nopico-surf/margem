@@ -58,7 +58,7 @@ export function TelaInicio({ codigo }: { codigo?: string }) {
           <p className="mochila-inicio-convite">
             Antes de sair, uma pergunta: o que vai na sua mochila?
             <br />
-            Escolha e saiba no fim qual tipo de redutor de danos você é
+            No fim, você descobre seu jeito de reduzir danos.
           </p>
         )}
         <p className="mochila-inicio-apoio">Não tem certo nem errado. Tem a sua escolha e umas ideias de cuidado no fim.</p>

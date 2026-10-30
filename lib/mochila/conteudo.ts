@@ -58,10 +58,10 @@ const COMUNS: Item[] = [
 ];
 
 const DOS_CENARIOS: Item[] = [
-  { id: "remedio", nome: "Remédio de uso diário", curto: "Remédio de uso diário", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 1, revelacao: "Se você toma algum remédio todo dia, ele vai junto. Vale perguntar pro seu médico se ele combina com álcool.", fora: "Se você toma remédio todo dia, lembra de levar." },
+  { id: "remedio", nome: "Remédio de uso diário", curto: "Remédio de uso diário", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 1, revelacao: "Se você toma algum remédio todo dia, ele vai junto. Vale checar com quem receitou se dá pra misturar com álcool.", fora: "Se você toma remédio todo dia, lembra de levar." },
   { id: "caixa-de-som", nome: "Caixa de som", curto: "Caixa de som", espacos: 2, tipo: "role", prioridade: null, nivel: 0, revelacao: "A festa agradece.", fora: null },
   { id: "maquiagem", nome: "Maquiagem", curto: "Maquiagem", espacos: 1, tipo: "role", prioridade: null, nivel: 0, revelacao: "Pro retoque no banheiro, claro.", fora: null },
-  { id: "protetor-auricular", nome: "Protetor auricular", curto: "Protetor auricular", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 0, revelacao: "Horas de som alto cansam o ouvido. Aquele zumbido no dia seguinte é o aviso.", fora: "Faltou protetor de ouvido. O zumbido do dia seguinte agradece." },
+  { id: "protetor-auricular", nome: "Protetor auricular", curto: "Protetor auricular", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 0, revelacao: "Horas de som alto cansam o ouvido. Aquele zumbido no dia seguinte é o aviso.", fora: "Faltou protetor de ouvido. Seu ouvido agradece amanhã." },
   { id: "pochete", nome: "Pochete", curto: "Pochete", espacos: 1, tipo: "role", prioridade: null, nivel: 0, revelacao: "Mãos livres e suas coisas perto do corpo.", fora: null },
   { id: "leque", nome: "Leque", curto: "Leque", espacos: 1, tipo: "role", prioridade: null, nivel: 0, revelacao: "Calor e multidão juntos. E ainda dá pra dançar com ele.", fora: null },
   { id: "protetor-solar", nome: "Protetor solar", curto: "Protetor solar", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 0, revelacao: "Sol forte por horas, junto com álcool, cansa e desidrata ainda mais.", fora: "Faltou protetor solar. Sombra e água ajudam a compensar." },

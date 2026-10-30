@@ -22,7 +22,7 @@ export function ComparacaoDesafio({
   return (
     <section className="mochila-caixa mochila-caixa-forte mochila-comparacao" aria-label="Comparação do desafio">
       <p className="mochila-titulo-bloco">
-        {iguais === 0 ? "As mochilas saíram bem diferentes. Cada rolê tem seu jeito." : `Vocês levaram ${iguais} coisas iguais.`}
+        {iguais === 0 ? "As mochilas saíram bem diferentes. Cada rolê tem seu jeito." : iguais === 1 ? "Vocês levaram 1 coisa igual." : `Vocês levaram ${iguais} coisas iguais.`}
       </p>
       {soMinha && (
         <p className="mochila-comparacao-linha">

@@ -521,6 +521,12 @@ body:has(.mochila-painel-montagem) {
   color: var(--colors-brand-secondary-950);
 }
 
+.mochila-opcao[data-nao-cabe="true"] {
+  border-style: dashed;
+  background: var(--colors-neutral-100);
+  animation: mochila-nao-cabe var(--duration-1500) var(--easing-in-out) infinite;
+}
+
 .mochila-opcao-tile {
   flex: none;
   display: flex;
@@ -1336,7 +1342,8 @@ button.mochila-celula {
 
 @media (prefers-reduced-motion: reduce) {
   .mochila-revela,
-  .mochila-item[data-nao-cabe="true"] {
+  .mochila-item[data-nao-cabe="true"],
+  .mochila-opcao[data-nao-cabe="true"] {
     animation: none;
   }
 }

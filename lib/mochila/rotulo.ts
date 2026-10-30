@@ -7,10 +7,10 @@ import { porExtremo, type Eixo } from "./eixos";
 export type Rotulo = { nome: string; tambem: string; frase: string };
 
 const POR_POLO: Record<Polo, Rotulo> = {
-  corpo: { nome: "Mochila de quem cuida do corpo", tambem: "e também cuida do corpo", frase: "Você é o redutor de danos que lembra que o corpo também foi pro rolê." },
+  corpo: { nome: "Mochila de quem cuida do corpo", tambem: "e também cuida do corpo", frase: "Você é o redutor de danos que não deixa o corpo pagar a conta da noite." },
   festa: { nome: "Mochila de quem veio pra festa", tambem: "e também veio pra festa", frase: "Você é o redutor de danos que não abre mão da parte boa da noite." },
   grupo: { nome: "Mochila de quem cuida do grupo", tambem: "e também cuida do grupo", frase: "Você é o redutor de danos que combina as coisas antes, pra ninguém se perder depois." },
-  autonomia: { nome: "Mochila de quem se resolve sozinho", tambem: "e também se resolve sozinho", frase: "Você é o redutor de danos que não depende de ninguém pra se virar bem." },
+  autonomia: { nome: "Mochila de quem se resolve sozinho", tambem: "e também se resolve sozinho", frase: "Você é o redutor de danos que sai com tudo o que precisa pra se virar." },
   volta: { nome: "Mochila de quem pensa na volta", tambem: "e também pensa na volta", frase: "Você é o redutor de danos que resolve a volta antes de sair de casa." },
   presenca: { nome: "Mochila de quem veio pra ficar", tambem: "e também veio pra ficar", frase: "Você é o redutor de danos que se prepara pra ficar até o fim." },
   planejamento: { nome: "Mochila de quem pensou em tudo", tambem: "e também pensou em tudo", frase: "Você é o redutor de danos que pensa na noite antes dela começar." },
