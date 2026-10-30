@@ -18,6 +18,7 @@ export function TelaDesafiar() {
   const [previa, setPrevia] = useState<{ url: string; blob: Blob } | null>(null);
   const [erroImagem, setErroImagem] = useState(false);
   const [confirmando, setConfirmando] = useState(false);
+  const [tentativa, setTentativa] = useState(0);
 
   // A imagem fica pronta antes do toque: gerar depois do clique faz o Safari recusar o compartilhar.
   // No WhatsApp vai o formato feed, o stories fica estreito demais na conversa.
@@ -25,6 +26,7 @@ export function TelaDesafiar() {
     if (!liberada) return;
     let cancelado = false;
     let url: string | null = null;
+    setErroImagem(false);
     desenharCard({ cenario: cenarioId, itens: visiveis, rotulo, eixos, tribo: triboPorId(tribo), formato: "feed", fontes: fontes() })
       .then(paraBlob)
       .then((blob) => {
@@ -44,7 +46,7 @@ export function TelaDesafiar() {
     };
     // visiveis muda junto com nivel e itens
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [liberada, nivel, cenarioId, rotulo, eixos, tribo, itens, fontes]);
+  }, [liberada, nivel, cenarioId, rotulo, eixos, tribo, itens, fontes, tentativa]);
 
   if (!liberada) return <TelaCarregando />;
   const doDesafio = { cenario: cenarioId, nivel, itens_no_desafio: visiveis };
@@ -75,8 +77,7 @@ export function TelaDesafiar() {
   return (
     <>
       <header className="mochila-cabeca mochila-cabeca-previa">
-        <h1 className="mochila-titulo">Quem você quer desafiar?</h1>
-        <p className="mochila-instrucao">Seu amigo vê a sua mochila e monta a dele pro mesmo rolê. No fim, vocês comparam.</p>
+        <h1 className="mochila-titulo mochila-titulo-menor">É assim que seu card vai aparecer</h1>
         <PreviaCard src={previa?.url ?? null} formato="feed" alt={altDoCard(visiveis, rotulo, eixos, suaTribo)} />
       </header>
       <div className="mochila-painel mochila-painel-montagem">
@@ -84,30 +85,51 @@ export function TelaDesafiar() {
           origem="desafio"
           confirmando={confirmando}
           aoConfirmar={setConfirmando}
-          legenda="O que aparece no desafio"
-          avisoEscondidos={(n) => (n === 1 ? "1 item da sua mochila não aparece no desafio." : `${n} itens da sua mochila não aparecem no desafio.`)}
+          legenda="O que aparece no card"
+          avisoEscondidos={(n) => (n === 1 ? "1 item da sua mochila não aparece no card." : `${n} itens da sua mochila não aparecem no card.`)}
         />
-        <div className="mochila-acoes">
-          <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || (!previa && !erroImagem)} onClick={desafiar}>
-            <GlifoWhatsapp size={20} />
-            <span>Desafiar por WhatsApp</span>
-          </Button>
-          <Button
-            variante="secondary"
-            tamanho="medium"
-            redondo
-            larguraTotal
-            disabled={confirmando}
-            onClick={async () => {
-              const copiou = await copiar(link(`/d/${codigoDesafio}`, "copia", cenarioId));
-              track("mochila_desafio_enviado", { ...doDesafio, canal: "copia", copiou });
-              if (copiou && !sistemaAvisa()) setAviso("Link copiado.");
-            }}
-          >
-            <GlifoLink size={20} />
-            <span>Copiar link do desafio</span>
-          </Button>
-        </div>
+
+        {erroImagem ? (
+          <div className="mochila-caixa mochila-caixa-forte mochila-erro-imagem">
+            <p role="status" className="mochila-abre">Não deu pra gerar a imagem agora.</p>
+            <div className="mochila-acoes-lado">
+              <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => {
+                  track("mochila_card_tentou_de_novo", { cenario: cenarioId, origem: "desafio" });
+                  setTentativa((t) => t + 1);
+                }}>
+                Tentar de novo
+              </Button>
+              <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={async () => {
+                  const copiou = await copiar(link(`/d/${codigoDesafio}`, "copia", cenarioId));
+                  track("mochila_link_copiado", { cenario: cenarioId, origem: "erro_card_desafio", copiou });
+                }}>
+                Copiar link
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="mochila-acoes mochila-acoes-compartilhar">
+            <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={desafiar}>
+              <GlifoWhatsapp size={20} />
+              <span>Desafiar por WhatsApp</span>
+            </Button>
+            <Button
+              variante="secondary"
+              tamanho="medium"
+              redondo
+              larguraTotal
+              disabled={confirmando}
+              onClick={async () => {
+                const copiou = await copiar(link(`/d/${codigoDesafio}`, "copia", cenarioId));
+                track("mochila_desafio_enviado", { ...doDesafio, canal: "copia", copiou });
+                if (copiou && !sistemaAvisa()) setAviso("Link copiado.");
+              }}
+            >
+              <GlifoLink size={20} />
+              <span>Copiar link do desafio</span>
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );

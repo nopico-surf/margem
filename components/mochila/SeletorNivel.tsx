@@ -55,9 +55,7 @@ export function SeletorNivel({
       {confirmando && (
         <div role="alertdialog" aria-labelledby="mochila-conf" className="mochila-caixa mochila-caixa-forte mochila-confirmacao">
           <p id="mochila-conf" className="mochila-confirmacao-texto">
-            {origem === "desafio"
-              ? "Quem receber seu desafio vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?"
-              : "Quem ver seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?"}
+            Quem abrir seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
           </p>
           <div className="mochila-acoes">
             <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => escolherNivel(0)}>
