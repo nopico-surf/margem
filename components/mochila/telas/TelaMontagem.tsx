@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { ActionRow } from "@/components/conversa/ActionRow";
@@ -20,6 +20,15 @@ export function TelaMontagem() {
   const [fechando, setFechando] = useState<"aberta" | "fechada" | null>(null);
   const timers = useRef<number[]>([]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
+  // O Next esconde a tela em vez de desmontar: sem isto, voltar da revelação reabria a montagem
+  // presa na mochila fechada.
+  useLayoutEffect(
+    () => () => {
+      setFechando(null);
+      setNaoCabe(null);
+    },
+    [],
+  );
   if (!liberada) return <TelaCarregando />;
 
   function fechar() {

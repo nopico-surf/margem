@@ -418,6 +418,21 @@ body:has(.mochila-painel-montagem) {
   border-color: var(--colors-neutral-950);
 }
 
+/* Cenário em que a pessoa estava, quando volta pra cá. Mesma marca da tribo e dos jeitos. */
+.mochila-cenario[data-marcada="true"] {
+  border-color: var(--colors-neutral-950);
+  background: var(--colors-brand-secondary-300);
+  color: var(--colors-brand-secondary-950);
+}
+
+.mochila-cenario[data-marcada="true"] .mochila-cenario-tile {
+  background: var(--colors-neutral-0);
+}
+
+.mochila-cenario[data-marcada="true"] .mochila-cenario-apoio {
+  color: inherit;
+}
+
 .mochila-cenario:focus-visible,
 .mochila-item:focus-visible,
 .mochila-celula:focus-visible {
@@ -610,6 +625,39 @@ button.mochila-celula {
 
 .mochila-celula-vazia {
   background: var(--colors-brand-primary-900);
+}
+
+/* Resultado: a mochila do jeito do card, em fileiras que fecham, com o nome embaixo */
+
+.mochila-fileiras {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  width: calc(var(--m-cel) * 3 + var(--spacing-8) * 2);
+}
+
+.mochila-fileira {
+  display: flex;
+  gap: var(--spacing-8);
+}
+
+.mochila-celula-nome {
+  flex-basis: 0;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  padding: var(--spacing-8) var(--spacing-4);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-sm);
+  text-align: center;
+  color: var(--colors-neutral-950);
+}
+
+/* Numa fileira apertada o item de 2 encolhe junto com a célula, como no card. */
+.mochila-celula-nome .mochila-sprite {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Prateleira: duas fileiras que rolam na horizontal */
@@ -1308,6 +1356,15 @@ button.mochila-celula {
 
 .mochila-fechando[data-fase="fechada"] .mochila-fechando-fechada {
   animation: mochila-fechando-baque var(--duration-350) var(--easing-out-quart) both;
+}
+
+/* Voltando da revelação: o contrário. A fechada surge e a aberta entra com o baque. */
+.mochila-fechando[data-sentido="abrir"][data-fase="fechada"] .mochila-fechando-fechada {
+  animation-name: mochila-fechando-entra;
+}
+
+.mochila-fechando[data-sentido="abrir"][data-fase="aberta"] .mochila-fechando-aberta {
+  animation-name: mochila-fechando-baque;
 }
 
 @keyframes mochila-fechando-entra {

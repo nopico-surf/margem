@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { spriteDe } from "@/lib/mochila/conteudo";
 import { track } from "@/lib/mixpanel";
@@ -9,8 +10,21 @@ import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaRevelacao() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { itens, ir } = usePartida();
+  const { itens, ir, abrindo, pararAbertura, voltar } = usePartida();
+  // Saiu de cena (voltou pra montagem ou pelo navegador): a próxima chegada mostra a revelação, não a mochila abrindo.
+  useLayoutEffect(() => pararAbertura, [pararAbertura]);
   if (!liberada) return <TelaCarregando />;
+
+  // O fechar da montagem ao contrário: começa fechada e abre.
+  if (abrindo) {
+    return (
+      <div className="mochila-fechando" data-sentido="abrir" data-fase={abrindo} aria-hidden="true">
+        <img className="mochila-sprite mochila-fechando-aberta" src={spriteDe("mochila-aberta")} alt="" />
+        <img className="mochila-sprite mochila-fechando-fechada" src={spriteDe("mochila-fechada")} alt="" />
+      </div>
+    );
+  }
+
   return (
     <>
       <header className="mochila-cabeca mochila-cabeca-linha">
@@ -34,7 +48,7 @@ export function TelaRevelacao() {
             larguraTotal
             onClick={() => {
               track("mochila_itens_trocados");
-              ir("montagem");
+              voltar(false);
             }}
           >
             Trocar itens

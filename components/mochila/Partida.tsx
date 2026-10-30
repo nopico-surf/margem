@@ -140,16 +140,78 @@ function useEstado() {
     track("mochila_som_alternado", { ligado: novo });
   };
 
+  // Tocar de novo no cenário em que já estava (voltou pra conferir) segue com a mochila como estava.
   const escolherCenario = (id: CenarioId) => {
     track("mochila_cenario_escolhido", { cenario: id, com_desafio: desafio !== null });
-    setCenarioId(id);
-    setEscolhido(true);
-    setItens([]);
-    setCombinados([]);
-    setJeitos([]);
-    setTribo(null);
+    if (!escolhido || id !== cenarioId) {
+      setCenarioId(id);
+      setEscolhido(true);
+      setItens([]);
+      setCombinados([]);
+      setJeitos([]);
+      setTribo(null);
+    }
     ir("tribo");
   };
+
+  // Voltar da revelação faz o fechar ao contrário: a mochila fechada aparece, abre e aí volta pra
+  // montagem. A TelaRevelacao desenha a animação e chama `pararAbertura` quando sai de cena.
+  const [abrindo, setAbrindo] = useState<"fechada" | "aberta" | null>(null);
+  const timersAbertura = useRef<number[]>([]);
+  const pararAbertura = useCallback(() => {
+    timersAbertura.current.forEach(clearTimeout);
+    timersAbertura.current = [];
+    setAbrindo(null);
+  }, []);
+
+  function abrirMochila(depois: () => void) {
+    if (abrindo) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      depois();
+      return;
+    }
+    setAbrindo("fechada");
+    timersAbertura.current.push(
+      window.setTimeout(() => {
+        setAbrindo("aberta");
+        tocarBip(som, 440);
+      }, 550),
+      window.setTimeout(depois, 1100),
+    );
+  }
+
+  // Rotas do jogo por onde a aba passou, mantidas pelo HeaderMochila. Se a tela de trás no histórico é
+  // a etapa anterior, voltar é o voltar do navegador; senão (link direto, recarregou) troca a tela
+  // atual pela anterior. Assim a seta do header e o gesto do celular levam pro mesmo lugar.
+  const historico = useRef<string[]>([]);
+  const registrarRota = useCallback((rota: string) => {
+    const h = historico.current;
+    if (h.at(-2) === rota) h.pop();
+    else if (h.at(-1) !== rota) h.push(rota);
+  }, []);
+
+  function voltar(medir = true) {
+    const atual = window.location.pathname;
+    const etapa = (Object.keys(ROTAS) as Etapa[]).find((e) => ROTAS[e] === atual);
+    const anterior = etapa && ETAPA_ANTERIOR[etapa];
+    if (medir) track("mochila_voltou", { de: etapa ?? atual, para: anterior ?? "inicio_margem" });
+    setAviso(null);
+    const seguir = () => {
+      if (!anterior) {
+        router.push("/inicio");
+        return;
+      }
+      const h = historico.current;
+      if (h.at(-2) === ROTAS[anterior]) {
+        router.back();
+        return;
+      }
+      h.pop();
+      router.replace(ROTAS[anterior]);
+    };
+    if (etapa === "revelacao") abrirMochila(seguir);
+    else seguir();
+  }
 
   const recomecar = () => {
     track("mochila_recomecada", { cenario: cenarioId });
@@ -197,6 +259,10 @@ function useEstado() {
     fontes,
     escolherCenario,
     recomecar,
+    abrindo,
+    pararAbertura,
+    registrarRota,
+    voltar,
     eixos,
     rotulo,
     visiveis,
@@ -223,22 +289,17 @@ const ETAPA_ANTERIOR: Partial<Record<Etapa, Etapa>> = {
   desafiar: "resultado",
 };
 
-// Header de largura total, fora do frame do jogo. Na tela de início a seta sai do jogo.
+// Header de largura total, fora do frame do jogo. Na tela de início a seta sai do jogo. Fica dentro
+// de Suspense por causa do usePathname, que também alimenta o histórico do voltar.
 function HeaderMochila() {
-  const router = useRouter();
+  const { voltar, registrarRota } = usePartida();
   const pathname = usePathname();
   const [menuAberto, setMenuAberto] = useState(false);
-
-  function voltar() {
-    const etapa = (Object.keys(ROTAS) as Etapa[]).find((e) => ROTAS[e] === pathname);
-    const anterior = etapa && ETAPA_ANTERIOR[etapa];
-    track("mochila_voltou", { de: etapa ?? pathname, para: anterior ?? "inicio_margem" });
-    router.push(anterior ? ROTAS[anterior] : "/inicio");
-  }
+  useEffect(() => registrarRota(pathname), [pathname, registrarRota]);
 
   return (
     <>
-      <Header onOpenMenu={() => setMenuAberto(true)} onVoltar={voltar} mostrarProfissionais={false} />
+      <Header onOpenMenu={() => setMenuAberto(true)} onVoltar={() => voltar()} mostrarProfissionais={false} />
       <SideMenu open={menuAberto} onClose={() => setMenuAberto(false)} rota="/mochila" />
     </>
   );
