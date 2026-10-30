@@ -24,6 +24,12 @@ export function bip(ligado: boolean, freq: number) {
   } catch {}
 }
 
+// No Android, o sistema confirma cópia e download com aviso próprio, que a página não consegue esconder.
+// Aí o nosso toast fica de fora, pra nunca aparecerem os dois.
+export function sistemaAvisa() {
+  return typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
+}
+
 export async function copiar(texto: string) {
   try {
     await navigator.clipboard.writeText(texto);

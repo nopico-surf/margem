@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { GlifoVisibilityOff } from "@/components/icons/glifos";
 import { ITENS, NIVEIS, triboPorId, type Nivel } from "@/lib/mochila/conteudo";
 import { NOME_POLO } from "@/lib/mochila/eixos";
-import { baixar, copiar, link } from "@/lib/mochila/acoes";
+import { baixar, copiar, link, sistemaAvisa } from "@/lib/mochila/acoes";
 import { desenharCard, paraBlob, type Formato } from "@/lib/mochila/card";
 import { track } from "@/lib/mixpanel";
 import { PreviaCard } from "../PreviaCard";
@@ -82,7 +82,7 @@ export function TelaCompartilhar() {
     baixar(previa.blob, "mochila-do-role.png");
     const copiou = await copiar(link("", "copia", cenarioId));
     track("mochila_card_compartilhado", { ...doCard, via: "download", concluido: copiou });
-    setAviso("Imagem baixada e link copiado.");
+    if (!sistemaAvisa()) setAviso("Imagem baixada e link copiado.");
   }
 
   const suaTribo = triboPorId(tribo);
@@ -187,7 +187,7 @@ export function TelaCompartilhar() {
                 if (!previa) return;
                 baixar(previa.blob, "mochila-do-role.png");
                 track("mochila_imagem_baixada", doCard);
-                setAviso("Imagem baixada.");
+                if (!sistemaAvisa()) setAviso("Imagem baixada.");
               }}
             >
               Baixar imagem

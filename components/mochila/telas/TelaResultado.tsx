@@ -6,7 +6,7 @@ import { GlifoContentCopy, GlifoSaveAlt } from "@/components/icons/glifos";
 import { ITENS, spriteDe, triboPorId } from "@/lib/mochila/conteudo";
 import { NOME_POLO } from "@/lib/mochila/eixos";
 import { ficouDeFora } from "@/lib/mochila/rotulo";
-import { baixar, copiar } from "@/lib/mochila/acoes";
+import { baixar, copiar, sistemaAvisa } from "@/lib/mochila/acoes";
 import { checklistTexto, desenharChecklist, paraBlob } from "@/lib/mochila/card";
 import { track } from "@/lib/mixpanel";
 import { MochilaGrade } from "../MochilaGrade";
@@ -45,7 +45,7 @@ export function TelaResultado() {
       const canvas = await desenharChecklist(linhasChecklist, fontes());
       baixar(await paraBlob(canvas), "checklist-do-role.png");
       track("mochila_checklist_baixado", { cenario: cenarioId });
-      setAviso("Checklist baixado.");
+      if (!sistemaAvisa()) setAviso("Checklist baixado.");
     } catch {
       track("mochila_checklist_falhou", { cenario: cenarioId });
       setAviso("Não deu pra gerar a imagem agora.");
@@ -56,7 +56,7 @@ export function TelaResultado() {
     setAviso(null);
     const copiou = await copiar(checklistTexto(linhasChecklist));
     track("mochila_checklist_copiado", { cenario: cenarioId, copiou });
-    if (copiou) setAviso("Checklist copiado. É só colar no grupo.");
+    if (copiou && !sistemaAvisa()) setAviso("Checklist copiado. É só colar no grupo.");
   }
 
   function irPara(destino: "compartilhar" | "desafiar", evento: string) {

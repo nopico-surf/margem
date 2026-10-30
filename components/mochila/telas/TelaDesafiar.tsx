@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { GlifoLink, GlifoVisibilityOff, GlifoWhatsapp } from "@/components/icons/glifos";
 import { ENDERECO_CURTO, spriteDe } from "@/lib/mochila/conteudo";
-import { copiar, link } from "@/lib/mochila/acoes";
+import { copiar, link, sistemaAvisa } from "@/lib/mochila/acoes";
 import { track } from "@/lib/mixpanel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
@@ -59,7 +59,7 @@ export function TelaDesafiar() {
             onClick={async () => {
               const copiou = await copiar(link(`/d/${codigoDesafio}`, "copia", cenarioId));
               track("mochila_desafio_enviado", { ...doDesafio, canal: "copia", copiou });
-              if (copiou) setAviso("Link copiado.");
+              if (copiou && !sistemaAvisa()) setAviso("Link copiado.");
             }}
           >
             <GlifoLink size={20} />
