@@ -408,6 +408,11 @@ export function checklistTexto(linhas: string[]): string {
   return ["Pra levar no bolso do rolê:", ...linhas.map((l) => `☐ ${l}`)].join("\n");
 }
 
+// Texto alternativo da prévia do card: o que a imagem mostra, na ordem em que aparece.
+export function altDoCard(itens: string[], rotulo: Rotulo, eixos: Eixo[], tribo: Tribo | undefined): string {
+  return `Mochila em pixel art com ${itens.map((id) => ITENS[id].curto.toLowerCase()).join(", ")}. Escrito: ${rotulo.nome}, ${rotulo.tambem}. ${rotulo.frase}${tribo ? ` Tribo ${tribo.nome}, ${tribo.estilo}.` : ""} ${eixos.map((e) => `${NOME_POLO[e.dominante]} ${e.percentual}%`).join(", ")}.`;
+}
+
 export function paraBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   return new Promise((ok, erro) => canvas.toBlob((b) => (b ? ok(b) : erro(new Error("sem imagem"))), "image/png"));
 }

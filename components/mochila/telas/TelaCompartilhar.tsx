@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { GlifoVisibilityOff } from "@/components/icons/glifos";
-import { ITENS, NIVEIS, triboPorId, type Nivel } from "@/lib/mochila/conteudo";
-import { NOME_POLO } from "@/lib/mochila/eixos";
-import { baixar, copiar, link, sistemaAvisa } from "@/lib/mochila/acoes";
-import { desenharCard, paraBlob, type Formato } from "@/lib/mochila/card";
+import { NIVEIS, triboPorId, type Nivel } from "@/lib/mochila/conteudo";
+import { baixar, copiar, link, sistemaAvisa, textoDesafio } from "@/lib/mochila/acoes";
+import { altDoCard, desenharCard, paraBlob, type Formato } from "@/lib/mochila/card";
 import { track } from "@/lib/mixpanel";
 import { PreviaCard } from "../PreviaCard";
 import { useLiberada, usePartida } from "../Partida";
@@ -14,7 +13,7 @@ import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaCompartilhar() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenarioId, itens, tribo, eixos, rotulo, visiveis, escondidos, nivel, setNivel, fontes, setAviso } = usePartida();
+  const { cenario, cenarioId, itens, tribo, eixos, rotulo, codigoDesafio, visiveis, escondidos, nivel, setNivel, fontes, setAviso } = usePartida();
   const [confirmando, setConfirmando] = useState(false);
   const [formato, setFormato] = useState<Formato>("stories");
   const [previa, setPrevia] = useState<{ url: string; blob: Blob } | null>(null);
@@ -51,6 +50,7 @@ export function TelaCompartilhar() {
   if (!liberada) return <TelaCarregando />;
 
   const doCard = { cenario: cenarioId, formato, nivel, itens_no_card: visiveis, escondidos };
+  const suaTribo = triboPorId(tribo);
 
   function escolherNivel(n: Nivel) {
     if (n === 2) {
@@ -65,8 +65,7 @@ export function TelaCompartilhar() {
 
   async function compartilharCard() {
     if (!previa) return;
-    const url = link("", "stories", cenarioId);
-    const texto = `Montei minha mochila pro rolê e saiu "${rotulo.nome}". Monta a sua: ${url}`;
+    const texto = textoDesafio({ cenario, rotulo, tribo: suaTribo, qtdItens: itens.length, url: link(`/d/${codigoDesafio}`, "compartilhar", cenarioId) });
     const arquivo = new File([previa.blob], "mochila-do-role.png", { type: "image/png" });
     if (navigator.canShare?.({ files: [arquivo] })) {
       // `concluido` falso é a pessoa fechando a folha de compartilhar sem escolher app.
@@ -85,8 +84,7 @@ export function TelaCompartilhar() {
     if (!sistemaAvisa()) setAviso("Imagem baixada e link copiado.");
   }
 
-  const suaTribo = triboPorId(tribo);
-  const alt = `Mochila em pixel art com ${visiveis.map((id) => ITENS[id].curto.toLowerCase()).join(", ")}. Escrito: ${rotulo.nome}, ${rotulo.tambem}. ${rotulo.frase}${suaTribo ? ` Tribo ${suaTribo.nome}, ${suaTribo.estilo}.` : ""} ${eixos.map((e) => `${NOME_POLO[e.dominante]} ${e.percentual}%`).join(", ")}.`;
+  const alt = altDoCard(visiveis, rotulo, eixos, suaTribo);
   return (
     <>
       <header className="mochila-cabeca mochila-cabeca-previa">
