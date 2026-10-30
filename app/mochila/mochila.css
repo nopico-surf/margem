@@ -1048,7 +1048,6 @@ button.mochila-celula {
   justify-content: center;
   width: var(--size-80);
   height: var(--size-80);
-  border: var(--border-width-medium) solid var(--colors-neutral-950);
   border-radius: 0;
   background: var(--colors-neutral-100);
 }
