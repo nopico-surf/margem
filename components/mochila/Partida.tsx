@@ -43,6 +43,7 @@ type Guardado = {
   escolhido: boolean;
   itens: string[];
   combinados: number[];
+  semCombinados: boolean;
   tribo: string | null;
   jeitos: string[];
   nivel: Nivel;
@@ -61,6 +62,7 @@ function lerGuardado(): Partial<Guardado> | null {
       escolhido: g.escolhido === true,
       itens: g.itens,
       combinados: Array.isArray(g.combinados) ? g.combinados.filter((i) => Number.isInteger(i) && i >= 0 && i < cenario.combinados.length) : [],
+      semCombinados: g.semCombinados === true,
       tribo: triboPorId(g.tribo) ? g.tribo : null,
       jeitos: Array.isArray(g.jeitos) ? g.jeitos.filter((id) => JEITOS.some((j) => j.id === id)).slice(0, QTD_JEITOS) : [],
       nivel: g.nivel === 1 || g.nivel === 2 ? g.nivel : 0,
@@ -79,6 +81,7 @@ function useEstado() {
   const [escolhido, setEscolhido] = useState(false);
   const [itens, setItens] = useState<string[]>([]);
   const [combinados, setCombinados] = useState<number[]>([]);
+  const [semCombinados, setSemCombinados] = useState(false);
   const [tribo, setTribo] = useState<string | null>(null);
   const [jeitos, setJeitos] = useState<string[]>([]);
   const [nivel, setNivel] = useState<Nivel>(0);
@@ -93,6 +96,7 @@ function useEstado() {
       setEscolhido(g.escolhido ?? false);
       setItens(g.itens ?? []);
       setCombinados(g.combinados ?? []);
+      setSemCombinados(g.semCombinados ?? false);
       setTribo(g.tribo ?? null);
       setJeitos(g.jeitos ?? []);
       setNivel(g.nivel ?? 0);
@@ -107,10 +111,10 @@ function useEstado() {
   useEffect(() => {
     if (!pronto) return;
     try {
-      const g: Guardado = { cenarioId, escolhido, itens, combinados, tribo, jeitos, nivel, desafio };
+      const g: Guardado = { cenarioId, escolhido, itens, combinados, semCombinados, tribo, jeitos, nivel, desafio };
       sessionStorage.setItem(CHAVE_PARTIDA, JSON.stringify(g));
     } catch {}
-  }, [pronto, cenarioId, escolhido, itens, combinados, tribo, jeitos, nivel, desafio]);
+  }, [pronto, cenarioId, escolhido, itens, combinados, semCombinados, tribo, jeitos, nivel, desafio]);
 
   // Os botões navegam com router.push, que não faz prefetch sozinho: sem isto, cada toque esperava a
   // próxima tela chegar da rede. São todas estáticas e pequenas.
@@ -188,6 +192,7 @@ function useEstado() {
       setEscolhido(true);
       setItens([]);
       setCombinados([]);
+      setSemCombinados(false);
       setJeitos([]);
       setTribo(null);
     }
@@ -258,6 +263,7 @@ function useEstado() {
     setEscolhido(false);
     setItens([]);
     setCombinados([]);
+    setSemCombinados(false);
     setJeitos([]);
     setNivel(0);
     ir("escolha");
@@ -265,7 +271,7 @@ function useEstado() {
 
   const cenario = cenarioPorId(cenarioId)!;
   // Memo: a prévia do card redesenha quando eixos ou rótulo mudam de referência.
-  const eixos = useMemo(() => eixosDe(cenarioId, itens, combinados, jeitos), [cenarioId, itens, combinados, jeitos]);
+  const eixos = useMemo(() => eixosDe(cenarioId, itens, combinados, semCombinados, jeitos), [cenarioId, itens, combinados, semCombinados, jeitos]);
   const rotulo = useMemo(() => rotuloDe(cenarioId, itens, combinados, eixos), [cenarioId, itens, combinados, eixos]);
   const visiveis = itens.filter((id) => ITENS[id].nivel <= nivel);
   const escondidos = itens.length - visiveis.length;
@@ -282,6 +288,8 @@ function useEstado() {
     setItens,
     combinados,
     setCombinados,
+    semCombinados,
+    setSemCombinados,
     tribo,
     setTribo,
     jeitos,

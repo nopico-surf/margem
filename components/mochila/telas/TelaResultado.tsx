@@ -17,7 +17,7 @@ import { SpriteMochila } from "../SpriteMochila";
 
 export function TelaResultado() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenarioId, itens, combinados, tribo, eixos, rotulo, desafio, linhasChecklist, fontes, setAviso, ir, recomecar } = usePartida();
+  const { cenarioId, itens, combinados, semCombinados, tribo, eixos, rotulo, desafio, linhasChecklist, fontes, setAviso, ir, recomecar } = usePartida();
 
   // Uma vez por chegada na tela (voltar do compartilhar conta de novo).
   useEffect(() => {
@@ -31,6 +31,7 @@ export function TelaResultado() {
       itens,
       qtd_itens: itens.length,
       qtd_combinados: combinados.length,
+      sem_combinados: semCombinados,
       ficou_de_fora: ficouDeFora(cenarioId, itens),
       com_desafio: desafio !== null,
       iguais_ao_desafio: desafio ? itens.filter((id) => desafio.itens.includes(id)).length : null,

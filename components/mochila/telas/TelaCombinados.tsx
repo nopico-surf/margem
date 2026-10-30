@@ -11,8 +11,7 @@ import { SpriteMochila } from "../SpriteMochila";
 
 export function TelaCombinados() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenario, combinados, setCombinados, ir } = usePartida();
-  const [nenhum, setNenhum] = useState(false);
+  const { cenario, combinados, setCombinados, semCombinados: nenhum, setSemCombinados: setNenhum, ir } = usePartida();
   // O Checkbox só lê `selected` ao montar. Quando um lado limpa o outro, a key nova recria os
   // checkboxes limpos pra o check sumir junto com o estado.
   const [limpouCombinados, setLimpouCombinados] = useState(0);
