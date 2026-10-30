@@ -152,7 +152,18 @@ export function TelaCompartilhar() {
             <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={compartilharCard}>
               Compartilhar card
             </Button>
-            <Button variante="secondary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={() => previa && baixar(previa.blob, "mochila-do-role.png")}>
+            <Button
+              variante="secondary"
+              tamanho="medium"
+              redondo
+              larguraTotal
+              disabled={confirmando || !previa}
+              onClick={() => {
+                if (!previa) return;
+                baixar(previa.blob, "mochila-do-role.png");
+                setAviso("Imagem baixada.");
+              }}
+            >
               Baixar imagem
             </Button>
           </div>

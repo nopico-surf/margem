@@ -14,7 +14,7 @@ export function TelaRevelacao() {
     <>
       <header className="mochila-cabeca mochila-cabeca-linha">
         <h1 className="mochila-titulo">Olha o que foi na sua mochila</h1>
-        <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} alt="" />
+        <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} alt="" />
       </header>
       <div className="mochila-painel">
         <ul className="mochila-lista">

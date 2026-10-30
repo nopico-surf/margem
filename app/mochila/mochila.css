@@ -1071,6 +1071,46 @@ button.mochila-celula {
   }
 }
 
+/* Transição entre a montagem e a revelação: a mochila aberta surge no centro e fecha com um baque.
+   As duas imagens ficam empilhadas desde o começo pra fechada já estar carregada na troca. */
+
+.mochila-fechando {
+  --m-sprite: calc(var(--size-64) * 3);
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+
+.mochila-fechando .mochila-sprite {
+  grid-area: 1 / 1;
+  transform-origin: 50% 100%;
+}
+
+.mochila-fechando[data-fase="aberta"] .mochila-fechando-fechada,
+.mochila-fechando[data-fase="fechada"] .mochila-fechando-aberta {
+  visibility: hidden;
+}
+
+.mochila-fechando[data-fase="aberta"] .mochila-fechando-aberta {
+  animation: mochila-fechando-entra var(--duration-350) var(--easing-out-quart) both;
+}
+
+.mochila-fechando[data-fase="fechada"] .mochila-fechando-fechada {
+  animation: mochila-fechando-baque var(--duration-350) var(--easing-out-quart) both;
+}
+
+@keyframes mochila-fechando-entra {
+  0% { opacity: 0; transform: scale(0.6); }
+  70% { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes mochila-fechando-baque {
+  0% { transform: scale(1.08, 0.85); }
+  50% { transform: scale(0.97, 1.05); }
+  100% { transform: none; }
+}
+
 /* Carregando. O osso padrão (.figma-skeleton) é neutral-100/50 e some no painel neutral-50. Aqui ele
    ganha duas versões: no quadriculado, o mesmo primary-700 do quadriculado, mais forte; no painel,
    neutral-200/100. A moldura da prévia é quadriculado de novo. A animação e o tamanho do gradiente

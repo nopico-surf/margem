@@ -15,7 +15,7 @@ export function TelaEscolha() {
     <>
       <header className="mochila-cabeca mochila-cabeca-linha">
         <h1 className="mochila-titulo">Pra onde você vai?</h1>
-        <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} alt="" />
+        <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} alt="" />
       </header>
       <div className="mochila-painel">
         {cenarios.map((c) => (

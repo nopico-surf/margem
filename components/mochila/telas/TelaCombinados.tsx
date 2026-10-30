@@ -15,7 +15,7 @@ export function TelaCombinados() {
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
           <h1 className="mochila-titulo">Tem coisa que não ocupa espaço</h1>
-          <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} alt="" />
+          <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} alt="" />
         </div>
         <p className="mochila-instrucao">Uns combinados antes de sair também vão junto. Marque os que você vai fazer.</p>
       </header>
