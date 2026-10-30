@@ -13,6 +13,10 @@ export function TelaCombinados() {
   const liberada = useLiberada((p) => p.itens.length > 0);
   const { cenario, combinados, setCombinados, ir } = usePartida();
   const [nenhum, setNenhum] = useState(false);
+  // O Checkbox só lê `selected` ao montar. Quando um lado limpa o outro, a key nova recria os
+  // checkboxes limpos pra o check sumir junto com o estado.
+  const [limpouCombinados, setLimpouCombinados] = useState(0);
+  const [limpouNenhum, setLimpouNenhum] = useState(0);
   if (!liberada) return <TelaCarregando />;
 
   function concluir(marcados: number[]) {
@@ -37,12 +41,16 @@ export function TelaCombinados() {
         <fieldset className="mochila-combinados">
           <legend className="mochila-so-leitor">Tem coisa que não ocupa espaço</legend>
           {cenario.combinados.map((texto, i) => (
-            <label key={texto} className="mochila-combinado" data-marcado={combinados.includes(i)}>
+            <label key={texto} className="mochila-combinado" data-marcado={combinados.includes(i)} data-inativo={nenhum}>
               <Checkbox
+                key={limpouCombinados}
                 selected={combinados.includes(i)}
                 onChange={(marcado) => {
                   track("mochila_combinado_alternado", { cenario: cenario.id, combinado: texto, marcado });
-                  if (marcado) setNenhum(false);
+                  if (marcado && nenhum) {
+                    setNenhum(false);
+                    setLimpouNenhum((n) => n + 1);
+                  }
                   setCombinados((atual) => (marcado ? [...atual, i].sort() : atual.filter((c) => c !== i)));
                 }}
               />
@@ -51,11 +59,15 @@ export function TelaCombinados() {
           ))}
           <label className="mochila-combinado" data-marcado={nenhum}>
             <Checkbox
+              key={limpouNenhum}
               selected={nenhum}
               onChange={(marcado) => {
                 track("mochila_combinado_alternado", { cenario: cenario.id, combinado: "nenhum", marcado });
                 setNenhum(marcado);
-                if (marcado) setCombinados([]);
+                if (marcado && combinados.length > 0) {
+                  setCombinados([]);
+                  setLimpouCombinados((n) => n + 1);
+                }
               }}
             />
             <span>Não vou fazer combinados.</span>
