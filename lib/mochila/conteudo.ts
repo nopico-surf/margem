@@ -187,7 +187,7 @@ export const JEITOS: Jeito[] = [
   { id: "olho", nome: "Fico de olho em todo mundo", bonus: { grupo: 3, corpo: 1 } },
   { id: "hora", nome: "Sei a hora de ir embora", bonus: { volta: 3, planejamento: 2 } },
   { id: "carro", nome: "Sou quem chama o carro", bonus: { volta: 2, grupo: 2 } },
-  { id: "proxima", nome: "Sou quem puxa a próxima", bonus: { presenca: 3, festa: 2 } },
+  { id: "proxima", nome: "Sou quem puxa o after", bonus: { presenca: 3, festa: 2 } },
   { id: "lembrou", nome: "Sou quem leva o que ninguém lembrou", bonus: { grupo: 2, planejamento: 2 } },
   { id: "fluxo", nome: "Vou no fluxo, resolvo no caminho", bonus: { leveza: 3, presenca: 1 } },
 ];
