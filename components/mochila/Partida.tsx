@@ -147,6 +147,7 @@ function useEstado() {
     setItens([]);
     setCombinados([]);
     setJeitos([]);
+    setTribo(null);
     ir("tribo");
   };
 
