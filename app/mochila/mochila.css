@@ -1108,12 +1108,6 @@ button.mochila-celula {
   font-weight: var(--font-weight-semi-bold);
 }
 
-/* Com "Não vou fazer combinados" marcado, as outras linhas ficam apagadas, mas seguem clicáveis. */
-.mochila-combinado[data-inativo="true"] {
-  border-color: var(--colors-alpha-8);
-  color: var(--colors-neutral-700);
-}
-
 .mochila-combinado:has(:focus-visible) {
   outline: var(--border-width-large) solid var(--colors-brand-primary-700);
   outline-offset: var(--border-width-medium);

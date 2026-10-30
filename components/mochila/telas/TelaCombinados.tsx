@@ -40,7 +40,7 @@ export function TelaCombinados() {
         <fieldset className="mochila-combinados">
           <legend className="mochila-so-leitor">Tem coisa que não ocupa espaço</legend>
           {cenario.combinados.map((texto, i) => (
-            <label key={texto} className="mochila-combinado" data-marcado={combinados.includes(i)} data-inativo={nenhum}>
+            <label key={texto} className="mochila-combinado" data-marcado={combinados.includes(i)}>
               <Checkbox
                 key={limpouCombinados}
                 selected={combinados.includes(i)}
