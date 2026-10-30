@@ -382,7 +382,9 @@ export function useLiberada(liberada: (p: Partida) => boolean): boolean {
   const p = usePartida();
   const router = useRouter();
   const ok = p.pronto && liberada(p);
-  const perdida = p.pronto && !ok;
+  // Navegação em curso (ex: "Montar outra mochila" zera a partida e já vai pra outra tela): a tela que
+  // está saindo não manda de volta pro início.
+  const perdida = p.pronto && !ok && p.indo === null;
   useEffect(() => {
     if (perdida) router.replace(ROTAS.inicio);
   }, [perdida, router]);
