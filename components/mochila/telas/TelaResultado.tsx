@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { GlifoContentCopy, GlifoSaveAlt } from "@/components/icons/glifos";
-import { ITENS, spriteDe } from "@/lib/mochila/conteudo";
+import { ITENS, spriteDe, triboPorId } from "@/lib/mochila/conteudo";
+import { NOME_POLO } from "@/lib/mochila/eixos";
 import { ficouDeFora } from "@/lib/mochila/rotulo";
 import { baixar, copiar } from "@/lib/mochila/acoes";
 import { checklistTexto, desenharChecklist, paraBlob } from "@/lib/mochila/card";
@@ -15,7 +16,7 @@ import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaResultado() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenarioId, itens, combinados, rotulo, desafio, linhasChecklist, fontes, setAviso, ir, recomecar } = usePartida();
+  const { cenarioId, itens, combinados, tribo, eixos, rotulo, desafio, linhasChecklist, fontes, setAviso, ir, recomecar } = usePartida();
 
   // Uma vez por chegada na tela (voltar do compartilhar conta de novo).
   useEffect(() => {
@@ -23,6 +24,9 @@ export function TelaResultado() {
     track("mochila_resultado_visto", {
       cenario: cenarioId,
       rotulo: rotulo.nome,
+      tambem: rotulo.tambem,
+      // Percentual do primeiro polo de cada eixo (o outro é 100 menos ele).
+      ...Object.fromEntries(eixos.map((e) => [`pct_${e.a}`, Math.round(e.valor)])),
       itens,
       qtd_itens: itens.length,
       qtd_combinados: combinados.length,
@@ -61,15 +65,49 @@ export function TelaResultado() {
   }
 
   const fora = ficouDeFora(cenarioId, itens);
+  const suaTribo = triboPorId(tribo);
   return (
     <>
       <header className="mochila-cabeca mochila-cabeca-resultado">
         <h1 className="mochila-titulo">Sua mochila saiu assim:</h1>
         <MochilaGrade itens={itens} />
         <div className="mochila-rotulo">
-          <p>{rotulo.nome}</p>
+          <p>
+            {rotulo.nome}
+            <span className="mochila-rotulo-tambem">{rotulo.tambem}</span>
+          </p>
         </div>
         <p className="mochila-rotulo-frase">{rotulo.frase}</p>
+        <section aria-label="Sua mochila em quatro eixos" className="mochila-eixos">
+          {eixos.map((e) => {
+            const pctA = e.dominante === e.a ? ` ${e.percentual}%` : "";
+            const pctB = e.dominante === e.b ? `${e.percentual}% ` : "";
+            return (
+              <div key={e.id} role="img" aria-label={`${NOME_POLO[e.a]} ou ${NOME_POLO[e.b]}: ${NOME_POLO[e.dominante]} ${e.percentual}%`} className="mochila-eixo">
+                <div className="mochila-eixo-polos" aria-hidden="true">
+                  <span data-dominante={e.dominante === e.a}>{NOME_POLO[e.a]}{pctA}</span>
+                  <span data-dominante={e.dominante === e.b}>{pctB}{NOME_POLO[e.b]}</span>
+                </div>
+                <div className="mochila-eixo-trilho" aria-hidden="true">
+                  <span className="mochila-eixo-preenchido" data-lado={e.dominante === e.a ? "a" : "b"} style={{ width: `${e.percentual}%` }} />
+                  <span className="mochila-eixo-meio" />
+                </div>
+              </div>
+            );
+          })}
+        </section>
+        {suaTribo && (
+          <section aria-label="Sua tribo" className="mochila-tribo">
+            <span className="mochila-tribo-tile">
+              <img className="mochila-sprite" src={spriteDe(`tribo-${suaTribo.id}`)} alt="" />
+            </span>
+            <span className="mochila-revela-texto">
+              <span className="mochila-tribo-nome">{suaTribo.nome}</span>
+              <span className="mochila-tribo-estilo">{suaTribo.estilo}</span>
+              <span>{suaTribo.frase}</span>
+            </span>
+          </section>
+        )}
       </header>
       <div className="mochila-painel mochila-painel-resultado">
         {desafio && <ComparacaoDesafio minha={itens} outra={desafio.itens} aoDevolver={() => irPara("desafiar", "mochila_desafio_devolvido")} />}

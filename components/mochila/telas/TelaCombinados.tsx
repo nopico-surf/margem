@@ -19,7 +19,7 @@ export function TelaCombinados() {
       qtd_combinados: marcados.length,
       pulou: marcados.length === 0,
     });
-    ir("resultado");
+    ir("jeitos");
   }
   return (
     <>

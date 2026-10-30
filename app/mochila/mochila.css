@@ -455,6 +455,97 @@ body:has(.mochila-painel-montagem) {
   color: var(--colors-alpha-64);
 }
 
+/* Tribo e jeitos: cartões em grade, uma ou duas escolhas */
+
+.mochila-opcoes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-10);
+}
+
+.mochila-opcoes[data-colunas="2"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.mochila-opcao {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-6);
+  min-width: 0;
+  padding: var(--spacing-10) var(--spacing-6) var(--spacing-12);
+  border: var(--border-width-medium) solid var(--colors-neutral-100);
+  border-radius: var(--radius-md);
+  background: var(--colors-neutral-0);
+  color: var(--colors-neutral-950);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mochila-opcoes[data-colunas="2"] .mochila-opcao {
+  gap: var(--spacing-10);
+  padding: var(--spacing-12);
+  border-radius: var(--radius-xl);
+}
+
+.mochila-opcao:hover {
+  border-color: var(--colors-neutral-950);
+}
+
+.mochila-opcao:focus-visible {
+  outline: var(--border-width-large) solid var(--colors-brand-primary-700);
+  outline-offset: var(--border-width-medium);
+}
+
+.mochila-opcao[data-marcada="true"] {
+  border-color: var(--colors-neutral-950);
+  background: var(--colors-brand-secondary-300);
+  color: var(--colors-brand-secondary-950);
+}
+
+.mochila-opcao-tile {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--m-cel);
+  height: var(--m-cel);
+  border-radius: var(--radius-md);
+  background: var(--colors-neutral-100);
+}
+
+.mochila-opcao[data-marcada="true"] .mochila-opcao-tile {
+  background: var(--colors-neutral-0);
+}
+
+.mochila-opcao-nome {
+  font-weight: var(--font-weight-semi-bold);
+  font-size: calc(var(--font-size-sm) + var(--size-1));
+  line-height: calc(var(--line-height-md) + var(--size-1));
+  text-wrap: balance;
+}
+
+.mochila-opcao-apoio {
+  font-size: var(--font-size-xs);
+  line-height: calc(var(--line-height-sm) + var(--size-1));
+  color: var(--colors-alpha-72);
+}
+
+.mochila-opcao[data-marcada="true"] .mochila-opcao-apoio {
+  color: inherit;
+}
+
+.mochila-contador-selo {
+  align-self: flex-end;
+  height: auto;
+  margin: 0;
+  padding: var(--spacing-6) var(--spacing-10);
+  background: var(--colors-brand-primary-900);
+}
+
 .mochila-selo {
   position: absolute;
   top: calc(var(--spacing-10) * -1);
@@ -785,6 +876,121 @@ button.mochila-celula {
   line-height: calc(var(--line-height-2xl) + var(--size-2));
   text-align: center;
   color: var(--colors-brand-secondary-300);
+}
+
+.mochila-rotulo-tambem {
+  display: block;
+  margin-top: var(--spacing-2);
+  font-family: var(--font-inter), sans-serif;
+  font-size: calc(var(--font-size-sm) + var(--size-1));
+  line-height: var(--line-height-xl);
+  color: var(--colors-brand-primary-300);
+}
+
+/* Quatro eixos: cada barra é uma mistura entre dois polos, preenchida a partir do dominante */
+
+.mochila-eixos {
+  align-self: stretch;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-14);
+  padding: var(--spacing-16);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.mochila-eixo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.mochila-eixo-polos {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-12);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-md);
+  white-space: nowrap;
+  color: var(--colors-alpha-72);
+}
+
+.mochila-eixo-polos [data-dominante="true"] {
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--colors-neutral-950);
+}
+
+.mochila-eixo-trilho {
+  position: relative;
+  box-sizing: border-box;
+  height: var(--size-16);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  background: var(--colors-neutral-100);
+  overflow: hidden;
+}
+
+.mochila-eixo-preenchido {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--colors-brand-primary-700);
+}
+
+.mochila-eixo-preenchido[data-lado="b"] {
+  left: auto;
+  right: 0;
+}
+
+.mochila-eixo-meio {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - var(--size-1));
+  width: var(--size-2);
+  background: var(--colors-alpha-32);
+}
+
+/* Tribo no resultado */
+
+.mochila-tribo {
+  align-self: stretch;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-14);
+  padding: var(--spacing-16);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.mochila-tribo-tile {
+  flex: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-80);
+  height: var(--size-80);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: var(--radius-md);
+  background: var(--colors-brand-secondary-300);
+}
+
+.mochila-tribo-nome {
+  font-family: var(--font-pixelify), sans-serif;
+  font-weight: var(--font-weight-semi-bold);
+  font-size: calc(var(--font-size-xl) + var(--size-2));
+  line-height: calc(var(--line-height-xl) + var(--size-6));
+  color: var(--colors-brand-primary-900);
+}
+
+.mochila-tribo-estilo {
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--colors-brand-primary-700);
 }
 
 .mochila-rotulo-frase {

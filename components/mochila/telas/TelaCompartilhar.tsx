@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { GlifoVisibilityOff } from "@/components/icons/glifos";
-import { ITENS, NIVEIS, type Nivel } from "@/lib/mochila/conteudo";
+import { ITENS, NIVEIS, triboPorId, type Nivel } from "@/lib/mochila/conteudo";
+import { NOME_POLO } from "@/lib/mochila/eixos";
 import { baixar, copiar, link } from "@/lib/mochila/acoes";
 import { desenharCard, paraBlob, type Formato } from "@/lib/mochila/card";
 import { track } from "@/lib/mixpanel";
@@ -13,7 +14,7 @@ import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaCompartilhar() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenarioId, itens, rotulo, visiveis, escondidos, nivel, setNivel, fontes, setAviso } = usePartida();
+  const { cenarioId, itens, tribo, eixos, rotulo, visiveis, escondidos, nivel, setNivel, fontes, setAviso } = usePartida();
   const [confirmando, setConfirmando] = useState(false);
   const [formato, setFormato] = useState<Formato>("stories");
   const [previa, setPrevia] = useState<{ url: string; blob: Blob } | null>(null);
@@ -26,7 +27,7 @@ export function TelaCompartilhar() {
     let cancelado = false;
     let url: string | null = null;
     setErroImagem(false);
-    desenharCard({ cenario: cenarioId, itens: visiveis, rotulo, formato, fontes: fontes() })
+    desenharCard({ cenario: cenarioId, itens: visiveis, rotulo, eixos, tribo: triboPorId(tribo), formato, fontes: fontes() })
       .then(paraBlob)
       .then((blob) => {
         if (cancelado) return;
@@ -45,7 +46,7 @@ export function TelaCompartilhar() {
     };
     // visiveis muda junto com nivel e itens
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [liberada, nivel, formato, cenarioId, rotulo, itens, fontes, tentativa]);
+  }, [liberada, nivel, formato, cenarioId, rotulo, eixos, tribo, itens, fontes, tentativa]);
 
   if (!liberada) return <TelaCarregando />;
 
@@ -84,7 +85,8 @@ export function TelaCompartilhar() {
     setAviso("Imagem baixada e link copiado.");
   }
 
-  const alt = `Mochila em pixel art com ${visiveis.map((id) => ITENS[id].curto.toLowerCase()).join(", ")}. Escrito: ${rotulo.nome}. ${rotulo.frase}`;
+  const suaTribo = triboPorId(tribo);
+  const alt = `Mochila em pixel art com ${visiveis.map((id) => ITENS[id].curto.toLowerCase()).join(", ")}. Escrito: ${rotulo.nome}, ${rotulo.tambem}. ${rotulo.frase}${suaTribo ? ` Tribo ${suaTribo.nome}, ${suaTribo.estilo}.` : ""} ${eixos.map((e) => `${NOME_POLO[e.dominante]} ${e.percentual}%`).join(", ")}.`;
   return (
     <>
       <header className="mochila-cabeca mochila-cabeca-previa">

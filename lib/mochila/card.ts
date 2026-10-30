@@ -1,7 +1,8 @@
-import { CENARIOS, ENDERECO_CURTO, ITENS, spriteDe, type CenarioId } from "./conteudo";
+import { CENARIOS, ENDERECO_CURTO, ITENS, spriteDe, type CenarioId, type Tribo } from "./conteudo";
+import { NOME_POLO, type Eixo } from "./eixos";
 import type { Rotulo } from "./rotulo";
 
-// Desenha no canvas o card compartilhável, igual à tela B-Stories do Claude Design (Stories
+// Desenha no canvas o card compartilhável, igual à tela U2-Card do Claude Design (Stories
 // 1080x1920 e feed 1080x1350). Roda só no navegador. As cores vêm dos tokens do CSS na hora de
 // desenhar, então trocar um token troca o card junto. A mochila do card é redesenhada só com os
 // itens visíveis no nível escolhido: as fileiras sempre fecham, sem espaço vazio que entregue algo.
@@ -107,37 +108,40 @@ function fileiras(ids: string[]): Bloco[][] {
   return rows.filter((r) => r.lista.length).map((r) => r.lista.sort((a, b) => a.ordem - b.ordem));
 }
 
-const DECOR: [number, number, number, string][] = [
-  [96, 96, 24, "brand-primary-900"], [216, 156, 12, "neutral-0"], [744, 84, 12, "brand-primary-900"],
-  [912, 144, 24, "neutral-0"], [540, 180, 12, "brand-primary-700"], [960, 60, 12, "brand-primary-700"],
-  [120, 1740, 12, "brand-primary-900"], [300, 1800, 24, "neutral-0"], [624, 1764, 12, "brand-primary-900"],
-  [852, 1812, 24, "brand-primary-700"], [984, 1740, 12, "neutral-0"], [60, 1860, 12, "brand-primary-700"],
-];
+// Medidas da tela U2-Card. O feed é desenhado direto em 1080x1350.
+const MEDIDAS = {
+  stories: { inset: 236, gap: 22, logoW: 348, logoH: 48, logoGap: 16, titulo: 66, sprite: 120, destino: 36, f1: 46, f2: 38, rPadY: 18, rPadX: 32, tGap: 14, frase: 38, barra: 30, barraH: 28, barraB: 4, barraGap: 10, eGap: 20, ePad: 28, selo: { s: 10, padY: 12, padX: 24, gap: 16, icone: 64, b: 4, fonte: 40 }, tagTop: 62, bagTop: 60, bagPad: 26, convite: 40 },
+  feed: { inset: 64, gap: 18, logoW: 261, logoH: 36, logoGap: 12, titulo: 54, sprite: 96, destino: 30, f1: 40, f2: 32, rPadY: 14, rPadX: 28, tGap: 12, frase: 34, barra: 26, barraH: 22, barraB: 3, barraGap: 8, eGap: 16, ePad: 22, selo: { s: 8, padY: 10, padX: 20, gap: 14, icone: 48, b: 3, fonte: 34 }, tagTop: 44, bagTop: 46, bagPad: 22, convite: 34 },
+};
 
 export async function desenharCard(opcoes: {
   cenario: CenarioId;
   itens: string[];
   rotulo: Rotulo;
+  eixos: Eixo[];
+  tribo: Tribo | undefined;
   formato: Formato;
   fontes: Fontes;
 }): Promise<HTMLCanvasElement> {
-  const { cenario, itens, rotulo, formato, fontes } = opcoes;
+  const { cenario, itens, rotulo, eixos, tribo, formato, fontes } = opcoes;
   const feed = formato === "feed";
+  const z = MEDIDAS[formato];
   const altura = feed ? 1350 : 1920;
-  const inset = feed ? 80 : 250;
   const largura = LARGURA - MARGEM_LADO * 2;
 
   // Se a fonte não carregar, o card sai com a fonte de reserva em vez de não sair.
   await Promise.all([
-    document.fonts.load(fonte(700, 92, fontes.pixel)),
-    document.fonts.load(fonte(600, 48, fontes.pixel)),
-    document.fonts.load(fonte(600, 46, fontes.texto)),
+    document.fonts.load(fonte(700, z.titulo, fontes.pixel)),
+    document.fonts.load(fonte(600, z.f1, fontes.pixel)),
+    document.fonts.load(fonte(600, z.f2, fontes.texto)),
+    document.fonts.load(fonte(400, z.barra, fontes.texto)),
   ]).catch((e) => console.error("[mochila] fonte do card não carregou", e));
   const virada = cenario === "virada";
-  const [logo, mochila, fogos, ...sprites] = await Promise.all([
+  const [logo, mochila, fogos, icone, ...sprites] = await Promise.all([
     carregar("/icons/logo-margem.svg"),
     carregar(spriteDe("mochila-fechada")),
     virada ? carregar(spriteDe("fogos")) : Promise.resolve(null),
+    tribo ? carregar(spriteDe(`tribo-${tribo.id}`)) : Promise.resolve(null),
     ...itens.map((id) => carregar(spriteDe(id))),
   ]);
   const spriteDoItem = new Map(itens.map((id, i) => [id, sprites[i]]));
@@ -147,6 +151,7 @@ export async function desenharCard(opcoes: {
   canvas.height = altura;
   const ctx = canvas.getContext("2d")!;
   ctx.imageSmoothingEnabled = false;
+  ctx.textBaseline = "middle";
 
   // Fundo
   ctx.fillStyle = cor("brand-secondary-300");
@@ -158,47 +163,41 @@ export async function desenharCard(opcoes: {
     ctx.save();
     ctx.globalAlpha = 0.1;
     ctx.fillStyle = cor("brand-primary-700");
-    for (let x = 0; x < LARGURA; x += 60) ctx.fillRect(x, 0, 3, altura);
-    for (let y = 0; y < altura; y += 60) ctx.fillRect(0, y, LARGURA, 3);
+    const passo = feed ? 45 : 60;
+    for (let x = 0; x < LARGURA; x += passo) ctx.fillRect(x, 0, 3, altura);
+    for (let y = 0; y < altura; y += passo) ctx.fillRect(0, y, LARGURA, 3);
     ctx.restore();
-    if (!feed) for (const [x, y, s, c] of DECOR) {
-      ctx.fillStyle = cor(c);
-      ctx.fillRect(x, y, s, s);
-    }
   }
 
-  // Medidas
+  // Medidas da mochila
   const rows = fileiras(itens);
   const muitas = rows.length >= 3;
-  const gap = feed ? 28 : muitas ? 20 : 44;
-  const escala = feed ? (muitas ? 3 : 4) : muitas ? 4 : 5;
-  const fonteNome = feed ? (muitas ? 26 : 28) : muitas ? 28 : 30;
-  const [padTopo, padLado, padBase] = muitas ? [20, 14, 18] : [28, 16, 24];
-  const rowGap = muitas ? 16 : 20;
+  const escala = feed ? (muitas ? 2.5 : 3) : muitas ? 3 : 4;
+  const fonteNome = feed ? (muitas ? 24 : 26) : muitas ? 26 : 28;
+  const [padTopo, padLado, padBase] = feed ? (muitas ? [12, 10, 12] : [16, 12, 14]) : muitas ? [14, 12, 14] : [20, 14, 16];
+  const rowGap = feed ? (muitas ? 12 : 14) : muitas ? 14 : 18;
 
-  const logoW = feed ? 261 : 348;
-  const logoH = feed ? 36 : 48;
-  const logoGap = feed ? 14 : 20;
-  const spriteLado = feed ? 96 : 192;
-  const fonteTitulo = feed ? 64 : 92;
-  ctx.font = fonte(700, fonteTitulo, fontes.pixel);
-  const linhasTitulo = quebrarEquilibrado(ctx, "Minha mochila pro rolê", Math.min(feed ? 800 : 700, largura - spriteLado - 24));
-  const alturaTitulo = linhasTitulo.length * fonteTitulo * 1.02;
-  const alturaCabeca = Math.max(spriteLado, logoH + logoGap + alturaTitulo);
+  // Cabeçalho: logo, título e destino à esquerda, mochila fechada à direita
+  ctx.font = fonte(700, z.titulo, fontes.pixel);
+  const linhasTitulo = quebrarEquilibrado(ctx, "Minha mochila pro rolê", largura - z.sprite - 24);
+  const destino = `Destino: ${CENARIOS.find((c) => c.id === cenario)?.nome ?? ""}`;
+  ctx.font = fonte(600, z.destino, fontes.texto);
+  const linhasDestino = quebrar(ctx, destino, largura - z.sprite - 24);
+  const blocoTexto = z.logoH + z.logoGap * 2 + linhasTitulo.length * z.titulo * 1.02 + linhasDestino.length * z.destino * 1.2;
+  const alturaCabeca = Math.max(z.sprite, blocoTexto);
 
-  const fontePilula = feed ? 40 : 48;
-  const [pilulaPadY, pilulaPadX] = feed ? [12, 28] : [16, 36];
+  // Rótulo: pílula com as duas linhas, e a frase embaixo
   const pilulaInterna = largura - 12;
-  const alturaPilula = fontePilula * 1.1 + pilulaPadY * 2 + 12;
+  ctx.font = fonte(600, z.f1, fontes.pixel);
+  const linhasNome = quebrarEquilibrado(ctx, rotulo.nome, pilulaInterna - z.rPadX * 2);
+  ctx.font = fonte(600, z.f2, fontes.texto);
+  const linhasTambem = quebrar(ctx, rotulo.tambem, pilulaInterna - z.rPadX * 2);
+  const alturaPilula = 12 + z.rPadY * 2 + linhasNome.length * z.f1 * 1.12 + 4 + linhasTambem.length * z.f2 * 1.25;
+  ctx.font = fonte(600, z.frase, fontes.texto);
+  const linhasFrase = quebrarEquilibrado(ctx, rotulo.frase, largura);
+  const alturaRotulo = alturaPilula + z.tGap + linhasFrase.length * z.frase * 1.25;
 
-  // Frase do rótulo, logo abaixo da pílula e menor que ela.
-  const fonteFrase = feed ? 32 : 38;
-  const gapFrase = feed ? 16 : 20;
-  ctx.font = fonte(600, fonteFrase, fontes.texto);
-  const linhasFrase = quebrarEquilibrado(ctx, rotulo.frase, largura - 40);
-  const alturaFrase = gapFrase + linhasFrase.length * fonteFrase * 1.3;
-
-  const interna = largura - 20 - 60;
+  const interna = largura - 20 - z.bagPad * 2;
   ctx.font = fonte(600, fonteNome, fontes.texto);
   const medidas = rows.map((row) => {
     const soma = row.reduce((s, b) => s + b.espacos, 0);
@@ -206,101 +205,158 @@ export async function desenharCard(opcoes: {
     const tiles = row.map((b) => {
       const w = (livre * b.espacos) / soma;
       const linhas = quebrar(ctx, ITENS[b.id].curto, w - 8 - padLado * 2);
-      const h = 8 + padTopo + padBase + 32 * escala + 12 + linhas.length * fonteNome * 1.2;
+      const h = 8 + padTopo + padBase + 32 * escala + 10 + linhas.length * fonteNome * 1.2;
       return { b, w, linhas, h };
     });
     return { tiles, h: Math.max(...tiles.map((t) => t.h)) };
   });
-  const alturaMochila = 20 + 60 + medidas.reduce((s, r) => s + r.h, 0) + (medidas.length - 1) * rowGap;
+  const alturaMochila = 20 + z.bagTop + z.bagPad + medidas.reduce((s, r) => s + r.h, 0) + (medidas.length - 1) * rowGap;
 
-  const fonteDestino = feed ? 40 : 46;
-  const fonteEndereco = feed ? 38 : 44;
-  const destino = `Destino: ${CENARIOS.find((c) => c.id === cenario)?.nome ?? ""}`;
-  ctx.font = fonte(600, fonteDestino, fontes.texto);
-  const linhasDestino = quebrar(ctx, destino, largura);
-  const alturaRodape = linhasDestino.length * fonteDestino * 1.2 + 12 + fonteEndereco * 1.2;
+  // Eixos: grade de 2 colunas
+  const alturaEixo = z.barra * 1.25 + z.barraGap + z.barraH;
+  const alturaEixos = 8 + z.ePad * 2 + alturaEixo * 2 + z.eGap;
 
-  const total = alturaCabeca + alturaPilula + alturaFrase + alturaMochila + alturaRodape + gap * 3;
-  let y = inset + (altura - inset * 2 - total) / 2;
+  const total = alturaCabeca + alturaRotulo + z.tagTop + alturaMochila + alturaEixos + z.convite * 1.2 + z.gap * 4;
+  let y = z.inset + (altura - z.inset * 2 - total) / 2;
   const x0 = MARGEM_LADO;
 
-  // Cabeçalho: logo + título à esquerda, mochila fechada à direita
-  const blocoTexto = logoH + logoGap + alturaTitulo;
+  // Cabeçalho
   let ty = y + (alturaCabeca - blocoTexto) / 2;
   ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(logo, x0, ty, logoW, logoH);
+  ctx.drawImage(logo, x0, ty, z.logoW, z.logoH);
   ctx.imageSmoothingEnabled = false;
-  ty += logoH + logoGap;
-  ctx.font = fonte(700, fonteTitulo, fontes.pixel);
-  ctx.fillStyle = cor("brand-primary-950");
-  ctx.textBaseline = "middle";
+  ty += z.logoH + z.logoGap;
   ctx.textAlign = "left";
-  linhasTitulo.forEach((l, i) => ctx.fillText(l, x0, ty + fonteTitulo * 1.02 * (i + 0.5)));
-  ctx.drawImage(mochila, x0 + largura - spriteLado, y + (alturaCabeca - spriteLado) / 2, spriteLado, spriteLado);
-  y += alturaCabeca + gap;
+  ctx.font = fonte(700, z.titulo, fontes.pixel);
+  ctx.fillStyle = cor("brand-primary-950");
+  linhasTitulo.forEach((l, i) => ctx.fillText(l, x0, ty + z.titulo * 1.02 * (i + 0.5)));
+  ty += linhasTitulo.length * z.titulo * 1.02 + z.logoGap;
+  ctx.font = fonte(600, z.destino, fontes.texto);
+  ctx.fillStyle = cor("brand-primary-900");
+  linhasDestino.forEach((l, i) => ctx.fillText(l, x0, ty + z.destino * 1.2 * (i + 0.5)));
+  ctx.drawImage(mochila, x0 + largura - z.sprite, y + (alturaCabeca - z.sprite) / 2, z.sprite, z.sprite);
+  y += alturaCabeca + z.gap;
 
-  // Pílula com o rótulo
-  const pilulaW = pilulaInterna + 12;
+  // Pílula com o rótulo e o "e também"
   ctx.fillStyle = cor("brand-primary-700");
-  pxRect(ctx, x0, y, pilulaW, alturaPilula, 12);
+  pxRect(ctx, x0, y, largura, alturaPilula, 12);
   ctx.fill();
   ctx.fillStyle = cor("brand-primary-900");
   pxRect(ctx, x0 + 6, y + 6, pilulaInterna, alturaPilula - 12, 6);
   ctx.fill();
-  let fp = fontePilula;
-  ctx.font = fonte(600, fp, fontes.pixel);
-  while (ctx.measureText(rotulo.nome).width > pilulaInterna - pilulaPadX * 2 && fp > 24) {
-    fp -= 1;
-    ctx.font = fonte(600, fp, fontes.pixel);
-  }
-  ctx.fillStyle = cor("brand-secondary-300");
   ctx.textAlign = "center";
-  ctx.fillText(rotulo.nome, x0 + 6 + pilulaInterna / 2, y + alturaPilula / 2);
-  y += alturaPilula + gapFrase;
-  ctx.font = fonte(600, fonteFrase, fontes.texto);
-  ctx.fillStyle = cor("brand-secondary-950");
-  linhasFrase.forEach((l, i) => ctx.fillText(l, LARGURA / 2, y + fonteFrase * 1.3 * (i + 0.5)));
-  y += alturaFrase - gapFrase + gap;
+  let py = y + 6 + z.rPadY;
+  ctx.font = fonte(600, z.f1, fontes.pixel);
+  ctx.fillStyle = cor("brand-secondary-300");
+  linhasNome.forEach((l, i) => ctx.fillText(l, LARGURA / 2, py + z.f1 * 1.12 * (i + 0.5)));
+  py += linhasNome.length * z.f1 * 1.12 + 4;
+  ctx.font = fonte(600, z.f2, fontes.texto);
+  ctx.fillStyle = cor("brand-primary-300");
+  linhasTambem.forEach((l, i) => ctx.fillText(l, LARGURA / 2, py + z.f2 * 1.25 * (i + 0.5)));
+  y += alturaPilula + z.tGap;
+  ctx.font = fonte(600, z.frase, fontes.texto);
+  ctx.fillStyle = cor("neutral-950");
+  linhasFrase.forEach((l, i) => ctx.fillText(l, LARGURA / 2, y + z.frase * 1.25 * (i + 0.5)));
+  y += linhasFrase.length * z.frase * 1.25 + z.gap + z.tagTop;
 
   // Mochila
+  const topoMochila = y;
   ctx.fillStyle = cor("brand-primary-900");
   pxRect(ctx, x0, y, largura, alturaMochila, 24);
   ctx.fill();
   ctx.fillStyle = cor("brand-primary-700");
   pxRect(ctx, x0 + 10, y + 10, largura - 20, alturaMochila - 20, 14);
   ctx.fill();
-  let ry = y + 40;
+  let ry = y + 10 + z.bagTop;
   ctx.font = fonte(600, fonteNome, fontes.texto);
   for (const row of medidas) {
-    let rx = x0 + 40;
+    let rx = x0 + 10 + z.bagPad;
     for (const t of row.tiles) {
       ctx.fillStyle = cor("neutral-950");
       ctx.fillRect(rx, ry, t.w, row.h);
       ctx.fillStyle = cor("neutral-100");
       ctx.fillRect(rx + 4, ry + 4, t.w - 8, row.h - 8);
-      const conteudo = 32 * escala + 12 + t.linhas.length * fonteNome * 1.2;
+      const conteudo = 32 * escala + 10 + t.linhas.length * fonteNome * 1.2;
       let cy = ry + (row.h - conteudo) / 2;
       const iw = 32 * escala * t.b.espacos;
       const img = spriteDoItem.get(t.b.id);
       if (img) ctx.drawImage(img, rx + (t.w - iw) / 2, cy, iw, 32 * escala);
-      cy += 32 * escala + 12;
+      cy += 32 * escala + 10;
       ctx.fillStyle = cor("neutral-950");
       t.linhas.forEach((l, i) => ctx.fillText(l, rx + t.w / 2, cy + fonteNome * 1.2 * (i + 0.5)));
       rx += t.w + rowGap;
     }
     ry += row.h + rowGap;
   }
-  y += alturaMochila + gap;
+  y += alturaMochila + z.gap;
 
-  // Rodapé
-  ctx.textAlign = "left";
-  ctx.font = fonte(600, fonteDestino, fontes.texto);
+  // Selo da tribo, pendurado no topo da mochila como etiqueta
+  if (tribo) {
+    const s = z.selo;
+    const texto = `${tribo.nome} · ${tribo.estilo}`;
+    ctx.font = fonte(600, s.fonte, fontes.pixel);
+    const w = s.b * 2 + s.padX * 2 + s.icone + s.gap + ctx.measureText(texto).width;
+    const h = s.b * 2 + s.padY * 2 + Math.max(s.icone, s.fonte * 1.1);
+    const sx = (LARGURA - w) / 2;
+    const sy = topoMochila - z.tagTop;
+    ctx.fillStyle = cor("neutral-950");
+    pxRect(ctx, sx, sy, w, h, s.s);
+    ctx.fill();
+    ctx.fillStyle = cor("neutral-100");
+    pxRect(ctx, sx + s.b, sy + s.b, w - s.b * 2, h - s.b * 2, Math.max(2, s.s - s.b));
+    ctx.fill();
+    if (icone) ctx.drawImage(icone, sx + s.b + s.padX, sy + (h - s.icone) / 2, s.icone, s.icone);
+    ctx.textAlign = "left";
+    ctx.fillStyle = cor("brand-primary-900");
+    ctx.fillText(texto, sx + s.b + s.padX + s.icone + s.gap, sy + h / 2);
+  }
+
+  // Eixos
   ctx.fillStyle = cor("neutral-950");
-  linhasDestino.forEach((l, i) => ctx.fillText(l, x0, y + fonteDestino * 1.2 * (i + 0.5)));
-  y += linhasDestino.length * fonteDestino * 1.2 + 12;
-  ctx.font = fonte(600, fonteEndereco, fontes.texto);
+  pxRect(ctx, x0, y, largura, alturaEixos, 12);
+  ctx.fill();
+  ctx.fillStyle = cor("neutral-0");
+  pxRect(ctx, x0 + 4, y + 4, largura - 8, alturaEixos - 8, 8);
+  ctx.fill();
+  const colGap = 36;
+  const colW = (largura - 8 - z.ePad * 2 - colGap) / 2;
+  eixos.forEach((e, i) => {
+    const ex = x0 + 4 + z.ePad + (i % 2) * (colW + colGap);
+    const ey = y + 4 + z.ePad + Math.floor(i / 2) * (alturaEixo + z.eGap);
+    const domA = e.dominante === e.a;
+    const linhaY = ey + (z.barra * 1.25) / 2;
+    const polo = (texto: string, forte: boolean, lado: "left" | "right") => {
+      ctx.font = fonte(forte ? 600 : 400, z.barra, fontes.texto);
+      ctx.fillStyle = cor("neutral-950");
+      ctx.globalAlpha = forte ? 1 : 0.72;
+      ctx.textAlign = lado;
+      ctx.fillText(texto, lado === "left" ? ex : ex + colW, linhaY);
+      ctx.globalAlpha = 1;
+    };
+    polo(domA ? `${NOME_POLO[e.a]} ${e.percentual}%` : NOME_POLO[e.a], domA, "left");
+    polo(domA ? NOME_POLO[e.b] : `${e.percentual}% ${NOME_POLO[e.b]}`, !domA, "right");
+    const by = ey + z.barra * 1.25 + z.barraGap;
+    const b = z.barraB;
+    ctx.fillStyle = cor("neutral-950");
+    ctx.fillRect(ex, by, colW, z.barraH);
+    ctx.fillStyle = cor("neutral-100");
+    ctx.fillRect(ex + b, by + b, colW - b * 2, z.barraH - b * 2);
+    const preenchido = ((colW - b * 2) * e.percentual) / 100;
+    ctx.fillStyle = cor("brand-primary-700");
+    ctx.fillRect(domA ? ex + b : ex + colW - b - preenchido, by + b, preenchido, z.barraH - b * 2);
+    ctx.fillStyle = cor("neutral-950");
+    ctx.globalAlpha = 0.35;
+    const meio = Math.max(2, b);
+    ctx.fillRect(ex + colW / 2 - meio / 2, by + b, meio, z.barraH - b * 2);
+    ctx.globalAlpha = 1;
+  });
+  y += alturaEixos + z.gap;
+
+  // Convite
+  ctx.textAlign = "center";
+  ctx.font = fonte(600, z.convite, fontes.texto);
   ctx.fillStyle = cor("status-success-950");
-  ctx.fillText(`Monte a sua: ${ENDERECO_CURTO}`, x0, y + fonteEndereco * 0.6);
+  ctx.fillText(`Monte a sua: ${ENDERECO_CURTO}`, LARGURA / 2, y + z.convite * 0.6);
 
   return canvas;
 }

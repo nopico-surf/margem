@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, Suspense, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
-import { ITENS, LINHAS_FIXAS, cenarioPorId, type CenarioId, type Nivel } from "@/lib/mochila/conteudo";
+import { ITENS, JEITOS, LINHAS_FIXAS, QTD_JEITOS, cenarioPorId, triboPorId, type CenarioId, type Nivel } from "@/lib/mochila/conteudo";
+import { eixos as eixosDe } from "@/lib/mochila/eixos";
 import { rotulo as rotuloDe } from "@/lib/mochila/rotulo";
 import { codificar, type Desafio } from "@/lib/mochila/codigo";
 import { bip as tocarBip } from "@/lib/mochila/acoes";
@@ -18,14 +19,16 @@ import { AvisoMochila } from "./AvisoMochila";
 // Cada passo do jogo vai pro Mixpanel com os eventos `mochila_*`, itens incluídos (decidido em
 // 30/10/2026), sem depender do painel de dados, que o jogo não tem.
 
-export type Etapa = "inicio" | "escolha" | "montagem" | "revelacao" | "combinados" | "resultado" | "compartilhar" | "desafiar";
+export type Etapa = "inicio" | "escolha" | "tribo" | "montagem" | "revelacao" | "combinados" | "jeitos" | "resultado" | "compartilhar" | "desafiar";
 
 export const ROTAS: Record<Etapa, string> = {
   inicio: "/mochila",
   escolha: "/mochila/cenarios",
+  tribo: "/mochila/tribo",
   montagem: "/mochila/montar",
   revelacao: "/mochila/revelacao",
   combinados: "/mochila/combinados",
+  jeitos: "/mochila/jeitos",
   resultado: "/mochila/resultado",
   compartilhar: "/mochila/compartilhar",
   desafiar: "/mochila/desafiar",
@@ -39,6 +42,8 @@ type Guardado = {
   escolhido: boolean;
   itens: string[];
   combinados: number[];
+  tribo: string | null;
+  jeitos: string[];
   nivel: Nivel;
   desafio: Desafio | null;
 };
@@ -55,6 +60,8 @@ function lerGuardado(): Partial<Guardado> | null {
       escolhido: g.escolhido === true,
       itens: g.itens,
       combinados: Array.isArray(g.combinados) ? g.combinados.filter((i) => Number.isInteger(i) && i >= 0 && i < cenario.combinados.length) : [],
+      tribo: triboPorId(g.tribo) ? g.tribo : null,
+      jeitos: Array.isArray(g.jeitos) ? g.jeitos.filter((id) => JEITOS.some((j) => j.id === id)).slice(0, QTD_JEITOS) : [],
       nivel: g.nivel === 1 || g.nivel === 2 ? g.nivel : 0,
       desafio: g.desafio && cenarioPorId(g.desafio.cenario) ? g.desafio : null,
     };
@@ -71,6 +78,8 @@ function useEstado() {
   const [escolhido, setEscolhido] = useState(false);
   const [itens, setItens] = useState<string[]>([]);
   const [combinados, setCombinados] = useState<number[]>([]);
+  const [tribo, setTribo] = useState<string | null>(null);
+  const [jeitos, setJeitos] = useState<string[]>([]);
   const [nivel, setNivel] = useState<Nivel>(0);
   const [desafio, setDesafio] = useState<Desafio | null>(null);
   const [som, setSom] = useState(false);
@@ -83,6 +92,8 @@ function useEstado() {
       setEscolhido(g.escolhido ?? false);
       setItens(g.itens ?? []);
       setCombinados(g.combinados ?? []);
+      setTribo(g.tribo ?? null);
+      setJeitos(g.jeitos ?? []);
       setNivel(g.nivel ?? 0);
       setDesafio(g.desafio ?? null);
     }
@@ -95,10 +106,10 @@ function useEstado() {
   useEffect(() => {
     if (!pronto) return;
     try {
-      const g: Guardado = { cenarioId, escolhido, itens, combinados, nivel, desafio };
+      const g: Guardado = { cenarioId, escolhido, itens, combinados, tribo, jeitos, nivel, desafio };
       sessionStorage.setItem(CHAVE_PARTIDA, JSON.stringify(g));
     } catch {}
-  }, [pronto, cenarioId, escolhido, itens, combinados, nivel, desafio]);
+  }, [pronto, cenarioId, escolhido, itens, combinados, tribo, jeitos, nivel, desafio]);
 
   const fecharAviso = useCallback(() => setAviso(null), []);
 
@@ -135,19 +146,23 @@ function useEstado() {
     setEscolhido(true);
     setItens([]);
     setCombinados([]);
-    ir("montagem");
+    setJeitos([]);
+    ir("tribo");
   };
 
   const recomecar = () => {
     track("mochila_recomecada", { cenario: cenarioId });
     setItens([]);
     setCombinados([]);
+    setJeitos([]);
     setNivel(0);
     ir("escolha");
   };
 
   const cenario = cenarioPorId(cenarioId)!;
-  const rotulo = rotuloDe(cenarioId, itens, combinados);
+  // Memo: a prévia do card redesenha quando eixos ou rótulo mudam de referência.
+  const eixos = useMemo(() => eixosDe(cenarioId, itens, combinados, jeitos), [cenarioId, itens, combinados, jeitos]);
+  const rotulo = useMemo(() => rotuloDe(cenarioId, itens, combinados, eixos), [cenarioId, itens, combinados, eixos]);
   const visiveis = itens.filter((id) => ITENS[id].nivel <= nivel);
   const escondidos = itens.length - visiveis.length;
   const linhasChecklist = [...combinados.map((i) => cenario.combinados[i]), ...LINHAS_FIXAS];
@@ -163,6 +178,10 @@ function useEstado() {
     setItens,
     combinados,
     setCombinados,
+    tribo,
+    setTribo,
+    jeitos,
+    setJeitos,
     nivel,
     setNivel,
     desafio,
@@ -177,6 +196,7 @@ function useEstado() {
     fontes,
     escolherCenario,
     recomecar,
+    eixos,
     rotulo,
     visiveis,
     escondidos,
@@ -192,10 +212,12 @@ const Contexto = createContext<Partida | null>(null);
 // Seta do header: uma etapa pra trás. Compartilhar e desafiar saem do resultado, então voltam pra ele.
 const ETAPA_ANTERIOR: Partial<Record<Etapa, Etapa>> = {
   escolha: "inicio",
-  montagem: "escolha",
+  tribo: "escolha",
+  montagem: "tribo",
   revelacao: "montagem",
   combinados: "revelacao",
-  resultado: "combinados",
+  jeitos: "combinados",
+  resultado: "jeitos",
   compartilhar: "resultado",
   desafiar: "resultado",
 };

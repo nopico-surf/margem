@@ -33,6 +33,8 @@ export type Cenario = {
   pra: string;
   itens: string[];
   combinados: string[];
+  // Índices dos combinados de ponto de encontro ou de volta (eixo Volta x Presença).
+  combinadosVolta: number[];
   // Janela do cenário sazonal (ISO, inclusive). Fora dela some da escolha; link de desafio continua.
   fim?: string;
   selo?: string;
@@ -88,6 +90,7 @@ export const CENARIOS: Cenario[] = [
     pra: "pra uma festa",
     itens: [...COMUNS_IDS, "remedio", "caixa-de-som", "maquiagem"],
     combinados: ["Combinar com quem você volta.", "Avisar alguém que horas pretende chegar.", "Saber o endereço exato da festa.", COPO],
+    combinadosVolta: [0],
   },
   {
     id: "show",
@@ -97,6 +100,7 @@ export const CENARIOS: Cenario[] = [
     pra: "pra um show",
     itens: [...COMUNS_IDS, "protetor-auricular", "pochete", "leque"],
     combinados: ["Combinar um ponto de encontro se o grupo se perder.", "Saber onde fica o posto médico.", "Combinar um horário de checar se tá todo mundo bem.", COPO],
+    combinadosVolta: [0],
   },
   {
     id: "bloco",
@@ -106,6 +110,7 @@ export const CENARIOS: Cenario[] = [
     pra: "pra um bloco",
     itens: [...COMUNS_IDS, "protetor-solar", "bone", "glitter"],
     combinados: ["Combinar um ponto de encontro.", "Deixar o celular no bolso da frente.", "Saber onde tem banheiro e sombra no caminho."],
+    combinadosVolta: [0],
   },
   {
     id: "virada",
@@ -119,6 +124,7 @@ export const CENARIOS: Cenario[] = [
       "Combinar a volta antes da meia-noite, quando o transporte lota e encarece.",
       "Combinar de ficar de olho um no outro durante a festa.",
     ],
+    combinadosVolta: [0, 1],
     fim: "2027-01-05",
     selo: "Só até 5 de jan",
   },
@@ -153,7 +159,42 @@ export const LINHAS_FIXAS = [
 export const ENDERECO_CURTO = "somosmargem.com.br/mochila";
 export const URL_DO_JOGO = "https://www.somosmargem.com.br/mochila";
 
-export const NIVEIS: { nivel: Nivel; nome: string; apoio: string }[] = [
+// Tribo: só selo no card e no resultado. Não muda a prateleira nem os eixos.
+export type Tribo = { id: string; nome: string; estilo: string; frase: string };
+
+export const TRIBOS: Tribo[] = [
+  { id: "pista", nome: "Da pista", estilo: "Eletrônica", frase: "Horas de som alto e pouca vontade de sentar." },
+  { id: "baile", nome: "Do baile", estilo: "Funk", frase: "O grave que dá pra sentir no peito." },
+  { id: "rima", nome: "Da rima", estilo: "Rap", frase: "Vai pela letra, presta atenção no que tá sendo dito." },
+  { id: "paz", nome: "Paz e amor", estilo: "Reggae", frase: "Sem pressa, com todo mundo junto." },
+  { id: "roda", nome: "Da roda", estilo: "Samba e pagode", frase: "Começa cedo, acaba tarde, todo mundo cantando junto." },
+  { id: "mosh", nome: "Do mosh", estilo: "Rock", frase: "Sai de lá suado e feliz." },
+  { id: "modao", nome: "Do modão", estilo: "Sertanejo", frase: "A música que todo mundo sabe de cor." },
+  { id: "arrasta", nome: "Do arrasta-pé", estilo: "Forró", frase: "Dançar colado até o pé reclamar." },
+  { id: "fluxo", nome: "Do fluxo", estilo: "De tudo um pouco", frase: "A playlist muda conforme a noite." },
+];
+
+export function triboPorId(id: string | null): Tribo | undefined {
+  return TRIBOS.find((t) => t.id === id);
+}
+
+// Polos dos quatro eixos. Cada jeito soma bônus em até dois polos.
+export type Polo = "corpo" | "festa" | "grupo" | "autonomia" | "volta" | "presenca" | "planejamento" | "leveza";
+
+export type Jeito = { id: string; nome: string; bonus: Partial<Record<Polo, number>> };
+
+export const JEITOS: Jeito[] = [
+  { id: "olho", nome: "Fico de olho em todo mundo", bonus: { grupo: 3, corpo: 1 } },
+  { id: "hora", nome: "Sei a hora de ir embora", bonus: { volta: 3, planejamento: 2 } },
+  { id: "carro", nome: "Sou quem chama o carro", bonus: { volta: 2, grupo: 2 } },
+  { id: "proxima", nome: "Sou quem puxa a próxima", bonus: { presenca: 3, festa: 2 } },
+  { id: "lembrou", nome: "Sou quem leva o que ninguém lembrou", bonus: { grupo: 2, planejamento: 2 } },
+  { id: "fluxo", nome: "Vou no fluxo, resolvo no caminho", bonus: { leveza: 3, presenca: 1 } },
+];
+
+export const QTD_JEITOS = 2;
+
+export const NIVEIS:{ nivel: Nivel; nome: string; apoio: string }[] = [
   { nivel: 0, nome: "Só o básico", apoio: "Itens íntimos ficam fora da imagem." },
   { nivel: 1, nome: "Básico e cuidado íntimo", apoio: "Inclui camisinha e remédio." },
   { nivel: 2, nome: "Tudo o que eu levei", apoio: "Inclui canudo, seda e soro." },
