@@ -262,7 +262,7 @@ body:has(.mochila-painel-montagem) {
   max-width: 100%;
   margin: 0;
   padding: var(--spacing-10) var(--spacing-16);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   background: var(--colors-brand-primary-900);
   color: var(--colors-neutral-0);
   font-weight: var(--font-weight-bold);
@@ -323,7 +323,7 @@ body:has(.mochila-painel-montagem) {
   width: calc(var(--size-40) + var(--size-4));
   height: calc(var(--size-40) + var(--size-4));
   border: var(--border-width-medium) solid var(--colors-neutral-950);
-  border-radius: var(--radius-full);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   color: var(--colors-brand-primary-900);
   cursor: pointer;
@@ -380,7 +380,7 @@ body:has(.mochila-painel-montagem) {
   justify-content: center;
   width: var(--size-56);
   height: var(--size-56);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   background: var(--colors-neutral-100);
 }
 
@@ -415,8 +415,8 @@ body:has(.mochila-painel-montagem) {
   width: 100%;
   min-height: var(--m-fila);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-xl);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   font: inherit;
   text-align: left;
@@ -456,7 +456,7 @@ body:has(.mochila-painel-montagem) {
   justify-content: center;
   width: var(--m-cel);
   height: var(--m-cel);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   background: var(--colors-neutral-100);
 }
 
@@ -500,8 +500,8 @@ body:has(.mochila-painel-montagem) {
   gap: var(--spacing-6);
   min-width: 0;
   padding: var(--spacing-10) var(--spacing-6) var(--spacing-12);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-md);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   color: var(--colors-neutral-950);
   font: inherit;
@@ -512,7 +512,7 @@ body:has(.mochila-painel-montagem) {
 .mochila-opcoes[data-colunas="2"] .mochila-opcao {
   gap: var(--spacing-10);
   padding: var(--spacing-12);
-  border-radius: var(--radius-xl);
+  border-radius: 0;
 }
 
 .mochila-opcao:hover {
@@ -543,7 +543,7 @@ body:has(.mochila-painel-montagem) {
   justify-content: center;
   width: var(--m-cel);
   height: var(--m-cel);
-  border-radius: var(--radius-md);
+  border-radius: 0;
 }
 
 .mochila-opcao-nome {
@@ -776,8 +776,8 @@ button.mochila-celula {
   min-height: calc(var(--size-40) + var(--size-4));
   margin: 0;
   padding: var(--spacing-10) var(--spacing-12);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-md);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   font-weight: var(--font-weight-semi-bold);
   font-size: var(--font-size-sm);
@@ -806,8 +806,8 @@ button.mochila-celula {
   flex-direction: column;
   gap: var(--spacing-12);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-xl);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
 }
 
@@ -821,8 +821,8 @@ button.mochila-celula {
   align-items: flex-start;
   gap: var(--spacing-14);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-xl);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   animation: mochila-surge var(--duration-420) var(--easing-out-quart) both;
 }
@@ -839,7 +839,7 @@ button.mochila-celula {
   justify-content: center;
   width: var(--size-80);
   height: var(--size-80);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   background: var(--colors-neutral-100);
 }
 
@@ -926,7 +926,7 @@ button.mochila-celula {
   justify-content: center;
   width: var(--m-cel);
   height: var(--size-40);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   background: var(--colors-neutral-100);
 }
 
@@ -973,7 +973,7 @@ button.mochila-celula {
   gap: var(--spacing-14);
   padding: var(--spacing-16);
   border: var(--border-width-medium) solid var(--colors-neutral-950);
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   background: var(--colors-neutral-0);
 }
 
@@ -1039,7 +1039,7 @@ button.mochila-celula {
   gap: var(--spacing-14);
   padding: var(--spacing-16);
   border: var(--border-width-medium) solid var(--colors-neutral-950);
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   background: var(--colors-neutral-0);
 }
 
@@ -1052,7 +1052,7 @@ button.mochila-celula {
   width: var(--size-80);
   height: var(--size-80);
   border: var(--border-width-medium) solid var(--colors-neutral-950);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   background: var(--colors-brand-secondary-300);
 }
 
@@ -1096,8 +1096,8 @@ button.mochila-celula {
   gap: var(--spacing-14);
   min-height: var(--m-cel);
   padding: var(--spacing-14) var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-md);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   font-size: var(--m-texto);
   line-height: var(--line-height-xl);
@@ -1131,8 +1131,8 @@ button.mochila-celula {
   gap: var(--spacing-10);
   margin: 0;
   padding: var(--spacing-14);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-xl);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   list-style: none;
 }
@@ -1154,7 +1154,7 @@ button.mochila-celula {
   width: var(--size-20);
   height: var(--size-20);
   margin-top: var(--size-1);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: var(--colors-brand-primary-700);
 }
 
@@ -1194,7 +1194,7 @@ button.mochila-celula {
   display: flex;
   padding: var(--spacing-4);
   border: var(--border-width-medium) solid var(--colors-neutral-950);
-  border-radius: var(--radius-full);
+  border-radius: 0;
   background: var(--colors-neutral-0);
 }
 
@@ -1202,7 +1202,7 @@ button.mochila-celula {
   flex: 1 1 0;
   min-height: var(--size-40);
   border: 0;
-  border-radius: var(--radius-full);
+  border-radius: 0;
   background: transparent;
   color: var(--colors-neutral-950);
   font: inherit;
@@ -1245,8 +1245,8 @@ button.mochila-celula {
   gap: var(--spacing-12);
   min-height: var(--size-56);
   padding: var(--spacing-12) var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-100);
-  border-radius: var(--radius-md);
+  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border-radius: 0;
   background: var(--colors-neutral-0);
   font-size: var(--m-texto);
   line-height: var(--line-height-xl);
@@ -1450,14 +1450,14 @@ button.mochila-celula {
 
 .mochila-osso-linha {
   height: var(--size-64);
-  border-radius: var(--radius-xl);
+  border-radius: 0;
 }
 
 /* Altura do Button medium: padding 14 em cima e embaixo mais a linha. */
 .mochila-osso-botao {
   height: calc(var(--spacing-14) * 2 + var(--line-height-xl));
   margin-top: var(--spacing-12);
-  border-radius: var(--radius-full);
+  border-radius: 0;
 }
 
 .mochila-osso-previa {
