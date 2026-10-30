@@ -61,7 +61,7 @@ export function SeletorNivel({
       </fieldset>
 
       {confirmando && (
-        <div id="mochila-confirmacao" role="alertdialog" aria-labelledby="mochila-conf" className="mochila-caixa mochila-caixa-forte mochila-confirmacao">
+        <div id="mochila-confirmacao" role="alertdialog" aria-labelledby="mochila-conf" className="mochila-caixa mochila-confirmacao">
           <p id="mochila-conf" className="mochila-confirmacao-texto">
             Quem abrir seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
           </p>

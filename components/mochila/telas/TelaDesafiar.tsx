@@ -90,7 +90,7 @@ export function TelaDesafiar() {
         />
 
         {erroImagem ? (
-          <div className="mochila-caixa mochila-caixa-forte mochila-erro-imagem">
+          <div className="mochila-caixa mochila-erro-imagem">
             <p role="status" className="mochila-abre">Não deu pra gerar a imagem agora.</p>
             <div className="mochila-acoes-lado">
               <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => {

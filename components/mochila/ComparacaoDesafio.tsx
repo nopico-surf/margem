@@ -15,31 +15,39 @@ export function ComparacaoDesafio({
   outra: string[];
   aoDevolver: () => void;
 }) {
-  const iguais = minha.filter((id) => outra.includes(id)).length;
-  const soMinha = minha.find((id) => !outra.includes(id));
-  const soOutra = outra.find((id) => !minha.includes(id));
+  const iguais = minha.filter((id) => outra.includes(id));
+  const soMinha = minha.filter((id) => !outra.includes(id));
+  const soOutra = outra.filter((id) => !minha.includes(id));
 
   return (
-    <section className="mochila-caixa mochila-caixa-forte mochila-comparacao" aria-label="Comparação do desafio">
+    <section className="mochila-caixa mochila-comparacao" aria-label="Comparação do desafio">
       <p className="mochila-titulo-bloco">
-        {iguais === 0 ? "As mochilas saíram bem diferentes. Cada rolê tem seu jeito." : iguais === 1 ? "Vocês levaram 1 coisa igual." : `Vocês levaram ${iguais} coisas iguais.`}
+        {iguais.length === 0 ? "As mochilas saíram bem diferentes. Cada rolê tem seu jeito." : iguais.length === 1 ? "Vocês levaram 1 coisa igual." : `Vocês levaram ${iguais.length} coisas iguais.`}
       </p>
-      {soMinha && (
-        <p className="mochila-comparacao-linha">
-          <span className="mochila-comparacao-tile" data-destaque="true">
-            <img className="mochila-sprite mochila-sprite-pequeno" src={spriteDe(soMinha)} alt="" data-espacos={ITENS[soMinha].espacos} />
-          </span>
-          <span>Só você levou: {ITENS[soMinha].curto.toLowerCase()}.</span>
-        </p>
-      )}
-      {soOutra && (
-        <p className="mochila-comparacao-linha">
+      {iguais.map((id) => (
+        <p key={id} className="mochila-comparacao-linha">
           <span className="mochila-comparacao-tile">
-            <img className="mochila-sprite mochila-sprite-pequeno" src={spriteDe(soOutra)} alt="" data-espacos={ITENS[soOutra].espacos} />
+            <img className="mochila-sprite mochila-sprite-pequeno" src={spriteDe(id)} alt="" data-espacos={ITENS[id].espacos} />
           </span>
-          <span>Só a outra mochila levou: {ITENS[soOutra].curto.toLowerCase()}.</span>
+          <span>{ITENS[id].curto}.</span>
         </p>
-      )}
+      ))}
+      {soMinha.map((id) => (
+        <p key={id} className="mochila-comparacao-linha">
+          <span className="mochila-comparacao-tile" data-destaque="true">
+            <img className="mochila-sprite mochila-sprite-pequeno" src={spriteDe(id)} alt="" data-espacos={ITENS[id].espacos} />
+          </span>
+          <span>Só você levou: {ITENS[id].curto.toLowerCase()}.</span>
+        </p>
+      ))}
+      {soOutra.map((id) => (
+        <p key={id} className="mochila-comparacao-linha">
+          <span className="mochila-comparacao-tile">
+            <img className="mochila-sprite mochila-sprite-pequeno" src={spriteDe(id)} alt="" data-espacos={ITENS[id].espacos} />
+          </span>
+          <span>Só a outra mochila levou: {ITENS[id].curto.toLowerCase()}.</span>
+        </p>
+      ))}
       <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={aoDevolver}>
         Devolver o desafio
       </Button>

@@ -80,7 +80,7 @@ export function GaleriaMochila() {
               <span>Checklist copiado. É só colar no grupo.</span>
             </p>
           </Estado>
-          <div className="mochila-caixa mochila-caixa-forte mochila-erro-imagem">
+          <div className="mochila-caixa mochila-erro-imagem">
             <p className="mochila-abre">Não deu pra gerar a imagem agora.</p>
             <div className="mochila-acoes-lado">
               <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={nada}>
