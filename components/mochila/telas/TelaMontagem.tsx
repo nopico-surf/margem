@@ -39,7 +39,6 @@ export function TelaMontagem() {
     <>
       <header className="mochila-cabeca mochila-cabeca-montagem">
         <h1 className="mochila-titulo">Mochila do Rolê</h1>
-        <p className="mochila-abertura">{cenario.abertura}</p>
         <MochilaGrade itens={itens} contador aoTirar={tocarItem} />
       </header>
       <div className="mochila-painel mochila-painel-montagem">

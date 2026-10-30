@@ -72,7 +72,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-10);
-  padding: var(--spacing-20) var(--spacing-16) var(--spacing-32);
+  padding: var(--spacing-0) var(--spacing-16) var(--spacing-32);
 }
 
 .mochila-cabeca-linha {
@@ -89,7 +89,7 @@
 
 .mochila-cabeca-montagem {
   gap: var(--spacing-8);
-  padding: var(--spacing-12) var(--spacing-16) var(--spacing-24);
+  padding: var(--spacing-0) var(--spacing-16) var(--spacing-24);
 }
 
 .mochila-cabeca-montagem .mochila-moldura,
@@ -105,8 +105,7 @@
 
 .mochila-cabeca-resultado .mochila-titulo,
 .mochila-cabeca-previa .mochila-titulo,
-.mochila-cabeca-montagem .mochila-titulo,
-.mochila-cabeca-montagem .mochila-abertura {
+.mochila-cabeca-montagem .mochila-titulo {
   text-align: center;
 }
 
@@ -134,17 +133,11 @@
   color: var(--colors-brand-primary-900);
 }
 
-.mochila-abertura,
 .mochila-instrucao {
   margin: 0;
   font-size: var(--m-texto);
   line-height: var(--line-height-xl);
   color: var(--colors-brand-secondary-950);
-}
-
-.mochila-abertura {
-  font-weight: var(--font-weight-semi-bold);
-  color: var(--colors-brand-primary-900);
 }
 
 .mochila-painel {
