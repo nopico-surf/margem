@@ -48,7 +48,7 @@ export function TelaCombinados() {
         </fieldset>
         <div className="mochila-acoes">
           <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={combinados.length === 0} onClick={() => concluir(combinados)}>
-            Ver minha mochila
+            Continuar
           </Button>
           <Button
             variante="secondary"
