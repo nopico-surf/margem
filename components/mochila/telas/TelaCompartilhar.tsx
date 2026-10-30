@@ -32,7 +32,10 @@ export function TelaCompartilhar() {
         url = URL.createObjectURL(blob);
         setPrevia({ url, blob });
       })
-      .catch(() => !cancelado && setErroImagem(true));
+      .catch((e) => {
+        console.error("[mochila] card não foi gerado", e);
+        if (!cancelado) setErroImagem(true);
+      });
     return () => {
       cancelado = true;
       if (url) URL.revokeObjectURL(url);

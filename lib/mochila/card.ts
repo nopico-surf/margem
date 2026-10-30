@@ -27,7 +27,11 @@ function carregar(src: string): Promise<HTMLImageElement> {
     p = new Promise((ok, erro) => {
       const img = new Image();
       img.onload = () => ok(img);
-      img.onerror = erro;
+      img.onerror = () => {
+        // Sem isso a falha ficava guardada e o "Tentar de novo" repetia o erro sem baixar de novo.
+        imagens.delete(src);
+        erro(new Error(`imagem não carregou: ${src}`));
+      };
       img.src = src;
     });
     imagens.set(src, p);
@@ -123,11 +127,12 @@ export async function desenharCard(opcoes: {
   const inset = feed ? 80 : 250;
   const largura = LARGURA - MARGEM_LADO * 2;
 
+  // Se a fonte não carregar, o card sai com a fonte de reserva em vez de não sair.
   await Promise.all([
     document.fonts.load(fonte(700, 92, fontes.pixel)),
     document.fonts.load(fonte(600, 48, fontes.pixel)),
     document.fonts.load(fonte(600, 46, fontes.texto)),
-  ]);
+  ]).catch((e) => console.error("[mochila] fonte do card não carregou", e));
   const virada = cenario === "virada";
   const [logo, mochila, fogos, ...sprites] = await Promise.all([
     carregar("/icons/logo-margem.svg"),
