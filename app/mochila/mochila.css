@@ -165,6 +165,23 @@
   padding-bottom: var(--spacing-16);
 }
 
+/* Em tela baixa (S22 com a barra do navegador) a prateleira termina na dobra e esconde o botão.
+   Ele gruda no pé da tela, com o fundo do painel indo de borda a borda por cima da prateleira.
+   O overflow-x: hidden do globals.css faz do body um contêiner de rolagem que nunca rola, e o sticky
+   se prende a ele em vez da tela; clip corta igual sem criar contêiner. Só nesta tela. */
+html:has(.mochila-painel-montagem),
+body:has(.mochila-painel-montagem) {
+  overflow-x: clip;
+}
+
+.mochila-painel-montagem .mochila-acoes {
+  position: sticky;
+  bottom: 0;
+  margin: 0 calc(var(--spacing-16) * -1) calc(var(--spacing-16) * -1);
+  padding: var(--spacing-12) var(--spacing-16) max(var(--spacing-16), env(safe-area-inset-bottom));
+  background: var(--colors-neutral-50);
+}
+
 .mochila-painel-resultado {
   gap: var(--spacing-24);
 }
