@@ -70,7 +70,7 @@ export function TelaResultado() {
     <>
       <header className="mochila-cabeca mochila-cabeca-resultado">
         <h1 className="mochila-titulo">Sua mochila saiu assim:</h1>
-        <MochilaGrade itens={itens} />
+        <MochilaGrade itens={itens} fileiras />
         <div className="mochila-rotulo">
           <p>
             {rotulo.nome}

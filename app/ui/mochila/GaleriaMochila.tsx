@@ -41,6 +41,15 @@ export function GaleriaMochila() {
           <Estado nome="resultado, só leitura">
             <MochilaGrade itens={["garrafa", "telefone", "dinheiro", "carregador", "camisinha", "canudo", "fone"]} />
           </Estado>
+          <Estado nome="resultado em fileiras, 3 espaços">
+            <MochilaGrade itens={["garrafa", "telefone", "fone"]} fileiras />
+          </Estado>
+          <Estado nome="resultado em fileiras, 5 espaços">
+            <MochilaGrade itens={["garrafa", "telefone", "dinheiro", "carregador"]} fileiras />
+          </Estado>
+          <Estado nome="resultado em fileiras, cheia">
+            <MochilaGrade itens={["telefone", "garrafa", "dinheiro", "carregador", "caixa-de-som"]} fileiras />
+          </Estado>
 
           <h2 className="mochila-titulo-bloco">ItemPrateleira</h2>
           <Estado nome="fora, na mochila, não cabe, item de 2">

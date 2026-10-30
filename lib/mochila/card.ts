@@ -1,6 +1,7 @@
 import { CENARIOS, ENDERECO_CURTO, ITENS, spriteDe, type CenarioId, type Tribo } from "./conteudo";
 import { NOME_POLO, type Eixo } from "./eixos";
 import type { Rotulo } from "./rotulo";
+import { fileiras } from "./encaixe";
 
 // Desenha no canvas o card compartilhável, igual à tela U2-Card do Claude Design (Stories
 // 1080x1920 e feed 1080x1350). Roda só no navegador. As cores vêm dos tokens do CSS na hora de
@@ -84,28 +85,6 @@ function quebrarEquilibrado(ctx: CanvasRenderingContext2D, texto: string, max: n
     else hi = meio;
   }
   return quebrar(ctx, texto, hi);
-}
-
-type Bloco = { id: string; ordem: number; espacos: 1 | 2 };
-
-function fileiras(ids: string[]): Bloco[][] {
-  const itens = ids.map((id, ordem) => ({ id, ordem, espacos: ITENS[id].espacos }));
-  const total = itens.reduce((s, it) => s + it.espacos, 0);
-  const dois = itens.filter((it) => it.espacos === 2);
-  let n = total <= 4 ? 1 : total <= 8 ? 2 : 3;
-  n = Math.max(n, Math.min(dois.length, 3));
-  const rows = Array.from({ length: n }, () => ({ lista: [] as Bloco[], usado: 0 }));
-  dois.forEach((it, k) => {
-    rows[k % n].lista.push(it);
-    rows[k % n].usado += 2;
-  });
-  for (const it of itens.filter((i) => i.espacos === 1)) {
-    let melhor = rows[0];
-    for (const r of rows) if (r.usado < melhor.usado) melhor = r;
-    melhor.lista.push(it);
-    melhor.usado += 1;
-  }
-  return rows.filter((r) => r.lista.length).map((r) => r.lista.sort((a, b) => a.ordem - b.ordem));
 }
 
 // Medidas da tela U2-Card. O feed é desenhado direto em 1080x1350.

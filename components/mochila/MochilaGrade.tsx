@@ -1,20 +1,43 @@
 "use client";
 
 import { CAPACIDADE, ITENS, spriteDe } from "@/lib/mochila/conteudo";
-import { encaixar, espacosUsados } from "@/lib/mochila/encaixe";
+import { encaixar, espacosUsados, fileiras as emFileiras } from "@/lib/mochila/encaixe";
 
 // Componente novo (sem equivalente no Figma): a grade 3x3 da mochila, telas B-Montagem e
-// B-Resultado do Claude Design. Na montagem tem o contador e cada item sai com um toque; no
-// resultado só mostra.
+// B-Resultado do Claude Design. Na montagem tem o contador e cada item sai com um toque. Com
+// `fileiras`, sai igual à mochila do card: fileiras que fecham, com o nome embaixo, sem vazio.
 export function MochilaGrade({
   itens,
   contador = false,
   aoTirar,
+  fileiras = false,
 }: {
   itens: string[];
   contador?: boolean;
   aoTirar?: (id: string) => void;
+  fileiras?: boolean;
 }) {
+  if (fileiras) {
+    return (
+      <div className="mochila-moldura">
+        <div className="mochila-miolo">
+          <div className="mochila-fileiras">
+            {emFileiras(itens).map((row) => (
+              <div key={row[0].id} className="mochila-fileira">
+                {row.map((b) => (
+                  <div key={b.id} className="mochila-celula mochila-celula-nome" style={{ flexGrow: b.espacos }} role="img" aria-label={ITENS[b.id].nome}>
+                    <img className="mochila-sprite" src={spriteDe(b.id)} alt="" data-espacos={b.espacos} />
+                    <span aria-hidden="true">{ITENS[b.id].curto}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const posicoes = encaixar(itens) ?? [];
   const usados = espacosUsados(itens);
   const vazias = Array.from({ length: CAPACIDADE }, (_, i) => i).filter(
