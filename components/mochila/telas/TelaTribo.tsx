@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
 import { TRIBOS, spriteDe } from "@/lib/mochila/conteudo";
 import { track } from "@/lib/mixpanel";
 import { useLiberada, usePartida } from "../Partida";
@@ -30,7 +29,11 @@ export function TelaTribo() {
                 aria-label={`${t.estilo}, ${t.nome}`}
                 className="mochila-opcao"
                 data-marcada={marcada}
-                onClick={() => setTribo(t.id)}
+                onClick={() => {
+                  setTribo(t.id);
+                  track("mochila_tribo", { cenario: cenarioId, tribo: t.id });
+                  ir("montagem");
+                }}
               >
                 <span className="mochila-opcao-tile">
                   <img className="mochila-sprite" src={spriteDe(`tribo-${t.id}`)} alt="" />
@@ -47,21 +50,6 @@ export function TelaTribo() {
               </button>
             );
           })}
-        </div>
-        <div className="mochila-acoes">
-          <Button
-            variante="primary"
-            tamanho="medium"
-            redondo
-            larguraTotal
-            disabled={!tribo}
-            onClick={() => {
-              track("mochila_tribo", { cenario: cenarioId, tribo });
-              ir("montagem");
-            }}
-          >
-            Continuar
-          </Button>
         </div>
       </div>
     </>
