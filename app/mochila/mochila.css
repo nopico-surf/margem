@@ -125,7 +125,7 @@
   font-weight: var(--font-weight-semi-bold);
   font-size: calc(var(--font-size-2xl) + var(--size-2));
   line-height: var(--line-height-4xl);
-  color: var(--colors-brand-primary-900);
+  color: var(--colors-neutral-950);
 }
 
 .mochila-titulo-menor {
@@ -571,6 +571,7 @@ body:has(.mochila-painel-montagem) {
   position: absolute;
   top: calc(var(--spacing-10) * -1);
   right: var(--spacing-12);
+  border-radius: 0;
 }
 
 /* Mochila: moldura verde escura em degrau, grade 3x3 */
@@ -1105,6 +1106,12 @@ button.mochila-celula {
   background: var(--colors-brand-secondary-300);
   color: var(--colors-brand-secondary-950);
   font-weight: var(--font-weight-semi-bold);
+}
+
+/* Com "Não vou fazer combinados" marcado, as outras linhas ficam apagadas, mas seguem clicáveis. */
+.mochila-combinado[data-inativo="true"] {
+  border-color: var(--colors-alpha-48);
+  color: var(--colors-alpha-48);
 }
 
 .mochila-combinado:has(:focus-visible) {
