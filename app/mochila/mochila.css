@@ -175,7 +175,8 @@ body:has(.mochila-painel-montagem) {
   background: var(--colors-neutral-50);
 }
 
-.mochila-painel-montagem .mochila-acoes-compartilhar {
+.mochila-painel-montagem .mochila-acoes-compartilhar,
+.mochila-painel-montagem .mochila-confirmacao .mochila-acoes {
   position: static;
   margin: 0;
   padding: 0;
