@@ -654,6 +654,17 @@ button.mochila-celula {
   color: var(--colors-neutral-950);
 }
 
+/* Nome em até duas linhas, mesmo sendo uma palavra só; passando disso, corta a segunda. */
+.mochila-celula-nome > span {
+  display: -webkit-box;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 /* Numa fileira apertada o item de 2 encolhe junto com a célula, como no card. */
 .mochila-celula-nome .mochila-sprite {
   max-width: 100%;
