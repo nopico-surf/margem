@@ -256,7 +256,7 @@ Linha opcional abaixo da frase, no Resultado (não vai no card): "Redução de d
 - Erro: Não deu pra gerar a imagem agora. · Botões: Tentar de novo / Copiar link
 
 **Confirmação do nível "Tudo"**
-- Quem vir seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
+- Quem ver seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
 - Botões: Mostrar tudo / Voltar pro básico
 
 **Texto dentro do card (imagem)**

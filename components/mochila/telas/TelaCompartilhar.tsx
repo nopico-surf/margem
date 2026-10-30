@@ -106,7 +106,7 @@ export function TelaCompartilhar() {
         {confirmando && (
           <div role="alertdialog" aria-labelledby="mochila-conf" className="mochila-caixa mochila-caixa-forte mochila-confirmacao">
             <p id="mochila-conf" className="mochila-confirmacao-texto">
-              Quem vir seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
+              Quem ver seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
             </p>
             <div className="mochila-acoes">
               <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => escolherNivel(0)}>
