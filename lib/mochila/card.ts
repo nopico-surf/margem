@@ -90,7 +90,7 @@ function quebrarEquilibrado(ctx: CanvasRenderingContext2D, texto: string, max: n
 // Medidas da tela U2-Card. O feed é desenhado direto em 1080x1350.
 const MEDIDAS = {
   stories: { inset: 236, gap: 22, logoW: 348, logoH: 48, logoGap: 16, titulo: 66, sprite: 120, destino: 36, f1: 46, f2: 38, rPadY: 18, rPadX: 32, tGap: 14, frase: 38, barra: 30, barraH: 28, barraB: 4, barraGap: 10, eGap: 20, ePad: 28, selo: { s: 10, padY: 12, padX: 24, gap: 16, icone: 64, b: 4, fonte: 40 }, tagTop: 62, bagTop: 60, bagPad: 26, convite: 40 },
-  feed: { inset: 64, gap: 18, logoW: 261, logoH: 36, logoGap: 12, titulo: 54, sprite: 96, destino: 30, f1: 40, f2: 32, rPadY: 14, rPadX: 28, tGap: 12, frase: 34, barra: 26, barraH: 22, barraB: 3, barraGap: 8, eGap: 16, ePad: 22, selo: { s: 8, padY: 10, padX: 20, gap: 14, icone: 48, b: 3, fonte: 34 }, tagTop: 44, bagTop: 46, bagPad: 22, convite: 34 },
+  feed: { inset: 80, gap: 18, logoW: 261, logoH: 36, logoGap: 12, titulo: 54, sprite: 96, destino: 30, f1: 40, f2: 32, rPadY: 14, rPadX: 28, tGap: 12, frase: 34, barra: 26, barraH: 22, barraB: 3, barraGap: 8, eGap: 16, ePad: 22, selo: { s: 8, padY: 10, padX: 20, gap: 14, icone: 48, b: 3, fonte: 34 }, tagTop: 44, bagTop: 46, bagPad: 22, convite: 34 },
 };
 
 export async function desenharCard(opcoes: {
@@ -198,6 +198,13 @@ export async function desenharCard(opcoes: {
   const total = alturaCabeca + alturaRotulo + z.tagTop + alturaMochila + alturaEixos + z.convite * 1.2 + z.gap * 4;
   let y = z.inset + (altura - z.inset * 2 - total) / 2;
   const x0 = MARGEM_LADO;
+
+  // No feed, mochila cheia encostava na borda. Se não couber com o inset em cima e embaixo, o
+  // bloco inteiro diminui por igual a partir do centro, sem apertar nada por dentro.
+  if (feed) {
+    const k = Math.min(1, (altura - z.inset * 2) / total);
+    ctx.setTransform(k, 0, 0, k, ((1 - k) * LARGURA) / 2, ((1 - k) * altura) / 2);
+  }
 
   // Cabeçalho
   let ty = y + (alturaCabeca - blocoTexto) / 2;
