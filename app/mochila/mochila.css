@@ -625,11 +625,6 @@ button.mochila-celula {
   cursor: pointer;
 }
 
-/* Item com linha que não é tocável: só a linha fica mais fraca que a dos tocáveis. */
-div.mochila-celula {
-  border-color: var(--colors-alpha-40);
-}
-
 .mochila-celula-vazia {
   background: var(--colors-brand-primary-900);
 }
@@ -807,7 +802,7 @@ div.mochila-celula {
   flex-direction: column;
   gap: var(--spacing-12);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border: var(--border-width-medium) solid var(--colors-alpha-8);
   border-radius: 0;
   background: var(--colors-neutral-0);
 }
@@ -822,7 +817,7 @@ div.mochila-celula {
   align-items: flex-start;
   gap: var(--spacing-14);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-alpha-40);
+  border: var(--border-width-medium) solid var(--colors-alpha-8);
   border-radius: 0;
   background: var(--colors-neutral-0);
   animation: mochila-surge var(--duration-420) var(--easing-out-quart) both;
@@ -973,7 +968,7 @@ div.mochila-celula {
   flex-direction: column;
   gap: var(--spacing-14);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border: var(--border-width-medium) solid var(--colors-alpha-8);
   border-radius: 0;
   background: var(--colors-neutral-0);
 }
@@ -1039,7 +1034,7 @@ div.mochila-celula {
   align-items: flex-start;
   gap: var(--spacing-14);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border: var(--border-width-medium) solid var(--colors-alpha-8);
   border-radius: 0;
   background: var(--colors-neutral-50);
 }
