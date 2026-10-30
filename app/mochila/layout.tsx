@@ -11,9 +11,16 @@ import "./mochila.css";
 const pixelify = Pixelify_Sans({ subsets: ["latin"], weight: ["600", "700"], variable: "--font-pixelify" });
 const pressStart = Press_Start_2P({ subsets: ["latin"], weight: "400", variable: "--font-press-start" });
 
+// openGraph e twitter próprios: sem eles a prévia do link herdava título e imagem da Margem. A
+// imagem vem do opengraph-image.tsx; o twitter sem images cai no og:image.
 export const metadata: Metadata = {
   title: "Mochila do Rolê",
   description: "Antes de sair, uma pergunta: o que vai na sua mochila?",
+  openGraph: {
+    title: "Mochila do Rolê",
+    description: "Antes de sair, uma pergunta: o que vai na sua mochila?",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function MochilaLayout({ children }: { children: React.ReactNode }) {
