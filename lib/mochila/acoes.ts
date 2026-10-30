@@ -18,7 +18,7 @@ export function textoDesafio(opcoes: { cenario: Cenario; rotulo: Rotulo; tribo: 
     ...(tribo ? [`🎶 Tribo: ${tribo.nome} (${tribo.estilo})`] : []),
     `✅ ${qtdItens === 1 ? "1 coisa" : `${qtdItens} coisas`} na mochila`,
     "",
-    "Duvido você levar as mesmas. Monta a sua pro mesmo rolê e vê quantas coisas a gente leva igual:",
+    "E você, levaria o quê? Monta a sua pro mesmo rolê e vê o que a gente leva igual e o que uma mochila completa na outra:",
     url,
   ].join("\n");
 }
