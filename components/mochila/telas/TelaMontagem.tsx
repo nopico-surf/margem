@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { ActionRow } from "@/components/conversa/ActionRow";
 import { CAPACIDADE, spriteDe } from "@/lib/mochila/conteudo";
 import { cabe, espacosUsados } from "@/lib/mochila/encaixe";
+import { track } from "@/lib/mixpanel";
 import { MochilaGrade } from "../MochilaGrade";
 import { ItemPrateleira } from "../ItemPrateleira";
 import { ROTAS, useLiberada, usePartida } from "../Partida";
@@ -13,7 +14,7 @@ import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaMontagem() {
   const liberada = useLiberada((p) => p.escolhido);
-  const { cenario, itens, setItens, bip, ir } = usePartida();
+  const { cenario, cenarioId, itens, setItens, bip, ir } = usePartida();
   const router = useRouter();
   const [naoCabe, setNaoCabe] = useState<string | null>(null);
   const [fechando, setFechando] = useState<"aberta" | "fechada" | null>(null);
@@ -22,6 +23,13 @@ export function TelaMontagem() {
   if (!liberada) return <TelaCarregando />;
 
   function fechar() {
+    track("mochila_fechada", {
+      cenario: cenarioId,
+      itens,
+      qtd_itens: itens.length,
+      espacos_usados: espacosUsados(itens),
+      cheia: espacosUsados(itens) >= CAPACIDADE,
+    });
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       ir("revelacao");
       return;
@@ -46,18 +54,23 @@ export function TelaMontagem() {
     );
   }
 
-  function tocarItem(id: string) {
+  // `onde`: tocou o item na prateleira ou na grade da mochila (a grade só tira).
+  function tocarItem(id: string, onde: "prateleira" | "mochila") {
+    const base = { cenario: cenarioId, item: id, onde, espacos_usados: espacosUsados(itens) };
     if (itens.includes(id)) {
+      track("mochila_item_tirado", base);
       setItens(itens.filter((i) => i !== id));
       setNaoCabe(null);
       bip(330);
       return;
     }
     if (!cabe(itens, id)) {
+      track("mochila_item_nao_coube", base);
       setNaoCabe(id);
       bip(140);
       return;
     }
+    track("mochila_item_colocado", base);
     setItens([...itens, id]);
     setNaoCabe(null);
     bip(660);
@@ -69,7 +82,7 @@ export function TelaMontagem() {
     <>
       <header className="mochila-cabeca mochila-cabeca-montagem">
         <h1 className="mochila-titulo">Mochila do Rolê</h1>
-        <MochilaGrade itens={itens} contador aoTirar={tocarItem} />
+        <MochilaGrade itens={itens} contador aoTirar={(id) => tocarItem(id, "mochila")} />
       </header>
       <div className="mochila-painel mochila-painel-montagem">
         <div className="mochila-painel-topo">
@@ -81,7 +94,7 @@ export function TelaMontagem() {
           <ActionRow className="mochila-prateleira">
             <div className="mochila-prateleira-grade">
               {cenario.itens.map((id) => (
-                <ItemPrateleira key={id} id={id} naMochila={itens.includes(id)} naoCabe={naoCabe === id} aoTocar={tocarItem} />
+                <ItemPrateleira key={id} id={id} naMochila={itens.includes(id)} naoCabe={naoCabe === id} aoTocar={(item) => tocarItem(item, "prateleira")} />
               ))}
             </div>
           </ActionRow>

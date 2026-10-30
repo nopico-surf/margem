@@ -627,6 +627,23 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   object-position: center 20%;
 }
 
+/* Card inteiro clicável: o ::after do link (o botão) cobre o card, acima da foto. Sem o afundar do
+   pressed, senão o botão vira o bloco de referência do ::after e ele encolhe no meio do clique. */
+.bloco-cannabis {
+  position: relative;
+}
+
+.bloco-cannabis .btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-index-raised);
+}
+
+.bloco-cannabis .btn:active:not(:disabled):not([data-carregando="true"]) {
+  transform: none;
+}
+
 /* Posição do selo sobre a foto no frame de 360: 23 da direita e 65 de baixo. */
 .bloco-cannabis .selo-giratorio {
   grid-area: foto;

@@ -1,11 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { GlifoContentCopy, GlifoSaveAlt } from "@/components/icons/glifos";
 import { ITENS, spriteDe } from "@/lib/mochila/conteudo";
 import { ficouDeFora } from "@/lib/mochila/rotulo";
 import { baixar, copiar } from "@/lib/mochila/acoes";
 import { checklistTexto, desenharChecklist, paraBlob } from "@/lib/mochila/card";
+import { track } from "@/lib/mixpanel";
 import { MochilaGrade } from "../MochilaGrade";
 import { ComparacaoDesafio } from "../ComparacaoDesafio";
 import { useLiberada, usePartida } from "../Partida";
@@ -13,7 +15,24 @@ import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaResultado() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenarioId, itens, rotulo, desafio, linhasChecklist, fontes, setAviso, ir, recomecar } = usePartida();
+  const { cenarioId, itens, combinados, rotulo, desafio, linhasChecklist, fontes, setAviso, ir, recomecar } = usePartida();
+
+  // Uma vez por chegada na tela (voltar do compartilhar conta de novo).
+  useEffect(() => {
+    if (!liberada) return;
+    track("mochila_resultado_visto", {
+      cenario: cenarioId,
+      rotulo: rotulo.nome,
+      itens,
+      qtd_itens: itens.length,
+      qtd_combinados: combinados.length,
+      ficou_de_fora: ficouDeFora(cenarioId, itens),
+      com_desafio: desafio !== null,
+      iguais_ao_desafio: desafio ? itens.filter((id) => desafio.itens.includes(id)).length : null,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [liberada]);
+
   if (!liberada) return <TelaCarregando />;
 
   async function salvarChecklist() {
@@ -21,15 +40,24 @@ export function TelaResultado() {
     try {
       const canvas = await desenharChecklist(linhasChecklist, fontes());
       baixar(await paraBlob(canvas), "checklist-do-role.png");
+      track("mochila_checklist_baixado", { cenario: cenarioId });
       setAviso("Checklist baixado.");
     } catch {
+      track("mochila_checklist_falhou", { cenario: cenarioId });
       setAviso("Não deu pra gerar a imagem agora.");
     }
   }
 
   async function copiarChecklist() {
     setAviso(null);
-    if (await copiar(checklistTexto(linhasChecklist))) setAviso("Checklist copiado. É só colar no grupo.");
+    const copiou = await copiar(checklistTexto(linhasChecklist));
+    track("mochila_checklist_copiado", { cenario: cenarioId, copiou });
+    if (copiou) setAviso("Checklist copiado. É só colar no grupo.");
+  }
+
+  function irPara(destino: "compartilhar" | "desafiar", evento: string) {
+    track(evento, { cenario: cenarioId });
+    ir(destino);
   }
 
   const fora = ficouDeFora(cenarioId, itens);
@@ -44,7 +72,7 @@ export function TelaResultado() {
         <p className="mochila-rotulo-frase">{rotulo.frase}</p>
       </header>
       <div className="mochila-painel mochila-painel-resultado">
-        {desafio && <ComparacaoDesafio minha={itens} outra={desafio.itens} aoDevolver={() => ir("desafiar")} />}
+        {desafio && <ComparacaoDesafio minha={itens} outra={desafio.itens} aoDevolver={() => irPara("desafiar", "mochila_desafio_devolvido")} />}
 
         {fora && (
           <section className="mochila-caixa">
@@ -93,10 +121,10 @@ export function TelaResultado() {
         </section>
 
         <div className="mochila-acoes">
-          <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => ir("compartilhar")}>
+          <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => irPara("compartilhar", "mochila_compartilhar_clicado")}>
             Compartilhar minha mochila
           </Button>
-          <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={() => ir("desafiar")}>
+          <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={() => irPara("desafiar", "mochila_desafiar_clicado")}>
             Desafiar um amigo
           </Button>
           <Button variante="transparent" tamanho="medium" redondo larguraTotal onClick={recomecar}>

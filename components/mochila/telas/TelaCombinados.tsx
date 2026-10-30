@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { spriteDe } from "@/lib/mochila/conteudo";
+import { track } from "@/lib/mixpanel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
 
@@ -10,6 +11,16 @@ export function TelaCombinados() {
   const liberada = useLiberada((p) => p.itens.length > 0);
   const { cenario, combinados, setCombinados, ir } = usePartida();
   if (!liberada) return <TelaCarregando />;
+
+  function concluir(marcados: number[]) {
+    track("mochila_combinados_concluidos", {
+      cenario: cenario.id,
+      combinados: marcados.map((i) => cenario.combinados[i]),
+      qtd_combinados: marcados.length,
+      pulou: marcados.length === 0,
+    });
+    ir("resultado");
+  }
   return (
     <>
       <header className="mochila-cabeca">
@@ -26,14 +37,17 @@ export function TelaCombinados() {
             <label key={texto} className="mochila-combinado" data-marcado={combinados.includes(i)}>
               <Checkbox
                 selected={combinados.includes(i)}
-                onChange={(marcado) => setCombinados((atual) => (marcado ? [...atual, i].sort() : atual.filter((c) => c !== i)))}
+                onChange={(marcado) => {
+                  track("mochila_combinado_alternado", { cenario: cenario.id, combinado: texto, marcado });
+                  setCombinados((atual) => (marcado ? [...atual, i].sort() : atual.filter((c) => c !== i)));
+                }}
               />
               <span>{texto}</span>
             </label>
           ))}
         </fieldset>
         <div className="mochila-acoes">
-          <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={combinados.length === 0} onClick={() => ir("resultado")}>
+          <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={combinados.length === 0} onClick={() => concluir(combinados)}>
             Ver minha mochila
           </Button>
           <Button
@@ -43,7 +57,7 @@ export function TelaCombinados() {
             larguraTotal
             onClick={() => {
               setCombinados([]);
-              ir("resultado");
+              concluir([]);
             }}
           >
             Seguir sem marcar

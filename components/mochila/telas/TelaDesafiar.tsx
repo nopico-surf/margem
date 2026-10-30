@@ -4,13 +4,15 @@ import { Button } from "@/components/ui/Button";
 import { GlifoLink, GlifoVisibilityOff, GlifoWhatsapp } from "@/components/icons/glifos";
 import { ENDERECO_CURTO, spriteDe } from "@/lib/mochila/conteudo";
 import { copiar, link } from "@/lib/mochila/acoes";
+import { track } from "@/lib/mixpanel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaDesafiar() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenario, cenarioId, codigoDesafio, setAviso } = usePartida();
+  const { cenario, cenarioId, codigoDesafio, visiveis, nivel, setAviso } = usePartida();
   if (!liberada) return <TelaCarregando />;
+  const doDesafio = { cenario: cenarioId, nivel, itens_no_desafio: visiveis };
   return (
     <>
       <header className="mochila-cabeca">
@@ -44,6 +46,7 @@ export function TelaDesafiar() {
               `Montei minha mochila ${cenario.pra}. Monta a sua e vê quantas coisas a gente levou igual: ${link(`/d/${codigoDesafio}`, "whatsapp", cenarioId)}`,
             )}`}
             alvoExterno
+            onClick={() => track("mochila_desafio_enviado", { ...doDesafio, canal: "whatsapp" })}
           >
             <GlifoWhatsapp size={20} />
             <span>Mandar desafio no WhatsApp</span>
@@ -54,7 +57,9 @@ export function TelaDesafiar() {
             redondo
             larguraTotal
             onClick={async () => {
-              if (await copiar(link(`/d/${codigoDesafio}`, "copia", cenarioId))) setAviso("Link copiado.");
+              const copiou = await copiar(link(`/d/${codigoDesafio}`, "copia", cenarioId));
+              track("mochila_desafio_enviado", { ...doDesafio, canal: "copia", copiou });
+              if (copiou) setAviso("Link copiado.");
             }}
           >
             <GlifoLink size={20} />

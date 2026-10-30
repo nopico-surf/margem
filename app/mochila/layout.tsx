@@ -4,7 +4,7 @@ import { PartidaProvider } from "@/components/mochila/Partida";
 import "./mochila.css";
 
 // Mochila do Rolê: minijogo de redução de danos (spec de 29/10/2026). Fica fora do fluxo de
-// boas-vindas e do painel de dados: o jogo roda sem coletar nada.
+// boas-vindas e do painel de dados. O Mixpanel mede cada passo, itens incluídos (ver Partida.tsx).
 // Pixelify Sans no nome do jogo e no rótulo; Press Start 2P só no contador. Urbanist e Inter vêm
 // do layout raiz.
 

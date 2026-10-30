@@ -123,6 +123,23 @@
   height:12px;
 }
 
+/* Card inteiro clicável: o ::after do link (o botão) cobre o card, acima da foto. Sem o afundar do
+   pressed, senão o botão vira o bloco de referência do ::after e ele encolhe no meio do clique. */
+.app-footer-card {
+  position:relative;
+}
+
+.app-footer-card .btn::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:var(--z-index-raised);
+}
+
+.app-footer-card .btn:active:not(:disabled):not([data-carregando="true"]) {
+  transform:none;
+}
+
 .app-footer-card-foto {
   position:relative;
   height:188.425px; /* Figma: 188,425 */

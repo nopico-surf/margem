@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { GlifoVolumeOff, GlifoVolumeUp } from "@/components/icons/glifos";
 import { cenarioPorId, spriteCenario, spriteDe } from "@/lib/mochila/conteudo";
 import { decodificar } from "@/lib/mochila/codigo";
+import { track } from "@/lib/mixpanel";
 import { usePartida } from "../Partida";
 
 // Entrada normal (/mochila) ou pelo link de desafio (/mochila/d/[codigo]). Código inválido vira
@@ -16,6 +17,22 @@ export function TelaInicio({ codigo }: { codigo?: string }) {
   useEffect(() => {
     if (pronto) setDesafio(desafio);
   }, [pronto, desafio, setDesafio]);
+
+  useEffect(() => {
+    if (!codigo) return;
+    track("mochila_desafio_aberto", {
+      valido: desafio !== null,
+      cenario: desafio?.cenario ?? null,
+      itens_da_outra: desafio?.itens ?? [],
+      qtd_combinados_da_outra: desafio?.combinados.length ?? 0,
+    });
+  }, [codigo, desafio]);
+
+  function comecar() {
+    track("mochila_iniciada", { origem: desafio ? "desafio" : "direto" });
+    if (desafio) escolherCenario(desafio.cenario);
+    else ir("escolha");
+  }
 
   return (
     <div className="mochila-inicio">
@@ -46,7 +63,7 @@ export function TelaInicio({ codigo }: { codigo?: string }) {
         )}
         <p className="mochila-inicio-apoio">Não tem certo nem errado. Tem a sua escolha e umas ideias de cuidado no fim.</p>
       </div>
-      <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => (desafio ? escolherCenario(desafio.cenario) : ir("escolha"))}>
+      <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={comecar}>
         {desafio ? "Montar minha mochila" : "Começar a montar"}
       </Button>
     </div>

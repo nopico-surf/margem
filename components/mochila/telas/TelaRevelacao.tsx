@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 import { spriteDe } from "@/lib/mochila/conteudo";
+import { track } from "@/lib/mixpanel";
 import { ItemRevelacao } from "../ItemRevelacao";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
@@ -25,6 +26,18 @@ export function TelaRevelacao() {
         <div className="mochila-acoes mochila-acoes-respiro">
           <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => ir("combinados")}>
             Continuar
+          </Button>
+          <Button
+            variante="secondary"
+            tamanho="medium"
+            redondo
+            larguraTotal
+            onClick={() => {
+              track("mochila_itens_trocados");
+              ir("montagem");
+            }}
+          >
+            Trocar itens
           </Button>
         </div>
       </div>

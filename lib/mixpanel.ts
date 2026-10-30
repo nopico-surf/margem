@@ -6,7 +6,7 @@ import { getOrCreateSessaoId } from "@/lib/sessao-client";
 import { HOST_LOCAL } from "@/lib/host-local";
 import { ROTA_SEM_MEDICAO } from "@/lib/sem-medicao";
 
-type Propriedades = Record<string, string | number | boolean | null>;
+type Propriedades = Record<string, string | number | boolean | null | string[]>;
 
 const token = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
 const UTM_CHAVES = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;

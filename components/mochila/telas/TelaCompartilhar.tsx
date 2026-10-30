@@ -6,6 +6,7 @@ import { GlifoVisibilityOff } from "@/components/icons/glifos";
 import { ITENS, NIVEIS, type Nivel } from "@/lib/mochila/conteudo";
 import { baixar, copiar, link } from "@/lib/mochila/acoes";
 import { desenharCard, paraBlob, type Formato } from "@/lib/mochila/card";
+import { track } from "@/lib/mixpanel";
 import { PreviaCard } from "../PreviaCard";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
@@ -34,7 +35,9 @@ export function TelaCompartilhar() {
       })
       .catch((e) => {
         console.error("[mochila] card não foi gerado", e);
-        if (!cancelado) setErroImagem(true);
+        if (cancelado) return;
+        setErroImagem(true);
+        track("mochila_card_falhou", { cenario: cenarioId, formato, nivel, detalhe: e instanceof Error ? e.message : String(e) });
       });
     return () => {
       cancelado = true;
@@ -46,11 +49,15 @@ export function TelaCompartilhar() {
 
   if (!liberada) return <TelaCarregando />;
 
+  const doCard = { cenario: cenarioId, formato, nivel, itens_no_card: visiveis, escondidos };
+
   function escolherNivel(n: Nivel) {
     if (n === 2) {
+      track("mochila_confirmacao_tudo_aberta", { cenario: cenarioId, nivel_anterior: nivel });
       setConfirmando(true);
       return;
     }
+    track("mochila_nivel_escolhido", { cenario: cenarioId, nivel: n, de_confirmacao: confirmando });
     setConfirmando(false);
     setNivel(n);
   }
@@ -61,13 +68,19 @@ export function TelaCompartilhar() {
     const texto = `Montei minha mochila pro rolê e saiu "${rotulo.nome}". Monta a sua: ${url}`;
     const arquivo = new File([previa.blob], "mochila-do-role.png", { type: "image/png" });
     if (navigator.canShare?.({ files: [arquivo] })) {
+      // `concluido` falso é a pessoa fechando a folha de compartilhar sem escolher app.
+      let concluido = true;
       try {
         await navigator.share({ files: [arquivo], text: texto });
-      } catch {}
+      } catch {
+        concluido = false;
+      }
+      track("mochila_card_compartilhado", { ...doCard, via: "share", concluido });
       return;
     }
     baixar(previa.blob, "mochila-do-role.png");
-    await copiar(link("", "copia", cenarioId));
+    const copiou = await copiar(link("", "copia", cenarioId));
+    track("mochila_card_compartilhado", { ...doCard, via: "download", concluido: copiou });
     setAviso("Imagem baixada e link copiado.");
   }
 
@@ -81,7 +94,10 @@ export function TelaCompartilhar() {
       <div className="mochila-painel mochila-painel-montagem">
         <div role="group" aria-label="Formato" className="mochila-formato">
           {(["stories", "feed"] as const).map((f) => (
-            <button key={f} type="button" aria-pressed={formato === f} onClick={() => setFormato(f)}>
+            <button key={f} type="button" aria-pressed={formato === f} onClick={() => {
+              if (f !== formato) track("mochila_formato_trocado", { cenario: cenarioId, formato: f });
+              setFormato(f);
+            }}>
               {f === "stories" ? "Stories" : "Feed"}
             </button>
           ))}
@@ -118,6 +134,7 @@ export function TelaCompartilhar() {
                 redondo
                 larguraTotal
                 onClick={() => {
+                  track("mochila_nivel_escolhido", { cenario: cenarioId, nivel: 2, de_confirmacao: true });
                   setConfirmando(false);
                   setNivel(2);
                 }}
@@ -139,10 +156,16 @@ export function TelaCompartilhar() {
           <div className="mochila-caixa mochila-caixa-forte mochila-erro-imagem">
             <p role="status" className="mochila-abre">Não deu pra gerar a imagem agora.</p>
             <div className="mochila-acoes-lado">
-              <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => setTentativa((t) => t + 1)}>
+              <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => {
+                  track("mochila_card_tentou_de_novo", { cenario: cenarioId });
+                  setTentativa((t) => t + 1);
+                }}>
                 Tentar de novo
               </Button>
-              <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={() => copiar(link("", "copia", cenarioId))}>
+              <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={async () => {
+                  const copiou = await copiar(link("", "copia", cenarioId));
+                  track("mochila_link_copiado", { cenario: cenarioId, origem: "erro_card", copiou });
+                }}>
                 Copiar link
               </Button>
             </div>
@@ -161,6 +184,7 @@ export function TelaCompartilhar() {
               onClick={() => {
                 if (!previa) return;
                 baixar(previa.blob, "mochila-do-role.png");
+                track("mochila_imagem_baixada", doCard);
                 setAviso("Imagem baixada.");
               }}
             >

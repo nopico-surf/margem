@@ -8,13 +8,15 @@ import { ITENS, LINHAS_FIXAS, cenarioPorId, type CenarioId, type Nivel } from "@
 import { rotulo as rotuloDe } from "@/lib/mochila/rotulo";
 import { codificar, type Desafio } from "@/lib/mochila/codigo";
 import { bip as tocarBip } from "@/lib/mochila/acoes";
+import { track } from "@/lib/mixpanel";
 import type { Fontes } from "@/lib/mochila/card";
 import { AvisoMochila } from "./AvisoMochila";
 
-// A partida inteira vive aqui, no layout, e cada tela é uma rota. Nada sai do navegador: as escolhas
-// ficam na memória e, só pra o recarregar não perder a mochila, no sessionStorage da aba (some ao
-// fechar). No desafio, a mochila da outra pessoa vem no próprio link. Só a preferência de som fica
-// guardada de vez.
+// A partida inteira vive aqui, no layout, e cada tela é uma rota. As escolhas ficam na memória e, só
+// pra o recarregar não perder a mochila, no sessionStorage da aba (some ao fechar). No desafio, a
+// mochila da outra pessoa vem no próprio link. Só a preferência de som fica guardada de vez.
+// Cada passo do jogo vai pro Mixpanel com os eventos `mochila_*`, itens incluídos (decidido em
+// 30/10/2026), sem depender do painel de dados, que o jogo não tem.
 
 export type Etapa = "inicio" | "escolha" | "montagem" | "revelacao" | "combinados" | "resultado" | "compartilhar" | "desafiar";
 
@@ -124,9 +126,11 @@ function useEstado() {
       localStorage.setItem(CHAVE_SOM, novo ? "1" : "0");
     } catch {}
     tocarBip(novo, 880);
+    track("mochila_som_alternado", { ligado: novo });
   };
 
   const escolherCenario = (id: CenarioId) => {
+    track("mochila_cenario_escolhido", { cenario: id, com_desafio: desafio !== null });
     setCenarioId(id);
     setEscolhido(true);
     setItens([]);
@@ -135,6 +139,7 @@ function useEstado() {
   };
 
   const recomecar = () => {
+    track("mochila_recomecada", { cenario: cenarioId });
     setItens([]);
     setCombinados([]);
     setNivel(0);
@@ -204,6 +209,7 @@ function HeaderMochila() {
   function voltar() {
     const etapa = (Object.keys(ROTAS) as Etapa[]).find((e) => ROTAS[e] === pathname);
     const anterior = etapa && ETAPA_ANTERIOR[etapa];
+    track("mochila_voltou", { de: etapa ?? pathname, para: anterior ?? "inicio_margem" });
     router.push(anterior ? ROTAS[anterior] : "/inicio");
   }
 
