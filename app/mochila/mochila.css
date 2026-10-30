@@ -781,6 +781,7 @@ button.mochila-celula {
 }
 
 .mochila-aviso[data-tipo="cheia"] {
+  border-color: var(--colors-alpha-8);
   background: var(--colors-brand-secondary-300);
   color: var(--colors-brand-secondary-950);
 }
@@ -1036,7 +1037,7 @@ button.mochila-celula {
   padding: var(--spacing-16);
   border: var(--border-width-medium) solid var(--colors-alpha-8);
   border-radius: 0;
-  background: var(--colors-neutral-50);
+  background: var(--colors-neutral-0);
 }
 
 .mochila-tribo-tile {
@@ -1049,7 +1050,7 @@ button.mochila-celula {
   height: var(--size-80);
   border: var(--border-width-medium) solid var(--colors-neutral-950);
   border-radius: 0;
-  background: var(--colors-brand-secondary-300);
+  background: var(--colors-neutral-100);
 }
 
 .mochila-tribo-nome {
@@ -1127,7 +1128,7 @@ button.mochila-celula {
   gap: var(--spacing-10);
   margin: 0;
   padding: var(--spacing-14);
-  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border: var(--border-width-medium) solid var(--colors-alpha-8);
   border-radius: 0;
   background: var(--colors-neutral-0);
   list-style: none;

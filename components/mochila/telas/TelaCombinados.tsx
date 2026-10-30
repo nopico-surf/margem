@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { spriteDe } from "@/lib/mochila/conteudo";
@@ -11,6 +12,7 @@ import { SpriteMochila } from "../SpriteMochila";
 export function TelaCombinados() {
   const liberada = useLiberada((p) => p.itens.length > 0);
   const { cenario, combinados, setCombinados, ir } = usePartida();
+  const [nenhum, setNenhum] = useState(false);
   if (!liberada) return <TelaCarregando />;
 
   function concluir(marcados: number[]) {
@@ -40,15 +42,27 @@ export function TelaCombinados() {
                 selected={combinados.includes(i)}
                 onChange={(marcado) => {
                   track("mochila_combinado_alternado", { cenario: cenario.id, combinado: texto, marcado });
+                  if (marcado) setNenhum(false);
                   setCombinados((atual) => (marcado ? [...atual, i].sort() : atual.filter((c) => c !== i)));
                 }}
               />
               <span>{texto}</span>
             </label>
           ))}
+          <label className="mochila-combinado" data-marcado={nenhum}>
+            <Checkbox
+              selected={nenhum}
+              onChange={(marcado) => {
+                track("mochila_combinado_alternado", { cenario: cenario.id, combinado: "nenhum", marcado });
+                setNenhum(marcado);
+                if (marcado) setCombinados([]);
+              }}
+            />
+            <span>Não vou fazer combinados.</span>
+          </label>
         </fieldset>
         <div className="mochila-acoes">
-          <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => concluir(combinados)}>
+          <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={!nenhum && combinados.length === 0} onClick={() => concluir(combinados)}>
             Continuar
           </Button>
         </div>
