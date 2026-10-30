@@ -900,6 +900,16 @@ button.mochila-celula {
   color: var(--colors-brand-primary-900);
 }
 
+.mochila-comparacao {
+  gap: var(--spacing-20);
+}
+
+.mochila-comparacao-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
 .mochila-comparacao-linha {
   display: flex;
   align-items: center;
@@ -920,9 +930,6 @@ button.mochila-celula {
   background: var(--colors-neutral-100);
 }
 
-.mochila-comparacao-tile[data-destaque="true"] {
-  background: var(--colors-brand-secondary-300);
-}
 
 /* Rótulo da mochila, a pílula pixelada */
 
@@ -1124,6 +1131,7 @@ button.mochila-celula {
   gap: var(--spacing-10);
   margin: 0;
   padding: var(--spacing-14);
+  border: var(--border-width-medium) solid var(--colors-neutral-100);
   border-radius: var(--radius-xl);
   background: var(--colors-neutral-0);
   list-style: none;
