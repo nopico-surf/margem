@@ -175,6 +175,13 @@ body:has(.mochila-painel-montagem) {
   background: var(--colors-neutral-50);
 }
 
+.mochila-painel-montagem .mochila-acoes-compartilhar {
+  position: static;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+
 .mochila-painel-resultado {
   gap: var(--spacing-24);
 }
