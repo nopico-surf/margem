@@ -28,6 +28,11 @@ export function TelaJeitos() {
           <p role="status" className="mochila-contador mochila-contador-selo">
             {jeitos.length} de {QTD_JEITOS} escolhidos
           </p>
+          {jeitos.length >= QTD_JEITOS && (
+            <p role="status" className="mochila-aviso" data-tipo="cheia">
+              Dois jeitos escolhidos. Dá pra seguir ou trocar algum.
+            </p>
+          )}
           <div role="group" aria-label="Escolhe dois jeitos" className="mochila-opcoes" data-colunas="2">
             {JEITOS.map((j) => {
               const marcado = jeitos.includes(j.id);

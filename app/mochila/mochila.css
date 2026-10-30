@@ -521,6 +521,10 @@ body:has(.mochila-painel-montagem) {
   background: var(--colors-neutral-0);
 }
 
+.mochila-opcoes[data-colunas="2"] .mochila-opcao-tile {
+  background: none;
+}
+
 .mochila-opcao-nome {
   font-weight: var(--font-weight-semi-bold);
   font-size: calc(var(--font-size-sm) + var(--size-1));
@@ -539,7 +543,7 @@ body:has(.mochila-painel-montagem) {
 }
 
 .mochila-contador-selo {
-  align-self: flex-end;
+  align-self: center;
   height: auto;
   margin: 0;
   padding: var(--spacing-6) var(--spacing-10);
