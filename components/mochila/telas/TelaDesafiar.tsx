@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { GlifoLink, GlifoVisibilityOff, GlifoWhatsapp } from "@/components/icons/glifos";
+import { GlifoLink, GlifoWhatsapp } from "@/components/icons/glifos";
 import { triboPorId } from "@/lib/mochila/conteudo";
 import { baixar, copiar, link, sistemaAvisa, textoDesafio } from "@/lib/mochila/acoes";
 import { altDoCard, desenharCard, paraBlob } from "@/lib/mochila/card";
 import { track } from "@/lib/mixpanel";
 import { PreviaCard } from "../PreviaCard";
+import { SeletorNivel } from "../SeletorNivel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
 
@@ -16,6 +17,7 @@ export function TelaDesafiar() {
   const { cenario, cenarioId, itens, tribo, eixos, rotulo, codigoDesafio, visiveis, nivel, fontes, setAviso } = usePartida();
   const [previa, setPrevia] = useState<{ url: string; blob: Blob } | null>(null);
   const [erroImagem, setErroImagem] = useState(false);
+  const [confirmando, setConfirmando] = useState(false);
 
   // A imagem fica pronta antes do toque: gerar depois do clique faz o Safari recusar o compartilhar.
   // No WhatsApp vai o formato feed, o stories fica estreito demais na conversa.
@@ -50,7 +52,7 @@ export function TelaDesafiar() {
 
   // Sem a imagem (falhou ao gerar), o desafio segue só com o texto.
   async function desafiar() {
-    const texto = textoDesafio({ cenario, rotulo, tribo: suaTribo, qtdItens: itens.length, url: link(`/d/${codigoDesafio}`, "desafio", cenarioId) });
+    const texto = textoDesafio({ cenario, rotulo, tribo: suaTribo, qtdItens: visiveis.length, url: link(`/d/${codigoDesafio}`, "desafio", cenarioId) });
     const arquivo = previa ? new File([previa.blob], "mochila-do-role.png", { type: "image/png" }) : null;
     const dados: ShareData = arquivo ? { files: [arquivo], text: texto } : { text: texto };
     if (navigator.canShare?.(dados)) {
@@ -78,14 +80,15 @@ export function TelaDesafiar() {
         <PreviaCard src={previa?.url ?? null} formato="feed" alt={altDoCard(visiveis, rotulo, eixos, suaTribo)} />
       </header>
       <div className="mochila-painel mochila-painel-montagem">
-        <div className="mochila-painel-topo">
-          <p className="mochila-escondidos">
-            <GlifoVisibilityOff size={18} />
-            <span>O desafio usa o mesmo nível do card. Itens escondidos ficam escondidos.</span>
-          </p>
-        </div>
+        <SeletorNivel
+          origem="desafio"
+          confirmando={confirmando}
+          aoConfirmar={setConfirmando}
+          legenda="O que aparece no desafio"
+          avisoEscondidos={(n) => (n === 1 ? "1 item da sua mochila não aparece no desafio." : `${n} itens da sua mochila não aparecem no desafio.`)}
+        />
         <div className="mochila-acoes">
-          <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={!previa && !erroImagem} onClick={desafiar}>
+          <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || (!previa && !erroImagem)} onClick={desafiar}>
             <GlifoWhatsapp size={20} />
             <span>Desafiar por WhatsApp</span>
           </Button>
@@ -94,6 +97,7 @@ export function TelaDesafiar() {
             tamanho="medium"
             redondo
             larguraTotal
+            disabled={confirmando}
             onClick={async () => {
               const copiou = await copiar(link(`/d/${codigoDesafio}`, "copia", cenarioId));
               track("mochila_desafio_enviado", { ...doDesafio, canal: "copia", copiou });

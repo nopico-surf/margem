@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { GlifoVisibilityOff } from "@/components/icons/glifos";
-import { NIVEIS, triboPorId, type Nivel } from "@/lib/mochila/conteudo";
+import { triboPorId } from "@/lib/mochila/conteudo";
 import { baixar, copiar, link, sistemaAvisa, textoDesafio } from "@/lib/mochila/acoes";
 import { altDoCard, desenharCard, paraBlob, type Formato } from "@/lib/mochila/card";
 import { track } from "@/lib/mixpanel";
 import { PreviaCard } from "../PreviaCard";
+import { SeletorNivel } from "../SeletorNivel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaCompartilhar() {
   const liberada = useLiberada((p) => p.itens.length > 0);
-  const { cenario, cenarioId, itens, tribo, eixos, rotulo, codigoDesafio, visiveis, escondidos, nivel, setNivel, fontes, setAviso } = usePartida();
+  const { cenario, cenarioId, itens, tribo, eixos, rotulo, codigoDesafio, visiveis, escondidos, nivel, fontes, setAviso } = usePartida();
   const [confirmando, setConfirmando] = useState(false);
   const [formato, setFormato] = useState<Formato>("stories");
   const [previa, setPrevia] = useState<{ url: string; blob: Blob } | null>(null);
@@ -52,20 +52,9 @@ export function TelaCompartilhar() {
   const doCard = { cenario: cenarioId, formato, nivel, itens_no_card: visiveis, escondidos };
   const suaTribo = triboPorId(tribo);
 
-  function escolherNivel(n: Nivel) {
-    if (n === 2) {
-      track("mochila_confirmacao_tudo_aberta", { cenario: cenarioId, nivel_anterior: nivel });
-      setConfirmando(true);
-      return;
-    }
-    track("mochila_nivel_escolhido", { cenario: cenarioId, nivel: n, de_confirmacao: confirmando });
-    setConfirmando(false);
-    setNivel(n);
-  }
-
   async function compartilharCard() {
     if (!previa) return;
-    const texto = textoDesafio({ cenario, rotulo, tribo: suaTribo, qtdItens: itens.length, url: link(`/d/${codigoDesafio}`, "compartilhar", cenarioId) });
+    const texto = textoDesafio({ cenario, rotulo, tribo: suaTribo, qtdItens: visiveis.length, url: link(`/d/${codigoDesafio}`, "compartilhar", cenarioId) });
     const arquivo = new File([previa.blob], "mochila-do-role.png", { type: "image/png" });
     if (navigator.canShare?.({ files: [arquivo] })) {
       // `concluido` falso é a pessoa fechando a folha de compartilhar sem escolher app.
@@ -103,54 +92,13 @@ export function TelaCompartilhar() {
           ))}
         </div>
 
-        <fieldset className="mochila-niveis">
-          <legend>O que aparece no card</legend>
-          {NIVEIS.map((n) => {
-            const marcado = confirmando ? n.nivel === 2 : nivel === n.nivel;
-            return (
-              <label key={n.nivel} className="mochila-nivel" data-marcado={marcado}>
-                <input type="radio" name="nivel" checked={marcado} onChange={() => escolherNivel(n.nivel)} />
-                <span className="mochila-nivel-texto">
-                  <span>{n.nome}</span>
-                  <span className="mochila-nivel-apoio">{n.apoio}</span>
-                </span>
-              </label>
-            );
-          })}
-        </fieldset>
-
-        {confirmando && (
-          <div role="alertdialog" aria-labelledby="mochila-conf" className="mochila-caixa mochila-caixa-forte mochila-confirmacao">
-            <p id="mochila-conf" className="mochila-confirmacao-texto">
-              Quem ver seu post vai ver tudo o que você levou, inclusive os itens mais pessoais. Quer mostrar mesmo assim?
-            </p>
-            <div className="mochila-acoes">
-              <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => escolherNivel(0)}>
-                Voltar pro básico
-              </Button>
-              <Button
-                variante="secondary"
-                tamanho="medium"
-                redondo
-                larguraTotal
-                onClick={() => {
-                  track("mochila_nivel_escolhido", { cenario: cenarioId, nivel: 2, de_confirmacao: true });
-                  setConfirmando(false);
-                  setNivel(2);
-                }}
-              >
-                Mostrar tudo
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {!confirmando && escondidos > 0 && (
-          <p className="mochila-escondidos">
-            <GlifoVisibilityOff size={18} />
-            <span>{escondidos === 1 ? "1 item da sua mochila não aparece no card." : `${escondidos} itens da sua mochila não aparecem no card.`}</span>
-          </p>
-        )}
+        <SeletorNivel
+          origem="compartilhar"
+          confirmando={confirmando}
+          aoConfirmar={setConfirmando}
+          legenda="O que aparece no card"
+          avisoEscondidos={(n) => (n === 1 ? "1 item da sua mochila não aparece no card." : `${n} itens da sua mochila não aparecem no card.`)}
+        />
 
         {erroImagem ? (
           <div className="mochila-caixa mochila-caixa-forte mochila-erro-imagem">
