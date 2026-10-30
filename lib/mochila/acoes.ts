@@ -18,6 +18,8 @@ export function textoDesafio(opcoes: { cenario: Cenario; rotulo: Rotulo; tribo: 
     ...(tribo ? [`🎶 Tribo: ${tribo.nome} (${tribo.estilo})`] : []),
     `✅ ${qtdItens === 1 ? "1 coisa" : `${qtdItens} coisas`} na mochila`,
     "",
+    "No caminho, você ainda aprende umas coisas sobre redução de danos.",
+    "",
     "E você, levaria o quê? Monta a sua pro mesmo rolê e vê o que a gente leva igual e o que uma mochila completa na outra:",
     url,
   ].join("\n");
