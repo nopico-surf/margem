@@ -12,7 +12,7 @@ export function link(caminho: string, canal: string, cenario: CenarioId) {
 export function textoDesafio(opcoes: { cenario: Cenario; rotulo: Rotulo; tribo: Tribo | undefined; qtdItens: number; url: string }) {
   const { cenario, rotulo, tribo, qtdItens, url } = opcoes;
   return [
-    `Montei minha Mochila do Rolê ${cenario.pra} e saiu isso:`,
+    `Montei minha Mochila do Rolê ${cenario.pra} e saiu assim:`,
     "",
     `🎒 ${rotulo.nome}, ${rotulo.tambem}`,
     ...(tribo ? [`🎶 Tribo: ${tribo.nome} (${tribo.estilo})`] : []),
