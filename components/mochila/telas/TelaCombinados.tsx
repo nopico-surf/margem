@@ -6,6 +6,7 @@ import { spriteDe } from "@/lib/mochila/conteudo";
 import { track } from "@/lib/mixpanel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
+import { SpriteMochila } from "../SpriteMochila";
 
 export function TelaCombinados() {
   const liberada = useLiberada((p) => p.itens.length > 0);
@@ -26,7 +27,7 @@ export function TelaCombinados() {
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
           <h1 className="mochila-titulo">Tem coisa que não ocupa espaço</h1>
-          <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} alt="" />
+          <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} />
         </div>
         <p className="mochila-instrucao">Uns combinados antes de sair também vão junto. Marca os que você vai fazer.</p>
       </header>
@@ -47,20 +48,8 @@ export function TelaCombinados() {
           ))}
         </fieldset>
         <div className="mochila-acoes">
-          <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={combinados.length === 0} onClick={() => concluir(combinados)}>
+          <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => concluir(combinados)}>
             Continuar
-          </Button>
-          <Button
-            variante="secondary"
-            tamanho="medium"
-            redondo
-            larguraTotal
-            onClick={() => {
-              setCombinados([]);
-              concluir([]);
-            }}
-          >
-            Seguir sem marcar
           </Button>
         </div>
       </div>

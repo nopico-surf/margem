@@ -119,22 +119,23 @@ function useEstado() {
     router.prefetch("/inicio");
   }, [router]);
 
-  // Sprites de todas as telas baixam em segundo plano depois da primeira, pra nenhuma abrir com a
-  // imagem chegando aos poucos.
+  // Sprites de todas as telas baixam antes de a pessoa chegar nelas, pra nenhuma abrir com a imagem
+  // chegando aos poucos. Cenários e tribos são as duas telas logo depois do início, então vão já; o
+  // resto espera a primeira tela assentar.
   useEffect(() => {
     if (!pronto) return;
-    const baixar = () => {
-      const ids = ["mochila-aberta", "mochila-fechada", ...Object.keys(ITENS), ...TRIBOS.map((t) => `tribo-${t.id}`), ...JEITOS.map((j) => `jeito-${j.id}`)];
-      [...ids.map(spriteDe), ...CENARIOS.map((c) => spriteCenario(c.id))].forEach((src) => {
+    const baixar = (srcs: string[]) =>
+      srcs.forEach((src) => {
         new Image().src = src;
       });
-    };
+    baixar(["mochila-aberta", "mochila-fechada", ...TRIBOS.map((t) => `tribo-${t.id}`)].map(spriteDe).concat(CENARIOS.map((c) => spriteCenario(c.id))));
+    const resto = () => baixar([...Object.keys(ITENS), ...JEITOS.map((j) => `jeito-${j.id}`)].map(spriteDe));
     // Safari não tem requestIdleCallback.
     if (typeof requestIdleCallback === "function") {
-      const id = requestIdleCallback(baixar);
+      const id = requestIdleCallback(resto);
       return () => cancelIdleCallback(id);
     }
-    const id = setTimeout(baixar, 500);
+    const id = setTimeout(resto, 500);
     return () => clearTimeout(id);
   }, [pronto]);
 

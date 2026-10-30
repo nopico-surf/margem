@@ -7,6 +7,8 @@ import { ItemRevelacao } from "@/components/mochila/ItemRevelacao";
 import { ComparacaoDesafio } from "@/components/mochila/ComparacaoDesafio";
 import { PreviaCard } from "@/components/mochila/PreviaCard";
 import { TelaCarregando } from "@/components/mochila/TelaCarregando";
+import { SpriteMochila } from "@/components/mochila/SpriteMochila";
+import { spriteDe } from "@/lib/mochila/conteudo";
 import { Button } from "@/components/ui/Button";
 
 function Estado({ nome, children }: { nome: string; children: ReactNode }) {
@@ -97,6 +99,15 @@ export function GaleriaMochila() {
             <div style={{ display: "flex", gap: "var(--spacing-16)", alignItems: "flex-start" }}>
               <PreviaCard src={null} formato="stories" alt="" />
               <PreviaCard src={null} formato="feed" alt="" />
+            </div>
+          </Estado>
+
+          <h2 className="mochila-titulo-bloco">SpriteMochila</h2>
+          <Estado nome="carregando, pronto">
+            <div style={{ display: "flex", gap: "var(--spacing-16)" }}>
+              {/* O carregando dura só até a imagem chegar: aqui, as mesmas classes que ele põe no <img>. */}
+              <span className="mochila-sprite figma-skeleton mochila-osso" aria-hidden="true" />
+              <SpriteMochila src={spriteDe("lanche")} />
             </div>
           </Estado>
 

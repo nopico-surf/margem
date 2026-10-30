@@ -13,6 +13,7 @@ import { MochilaGrade } from "../MochilaGrade";
 import { ComparacaoDesafio } from "../ComparacaoDesafio";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
+import { SpriteMochila } from "../SpriteMochila";
 
 export function TelaResultado() {
   const liberada = useLiberada((p) => p.itens.length > 0);
@@ -99,7 +100,7 @@ export function TelaResultado() {
         {suaTribo && (
           <section aria-label="Sua tribo" className="mochila-tribo">
             <span className="mochila-tribo-tile">
-              <img className="mochila-sprite" src={spriteDe(`tribo-${suaTribo.id}`)} alt="" />
+              <SpriteMochila src={spriteDe(`tribo-${suaTribo.id}`)} />
             </span>
             <span className="mochila-revela-texto">
               <span className="mochila-tribo-nome">{suaTribo.nome}</span>
@@ -117,7 +118,7 @@ export function TelaResultado() {
             <h2 className="mochila-abre">Uma coisa que ficou de fora:</h2>
             <div className="mochila-fora">
               <span className="mochila-fora-tile">
-                <img className="mochila-sprite" src={spriteDe(fora)} alt="" data-espacos={ITENS[fora].espacos} />
+                <SpriteMochila src={spriteDe(fora)} data-espacos={ITENS[fora].espacos} />
               </span>
               <span className="mochila-revela-texto">
                 <span className="mochila-revela-nome">{ITENS[fora].curto}</span>

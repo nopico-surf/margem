@@ -2,12 +2,13 @@
 
 import { Button } from "@/components/ui/Button";
 import { ITENS, spriteDe } from "@/lib/mochila/conteudo";
+import { SpriteMochila } from "./SpriteMochila";
 
 function Linhas({ ids }: { ids: string[] }) {
   return ids.map((id) => (
     <p key={id} className="mochila-comparacao-linha">
       <span className="mochila-comparacao-tile">
-        <img className="mochila-sprite mochila-sprite-pequeno" src={spriteDe(id)} alt="" data-espacos={ITENS[id].espacos} />
+        <SpriteMochila className="mochila-sprite-pequeno" src={spriteDe(id)} data-espacos={ITENS[id].espacos} />
       </span>
       <span>{ITENS[id].curto}</span>
     </p>

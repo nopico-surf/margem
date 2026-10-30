@@ -6,6 +6,7 @@ import { JEITOS, QTD_JEITOS, spriteDe } from "@/lib/mochila/conteudo";
 import { track } from "@/lib/mixpanel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
+import { SpriteMochila } from "../SpriteMochila";
 
 // Tela U2-Jeitos do Claude Design. Exatamente dois jeitos: tocar de novo desmarca, e com dois
 // marcados um terceiro toque não faz nada até desmarcar um.
@@ -31,7 +32,7 @@ export function TelaJeitos() {
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
           <h1 className="mochila-titulo">E qual é o seu jeito no rolê?</h1>
-          <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} alt="" />
+          <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} />
         </div>
         <p className="mochila-instrucao">Escolhe dois jeitos que combinam com você.</p>
       </header>
@@ -51,7 +52,7 @@ export function TelaJeitos() {
               return (
                 <button key={j.id} type="button" aria-pressed={marcado} className="mochila-opcao" data-marcada={marcado} data-nao-cabe={naoCabe === j.id} onClick={() => alternar(j.id)}>
                   <span className="mochila-opcao-tile">
-                    <img className="mochila-sprite" src={spriteDe(`jeito-${j.id}`)} alt="" />
+                    <SpriteMochila src={spriteDe(`jeito-${j.id}`)} />
                   </span>
                   <span className="mochila-opcao-nome">{j.nome}</span>
                   {marcado && (

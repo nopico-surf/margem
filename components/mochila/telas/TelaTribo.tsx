@@ -4,6 +4,7 @@ import { TRIBOS, spriteDe } from "@/lib/mochila/conteudo";
 import { track } from "@/lib/mixpanel";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
+import { SpriteMochila } from "../SpriteMochila";
 
 // Tela U2-Tribo do Claude Design. Toca e já segue. Mochila nova começa sem tribo; quem volta pra cá vê
 // marcada a que escolheu, e tocar nela de novo segue com a mochila como estava.
@@ -16,7 +17,7 @@ export function TelaTribo() {
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
           <h1 className="mochila-titulo">Que som te leva pro rolê?</h1>
-          <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} alt="" />
+          <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} />
         </div>
         <p className="mochila-instrucao">Toca no que mais combina com o seu rolê.</p>
       </header>
@@ -39,7 +40,7 @@ export function TelaTribo() {
                 }}
               >
                 <span className="mochila-opcao-tile">
-                  <img className="mochila-sprite" src={spriteDe(`tribo-${t.id}`)} alt="" />
+                  <SpriteMochila src={spriteDe(`tribo-${t.id}`)} />
                 </span>
                 <span className="mochila-opcao-nome">{t.estilo}</span>
                 <span className="mochila-opcao-apoio">{t.nome}</span>

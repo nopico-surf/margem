@@ -434,10 +434,6 @@ body:has(.mochila-painel-montagem) {
   color: var(--colors-brand-secondary-950);
 }
 
-.mochila-cenario[data-marcada="true"] .mochila-cenario-tile {
-  background: var(--colors-neutral-0);
-}
-
 .mochila-cenario[data-marcada="true"] .mochila-cenario-apoio {
   color: inherit;
 }
@@ -457,7 +453,7 @@ body:has(.mochila-painel-montagem) {
   width: var(--m-cel);
   height: var(--m-cel);
   border-radius: 0;
-  background: var(--colors-neutral-100);
+  background: transparent;
 }
 
 .mochila-cenario-texto {
@@ -627,6 +623,11 @@ body:has(.mochila-painel-montagem) {
 
 button.mochila-celula {
   cursor: pointer;
+}
+
+/* Item com linha que não é tocável: só a linha fica mais fraca que a dos tocáveis. */
+div.mochila-celula {
+  border-color: var(--colors-alpha-40);
 }
 
 .mochila-celula-vazia {
@@ -821,7 +822,7 @@ button.mochila-celula {
   align-items: flex-start;
   gap: var(--spacing-14);
   padding: var(--spacing-16);
-  border: var(--border-width-medium) solid var(--colors-neutral-950);
+  border: var(--border-width-medium) solid var(--colors-alpha-40);
   border-radius: 0;
   background: var(--colors-neutral-0);
   animation: mochila-surge var(--duration-420) var(--easing-out-quart) both;
@@ -1040,7 +1041,7 @@ button.mochila-celula {
   padding: var(--spacing-16);
   border: var(--border-width-medium) solid var(--colors-neutral-950);
   border-radius: 0;
-  background: var(--colors-neutral-0);
+  background: var(--colors-neutral-50);
 }
 
 .mochila-tribo-tile {

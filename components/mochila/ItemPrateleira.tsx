@@ -1,6 +1,7 @@
 "use client";
 
 import { ITENS, spriteDe } from "@/lib/mochila/conteudo";
+import { SpriteMochila } from "./SpriteMochila";
 
 // Componente novo (sem equivalente no Figma): item pixel da prateleira, tela B-Montagem do Claude
 // Design. Escolhido ganha o fundo de destaque e o check (a cor nunca vai sozinha). "naoCabe" treme
@@ -31,7 +32,7 @@ export function ItemPrateleira({
       aria-label={rotulo}
       onClick={() => aoTocar(id)}
     >
-      <img className="mochila-sprite" src={spriteDe(id)} alt="" data-espacos={item.espacos} />
+      <SpriteMochila src={spriteDe(id)} data-espacos={item.espacos} />
       <span>{item.curto}</span>
       {naMochila && (
         <span className="mochila-item-check" aria-hidden="true">

@@ -2,6 +2,7 @@
 
 import { CAPACIDADE, ITENS, spriteDe } from "@/lib/mochila/conteudo";
 import { encaixar, espacosUsados, fileiras as emFileiras } from "@/lib/mochila/encaixe";
+import { SpriteMochila } from "./SpriteMochila";
 
 // Componente novo (sem equivalente no Figma): a grade 3x3 da mochila, telas B-Montagem e
 // B-Resultado do Claude Design. Na montagem tem o contador e cada item sai com um toque. Com
@@ -26,7 +27,7 @@ export function MochilaGrade({
               <div key={row[0].id} className="mochila-fileira">
                 {row.map((b) => (
                   <div key={b.id} className="mochila-celula mochila-celula-nome" style={{ flexGrow: b.espacos }} role="img" aria-label={ITENS[b.id].nome}>
-                    <img className="mochila-sprite" src={spriteDe(b.id)} alt="" data-espacos={b.espacos} />
+                    <SpriteMochila src={spriteDe(b.id)} data-espacos={b.espacos} />
                     <span aria-hidden="true">{ITENS[b.id].curto}</span>
                   </div>
                 ))}
@@ -59,7 +60,7 @@ export function MochilaGrade({
           {posicoes.map((p) => {
             const item = ITENS[p.id];
             const estilo = { gridRow: p.linha + 1, gridColumn: `${p.coluna + 1} / span ${p.espacos}` };
-            const imagem = <img className="mochila-sprite" src={spriteDe(p.id)} alt="" data-espacos={p.espacos} />;
+            const imagem = <SpriteMochila src={spriteDe(p.id)} data-espacos={p.espacos} />;
             return aoTirar ? (
               <button
                 key={p.id}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { CENARIOS, cenarioAtivo, spriteCenario, spriteDe } from "@/lib/mochila/conteudo";
 import { usePartida } from "../Partida";
+import { SpriteMochila } from "../SpriteMochila";
 
 export function TelaEscolha() {
   const { escolhido, cenarioId, escolherCenario } = usePartida();
@@ -15,7 +16,7 @@ export function TelaEscolha() {
     <>
       <header className="mochila-cabeca mochila-cabeca-linha">
         <h1 className="mochila-titulo">Pra onde você vai?</h1>
-        <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} alt="" />
+        <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} />
       </header>
       <div className="mochila-painel">
         {/* Quem volta pra cá vê marcado o cenário em que estava; tocar nele de novo não apaga a mochila. */}
@@ -32,7 +33,7 @@ export function TelaEscolha() {
               onClick={() => escolherCenario(c.id)}
             >
               <span className="mochila-cenario-tile">
-                <img className="mochila-sprite" src={spriteCenario(c.id)} alt="" />
+                <SpriteMochila src={spriteCenario(c.id)} />
               </span>
               <span className="mochila-cenario-texto">
                 <span className="mochila-cenario-nome">{c.nome}</span>

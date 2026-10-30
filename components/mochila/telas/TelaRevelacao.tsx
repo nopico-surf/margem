@@ -7,6 +7,7 @@ import { track } from "@/lib/mixpanel";
 import { ItemRevelacao } from "../ItemRevelacao";
 import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
+import { SpriteMochila } from "../SpriteMochila";
 
 export function TelaRevelacao() {
   const liberada = useLiberada((p) => p.itens.length > 0);
@@ -29,7 +30,7 @@ export function TelaRevelacao() {
     <>
       <header className="mochila-cabeca mochila-cabeca-linha">
         <h1 className="mochila-titulo">Olha o que foi na sua mochila</h1>
-        <img className="mochila-sprite mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} alt="" />
+        <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} />
       </header>
       <div className="mochila-painel">
         <ul className="mochila-lista">

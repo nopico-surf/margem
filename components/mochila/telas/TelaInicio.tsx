@@ -7,6 +7,7 @@ import { cenarioPorId, spriteCenario, spriteDe } from "@/lib/mochila/conteudo";
 import { decodificar } from "@/lib/mochila/codigo";
 import { track } from "@/lib/mixpanel";
 import { usePartida } from "../Partida";
+import { SpriteMochila } from "../SpriteMochila";
 
 // Entrada normal (/mochila) ou pelo link de desafio (/mochila/d/[codigo]). Código inválido vira
 // entrada normal, sem erro na tela.
@@ -42,12 +43,12 @@ export function TelaInicio({ codigo }: { codigo?: string }) {
         </button>
       </div>
       <div className="mochila-inicio-meio">
-        <img className="mochila-sprite mochila-sprite-capa" src={spriteDe("mochila-fechada")} alt="" />
+        <SpriteMochila className="mochila-sprite-capa" src={spriteDe("mochila-fechada")} />
         <h1 className="mochila-nome-jogo">Mochila do Rolê</h1>
         {desafio ? (
           <div className="mochila-caixa mochila-caixa-forte mochila-convite">
             <span className="mochila-convite-tile">
-              <img className="mochila-sprite" src={spriteCenario(desafio.cenario)} alt="" />
+              <SpriteMochila src={spriteCenario(desafio.cenario)} />
             </span>
             <span className="mochila-convite-texto">
               <span className="mochila-convite-titulo">Alguém montou uma mochila {cenarioPorId(desafio.cenario)!.pra} e quer ver a sua.</span>
