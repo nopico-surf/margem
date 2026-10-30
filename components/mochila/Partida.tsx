@@ -1,10 +1,10 @@
 "use client";
 
-import { createContext, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, Suspense, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
-import { ITENS, JEITOS, LINHAS_FIXAS, QTD_JEITOS, cenarioPorId, triboPorId, type CenarioId, type Nivel } from "@/lib/mochila/conteudo";
+import { CENARIOS, ITENS, JEITOS, LINHAS_FIXAS, QTD_JEITOS, TRIBOS, cenarioPorId, spriteCenario, spriteDe, triboPorId, type CenarioId, type Nivel } from "@/lib/mochila/conteudo";
 import { eixos as eixosDe } from "@/lib/mochila/eixos";
 import { rotulo as rotuloDe } from "@/lib/mochila/rotulo";
 import { codificar, type Desafio } from "@/lib/mochila/codigo";
@@ -12,6 +12,7 @@ import { bip as tocarBip } from "@/lib/mochila/acoes";
 import { track } from "@/lib/mixpanel";
 import type { Fontes } from "@/lib/mochila/card";
 import { AvisoMochila } from "./AvisoMochila";
+import { TelaCarregando } from "./TelaCarregando";
 
 // A partida inteira vive aqui, no layout, e cada tela é uma rota. As escolhas ficam na memória e, só
 // pra o recarregar não perder a mochila, no sessionStorage da aba (some ao fechar). No desafio, a
@@ -111,15 +112,53 @@ function useEstado() {
     } catch {}
   }, [pronto, cenarioId, escolhido, itens, combinados, tribo, jeitos, nivel, desafio]);
 
+  // Os botões navegam com router.push, que não faz prefetch sozinho: sem isto, cada toque esperava a
+  // próxima tela chegar da rede. São todas estáticas e pequenas.
+  useEffect(() => {
+    Object.values(ROTAS).forEach((r) => router.prefetch(r));
+    router.prefetch("/inicio");
+  }, [router]);
+
+  // Sprites de todas as telas baixam em segundo plano depois da primeira, pra nenhuma abrir com a
+  // imagem chegando aos poucos.
+  useEffect(() => {
+    if (!pronto) return;
+    const baixar = () => {
+      const ids = ["mochila-aberta", "mochila-fechada", ...Object.keys(ITENS), ...TRIBOS.map((t) => `tribo-${t.id}`), ...JEITOS.map((j) => `jeito-${j.id}`)];
+      [...ids.map(spriteDe), ...CENARIOS.map((c) => spriteCenario(c.id))].forEach((src) => {
+        new Image().src = src;
+      });
+    };
+    // Safari não tem requestIdleCallback.
+    if (typeof requestIdleCallback === "function") {
+      const id = requestIdleCallback(baixar);
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(baixar, 500);
+    return () => clearTimeout(id);
+  }, [pronto]);
+
+  // Rota pra onde a partida está indo: enquanto a tela nova não chega, o skeleton toma o lugar da
+  // atual no mesmo toque. O HeaderMochila limpa quando o endereço muda.
+  const [indo, setIndo] = useState<string | null>(null);
+  const navegar = useCallback((rota: string, como: "push" | "replace" | "back" = "push") => {
+    if (como !== "back" && rota === window.location.pathname) return;
+    setIndo(rota);
+    if (como === "push") router.push(rota);
+    else if (como === "replace") router.replace(rota);
+    else router.back();
+  }, [router]);
+  const chegou = useCallback(() => setIndo(null), []);
+
   const fecharAviso = useCallback(() => setAviso(null), []);
 
   // O aviso é da tela em que apareceu.
   const ir = useCallback(
     (proxima: Etapa) => {
       setAviso(null);
-      router.push(ROTAS[proxima]);
+      navegar(ROTAS[proxima]);
     },
-    [router],
+    [navegar],
   );
 
   const fontes = useCallback((): Fontes => {
@@ -198,16 +237,16 @@ function useEstado() {
     setAviso(null);
     const seguir = () => {
       if (!anterior) {
-        router.push("/inicio");
+        navegar("/inicio");
         return;
       }
       const h = historico.current;
       if (h.at(-2) === ROTAS[anterior]) {
-        router.back();
+        navegar(ROTAS[anterior], "back");
         return;
       }
       h.pop();
-      router.replace(ROTAS[anterior]);
+      navegar(ROTAS[anterior], "replace");
     };
     if (etapa === "revelacao") abrirMochila(seguir);
     else seguir();
@@ -215,6 +254,7 @@ function useEstado() {
 
   const recomecar = () => {
     track("mochila_recomecada", { cenario: cenarioId });
+    setEscolhido(false);
     setItens([]);
     setCombinados([]);
     setJeitos([]);
@@ -263,6 +303,8 @@ function useEstado() {
     pararAbertura,
     registrarRota,
     voltar,
+    indo,
+    chegou,
     eixos,
     rotulo,
     visiveis,
@@ -292,10 +334,12 @@ const ETAPA_ANTERIOR: Partial<Record<Etapa, Etapa>> = {
 // Header de largura total, fora do frame do jogo. Na tela de início a seta sai do jogo. Fica dentro
 // de Suspense por causa do usePathname, que também alimenta o histórico do voltar.
 function HeaderMochila() {
-  const { voltar, registrarRota } = usePartida();
+  const { voltar, registrarRota, chegou } = usePartida();
   const pathname = usePathname();
   const [menuAberto, setMenuAberto] = useState(false);
   useEffect(() => registrarRota(pathname), [pathname, registrarRota]);
+  // Antes da pintura: a tela nova aparece direto, sem um quadro de skeleton por cima dela.
+  useLayoutEffect(chegou, [pathname, chegou]);
 
   return (
     <>
@@ -314,7 +358,11 @@ export function PartidaProvider({ children }: { children: React.ReactNode }) {
           <HeaderMochila />
         </Suspense>
         <main className="mochila-tela">
-          {children}
+          {/* A tela atual fica montada e só some de vista, pra voltar a ela como estava. */}
+          {partida.indo && <TelaCarregando />}
+          <div className="mochila-conteudo" hidden={partida.indo !== null}>
+            {children}
+          </div>
         </main>
         <AvisoMochila texto={partida.aviso} aoFechar={partida.fecharAviso} />
       </div>

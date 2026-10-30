@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { ActionRow } from "@/components/conversa/ActionRow";
 import { CAPACIDADE, spriteDe } from "@/lib/mochila/conteudo";
@@ -9,13 +8,12 @@ import { cabe, espacosUsados } from "@/lib/mochila/encaixe";
 import { track } from "@/lib/mixpanel";
 import { MochilaGrade } from "../MochilaGrade";
 import { ItemPrateleira } from "../ItemPrateleira";
-import { ROTAS, useLiberada, usePartida } from "../Partida";
+import { useLiberada, usePartida } from "../Partida";
 import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaMontagem() {
   const liberada = useLiberada((p) => p.escolhido);
   const { cenario, cenarioId, itens, setItens, bip, ir } = usePartida();
-  const router = useRouter();
   const [naoCabe, setNaoCabe] = useState<string | null>(null);
   const [fechando, setFechando] = useState<"aberta" | "fechada" | null>(null);
   const timers = useRef<number[]>([]);
@@ -43,7 +41,6 @@ export function TelaMontagem() {
       ir("revelacao");
       return;
     }
-    router.prefetch(ROTAS.revelacao);
     setFechando("aberta");
     timers.current.push(
       window.setTimeout(() => {

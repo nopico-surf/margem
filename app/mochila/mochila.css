@@ -33,6 +33,15 @@
   margin: 0 auto;
 }
 
+/* Embrulho da tela atual: não entra no layout, só esconde a tela enquanto a próxima chega. */
+.mochila-conteudo {
+  display: contents;
+}
+
+.mochila-conteudo[hidden] {
+  display: none;
+}
+
 /* .app-header vem branco por padrão (globals.css); aqui deixa o quadriculado aparecer atrás. */
 .mochila .app-header {
   background: transparent;
