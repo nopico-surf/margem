@@ -46,7 +46,7 @@ export function TelaInicio({ codigo }: { codigo?: string }) {
         <SpriteMochila className="mochila-sprite-capa" src={spriteDe("mochila-fechada")} />
         <h1 className="mochila-nome-jogo">Mochila do Rolê</h1>
         {desafio ? (
-          <div className="mochila-caixa mochila-caixa-forte mochila-convite">
+          <div className="mochila-caixa mochila-convite">
             <span className="mochila-convite-tile">
               <SpriteMochila src={spriteCenario(desafio.cenario)} />
             </span>
