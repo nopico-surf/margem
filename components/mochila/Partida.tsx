@@ -416,7 +416,7 @@ function HeaderMochila() {
         antesDoMenu={
           inicio ? undefined : (
             <button type="button" className="menu-button" aria-label={som ? "Desligar som" : "Ligar som"} aria-pressed={som} onClick={alternarSom}>
-              {som ? <GlifoVolumeUp size={24} /> : <GlifoVolumeOff size={24} />}
+              {som ? <GlifoVolumeUp size={24} color="var(--colors-neutral-950)" /> : <GlifoVolumeOff size={24} color="var(--colors-neutral-950)" />}
             </button>
           )
         }
