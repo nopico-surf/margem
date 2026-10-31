@@ -131,7 +131,7 @@ export function TelaCompartilhar() {
         ) : (
           <div className="mochila-acoes mochila-acoes-compartilhar">
             <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={direct ? copiarTexto : compartilharCard}>
-              {direct ? "Copiar texto do desafio" : "Compartilhar card"}
+              {direct ? "Copiar texto do desafio" : "Compartilhar"}
             </Button>
             {!direct && <Button
               variante="secondary"

@@ -162,10 +162,10 @@ export function TelaResultado() {
 
         <div className="mochila-acoes">
           <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => irPara("desafiar", "mochila_desafiar_clicado")}>
-            Desafiar por WhatsApp
+            Preparar para o WhatsApp
           </Button>
           <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={() => irPara("compartilhar", "mochila_compartilhar_clicado")}>
-            Compartilhar no Instagram
+            Preparar para o Instagram
           </Button>
           <Button variante="transparent" tamanho="medium" redondo larguraTotal onClick={recomecar}>
             Montar outra mochila
