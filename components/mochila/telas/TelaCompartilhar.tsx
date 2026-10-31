@@ -15,7 +15,10 @@ export function TelaCompartilhar() {
   const liberada = useLiberada((p) => p.itens.length > 0);
   const { cenario, cenarioId, itens, tribo, eixos, rotulo, codigoDesafio, visiveis, escondidos, nivel, fontes, setAviso } = usePartida();
   const [confirmando, setConfirmando] = useState(false);
-  const [formato, setFormato] = useState<Formato>("stories");
+  // No Direct não vai imagem: vai só o texto com o link, e o opengraph do link gera o card do feed.
+  const [modo, setModo] = useState<Formato | "direct">("stories");
+  const direct = modo === "direct";
+  const formato: Formato = direct ? "feed" : modo;
   const [previa, setPrevia] = useState<{ url: string; blob: Blob } | null>(null);
   const [erroImagem, setErroImagem] = useState(false);
   const [tentativa, setTentativa] = useState(0);
@@ -52,6 +55,13 @@ export function TelaCompartilhar() {
   const doCard = { cenario: cenarioId, formato, nivel, itens_no_card: visiveis, escondidos };
   const suaTribo = triboPorId(tribo);
 
+  async function copiarTexto() {
+    const texto = textoDesafio({ cenario, rotulo, tribo: suaTribo, qtdItens: visiveis.length, url: link(`/d/${codigoDesafio}`, "compartilhar", cenarioId) });
+    const copiou = await copiar(texto);
+    track("mochila_card_compartilhado", { ...doCard, formato: "direct", via: "direct_texto", concluido: copiou });
+    if (copiou && !sistemaAvisa()) setAviso("Texto copiado.");
+  }
+
   async function compartilharCard() {
     if (!previa) return;
     const texto = textoDesafio({ cenario, rotulo, tribo: suaTribo, qtdItens: visiveis.length, url: link(`/d/${codigoDesafio}`, "compartilhar", cenarioId) });
@@ -82,12 +92,12 @@ export function TelaCompartilhar() {
       </header>
       <div className="mochila-painel mochila-painel-montagem">
         <div role="group" aria-label="Formato" className="mochila-formato">
-          {(["stories", "feed"] as const).map((f) => (
-            <button key={f} type="button" aria-pressed={formato === f} onClick={() => {
-              if (f !== formato) track("mochila_formato_trocado", { cenario: cenarioId, formato: f });
-              setFormato(f);
+          {(["stories", "feed", "direct"] as const).map((f) => (
+            <button key={f} type="button" aria-pressed={modo === f} onClick={() => {
+              if (f !== modo) track("mochila_formato_trocado", { cenario: cenarioId, formato: f });
+              setModo(f);
             }}>
-              {f === "stories" ? "Stories" : "Feed"}
+              {f === "stories" ? "Stories" : f === "feed" ? "Feed" : "Direct"}
             </button>
           ))}
         </div>
@@ -120,10 +130,10 @@ export function TelaCompartilhar() {
           </div>
         ) : (
           <div className="mochila-acoes mochila-acoes-compartilhar">
-            <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={compartilharCard}>
-              Compartilhar card
+            <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={direct ? copiarTexto : compartilharCard}>
+              {direct ? "Copiar texto do desafio" : "Compartilhar card"}
             </Button>
-            <Button
+            {!direct && <Button
               variante="secondary"
               tamanho="medium"
               redondo
@@ -137,7 +147,7 @@ export function TelaCompartilhar() {
               }}
             >
               Baixar imagem
-            </Button>
+            </Button>}
           </div>
         )}
       </div>

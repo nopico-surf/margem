@@ -7,8 +7,9 @@ export function link(caminho: string, canal: string, cenario: CenarioId) {
   return `${URL_DO_JOGO}${caminho}?utm_source=mochila&utm_medium=${canal}&utm_campaign=${cenario}`;
 }
 
-// Texto que vai junto da imagem no desafio e no compartilhar. O Instagram ignora o texto; quem
-// escolhe o WhatsApp por qualquer um dos dois caminhos manda a mesma coisa.
+// Texto que vai junto da imagem no desafio e no compartilhar. O Instagram ignora o texto na folha
+// de compartilhar; no Direct ele é copiado sozinho e o link gera a imagem. Quem escolhe o WhatsApp
+// por qualquer um dos dois caminhos manda a mesma coisa.
 export function textoDesafio(opcoes: { cenario: Cenario; rotulo: Rotulo; tribo: Tribo | undefined; qtdItens: number; url: string }) {
   const { cenario, rotulo, tribo, qtdItens, url } = opcoes;
   return [
