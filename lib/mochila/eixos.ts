@@ -91,6 +91,17 @@ export function eixos(cenarioId: CenarioId, itens: string[], combinados: number[
   ];
 }
 
+// Os eixos refeitos a partir dos quatro valores, na ordem acima. Serve o link de desafio, que leva
+// os valores prontos: os itens escondidos pelo nível entram na conta sem aparecer no link.
+export function eixosDeValores(valores: number[]): Eixo[] {
+  return [
+    eixo("corpo_festa", "corpo", "festa", valores[0]),
+    eixo("grupo_autonomia", "grupo", "autonomia", valores[1]),
+    eixo("volta_presenca", "volta", "presenca", valores[2]),
+    eixo("planejamento_leveza", "planejamento", "leveza", valores[3]),
+  ];
+}
+
 // Mais extremo primeiro (maior distância de 50). Empate fica na ordem dos eixos.
 export function porExtremo(lista: Eixo[]): Eixo[] {
   return [...lista].sort((x, y) => Math.abs(y.valor - 50) - Math.abs(x.valor - 50));

@@ -16,6 +16,9 @@ const nextConfig = {
   allowedDevOrigins: ['192.168.1.*'],
   cacheComponents: true,
   partialPrefetching: true,
+  // Canvas nativo da prévia do link de desafio da Mochila (lib/mochila/card-servidor.ts): o
+  // binário .node não entra no bundle, fica em node_modules.
+  serverExternalPackages: ["@napi-rs/canvas"],
   // A /bem-vindo (e a etapa de proteção de dados, que já tinha virado o painel dela) se juntou à
   // /inicio em 07/10/2026.
   async redirects() {

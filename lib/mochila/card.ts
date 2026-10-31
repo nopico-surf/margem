@@ -4,21 +4,31 @@ import type { Rotulo } from "./rotulo";
 import { fileiras } from "./encaixe";
 
 // Desenha no canvas o card compartilhável, igual à tela U2-Card do Claude Design (Stories
-// 1080x1920 e feed 1080x1350). Roda só no navegador. As cores vêm dos tokens do CSS na hora de
+// 1080x1920 e feed 1080x1440). Roda no navegador e, pela prévia do link de desafio, no servidor
+// (lib/mochila/card-servidor.ts), que troca o Ambiente. As cores vêm dos tokens do CSS na hora de
 // desenhar, então trocar um token troca o card junto. A mochila do card é redesenhada só com os
 // itens visíveis no nível escolhido: as fileiras sempre fecham, sem espaço vazio que entregue algo.
 
 export type Formato = "stories" | "feed";
 export type Fontes = { pixel: string; texto: string };
 
+// O que muda entre navegador e servidor: de onde vêm as cores, as imagens, as fontes e o canvas.
+export type Ambiente = {
+  cor: (token: string) => string;
+  imagem: (src: string) => Promise<HTMLImageElement>;
+  fonte: (especificacao: string) => Promise<unknown>;
+  canvas: (largura: number, altura: number) => HTMLCanvasElement;
+};
+
 const LARGURA = 1080;
+export const ALTURA_FEED = 1440;
 const MARGEM_LADO = 80;
 
 function fonte(peso: number, tamanho: number, familia: string): string {
   return `${peso} ${tamanho}px ${familia}`;
 }
 
-function cor(token: string): string {
+function corDoCss(token: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(`--colors-${token}`).trim();
 }
 
@@ -40,6 +50,18 @@ function carregar(src: string): Promise<HTMLImageElement> {
   }
   return p;
 }
+
+const NAVEGADOR: Ambiente = {
+  cor: corDoCss,
+  imagem: carregar,
+  fonte: (especificacao) => document.fonts.load(especificacao),
+  canvas: (largura, altura) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = largura;
+    canvas.height = altura;
+    return canvas;
+  },
+};
 
 // O mesmo recorte em degrau do clip-path .px do design.
 function pxRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, s: number) {
@@ -87,7 +109,7 @@ function quebrarEquilibrado(ctx: CanvasRenderingContext2D, texto: string, max: n
   return quebrar(ctx, texto, hi);
 }
 
-// Medidas da tela U2-Card. O feed é desenhado direto em 1080x1350.
+// Medidas da tela U2-Card. O feed é desenhado direto em 1080x1440.
 const MEDIDAS = {
   stories: { inset: 236, gap: 22, logoW: 348, logoH: 48, logoGap: 16, titulo: 66, sprite: 120, destino: 36, f1: 46, f2: 38, rPadY: 18, rPadX: 32, tGap: 14, frase: 38, barra: 30, barraH: 28, barraB: 4, barraGap: 10, eGap: 20, ePad: 28, selo: { s: 10, padY: 12, padX: 24, gap: 16, icone: 64, b: 4, fonte: 40 }, tagTop: 62, bagTop: 60, bagPad: 26, convite: 40 },
   feed: { inset: 80, gap: 18, logoW: 261, logoH: 36, logoGap: 12, titulo: 54, sprite: 96, destino: 30, f1: 40, f2: 32, rPadY: 14, rPadX: 28, tGap: 12, frase: 34, barra: 26, barraH: 22, barraB: 3, barraGap: 8, eGap: 16, ePad: 22, selo: { s: 8, padY: 10, padX: 20, gap: 14, icone: 48, b: 3, fonte: 34 }, tagTop: 44, bagTop: 46, bagPad: 22, convite: 34 },
@@ -101,33 +123,33 @@ export async function desenharCard(opcoes: {
   tribo: Tribo | undefined;
   formato: Formato;
   fontes: Fontes;
+  ambiente?: Ambiente;
 }): Promise<HTMLCanvasElement> {
-  const { cenario, itens, rotulo, eixos, tribo, formato, fontes } = opcoes;
+  const { cenario, itens, rotulo, eixos, tribo, formato, fontes, ambiente = NAVEGADOR } = opcoes;
+  const { cor, imagem } = ambiente;
   const feed = formato === "feed";
   const z = MEDIDAS[formato];
-  const altura = feed ? 1350 : 1920;
+  const altura = feed ? ALTURA_FEED : 1920;
   const largura = LARGURA - MARGEM_LADO * 2;
 
   // Se a fonte não carregar, o card sai com a fonte de reserva em vez de não sair.
   await Promise.all([
-    document.fonts.load(fonte(700, z.titulo, fontes.pixel)),
-    document.fonts.load(fonte(600, z.f1, fontes.pixel)),
-    document.fonts.load(fonte(600, z.f2, fontes.texto)),
-    document.fonts.load(fonte(400, z.barra, fontes.texto)),
+    ambiente.fonte(fonte(700, z.titulo, fontes.pixel)),
+    ambiente.fonte(fonte(600, z.f1, fontes.pixel)),
+    ambiente.fonte(fonte(600, z.f2, fontes.texto)),
+    ambiente.fonte(fonte(400, z.barra, fontes.texto)),
   ]).catch((e) => console.error("[mochila] fonte do card não carregou", e));
   const virada = cenario === "virada";
   const [logo, mochila, fogos, icone, ...sprites] = await Promise.all([
-    carregar("/icons/logo-margem.svg"),
-    carregar(spriteDe("mochila-fechada")),
-    virada ? carregar(spriteDe("fogos")) : Promise.resolve(null),
-    tribo ? carregar(spriteDe(`tribo-${tribo.id}`)) : Promise.resolve(null),
-    ...itens.map((id) => carregar(spriteDe(id))),
+    imagem("/icons/logo-margem.svg"),
+    imagem(spriteDe("mochila-fechada")),
+    virada ? imagem(spriteDe("fogos")) : Promise.resolve(null),
+    tribo ? imagem(spriteDe(`tribo-${tribo.id}`)) : Promise.resolve(null),
+    ...itens.map((id) => imagem(spriteDe(id))),
   ]);
   const spriteDoItem = new Map(itens.map((id, i) => [id, sprites[i]]));
 
-  const canvas = document.createElement("canvas");
-  canvas.width = LARGURA;
-  canvas.height = altura;
+  const canvas = ambiente.canvas(LARGURA, altura);
   const ctx = canvas.getContext("2d")!;
   ctx.imageSmoothingEnabled = false;
   ctx.textBaseline = "middle";
@@ -349,6 +371,7 @@ export async function desenharCard(opcoes: {
 
 // Checklist como imagem: o mesmo bloco "Pra levar no bolso do rolê" da tela de resultado.
 export async function desenharChecklist(linhas: string[], fontes: Fontes): Promise<HTMLCanvasElement> {
+  const cor = corDoCss;
   const largura = 1080;
   const pad = 80;
   const canvas = document.createElement("canvas");

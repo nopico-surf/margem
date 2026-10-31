@@ -330,7 +330,7 @@ function useEstado() {
   const visiveis = itens.filter((id) => ITENS[id].nivel <= nivel);
   const escondidos = itens.length - visiveis.length;
   const linhasChecklist = [...combinados.map((i) => cenario.combinados[i]), ...LINHAS_FIXAS];
-  const codigoDesafio = codificar({ cenario: cenarioId, itens: visiveis, combinados });
+  const codigoDesafio = codificar({ cenario: cenarioId, itens: visiveis, combinados, tribo: tribo ?? undefined, eixos: eixos.map((e) => e.valor) });
 
   return {
     raiz,
