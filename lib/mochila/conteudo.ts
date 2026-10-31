@@ -67,7 +67,7 @@ const DOS_CENARIOS: Item[] = [
   { id: "protetor-solar", nome: "Protetor solar", curto: "Protetor solar", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 0, revelacao: "Sol forte por horas, junto com álcool, cansa e desidrata ainda mais.", fora: "Faltou protetor solar. Sombra e água ajudam a compensar." },
   { id: "bone", nome: "Boné", curto: "Boné", espacos: 1, tipo: "role", prioridade: null, nivel: 0, revelacao: "Estilo e sombra no mesmo item.", fora: null },
   { id: "glitter", nome: "Glitter", curto: "Glitter", espacos: 1, tipo: "role", prioridade: null, nivel: 0, revelacao: "Bloco sem glitter nem conta.", fora: null },
-  { id: "calcado", nome: "Calçado confortável de reserva", curto: "Calçado confortável de reserva", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 0, revelacao: "Horas em pé e chão de festa cansam. Um calçado confortável de reserva ajuda a voltar com calma.", fora: "Faltou um calçado confortável. Depois de horas em pé, ele faz diferença na volta." },
+  { id: "calcado", nome: "Calçado confortável de reserva", curto: "Calçado de reserva", espacos: 1, tipo: "cuidado", prioridade: 6, nivel: 0, revelacao: "Horas em pé e chão de festa cansam. Um calçado confortável de reserva ajuda a voltar com calma.", fora: "Faltou um calçado confortável. Depois de horas em pé, ele faz diferença na volta." },
   { id: "casaquinho", nome: "Casaquinho", curto: "Casaquinho", espacos: 1, tipo: "role", prioridade: null, nivel: 0, revelacao: "A madrugada esfria. Um agasalho na mochila e você segue firme até o amanhecer.", fora: null },
   { id: "uvas", nome: "Uvas da virada", curto: "Uvas da virada", espacos: 1, tipo: "role", prioridade: null, nivel: 0, revelacao: "Cada uva é um desejo pro ano novo. Dá pra pedir saúde também.", fora: null },
 ];
