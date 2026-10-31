@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
-import { GlifoContentCopy, GlifoSaveAlt } from "@/components/icons/glifos";
+import { GlifoContentCopy, GlifoInstagram, GlifoSaveAlt, GlifoWhatsapp } from "@/components/icons/glifos";
 import { ITENS, spriteDe, triboPorId } from "@/lib/mochila/conteudo";
 import { NOME_POLO } from "@/lib/mochila/eixos";
 import { ficouDeFora } from "@/lib/mochila/rotulo";
@@ -162,10 +162,12 @@ export function TelaResultado() {
 
         <div className="mochila-acoes">
           <Button variante="primary" tamanho="medium" redondo larguraTotal onClick={() => irPara("desafiar", "mochila_desafiar_clicado")}>
-            Preparar para o WhatsApp
+            <GlifoWhatsapp size={20} />
+            <span>Preparar para o WhatsApp</span>
           </Button>
           <Button variante="secondary" tamanho="medium" redondo larguraTotal onClick={() => irPara("compartilhar", "mochila_compartilhar_clicado")}>
-            Preparar para o Instagram
+            <GlifoInstagram size={20} />
+            <span>Preparar para o Instagram</span>
           </Button>
           <Button variante="transparent" tamanho="medium" redondo larguraTotal onClick={recomecar}>
             Montar outra mochila

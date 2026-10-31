@@ -111,7 +111,7 @@ export function TelaDesafiar() {
           <div className="mochila-acoes mochila-acoes-compartilhar">
             <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={desafiar}>
               <GlifoWhatsapp size={20} />
-              <span>Compartilhar</span>
+              <span>Compartilhar no WhatsApp</span>
             </Button>
             <Button
               variante="secondary"

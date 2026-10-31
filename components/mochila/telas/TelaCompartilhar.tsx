@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { GlifoInstagram } from "@/components/icons/glifos";
 import { triboPorId } from "@/lib/mochila/conteudo";
 import { baixar, copiar, link, sistemaAvisa, textoDesafio } from "@/lib/mochila/acoes";
 import { altDoCard, desenharCard, paraBlob, type Formato } from "@/lib/mochila/card";
@@ -131,7 +132,12 @@ export function TelaCompartilhar() {
         ) : (
           <div className="mochila-acoes mochila-acoes-compartilhar">
             <Button variante="primary" tamanho="medium" redondo larguraTotal disabled={confirmando || !previa} onClick={direct ? copiarTexto : compartilharCard}>
-              {direct ? "Copiar texto do desafio" : "Compartilhar"}
+              {direct ? "Copiar texto do desafio" : (
+                <>
+                  <GlifoInstagram size={20} />
+                  <span>Compartilhar no Instagram</span>
+                </>
+              )}
             </Button>
             {!direct && <Button
               variante="secondary"
