@@ -179,23 +179,16 @@ export async function desenharCard(opcoes: {
   const rowGap = feed ? (muitas ? 12 : 14) : muitas ? 14 : 18;
 
   // Cabeçalho: logo, título e destino à esquerda, mochila fechada à direita, da mesma altura do
-  // bloco de texto. A mochila maior estreita o texto, que pode quebrar em mais linhas e crescer,
-  // então o tamanho é recalculado até assentar.
+  // bloco de texto. O texto quebra na largura de sempre (a da mochila pequena): a mochila maior
+  // só cresce, sem mudar o texto.
   const destino = `Destino: ${CENARIOS.find((c) => c.id === cenario)?.nome ?? ""}`;
-  let tamanhoMochila = z.sprite;
-  let linhasTitulo: string[] = [];
-  let linhasDestino: string[] = [];
-  let blocoTexto = 0;
-  for (let i = 0; i < 4; i++) {
-    ctx.font = fonte(700, z.titulo, fontes.pixel);
-    linhasTitulo = quebrarEquilibrado(ctx, "Minha mochila pro rolê", largura - tamanhoMochila - 24);
-    ctx.font = fonte(600, z.destino, fontes.texto);
-    linhasDestino = quebrar(ctx, destino, largura - tamanhoMochila - 24);
-    blocoTexto = z.logoH + z.logoGap * 2 + linhasTitulo.length * z.titulo * 1.02 + linhasDestino.length * z.destino * 1.2;
-    if (blocoTexto === tamanhoMochila) break;
-    tamanhoMochila = blocoTexto;
-  }
-  const alturaCabeca = Math.max(tamanhoMochila, blocoTexto);
+  ctx.font = fonte(700, z.titulo, fontes.pixel);
+  const linhasTitulo = quebrarEquilibrado(ctx, "Minha mochila pro rolê", largura - z.sprite - 24);
+  ctx.font = fonte(600, z.destino, fontes.texto);
+  const linhasDestino = quebrar(ctx, destino, largura - z.sprite - 24);
+  const blocoTexto = z.logoH + z.logoGap * 2 + linhasTitulo.length * z.titulo * 1.02 + linhasDestino.length * z.destino * 1.2;
+  const tamanhoMochila = blocoTexto;
+  const alturaCabeca = blocoTexto;
 
   // Rótulo: pílula com as duas linhas, e a frase embaixo
   const pilulaInterna = largura - 12;
