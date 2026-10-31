@@ -25,24 +25,6 @@ export function textoDesafio(opcoes: { cenario: Cenario; rotulo: Rotulo; tribo: 
   ].join("\n");
 }
 
-// Efeito 8 bits curto. Desligado por padrão.
-export function bip(ligado: boolean, freq: number) {
-  if (!ligado || typeof window === "undefined") return;
-  try {
-    const ac = new AudioContext();
-    const osc = ac.createOscillator();
-    const ganho = ac.createGain();
-    osc.type = "square";
-    osc.frequency.value = freq;
-    ganho.gain.setValueAtTime(0.06, ac.currentTime);
-    ganho.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.12);
-    osc.connect(ganho).connect(ac.destination);
-    osc.start();
-    osc.stop(ac.currentTime + 0.13);
-    osc.onended = () => ac.close();
-  } catch {}
-}
-
 // No Android, o sistema confirma cópia e download com aviso próprio, que a página não consegue esconder.
 // Aí o nosso toast fica de fora, pra nunca aparecerem os dois.
 export function sistemaAvisa() {

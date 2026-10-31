@@ -30,9 +30,11 @@ type HeaderProps = {
   mostrarProfissionais?: boolean;
   // Só o logo, sem menu (Figma: telas do Pix e do código vencido, 1537:36169 e 1542:40036).
   semMenu?: boolean;
+  // Botão ao lado do menu, só no header com seta (a Mochila põe o de som aqui).
+  antesDoMenu?: React.ReactNode;
 };
 
-export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar, mostrarProfissionais = true, semMenu = false }: HeaderProps) {
+export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar, mostrarProfissionais = true, semMenu = false, antesDoMenu }: HeaderProps) {
   const logo = onVoltar ? (
     <>
       <LogoMargem className="app-logo app-logo-completo" />
@@ -67,6 +69,11 @@ export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar
           <Button variante="secondary" tamanho="xx-small" href="/profissionais">
             Psicólogos e psiquiatras
           </Button>
+          <BotaoMenu onClick={onOpenMenu} />
+        </div>
+      ) : antesDoMenu ? (
+        <div className="app-header-direita">
+          {antesDoMenu}
           <BotaoMenu onClick={onOpenMenu} />
         </div>
       ) : (

@@ -47,6 +47,16 @@
   background: transparent;
 }
 
+/* Com o botão de som, a direita fica mais larga que a seta: a grade de três colunas mantém o logo no centro. */
+.mochila .app-header-com-voltar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.mochila .app-header-com-voltar > :last-child {
+  justify-self: end;
+}
+
 .mochila-so-leitor {
   position: absolute;
   width: var(--size-1);

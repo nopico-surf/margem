@@ -8,7 +8,8 @@ import { CENARIOS, ITENS, JEITOS, LINHAS_FIXAS, QTD_JEITOS, TRIBOS, cenarioPorId
 import { eixos as eixosDe } from "@/lib/mochila/eixos";
 import { rotulo as rotuloDe } from "@/lib/mochila/rotulo";
 import { codificar, type Desafio } from "@/lib/mochila/codigo";
-import { bip as tocarBip } from "@/lib/mochila/acoes";
+import { bip as tocarBip, pararMusica, tocarMusica } from "@/lib/mochila/som";
+import { GlifoVolumeOff, GlifoVolumeUp } from "@/components/icons/glifos";
 import { track } from "@/lib/mixpanel";
 import type { Fontes } from "@/lib/mochila/card";
 import { AvisoMochila } from "./AvisoMochila";
@@ -16,7 +17,8 @@ import { TelaCarregando } from "./TelaCarregando";
 
 // A partida inteira vive aqui, no layout, e cada tela é uma rota. As escolhas ficam na memória e, só
 // pra o recarregar não perder a mochila, no sessionStorage da aba (some ao fechar). No desafio, a
-// mochila da outra pessoa vem no próprio link. Só a preferência de som fica guardada de vez.
+// mochila da outra pessoa vem no próprio link. Só a preferência de som fica guardada de vez: o som
+// começa ligado, e quem desliga não ouve mais nem o bip dos toques nem a música da tribo.
 // Cada passo do jogo vai pro Mixpanel com os eventos `mochila_*`, itens incluídos (decidido em
 // 30/10/2026), sem depender do painel de dados, que o jogo não tem.
 
@@ -36,6 +38,8 @@ export const ROTAS: Record<Etapa, string> = {
 };
 
 const CHAVE_SOM = "mochila-som";
+// Frequência do bip de um toque qualquer.
+const TOQUE = 520;
 const CHAVE_PARTIDA = "mochila-partida";
 
 type Guardado = {
@@ -86,7 +90,10 @@ function useEstado() {
   const [jeitos, setJeitos] = useState<string[]>([]);
   const [nivel, setNivel] = useState<Nivel>(0);
   const [desafio, setDesafio] = useState<Desafio | null>(null);
-  const [som, setSom] = useState(false);
+  const [som, setSom] = useState(true);
+  // O bip e a música leem daqui: o toque que desliga o som não pode tocar com o valor velho.
+  const somRef = useRef(true);
+  const ultimoBip = useRef(0);
   const [aviso, setAviso] = useState<string | null>(null);
 
   useEffect(() => {
@@ -103,9 +110,26 @@ function useEstado() {
       setDesafio(g.desafio ?? null);
     }
     try {
-      setSom(localStorage.getItem(CHAVE_SOM) === "1");
+      const ligado = localStorage.getItem(CHAVE_SOM) !== "0";
+      somRef.current = ligado;
+      setSom(ligado);
     } catch {}
     setPronto(true);
+  }, []);
+
+  // Música só com tribo escolhida. Sai da Mochila ou a aba vai pro fundo, ela para; volta no próximo toque.
+  useEffect(() => {
+    if (!tribo) pararMusica();
+  }, [tribo]);
+  useEffect(() => {
+    const aoEsconder = () => {
+      if (document.hidden) pararMusica();
+    };
+    document.addEventListener("visibilitychange", aoEsconder);
+    return () => {
+      document.removeEventListener("visibilitychange", aoEsconder);
+      pararMusica();
+    };
   }, []);
 
   useEffect(() => {
@@ -174,14 +198,39 @@ function useEstado() {
     };
   }, []);
 
+  const bip = useCallback((freq: number) => {
+    if (!somRef.current) return;
+    ultimoBip.current = performance.now();
+    tocarBip(freq);
+  }, []);
+
   const alternarSom = () => {
-    const novo = !som;
+    const novo = !somRef.current;
+    somRef.current = novo;
     setSom(novo);
     try {
       localStorage.setItem(CHAVE_SOM, novo ? "1" : "0");
     } catch {}
-    tocarBip(novo, 880);
+    if (novo) {
+      bip(880);
+      if (tribo) tocarMusica(tribo);
+    } else pararMusica();
     track("mochila_som_alternado", { ligado: novo });
+  };
+
+  // A música começa dentro do toque na tribo: fora dele o iPhone não deixa tocar.
+  const escolherTribo = (id: string) => {
+    setTribo(id);
+    if (somRef.current) tocarMusica(id);
+  };
+
+  // Todo toque em botão ou link do jogo faz bip. Quem já tocou um bip próprio no mesmo toque (colocar,
+  // tirar, não coube) fica só com ele. O toque também retoma a música que parou com a aba no fundo.
+  const aoTocar = (evento: React.MouseEvent) => {
+    if (!somRef.current) return;
+    if (!(evento.target as HTMLElement).closest("button, a, label, [role='button']")) return;
+    if (performance.now() - ultimoBip.current > 50) bip(TOQUE);
+    if (tribo) tocarMusica(tribo);
   };
 
   // Tocar de novo no cenário em que já estava (voltou pra conferir) segue com a mochila como estava.
@@ -219,7 +268,7 @@ function useEstado() {
     timersAbertura.current.push(
       window.setTimeout(() => {
         setAbrindo("aberta");
-        tocarBip(som, 440);
+        bip(440);
       }, 550),
       window.setTimeout(depois, 1100),
     );
@@ -291,7 +340,7 @@ function useEstado() {
     semCombinados,
     setSemCombinados,
     tribo,
-    setTribo,
+    escolherTribo,
     jeitos,
     setJeitos,
     nivel,
@@ -300,7 +349,8 @@ function useEstado() {
     setDesafio,
     som,
     alternarSom,
-    bip: (freq: number) => tocarBip(som, freq),
+    bip,
+    aoTocar,
     aviso,
     setAviso,
     fecharAviso,
@@ -343,16 +393,29 @@ const ETAPA_ANTERIOR: Partial<Record<Etapa, Etapa>> = {
 // Header de largura total, fora do frame do jogo. Na tela de início a seta sai do jogo. Fica dentro
 // de Suspense por causa do usePathname, que também alimenta o histórico do voltar.
 function HeaderMochila() {
-  const { voltar, registrarRota, chegou } = usePartida();
+  const { voltar, registrarRota, chegou, som, alternarSom } = usePartida();
   const pathname = usePathname();
   const [menuAberto, setMenuAberto] = useState(false);
   useEffect(() => registrarRota(pathname), [pathname, registrarRota]);
   // Antes da pintura: a tela nova aparece direto, sem um quadro de skeleton por cima dela.
   useLayoutEffect(chegou, [pathname, chegou]);
+  // Na tela de início (normal ou do desafio) o botão de som fica no corpo da tela; nas outras, aqui.
+  const inicio = pathname === ROTAS.inicio || pathname.startsWith("/mochila/d/");
 
   return (
     <>
-      <Header onOpenMenu={() => setMenuAberto(true)} onVoltar={() => voltar()} mostrarProfissionais={false} />
+      <Header
+        onOpenMenu={() => setMenuAberto(true)}
+        onVoltar={() => voltar()}
+        mostrarProfissionais={false}
+        antesDoMenu={
+          inicio ? undefined : (
+            <button type="button" className="menu-button" aria-label={som ? "Desligar som" : "Ligar som"} aria-pressed={som} onClick={alternarSom}>
+              {som ? <GlifoVolumeUp size={24} /> : <GlifoVolumeOff size={24} />}
+            </button>
+          )
+        }
+      />
       <SideMenu open={menuAberto} onClose={() => setMenuAberto(false)} rota="/mochila" />
     </>
   );
@@ -362,7 +425,7 @@ export function PartidaProvider({ children }: { children: React.ReactNode }) {
   const partida = useEstado();
   return (
     <Contexto.Provider value={partida}>
-      <div className="mochila" ref={partida.raiz}>
+      <div className="mochila" ref={partida.raiz} onClick={partida.aoTocar}>
         <Suspense fallback={null}>
           <HeaderMochila />
         </Suspense>

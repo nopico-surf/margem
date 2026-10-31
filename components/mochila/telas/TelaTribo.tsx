@@ -10,7 +10,7 @@ import { SpriteMochila } from "../SpriteMochila";
 // marcada a que escolheu, e tocar nela de novo segue com a mochila como estava.
 export function TelaTribo() {
   const liberada = useLiberada((p) => p.escolhido);
-  const { cenarioId, tribo, setTribo, ir } = usePartida();
+  const { cenarioId, tribo, escolherTribo, ir } = usePartida();
   if (!liberada) return <TelaCarregando />;
   return (
     <>
@@ -34,7 +34,7 @@ export function TelaTribo() {
                 className="mochila-opcao"
                 data-marcada={marcada}
                 onClick={() => {
-                  setTribo(t.id);
+                  escolherTribo(t.id);
                   track("mochila_tribo", { cenario: cenarioId, tribo: t.id });
                   ir("montagem");
                 }}
