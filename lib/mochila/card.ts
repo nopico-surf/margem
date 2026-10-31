@@ -178,14 +178,24 @@ export async function desenharCard(opcoes: {
   const [padTopo, padLado, padBase] = feed ? (muitas ? [12, 10, 12] : [16, 12, 14]) : muitas ? [14, 12, 14] : [20, 14, 16];
   const rowGap = feed ? (muitas ? 12 : 14) : muitas ? 14 : 18;
 
-  // Cabeçalho: logo, título e destino à esquerda, mochila fechada à direita
-  ctx.font = fonte(700, z.titulo, fontes.pixel);
-  const linhasTitulo = quebrarEquilibrado(ctx, "Minha mochila pro rolê", largura - z.sprite - 24);
+  // Cabeçalho: logo, título e destino à esquerda, mochila fechada à direita, da mesma altura do
+  // bloco de texto. A mochila maior estreita o texto, que pode quebrar em mais linhas e crescer,
+  // então o tamanho é recalculado até assentar.
   const destino = `Destino: ${CENARIOS.find((c) => c.id === cenario)?.nome ?? ""}`;
-  ctx.font = fonte(600, z.destino, fontes.texto);
-  const linhasDestino = quebrar(ctx, destino, largura - z.sprite - 24);
-  const blocoTexto = z.logoH + z.logoGap * 2 + linhasTitulo.length * z.titulo * 1.02 + linhasDestino.length * z.destino * 1.2;
-  const alturaCabeca = Math.max(z.sprite, blocoTexto);
+  let tamanhoMochila = z.sprite;
+  let linhasTitulo: string[] = [];
+  let linhasDestino: string[] = [];
+  let blocoTexto = 0;
+  for (let i = 0; i < 4; i++) {
+    ctx.font = fonte(700, z.titulo, fontes.pixel);
+    linhasTitulo = quebrarEquilibrado(ctx, "Minha mochila pro rolê", largura - tamanhoMochila - 24);
+    ctx.font = fonte(600, z.destino, fontes.texto);
+    linhasDestino = quebrar(ctx, destino, largura - tamanhoMochila - 24);
+    blocoTexto = z.logoH + z.logoGap * 2 + linhasTitulo.length * z.titulo * 1.02 + linhasDestino.length * z.destino * 1.2;
+    if (blocoTexto === tamanhoMochila) break;
+    tamanhoMochila = blocoTexto;
+  }
+  const alturaCabeca = Math.max(tamanhoMochila, blocoTexto);
 
   // Rótulo: pílula com as duas linhas, e a frase embaixo
   const pilulaInterna = largura - 12;
@@ -242,7 +252,7 @@ export async function desenharCard(opcoes: {
   ctx.font = fonte(600, z.destino, fontes.texto);
   ctx.fillStyle = cor("brand-primary-900");
   linhasDestino.forEach((l, i) => ctx.fillText(l, x0, ty + z.destino * 1.2 * (i + 0.5)));
-  ctx.drawImage(mochila, x0 + largura - z.sprite, y + (alturaCabeca - z.sprite) / 2, z.sprite, z.sprite);
+  ctx.drawImage(mochila, x0 + largura - tamanhoMochila, y + (alturaCabeca - tamanhoMochila) / 2, tamanhoMochila, tamanhoMochila);
   y += alturaCabeca + z.gap;
 
   // Pílula com o rótulo e o "e também"
