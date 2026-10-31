@@ -93,6 +93,8 @@ function useEstado() {
   const [som, setSom] = useState(true);
   // O bip e a música leem daqui: o toque que desliga o som não pode tocar com o valor velho.
   const somRef = useRef(true);
+  // Mesmo motivo: o toque que escolhe a tribo sobe até o `aoTocar`, que não pode religar a música da anterior.
+  const triboRef = useRef<string | null>(null);
   const ultimoBip = useRef(0);
   const [aviso, setAviso] = useState<string | null>(null);
 
@@ -105,6 +107,7 @@ function useEstado() {
       setCombinados(g.combinados ?? []);
       setSemCombinados(g.semCombinados ?? false);
       setTribo(g.tribo ?? null);
+      triboRef.current = g.tribo ?? null;
       setJeitos(g.jeitos ?? []);
       setNivel(g.nivel ?? 0);
       setDesafio(g.desafio ?? null);
@@ -213,7 +216,7 @@ function useEstado() {
     } catch {}
     if (novo) {
       bip(880);
-      if (tribo) tocarMusica(tribo);
+      if (triboRef.current) tocarMusica(triboRef.current);
     } else pararMusica();
     track("mochila_som_alternado", { ligado: novo });
   };
@@ -221,6 +224,7 @@ function useEstado() {
   // A música começa dentro do toque na tribo: fora dele o iPhone não deixa tocar.
   const escolherTribo = (id: string) => {
     setTribo(id);
+    triboRef.current = id;
     if (somRef.current) tocarMusica(id);
   };
 
@@ -230,7 +234,7 @@ function useEstado() {
     if (!somRef.current) return;
     if (!(evento.target as HTMLElement).closest("button, a, label, [role='button']")) return;
     if (performance.now() - ultimoBip.current > 50) bip(TOQUE);
-    if (tribo) tocarMusica(tribo);
+    if (triboRef.current) tocarMusica(triboRef.current);
   };
 
   // Tocar de novo no cenário em que já estava (voltou pra conferir) segue com a mochila como estava.
@@ -244,6 +248,7 @@ function useEstado() {
       setSemCombinados(false);
       setJeitos([]);
       setTribo(null);
+      triboRef.current = null;
     }
     ir("tribo");
   };
