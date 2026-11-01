@@ -1,8 +1,9 @@
 // Os seis caminhos da home. A ordem importa: o índice é o mesmo usado pro /api/orientacao e pra
 // escolher o ícone em ICONES_CAMINHO. `chave` é a chave_busca da resposta no banco; `slug` é a URL
-// pública e indexável de /conversa/[slug].
-export const CARDS_HOME: Array<{ titulo: string; descricao: string; chave: string; slug: string }> = [
-  { titulo: "Quero mudar o uso", descricao: "Informações práticas e orientações para quem quer reduzir ou parar", chave: "quero mudar uso", slug: "quero-mudar-o-uso" },
+// pública e indexável de /conversa/[slug]. `tituloSeo` substitui o título só nos metadados da página: na
+// tela continua o `titulo`.
+export const CARDS_HOME: Array<{ titulo: string; tituloSeo?: string; descricao: string; chave: string; slug: string }> = [
+  { titulo: "Quero mudar o uso", tituloSeo: "Como reduzir ou parar o uso de álcool e outras drogas | Margem", descricao: "Informações práticas e orientações para quem quer reduzir ou parar", chave: "quero mudar uso", slug: "quero-mudar-o-uso" },
   { titulo: "Estou fisicamente mal", descricao: "Orientações imediatas para o seu corpo e contatos de emergência", chave: "estou fisicamente mal", slug: "estou-fisicamente-mal" },
   { titulo: "Estou emocionalmente mal", descricao: "Orientação para lidar com o momento e canais para falar sobre o que sente", chave: "estou emocionalmente mal", slug: "estou-emocionalmente-mal" },
   { titulo: "Quero ajudar alguém próximo", descricao: "Formas de oferecer suporte a quem você ama e grupos de acolhimento", chave: "quero ajudar alguem proximo", slug: "quero-ajudar-alguem-proximo" },

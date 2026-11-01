@@ -16,11 +16,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const indice = indiceDoCard(slug);
   if (indice === -1) return {};
   const card = CARDS_HOME[indice];
+  const titulo = card.tituloSeo ?? card.titulo;
   return {
-    title: card.titulo,
+    title: titulo,
     description: card.descricao,
     alternates: { canonical: `/conversa/${card.slug}` },
-    openGraph: { type: "website", title: card.titulo, description: card.descricao },
+    openGraph: { type: "website", title: titulo, description: card.descricao },
   };
 }
 

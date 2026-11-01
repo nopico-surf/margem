@@ -15,7 +15,7 @@ const pressStart = Press_Start_2P({ subsets: ["latin"], weight: "400", variable:
 // imagem vem do opengraph-image.tsx; o twitter sem images cai no og:image.
 export const metadata: Metadata = {
   title: "Mochila do Rolê",
-  description: "Antes de sair, uma pergunta: o que vai na sua mochila?",
+  description: "Antes de sair, uma pergunta: o que vai na sua mochila? Um jogo de redução de danos da Margem pra montar seus cuidados do rolê.",
   openGraph: {
     title: "Mochila do Rolê",
     description: "Antes de sair, uma pergunta: o que vai na sua mochila?",
