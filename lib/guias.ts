@@ -102,7 +102,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "E se nem o valor social couber agora?",
         blocos: [
-          p("Acontece, e não diz nada sobre você. Pelo SUS, a porta de entrada é a Unidade Básica de Saúde do seu bairro, e o CAPS atende sem precisar de encaminhamento. Muitas faculdades de psicologia também têm clínicas-escola, com atendimento feito por estudantes supervisionados por professores. A fila costuma ser longa, mas é um caminho real. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio)"),
+          p("Acontece, e não diz nada sobre você. Pelo SUS, a porta de entrada é a Unidade Básica de Saúde do seu bairro, e o CAPS atende sem precisar de encaminhamento. Muitas faculdades de psicologia também têm clínicas-escola, com atendimento feito por estudantes supervisionados por professores. A fila costuma ser longa, mas é um caminho real. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
           p("Se você está num momento muito difícil e precisa conversar agora, o CVV atende 24 horas pelo 188."),
         ],
       },
@@ -201,7 +201,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Dá pra consultar com psiquiatra pelo SUS?",
         blocos: [
-          p("Dá, mas fora da Margem: a Margem não faz parte do SUS nem tem parceria com o governo. No SUS, o caminho começa na Unidade Básica de Saúde: o médico da unidade avalia e, se precisar, encaminha pra psiquiatra ou pro CAPS. O CAPS também atende sem encaminhamento, indo direto na unidade. A espera costuma ser maior. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio)"),
+          p("Dá, mas fora da Margem: a Margem não faz parte do SUS nem tem parceria com o governo. No SUS, o caminho começa na Unidade Básica de Saúde: o médico da unidade avalia e, se precisar, encaminha pra psiquiatra ou pro CAPS. O CAPS também atende sem encaminhamento, indo direto na unidade. A espera costuma ser maior. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
           p("Em crise, procure uma UPA ou ligue para o SAMU no 192. Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
         ],
       },
@@ -292,7 +292,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Grupos de apoio também ajudam",
         blocos: [
-          p("Alcoólicos Anônimos e Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Pra familiares, existem o Al-Anon e o Nar-Anon. Muita gente combina grupo e terapia. Pelo SUS, o CAPS AD é especializado em álcool e outras drogas e atende sem encaminhamento. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Alcoólicos Anônimos e Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Pra familiares, existem o Al-Anon e o Nar-Anon. Muita gente combina grupo e terapia. Pelo SUS, o CAPS AD é especializado em álcool e outras drogas e atende sem encaminhamento. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
           p("Ninguém precisa ter a resposta inteira pra dar o primeiro passo."),
           p("Em emergência, como sinais de intoxicação grave, ligue para o SAMU no 192. Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
           p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
@@ -502,7 +502,7 @@ export const GUIAS: Guia[] = [
         titulo: "Preciso de um profissional pra fazer redução de danos?",
         blocos: [
           p("Pra começar, não. Mas ter com quem conversar pode ajudar a entender o que o uso está resolvendo na sua vida e quais mudanças cabem na sua realidade. Você não precisa prometer que vai parar pra ser atendido, e o que você conta fica em sigilo. [Entender como funciona o atendimento com psicólogo e psiquiatra](/blog/psicologo-alcool-e-drogas)"),
-          p("Fora da Margem, pelo SUS, o CAPS AD atende sem encaminhamento e sem custo. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio)"),
+          p("Fora da Margem, pelo SUS, o CAPS AD atende sem encaminhamento e sem custo. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
         ],
       },
       {
@@ -653,7 +653,7 @@ export const GUIAS: Guia[] = [
         titulo: "Onde encontrar apoio pra parar de beber?",
         blocos: [
           p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Procurar esse cuidado não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
-          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Alcoólicos Anônimos têm reuniões presenciais e online, sem custo. Muita gente combina mais de um desses caminhos. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Alcoólicos Anônimos têm reuniões presenciais e online, sem custo. Muita gente combina mais de um desses caminhos. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
           p("Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
           p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
           { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
@@ -745,7 +745,7 @@ export const GUIAS: Guia[] = [
         titulo: "O SUS tem tratamento pra parar de fumar?",
         blocos: [
           p("Tem, e é gratuito. O programa é coordenado pelo INCA e inclui consultas, grupos de apoio e acompanhamento. Quando a equipe indica, também oferece adesivo, goma e pastilha de nicotina e bupropiona, um remédio que ajuda a reduzir os sintomas."),
-          p("A porta de entrada é a Unidade Básica de Saúde. O Disque Saúde, no 136, pode ajudar a descobrir onde o tratamento é oferecido na sua cidade. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio)"),
+          p("A porta de entrada é a Unidade Básica de Saúde. O Disque Saúde, no 136, pode ajudar a descobrir onde o tratamento é oferecido na sua cidade. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
         ],
       },
       {
@@ -911,7 +911,7 @@ export const GUIAS: Guia[] = [
         titulo: "Onde encontrar apoio pra parar de fumar maconha?",
         blocos: [
           p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Procurar esse cuidado não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
-          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Pra familiares, existe o Nar-Anon. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Pra familiares, existe o Nar-Anon. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
           p("Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
           p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
           { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
@@ -1037,7 +1037,7 @@ export const GUIAS: Guia[] = [
               "Ter ainda mais cuidado se você tem algum problema no coração",
             ],
           },
-          p("Se você compartilhou material, vale fazer os testes de HIV e de hepatites, gratuitos no SUS. Se o uso é de crack ou injetável, ter o próprio cachimbo ou a própria seringa também reduz riscos, e o CAPS AD pode ajudar. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio)"),
+          p("Se você compartilhou material, vale fazer os testes de HIV e de hepatites, gratuitos no SUS. Se o uso é de crack ou injetável, ter o próprio cachimbo ou a própria seringa também reduz riscos, e o CAPS AD pode ajudar. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
         ],
       },
       {
@@ -1062,7 +1062,7 @@ export const GUIAS: Guia[] = [
         titulo: "Onde encontrar apoio pra parar de usar cocaína?",
         blocos: [
           p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online."),
-          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Se quem usa é alguém que você ama, o Nar-Anon reúne familiares, e você também pode buscar uma terapia pra você. [Ver serviços públicos de saúde presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Se quem usa é alguém que você ama, o Nar-Anon reúne familiares, e você também pode buscar uma terapia pra você. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
           p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
           { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
         ],
