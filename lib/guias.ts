@@ -544,8 +544,9 @@ export const GUIAS: Guia[] = [
         resposta: "No CAPS AD, serviço do SUS especializado em álcool e outras drogas, que atende sem encaminhamento.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Homem tatuado, de óculos escuros, bebendo água num copo, sentado ao balcão de um bar.",
+    imagemCard: true,
   },
   {
     slug: "como-parar-de-beber",
@@ -691,9 +692,8 @@ export const GUIAS: Guia[] = [
         resposta: "No CAPS AD, que atende pelo SUS sem encaminhamento, e nos Alcoólicos Anônimos, que têm reuniões presenciais e online.",
       },
     ],
-    imagem: true,
-    imagemAlt: "Homem tatuado, de óculos escuros, bebendo água num copo, sentado ao balcão de um bar.",
-    imagemCard: true,
+    imagem: false,
+    imagemAlt: "",
   },
   {
     slug: "como-parar-de-fumar",
