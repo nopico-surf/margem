@@ -84,19 +84,18 @@
   text-underline-offset: var(--spacing-2);
 }
 
-/* A abertura (imagem, H1 e primeiro parágrafo) fica mais junta que as seções. */
+/* A abertura (H1 e primeiro parágrafo) fica mais junta que as seções. */
 .guia-abertura {
   gap: var(--spacing-16);
-  padding-top: var(--spacing-16);
 }
 
-/* Espaço da imagem do topo. Proporção fixa pra a página não pular quando a imagem carregar; sem
-   imagem, fica só o fundo neutro. */
+/* Banner do topo, de ponta a ponta da tela (fora do container do texto, por isso não precisa de
+   100vw nem gera rolagem lateral). Faixa baixa de proporção fixa, pra a página não pular quando a
+   imagem carregar; sem imagem, fica só o fundo neutro. */
 .guia-imagem {
   position: relative;
-  width: min(100%, 14rem);
-  aspect-ratio: 4 / 3;
-  border-radius: var(--radius-xl);
+  width: 100%;
+  aspect-ratio: 2 / 1;
   overflow: hidden;
   background: var(--colors-neutral-100);
 }
@@ -135,16 +134,11 @@
 
 @media (min-width: 48em) {
   .guia-imagem {
-    width: min(100%, 24rem);
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 6 / 1;
   }
 
   .guia-texto h1 {
     font-size: var(--font-size-3xl);
     line-height: var(--line-height-5xl);
-  }
-
-  .guia-abertura {
-    padding-top: var(--spacing-24);
   }
 }

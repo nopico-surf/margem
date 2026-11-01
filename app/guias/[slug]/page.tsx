@@ -171,12 +171,10 @@ async function GuiaConteudo({ params }: Props) {
   return (
     <article className="guia">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <div className="guia-imagem">
+        {guia.imagem && <Image src={caminhoDaImagem(guia)} alt={guia.imagemAlt} fill priority sizes="100vw" />}
+      </div>
       <div className="figma-section-inner guia-texto guia-abertura">
-        <div className="guia-imagem">
-          {guia.imagem && (
-            <Image src={caminhoDaImagem(guia)} alt={guia.imagemAlt} fill priority sizes="(min-width: 48em) 24rem, 14rem" />
-          )}
-        </div>
         <h1>{guia.h1}</h1>
         <p>{guia.abertura}</p>
       </div>
