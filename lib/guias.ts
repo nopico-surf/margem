@@ -54,24 +54,24 @@ export const GUIAS: Guia[] = [
     slug: "terapia-barata",
     title: "Terapia barata: psicólogo online a partir de R$ 60 | Margem",
     descricao:
-      "Sessão com psicólogo registrado no CRP a valor social, de R$ 60 a 200. Você escolhe quanto paga dentro da faixa. Veja como funciona.",
+      "Sessão com psicólogo registrado no CRP, de R$ 60 a 200, a valor social. Você escolhe quanto paga dentro da faixa. Veja como funciona.",
     h1: "Terapia barata com psicólogo registrado: como funciona o valor social",
     abertura:
-      "Cuidar da cabeça não deveria ser luxo. Mesmo assim, o preço da terapia é um dos motivos mais comuns pra muita gente adiar esse cuidado. Não é falta de vontade, é conta que não fecha. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e quem decide quanto paga dentro dessa faixa é você.",
+      "Cuidar da cabeça não deveria ser luxo. Mesmo assim, o valor das sessões é um dos motivos mais comuns pra muita gente adiar esse cuidado. Não é falta de vontade, é conta que não fecha. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e quem decide quanto paga dentro dessa faixa é você.",
     carrossel: ["psicologo"],
     carrosselTopo: true,
     secoes: [
       {
         titulo: "O que é terapia a valor social?",
         blocos: [
-          p("Valor social é um preço reduzido que o profissional escolhe oferecer pra que mais gente consiga fazer terapia. O atendimento não muda: mesma formação, mesmo registro no Conselho Regional de Psicologia, mesmo sigilo. O que muda é quanto você paga."),
+          p("Valor social é um valor reduzido que o profissional escolhe oferecer pra que mais gente consiga fazer terapia. O atendimento não muda: mesma formação, mesmo registro no Conselho Regional de Psicologia, mesmo sigilo. O que muda é quanto você paga."),
         ],
       },
       {
         titulo: "Quanto custa uma sessão de terapia na Margem?",
         blocos: [
           p("De R$ 60 a R$ 200 por sessão. Você olha pro seu mês e escolhe um valor dentro dessa faixa. Se o orçamento apertar mais pra frente, dá pra conversar com o profissional sobre isso."),
-          p("Você não precisa explicar por que escolheu esse valor. A Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas, e a faixa de preço é pensada pra isso."),
+          p("Você não precisa explicar por que escolheu esse valor. A Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas, e a faixa de valores é pensada pra isso."),
         ],
       },
       {
@@ -116,7 +116,7 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Psicólogo a valor social tem registro no CRP?",
         resposta:
-          "Tem. Valor social muda o preço, não a formação nem o registro. Você pode conferir o registro de qualquer psicólogo no Cadastro Nacional do Conselho Federal de Psicologia.",
+          "Tem. Valor social muda o valor da sessão, não a formação nem o registro. Você pode conferir o registro de qualquer psicólogo no Cadastro Nacional do Conselho Federal de Psicologia.",
       },
       {
         pergunta: "Terapia online é confiável?",
@@ -136,8 +136,8 @@ export const GUIAS: Guia[] = [
     slug: "psiquiatra-barato",
     title: "Psiquiatra barato: consulta online a partir de R$ 110 | Margem",
     descricao:
-      "Consulta com psiquiatra a valor social, de R$ 110 a 290, online e com receita digital. Veja como funciona e como conferir o CRM do médico.",
-    h1: "Psiquiatra barato: consulta a valor social com médico registrado no CRM",
+      "Consulta com psiquiatra, de R$ 110 a 290, online e com receita digital, a valor social. Veja como funciona e como conferir o CRM do médico.",
+    h1: "Psiquiatra barato: consulta com médico registrado no CRM, a valor social",
     abertura:
       "Uma consulta com psiquiatra particular pesa no bolso de muita gente, e a espera pelo SUS pode demorar. No meio disso, muita gente fica sem cuidado justamente quando mais precisa. Na Margem, a consulta com psiquiatra custa de R$ 110 a R$ 290. Você escolhe o valor dentro dessa faixa e não precisa explicar por quê: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
     carrossel: ["psiquiatra"],
@@ -280,7 +280,7 @@ export const GUIAS: Guia[] = [
         titulo: "Quanto custa?",
         blocos: [
           p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online."),
-          p("Você escolhe o valor dentro da faixa e não precisa explicar por quê. A Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas, e a faixa de preço é pensada pra isso."),
+          p("Você escolhe o valor dentro da faixa e não precisa explicar por quê. A Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas, e a faixa de valores é pensada pra isso."),
         ],
       },
       {

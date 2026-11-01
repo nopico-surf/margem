@@ -212,6 +212,12 @@ Todo texto da Margem deve buscar: falar **com** as pessoas, não apenas **sobre*
 
 **Promessas exageradas:** solução definitiva; resultado garantido; mudança de vida; resposta para todos os problemas; acesso para todo mundo; ninguém mais ficará sozinho; a melhor solução; o futuro do cuidado.
 
+**"Preço" e "preços":** falar em *valor das consultas e sessões*, nunca em "preço". Vale para blog, site, redes e metadados. "Valor social" já é o termo da casa. As buscas do blog (terapia barata, psiquiatra barato, quanto custa) seguem intactas, porque nenhuma delas depende da palavra "preço".
+
+**Valor sempre no fim.** Quando o valor aparece junto de outras informações (profissional, registro, formato, receita), ele fecha a frase ou o título.
+- Preferir: *Psiquiatra barato: consulta com médico registrado no CRM, a valor social.*
+- Evitar: *Psiquiatra barato: consulta a valor social com médico registrado no CRM.*
+
 ---
 
 ## 11. Produtos digitais

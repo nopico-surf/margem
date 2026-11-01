@@ -28,7 +28,7 @@ export default function BlogPage() {
         <CardHeader
           as="h1"
           title="Blog da Margem"
-          description="Textos pra entender preços, caminhos de cuidado e como conferir quem vai te atender."
+          description="Textos pra entender os valores das consultas e sessões, caminhos de cuidado e como conferir quem vai te atender."
         />
         <div className="blog-lista">
           {GUIAS.map((guia) => (
