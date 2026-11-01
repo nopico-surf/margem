@@ -329,8 +329,9 @@ export const GUIAS: Guia[] = [
           "De R$ 60 a R$ 200 por sessão com psicólogo e de R$ 110 a R$ 290 por consulta com psiquiatra. Você escolhe o valor dentro da faixa, sem precisar justificar a escolha: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mulher e psiquiatra de jaleco conversando frente a frente, sentados a uma mesa de madeira.",
+    imagemCard: true,
   },
   {
     slug: "como-saber-se-o-psicologo-e-registrado",
