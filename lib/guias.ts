@@ -133,7 +133,7 @@ export const GUIAS: Guia[] = [
       },
     ],
     imagem: true,
-    imagemAlt: "Mulher sorrindo diante de um notebook, em videochamada com um psicólogo.",
+    imagemAlt: "Psicóloga sorrindo diante de um notebook, em videochamada com um paciente.",
     imagemCard: true,
   },
   {
@@ -234,7 +234,7 @@ export const GUIAS: Guia[] = [
       },
     ],
     imagem: true,
-    imagemAlt: "Psiquiatra de jaleco diante de um notebook, em videochamada com um paciente.",
+    imagemAlt: "Psiquiatra de jaleco diante de um notebook, em videochamada com um paciente, num consultório.",
     imagemCard: true,
   },
   {
@@ -330,7 +330,7 @@ export const GUIAS: Guia[] = [
       },
     ],
     imagem: true,
-    imagemAlt: "Mulher e psiquiatra de jaleco conversando frente a frente, sentados a uma mesa de madeira.",
+    imagemAlt: "Psiquiatra de jaleco e psicóloga conversando frente a frente, sentados a uma mesa, num consultório.",
     imagemCard: true,
   },
   {
@@ -433,8 +433,9 @@ export const GUIAS: Guia[] = [
         resposta: "Não. Coach não é uma profissão de saúde regulamentada.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Jovem de cabelo ruivo sentada num sofá, olhando para o celular.",
+    imagemCard: true,
   },
   // Textos de redução de danos e de como parar (01/11/2026). Um texto central de redução de danos, ligado
   // aos quatro por substância e de volta. Mesma exceção de copy do briefing, autorizada de novo pelo Vitor.
@@ -692,8 +693,9 @@ export const GUIAS: Guia[] = [
         resposta: "No CAPS AD, que atende pelo SUS sem encaminhamento, e nos Alcoólicos Anônimos, que têm reuniões presenciais e online.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Garrafa de cerveja vazia sendo solta por uma mão sobre uma lixeira.",
+    imagemCard: true,
   },
   {
     slug: "como-parar-de-fumar",
@@ -816,8 +818,9 @@ export const GUIAS: Guia[] = [
         resposta: "Ele não faz parte do tratamento oferecido pelo SUS, e a venda é proibida no Brasil pela Anvisa. Muitos têm nicotina, então a dependência pode continuar.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mão soltando uma bituca de cigarro sobre uma lixeira.",
+    imagemCard: true,
   },
   {
     slug: "como-parar-de-fumar-maconha",
@@ -1100,8 +1103,9 @@ export const GUIAS: Guia[] = [
           "Dor no peito, coração muito acelerado, corpo muito quente, falta de ar, convulsão, desmaio, fala enrolada, fraqueza de um lado do corpo, pânico ou paranoia muito fortes. Nesses casos, ligue para o SAMU no 192.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mão soltando um saquinho com pó branco sobre uma lixeira.",
+    imagemCard: true,
   },
 ];
 

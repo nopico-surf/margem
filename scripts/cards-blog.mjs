@@ -19,10 +19,14 @@ const PASTA = path.join(process.cwd(), "public", "blog");
 const SAIDA = { largura: 1300, altura: 605 };
 
 const RECORTES = {
-  "terapia-barata": { sujeito: [478, 1557], topo: 260, largura: 1300 },
-  "psiquiatra-barato": { sujeito: [425, 1565], topo: 215, largura: 1300 },
-  "psicologo-alcool-e-drogas": { sujeito: [275, 1745], topo: 120, largura: 1600 },
+  "terapia-barata": { sujeito: [575, 1750], topo: 30, largura: 1700 },
+  "psiquiatra-barato": { sujeito: [245, 1430], topo: 100, largura: 1500 },
+  "psicologo-alcool-e-drogas": { sujeito: [180, 1900], topo: 80, largura: 1800 },
   "reducao-de-danos": { sujeito: [620, 1580], topo: 0, largura: 1700 },
+  "como-saber-se-o-psicologo-e-registrado": { sujeito: [880, 1640], topo: 60, largura: 1500 },
+  "como-parar-de-fumar": { sujeito: [520, 1330], topo: 0, largura: 1800 },
+  "como-parar-de-beber": { sujeito: [690, 1260], topo: 200, largura: 1700 },
+  "como-parar-de-usar-cocaina": { sujeito: [880, 1360], topo: 160, largura: 1800 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {
