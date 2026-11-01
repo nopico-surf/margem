@@ -67,6 +67,7 @@ export const GUIAS: Guia[] = [
         titulo: "Quanto custa uma sessão de terapia na Margem?",
         blocos: [
           p("De R$ 60 a R$ 200 por sessão. Você olha pro seu mês e escolhe um valor dentro dessa faixa. Se o orçamento apertar mais pra frente, dá pra conversar com o profissional sobre isso."),
+          p("Você não precisa explicar por que escolheu esse valor. A Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas, e a faixa de preço é pensada pra isso."),
         ],
       },
       {
@@ -133,7 +134,7 @@ export const GUIAS: Guia[] = [
       "Consulta com psiquiatra a valor social, de R$ 110 a 290, online e com receita digital. Veja como funciona e como conferir o CRM do médico.",
     h1: "Psiquiatra barato: consulta a valor social com médico registrado no CRM",
     abertura:
-      "Uma consulta com psiquiatra particular pesa no bolso de muita gente, e a espera pelo SUS pode demorar. No meio disso, muita gente fica sem cuidado justamente quando mais precisa. Na Margem, a consulta com psiquiatra custa de R$ 110 a R$ 290.",
+      "Uma consulta com psiquiatra particular pesa no bolso de muita gente, e a espera pelo SUS pode demorar. No meio disso, muita gente fica sem cuidado justamente quando mais precisa. Na Margem, a consulta com psiquiatra custa de R$ 110 a R$ 290. Você escolhe o valor dentro dessa faixa e não precisa explicar por quê: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
     carrossel: ["psiquiatra"],
     secoes: [
       {
@@ -270,6 +271,7 @@ export const GUIAS: Guia[] = [
         titulo: "Quanto custa?",
         blocos: [
           p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online."),
+          p("Você escolhe o valor dentro da faixa e não precisa explicar por quê. A Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas, e a faixa de preço é pensada pra isso."),
         ],
       },
       {

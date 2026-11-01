@@ -115,7 +115,13 @@ function Carrossel({ guia, posicao }: { guia: Guia; posicao: "topo" | "fim" }) {
     <div className="guia-carrossel">
       <Suspense
         fallback={
-          <CardProfissionais variante="guia" profissionais={[]} isLoading id={`guia-profissionais-${posicao}`} />
+          <CardProfissionais
+            variante="guia"
+            profissionais={[]}
+            especialidades={guia.carrossel}
+            isLoading
+            id={`guia-profissionais-${posicao}`}
+          />
         }
       >
         <CarrosselComProfissionais guia={guia} posicao={posicao} />

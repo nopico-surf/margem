@@ -21,8 +21,8 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // `variante="home"` é o card-profissionais da home (Figma 1434:302136): sem a descrição, com a faixa de
 // preço numa caixa cinza e sem o botão de serviços públicos, que só faz sentido no resultado.
 //
-// `variante="guia"` é o carrossel dos guias de SEO (/guias/[slug]): só a fileira de cards, sem título,
-// filtro nem faixa de preço, com as especialidades fixas que o guia pede. `origem` (o slug do guia) vai
+// `variante="guia"` é o carrossel dos guias de SEO (/guias/[slug]): faixa de preço e fileira de cards, sem
+// título, nas especialidades que o guia pede (seletor só quando são as duas). `origem` (o slug do guia) vai
 // no evento de abertura do perfil, e `id` separa os dois carrosséis da mesma página.
 export function CardProfissionais({
   profissionais,
@@ -68,9 +68,22 @@ export function CardProfissionais({
   const [sessaoId, setSessaoId] = useState<string | null>(null);
   useEffect(() => setSessaoId(getOrCreateSessaoId()), []);
 
+  // Guia com as duas especialidades (álcool e outras drogas): o seletor da home volta, e a faixa de
+  // preço e os cards seguem a aba escolhida. Com uma só, fica a faixa dela, sem seletor.
+  const comSeletor = noGuia && (especialidades?.length ?? 0) > 1;
+
+  // No guia a faixa de preço não depende da lista, então já aparece no esqueleto e a tela não pula.
+  const valorDoGuia = (
+    <ValorSessaoPsicologos especialidade={comSeletor || !especialidades ? especialidadeSelecionada : especialidades[0]} />
+  );
+
   if ((isLoading || !fotosProntas || !sessaoId) && noGuia) {
     return (
       <ContainerConteudo id={id}>
+        {comSeletor && (
+          <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
+        )}
+        {valorDoGuia}
         <ActionRow className="figma-professionals-row figma-professionals-row--esquerda" origem="profissionais">
           {[0, 1, 2, 3, 4].map((i) => <CardProfissionalSkeleton key={i} />)}
         </ActionRow>
@@ -106,7 +119,7 @@ export function CardProfissionais({
     [...profissionais].sort((a, b) => a.nome.localeCompare(b.nome)),
     sessaoId,
   ).filter((profissional) =>
-    especialidades
+    especialidades && !comSeletor
       ? (especialidades as string[]).includes(profissional.especialidade)
       : profissional.especialidade === especialidadeSelecionada,
   );
@@ -120,16 +133,20 @@ export function CardProfissionais({
     // Se o bloco não está todo na tela, rola pra deixá-lo visível. Espera a lista nova renderizar pra medir
     // a altura final.
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
-      const secao = document.getElementById("figma-section-professionals");
+      const secao = document.getElementById(id);
       if (!secao) return;
       const { top, bottom } = secao.getBoundingClientRect();
-      if (top < 0 || bottom > window.innerHeight) rolarAteSecao("figma-section-professionals");
+      if (top < 0 || bottom > window.innerHeight) rolarAteSecao(id);
     }));
   }
 
   if (noGuia) {
     return (
       <ContainerConteudo id={id}>
+        {comSeletor && (
+          <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
+        )}
+        {valorDoGuia}
         {profissionaisFiltrados.length === 0 ? (
           <CardProfissionaisCompleto estado="in-construction" />
         ) : profissionaisFiltrados.length === 1 ? (
