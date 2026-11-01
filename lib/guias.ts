@@ -691,8 +691,9 @@ export const GUIAS: Guia[] = [
         resposta: "No CAPS AD, que atende pelo SUS sem encaminhamento, e nos Alcoólicos Anônimos, que têm reuniões presenciais e online.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Homem tatuado, de óculos escuros, bebendo água num copo, sentado ao balcão de um bar.",
+    imagemCard: true,
   },
   {
     slug: "como-parar-de-fumar",

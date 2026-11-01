@@ -22,6 +22,7 @@ const RECORTES = {
   "terapia-barata": { sujeito: [478, 1557], topo: 260, largura: 1300 },
   "psiquiatra-barato": { sujeito: [425, 1565], topo: 215, largura: 1300 },
   "psicologo-alcool-e-drogas": { sujeito: [275, 1745], topo: 120, largura: 1600 },
+  "como-parar-de-beber": { sujeito: [620, 1580], topo: 0, largura: 1700 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {
