@@ -1,0 +1,153 @@
+/* Guias de SEO (/guias/[slug]). Texto longo numa coluna de leitura, com os carrosséis de
+   profissionais na faixa cinza do ContainerConteudo, como no resultado. Sem Figma: composto com os
+   tokens e estilos de texto que já existem. */
+
+.guia-pagina {
+  display: flex;
+  flex-direction: column;
+}
+
+.guia-pagina > .app-footer {
+  margin-top: auto;
+}
+
+.guia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-32);
+  padding-bottom: var(--spacing-48);
+}
+
+.guia-texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-32);
+  width: 100%;
+  max-width: var(--layout-content-max-width-md);
+  margin: 0 auto;
+  padding: 0 var(--pagina-padding-lateral);
+  box-sizing: border-box;
+  color: var(--colors-alpha-88);
+}
+
+.guia-texto section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.guia-texto h1 {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-4xl);
+  color: var(--colors-neutral-950);
+}
+
+.guia-texto h2 {
+  margin: 0;
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-3xl);
+  color: var(--colors-neutral-950);
+}
+
+.guia-texto h3 {
+  margin: 0;
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-xl);
+  color: var(--colors-neutral-950);
+}
+
+.guia-texto p,
+.guia-texto li {
+  margin: 0;
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-2xl);
+}
+
+.guia-texto ol,
+.guia-texto ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding-left: var(--spacing-24);
+}
+
+.guia-texto a:not(.btn) {
+  color: var(--colors-brand-primary-700);
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-underline-offset: var(--spacing-2);
+}
+
+/* A abertura (imagem, H1 e primeiro parágrafo) fica mais junta que as seções. */
+.guia-abertura {
+  gap: var(--spacing-16);
+  padding-top: var(--spacing-16);
+}
+
+/* Espaço da imagem do topo. Proporção fixa pra a página não pular quando a imagem carregar; sem
+   imagem, fica só o fundo neutro. */
+.guia-imagem {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--colors-neutral-100);
+}
+
+.guia-imagem img {
+  object-fit: cover;
+}
+
+.guia-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-12);
+}
+
+/* O carrossel e os links "Ver todos" ficam na mesma faixa cinza. */
+.guia-carrossel {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--spacing-16);
+  background: var(--colors-neutral-50);
+}
+
+.guia-ver-todos {
+  gap: var(--spacing-8);
+}
+
+.guia-perguntas {
+  gap: var(--spacing-20);
+}
+
+.guia-pergunta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+@media (min-width: 48em) {
+  .guia-imagem {
+    aspect-ratio: 16 / 9;
+  }
+
+  .guia-texto h1 {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-5xl);
+  }
+
+  .guia-abertura {
+    padding-top: var(--spacing-24);
+  }
+}

@@ -41,9 +41,11 @@ type CardProfissionaisCompletoProps = {
   estado?: "default" | "in-construction";
   // posição na lista filtrada que a pessoa está vendo, começando em 1
   posicao?: number;
+  // De onde o perfil foi aberto, quando a rota não basta (nos guias de SEO, o slug do guia).
+  origem?: string;
 };
 
-export function CardProfissionaisCompleto({ profissional, estado = "default", posicao }: CardProfissionaisCompletoProps) {
+export function CardProfissionaisCompleto({ profissional, estado = "default", posicao, origem }: CardProfissionaisCompletoProps) {
   const pathname = usePathname();
 
   if (estado === "in-construction") {
@@ -82,6 +84,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
                     recurso_nome: profissional.nome,
                     especialidade: profissional.especialidade,
                     posicao: posicao ?? null,
+                    ...(origem ? { origem } : {}),
                   })
                 }
               >

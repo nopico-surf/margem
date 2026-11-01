@@ -24,6 +24,7 @@
 @import url('./profissionais.css');
 @import url('./redes-de-apoio.css');
 @import url('./profissional-detalhe.css');
+@import url('./guias.css');
 
 /* Tokens da tela migrados para seu valor real do tokens.css em 18/09/2026.
    Apelidos removidos após cada tela: footer (19/09), side-menu, message-input, onboarding, home, resultado. */

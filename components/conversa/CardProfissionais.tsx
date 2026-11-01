@@ -20,16 +20,27 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // `variante="home"` é o card-profissionais da home (Figma 1434:302136): sem a descrição, com a faixa de
 // preço numa caixa cinza e sem o botão de serviços públicos, que só faz sentido no resultado.
+//
+// `variante="guia"` é o carrossel dos guias de SEO (/guias/[slug]): só a fileira de cards, sem título,
+// filtro nem faixa de preço, com as especialidades fixas que o guia pede. `origem` (o slug do guia) vai
+// no evento de abertura do perfil, e `id` separa os dois carrosséis da mesma página.
 export function CardProfissionais({
   profissionais,
   isLoading = false,
   variante = "resultado",
+  especialidades,
+  origem,
+  id = "figma-section-professionals",
 }: {
   profissionais: ProfissionalCadastrado[];
   isLoading?: boolean;
-  variante?: "resultado" | "home";
+  variante?: "resultado" | "home" | "guia";
+  especialidades?: Especialidade[];
+  origem?: string;
+  id?: string;
 }) {
   const naHome = variante === "home";
+  const noGuia = variante === "guia";
   const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>("psicologo");
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
   const urlsDasFotos = profissionais.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO));
@@ -57,9 +68,19 @@ export function CardProfissionais({
   const [sessaoId, setSessaoId] = useState<string | null>(null);
   useEffect(() => setSessaoId(getOrCreateSessaoId()), []);
 
+  if ((isLoading || !fotosProntas || !sessaoId) && noGuia) {
+    return (
+      <ContainerConteudo id={id}>
+        <ActionRow className="figma-professionals-row figma-professionals-row--esquerda" origem="profissionais">
+          {[0, 1, 2, 3, 4].map((i) => <CardProfissionalSkeleton key={i} />)}
+        </ActionRow>
+      </ContainerConteudo>
+    );
+  }
+
   if (isLoading || !fotosProntas || !sessaoId) {
     return (
-      <ContainerConteudo id="figma-section-professionals" className={naHome ? "home-profissionais" : undefined}>
+      <ContainerConteudo id={id} className={naHome ? "home-profissionais" : undefined}>
         {naHome ? (
           <span className="figma-skeleton home-osso-profissionais-titulo" aria-hidden="true" />
         ) : (
@@ -84,8 +105,10 @@ export function CardProfissionais({
   const profissionaisFiltrados = embaralharComSeed(
     [...profissionais].sort((a, b) => a.nome.localeCompare(b.nome)),
     sessaoId,
-  ).filter(
-    (profissional) => profissional.especialidade === especialidadeSelecionada,
+  ).filter((profissional) =>
+    especialidades
+      ? (especialidades as string[]).includes(profissional.especialidade)
+      : profissional.especialidade === especialidadeSelecionada,
   );
 
   function selecionarEspecialidade(especialidade: Especialidade) {
@@ -104,8 +127,26 @@ export function CardProfissionais({
     }));
   }
 
+  if (noGuia) {
+    return (
+      <ContainerConteudo id={id}>
+        {profissionaisFiltrados.length === 0 ? (
+          <CardProfissionaisCompleto estado="in-construction" />
+        ) : profissionaisFiltrados.length === 1 ? (
+          <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} origem={origem} />
+        ) : (
+          <ActionRow className="figma-professionals-row figma-professionals-row--esquerda" origem="profissionais">
+            {profissionaisFiltrados.map((profissional, index) => (
+              <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} origem={origem} key={profissional.id} />
+            ))}
+          </ActionRow>
+        )}
+      </ContainerConteudo>
+    );
+  }
+
   return (
-    <ContainerConteudo id="figma-section-professionals" className={naHome ? "home-profissionais" : undefined}>
+    <ContainerConteudo id={id} className={naHome ? "home-profissionais" : undefined}>
       <CardHeader
         title="Profissionais que podem ajudar"
         description={naHome ? undefined : "É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"}

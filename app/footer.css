@@ -71,6 +71,14 @@
   white-space:nowrap;
 }
 
+/* Links dos guias de SEO, um embaixo do outro, com o mesmo estilo dos contatos. */
+.app-footer-guias {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:var(--spacing-10);
+}
+
 /* Card do grupo do Facebook */
 
 .app-footer-card {
