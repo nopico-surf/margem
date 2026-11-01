@@ -106,7 +106,8 @@ export const GUIAS: Guia[] = [
     perguntas: [
       {
         pergunta: "Quanto custa terapia barata na Margem?",
-        resposta: "De R$ 60 a R$ 200 por sessão, e você escolhe o valor dentro dessa faixa.",
+        resposta:
+          "De R$ 60 a R$ 200 por sessão, e você escolhe o valor dentro dessa faixa. Não precisa justificar a escolha: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
       },
       {
         pergunta: "Psicólogo a valor social tem registro no CRP?",
@@ -203,7 +204,8 @@ export const GUIAS: Guia[] = [
     perguntas: [
       {
         pergunta: "Quanto custa uma consulta com psiquiatra barato na Margem?",
-        resposta: "De R$ 110 a R$ 290 por consulta.",
+        resposta:
+          "De R$ 110 a R$ 290 por consulta, e você escolhe o valor dentro dessa faixa. Não precisa justificar a escolha: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
       },
       {
         pergunta: "Precisa de encaminhamento pra ir ao psiquiatra?",
@@ -311,7 +313,8 @@ export const GUIAS: Guia[] = [
       },
       {
         pergunta: "Quanto custa terapia para dependência química na Margem?",
-        resposta: "De R$ 60 a R$ 200 por sessão com psicólogo e de R$ 110 a R$ 290 por consulta com psiquiatra.",
+        resposta:
+          "De R$ 60 a R$ 200 por sessão com psicólogo e de R$ 110 a R$ 290 por consulta com psiquiatra. Você escolhe o valor dentro da faixa, sem precisar justificar a escolha: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
       },
     ],
     imagem: false,
