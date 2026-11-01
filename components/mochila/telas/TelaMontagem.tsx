@@ -13,7 +13,7 @@ import { TelaCarregando } from "../TelaCarregando";
 
 export function TelaMontagem() {
   const liberada = useLiberada((p) => p.escolhido);
-  const { cenario, cenarioId, itens, setItens, bip, ir } = usePartida();
+  const { cenario, cenarioId, itens, setItens, bip, ir, abrindo } = usePartida();
   const [naoCabe, setNaoCabe] = useState<string | null>(null);
   const [fechando, setFechando] = useState<"aberta" | "fechada" | null>(null);
   const timers = useRef<number[]>([]);
@@ -51,9 +51,11 @@ export function TelaMontagem() {
     );
   }
 
-  if (fechando) {
+  // `abrindo`: chegou aqui pelo voltar do celular, a mochila abre antes da montagem aparecer.
+  const fase = fechando ?? abrindo;
+  if (fase) {
     return (
-      <div className="mochila-fechando" data-fase={fechando} aria-hidden="true">
+      <div className="mochila-fechando" data-sentido={fechando ? undefined : "abrir"} data-fase={fase} aria-hidden="true">
         <img className="mochila-sprite mochila-fechando-aberta" src={spriteDe("mochila-aberta")} alt="" />
         <img className="mochila-sprite mochila-fechando-fechada" src={spriteDe("mochila-fechada")} alt="" />
       </div>

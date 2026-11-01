@@ -364,6 +364,7 @@ function useEstado() {
     escolherCenario,
     recomecar,
     abrindo,
+    abrirMochila,
     pararAbertura,
     registrarRota,
     voltar,
@@ -398,10 +399,19 @@ const ETAPA_ANTERIOR: Partial<Record<Etapa, Etapa>> = {
 // Header de largura total, fora do frame do jogo. Na tela de início a seta sai do jogo. Fica dentro
 // de Suspense por causa do usePathname, que também alimenta o histórico do voltar.
 function HeaderMochila() {
-  const { voltar, registrarRota, chegou, som, alternarSom } = usePartida();
+  const { voltar, registrarRota, chegou, indo, abrirMochila, pararAbertura, som, alternarSom } = usePartida();
   const pathname = usePathname();
   const [menuAberto, setMenuAberto] = useState(false);
   useEffect(() => registrarRota(pathname), [pathname, registrarRota]);
+  // O voltar do celular sai da revelação sem passar pelo `voltar`, que é quem abre a mochila antes de
+  // trocar de tela. O endereço já mudou, então ela abre na montagem. `indo` vazio: não foi a gente que navegou.
+  const rotaAnterior = useRef(pathname);
+  useLayoutEffect(() => {
+    const de = rotaAnterior.current;
+    rotaAnterior.current = pathname;
+    if (de === ROTAS.revelacao && pathname === ROTAS.montagem && indo === null) abrirMochila(pararAbertura);
+    // Só na troca de endereço; `indo` e `abrirMochila` são os do render em que ela aconteceu.
+  }, [pathname]);
   // Antes da pintura: a tela nova aparece direto, sem um quadro de skeleton por cima dela.
   useLayoutEffect(chegou, [pathname, chegou]);
   // Na tela de início (normal ou do desafio) o botão de som fica no corpo da tela; nas outras, aqui.
