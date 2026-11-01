@@ -18,16 +18,18 @@
   padding-bottom: var(--spacing-48);
 }
 
+/* O container é o do resto do site (.figma-section-inner: 1080 de teto, padding lateral da página,
+   centralizado), pra a borda do texto bater com a do header, dos carrosséis e do rodapé. Aqui só
+   mudam o espaço entre blocos e a cor do texto. A linha de leitura fica em 768, alinhada à esquerda:
+   com 1080 cada linha passaria de 150 caracteres. */
 .guia-texto {
-  display: flex;
-  flex-direction: column;
   gap: var(--spacing-32);
-  width: 100%;
-  max-width: var(--layout-content-max-width-md);
-  margin: 0 auto;
-  padding: 0 var(--pagina-padding-lateral);
-  box-sizing: border-box;
   color: var(--colors-alpha-88);
+}
+
+.guia-texto > *,
+.guia-texto .guia-imagem {
+  max-width: var(--layout-content-max-width-md);
 }
 
 .guia-texto section {

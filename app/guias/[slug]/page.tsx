@@ -126,7 +126,7 @@ function Carrossel({ guia, posicao }: { guia: Guia; posicao: "topo" | "fim" }) {
       >
         <CarrosselComProfissionais guia={guia} posicao={posicao} />
       </Suspense>
-      <div className="guia-texto guia-ver-todos">
+      <div className="figma-section-inner guia-texto guia-ver-todos">
         {guia.carrossel.map((especialidade) => (
           <Link key={especialidade} href={URL_PROFISSIONAIS[especialidade]}>
             {TEXTO_VER_TODOS[especialidade]}
@@ -170,7 +170,7 @@ async function GuiaConteudo({ params }: Props) {
   return (
     <article className="guia">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <div className="guia-texto guia-abertura">
+      <div className="figma-section-inner guia-texto guia-abertura">
         <div className="guia-imagem">
           {guia.imagem && (
             <Image src={caminhoDaImagem(guia)} alt={guia.imagemAlt} fill priority sizes="(min-width: 48em) 48rem, 100vw" />
@@ -182,7 +182,7 @@ async function GuiaConteudo({ params }: Props) {
 
       <Carrossel guia={guia} posicao="topo" />
 
-      <div className="guia-texto">
+      <div className="figma-section-inner guia-texto">
         {guia.secoes.map((secao) => (
           <section key={secao.titulo}>
             <h2>{secao.titulo}</h2>
@@ -195,7 +195,7 @@ async function GuiaConteudo({ params }: Props) {
 
       <Carrossel guia={guia} posicao="fim" />
 
-      <div className="guia-texto">
+      <div className="figma-section-inner guia-texto">
         <section className="guia-perguntas">
           <h2>Perguntas frequentes</h2>
           {guia.perguntas.map(({ pergunta, resposta }) => (
