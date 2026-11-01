@@ -9,20 +9,16 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
-import { GUIAS, TEXTO_VER_TODOS, URL_PROFISSIONAIS, buscarGuia, type BlocoGuia, type Guia } from "@/lib/guias";
+import { GUIAS, TEXTO_VER_TODOS, URL_PROFISSIONAIS, buscarGuia, caminhoDaImagem, type BlocoGuia, type Guia } from "@/lib/guias";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 
-// Guias de SEO (briefing de 31/10/2026). Tudo aqui é renderizado no servidor, então o texto chega
+// Textos do blog (briefing de 31/10/2026). Tudo aqui é renderizado no servidor, então o texto chega
 // inteiro no HTML. Só o carrossel de profissionais depende de JavaScript, como no resto do site.
 
 export function generateStaticParams() {
   return GUIAS.map(({ slug }) => ({ slug }));
-}
-
-function caminhoDaImagem(guia: Guia) {
-  return `/guias/${guia.slug}.webp`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -35,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: guia.title,
     description: guia.descricao,
-    alternates: { canonical: `/guias/${guia.slug}` },
+    alternates: { canonical: `/blog/${guia.slug}` },
     openGraph: { type: "article", title: guia.title, description: guia.descricao, images: [imagem], siteName: OG_SITE_NAME },
   };
 }
@@ -206,6 +202,7 @@ async function GuiaConteudo({ params }: Props) {
             </div>
           ))}
         </section>
+        <Link href="/blog">Ver todos os textos do blog</Link>
       </div>
     </article>
   );

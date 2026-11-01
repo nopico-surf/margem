@@ -1,9 +1,9 @@
-// Conteúdo dos guias de SEO (/guias/[slug]). O texto veio aprovado do briefing de 31/10/2026 e vai
+// Conteúdo dos textos do blog (/blog e /blog/[slug]). O texto veio aprovado do briefing de 31/10/2026 e vai
 // exatamente como está: as regras de copy da seção 7 do CLAUDE.md não valem aqui (H2 em pergunta e
 // termos de busca como "dependência química" são de propósito).
 //
 // Links internos ficam no próprio texto, no formato markdown `[texto](/rota)` (ver TextoComLinks em
-// app/guias/[slug]/page.tsx). Este arquivo é lido só no servidor.
+// app/blog/[slug]/page.tsx). Este arquivo é lido só no servidor.
 
 export type EspecialidadeGuia = "psicologo" | "psiquiatra";
 
@@ -40,7 +40,7 @@ export type Guia = {
   carrosselTopo: boolean;
   secoes: SecaoGuia[];
   perguntas: { pergunta: string; resposta: string }[];
-  // A imagem do topo fica em /public/guias/<slug>.webp. Enquanto o arquivo não existir, `imagem` fica
+  // A imagem do topo fica em /public/blog/<slug>.webp. Enquanto o arquivo não existir, `imagem` fica
   // false e o espaço aparece só com o fundo neutro. Ao subir a imagem, virar pra true e preencher o alt:
   // ela passa a ser também a imagem de Open Graph da página.
   imagem: boolean;
@@ -77,7 +77,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Terapia barata é pior?",
         blocos: [
-          p("Não por ser mais barata. O que pesa no resultado é a formação de quem atende e o vínculo que vocês constroem. Antes de entrar na Margem, cada profissional passa por uma aprovação. E você pode conferir o registro de qualquer psicólogo sozinho, em poucos minutos. [Ver como conferir o registro de um psicólogo](/guias/como-saber-se-o-psicologo-e-registrado)"),
+          p("Não por ser mais barata. O que pesa no resultado é a formação de quem atende e o vínculo que vocês constroem. Antes de entrar na Margem, cada profissional passa por uma aprovação. E você pode conferir o registro de qualquer psicólogo sozinho, em poucos minutos. [Ver como conferir o registro de um psicólogo](/blog/como-saber-se-o-psicologo-e-registrado)"),
         ],
       },
       {
@@ -96,7 +96,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "E se eu também precisar de psiquiatra?",
         blocos: [
-          p("Às vezes faz sentido ter os dois juntos: o psicólogo cuida da conversa e do que está por baixo do que você sente, o psiquiatra avalia se um remédio pode ajudar. A Margem também tem psiquiatras a valor social. [Ver psiquiatras a valor social](/guias/psiquiatra-barato)"),
+          p("Às vezes faz sentido ter os dois juntos: o psicólogo cuida da conversa e do que está por baixo do que você sente, o psiquiatra avalia se um remédio pode ajudar. A Margem também tem psiquiatras a valor social. [Ver psiquiatras a valor social](/blog/psiquiatra-barato)"),
         ],
       },
       {
@@ -189,13 +189,13 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Psiquiatra e psicólogo juntos",
         blocos: [
-          p("Em muitas situações, o melhor resultado vem dos dois juntos: o remédio ajuda a estabilizar, a terapia ajuda a entender e mudar o que está por baixo. [Ver psicólogos a valor social](/guias/terapia-barata)"),
+          p("Em muitas situações, o melhor resultado vem dos dois juntos: o remédio ajuda a estabilizar, a terapia ajuda a entender e mudar o que está por baixo. [Ver psicólogos a valor social](/blog/terapia-barata)"),
         ],
       },
       {
         titulo: "Como saber se o psiquiatra é especialista?",
         blocos: [
-          p("Todo médico tem registro no CRM. Quem é especialista em psiquiatria também tem um número de RQE, que aparece na busca pública do Conselho Federal de Medicina. [Ver como conferir o CRM de um psiquiatra](/guias/como-saber-se-o-psicologo-e-registrado)"),
+          p("Todo médico tem registro no CRM. Quem é especialista em psiquiatria também tem um número de RQE, que aparece na busca pública do Conselho Federal de Medicina. [Ver como conferir o CRM de um psiquiatra](/blog/como-saber-se-o-psicologo-e-registrado)"),
         ],
       },
       {
@@ -430,6 +430,10 @@ export const GUIAS: Guia[] = [
     imagemAlt: "",
   },
 ];
+
+export function caminhoDaImagem(guia: Guia) {
+  return `/blog/${guia.slug}.webp`;
+}
 
 export function buscarGuia(slug: string) {
   return GUIAS.find((guia) => guia.slug === slug) ?? null;

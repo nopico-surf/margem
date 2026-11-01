@@ -21,7 +21,7 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // `variante="home"` é o card-profissionais da home (Figma 1434:302136): sem a descrição, com a faixa de
 // preço numa caixa cinza e sem o botão de serviços públicos, que só faz sentido no resultado.
 //
-// `variante="guia"` é o carrossel dos guias de SEO (/guias/[slug]): título, faixa de preço e fileira de
+// `variante="guia"` é o carrossel dos textos do blog (/blog/[slug]): título, faixa de preço e fileira de
 // cards, nas especialidades que o guia pede (seletor só quando são as duas). `origem` (o slug do guia) vai
 // no evento de abertura do perfil, e `id` separa os dois carrosséis da mesma página.
 export function CardProfissionais({

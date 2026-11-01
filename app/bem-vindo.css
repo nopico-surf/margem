@@ -263,6 +263,30 @@
   object-fit: cover;
 }
 
+.card-publico-foto:empty {
+  background: var(--colors-neutral-100);
+}
+
+/* Card com link (/blog). Sem Figma: o hover sublinha o título e o foco é o mesmo stroke do button. */
+.card-publico-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card-publico-link:focus-visible,
+[data-estado-forcado="focus"] .card-publico-link {
+  outline: var(--border-width-large) solid var(--colors-brand-secondary-400);
+  outline-offset: var(--border-width-large);
+}
+
+@media (hover: hover) {
+  .card-publico-link:hover .card-publico-titulo,
+  [data-estado-forcado="hover"] .card-publico-link .card-publico-titulo {
+    text-decoration: underline;
+    text-underline-offset: var(--spacing-2);
+  }
+}
+
 .card-publico-texto {
   display: flex;
   flex-direction: column;

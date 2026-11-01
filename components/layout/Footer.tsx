@@ -19,14 +19,6 @@ const CONTATOS_RODAPE = CONTATOS.filter((contato) => contato.tipo !== "instagram
 const LINK_INSTAGRAM = CONTATOS.find((contato) => contato.tipo === "instagram")!.href;
 const SIZES_FOTO = "(min-width: 86rem) 25vw, (min-width: 48em) 50vw, 100vw";
 
-// Guias de SEO (lib/guias.ts). Os textos são do briefing, não os títulos das páginas.
-const LINKS_GUIAS = [
-  { texto: "Terapia barata", href: "/guias/terapia-barata" },
-  { texto: "Psiquiatra barato", href: "/guias/psiquiatra-barato" },
-  { texto: "Ajuda com álcool e drogas", href: "/guias/psicologo-alcool-e-drogas" },
-  { texto: "Como conferir o registro", href: "/guias/como-saber-se-o-psicologo-e-registrado" },
-];
-
 // Figma: componente `rodape` (Margem System, 670:1425: mobile, desk1 e desk 2). Contatos e redes,
 // card do Instagram e card do grupo do Facebook. O título do Instagram troca no corte do desk 2
 // (86rem), como no Figma. Decidido com o usuário: o Instagram não aparece na lista de contatos e o
@@ -71,14 +63,12 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
           </div>
         </div>
         {!compacto && (
-          <nav className="app-footer-redes app-footer-secao-guias" aria-labelledby="app-footer-guias-titulo">
-            <p className="app-footer-title" id="app-footer-guias-titulo">Guias</p>
-            <div className="app-footer-guias">
-              {LINKS_GUIAS.map((link) => (
-                <a key={link.href} className="app-footer-item" href={link.href}>
-                  <span>{link.texto}</span>
-                </a>
-              ))}
+          <nav className="app-footer-redes app-footer-secao-conteudo" aria-labelledby="app-footer-conteudo-titulo">
+            <p className="app-footer-title" id="app-footer-conteudo-titulo">Conteúdo</p>
+            <div className="app-footer-conteudo">
+              <a className="app-footer-item" href="/blog">
+                <span>Ler o blog</span>
+              </a>
             </div>
           </nav>
         )}

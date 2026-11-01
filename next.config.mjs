@@ -25,6 +25,9 @@ const nextConfig = {
     return [
       { source: "/protecao-de-dados", destination: "/inicio", permanent: false },
       { source: "/bem-vindo", destination: "/inicio", permanent: false },
+      // Os guias de SEO viraram o blog em 01/11/2026, um dia depois de publicados.
+      { source: "/guias", destination: "/blog", permanent: true },
+      { source: "/guias/:slug", destination: "/blog/:slug", permanent: true },
     ];
   },
   // A /profissionais é HTML estático e não conhece a query: sem isso, o link da aba de psiquiatras

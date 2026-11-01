@@ -1,6 +1,30 @@
-/* Guias de SEO (/guias/[slug]). Texto longo numa coluna de leitura, com os carrosséis de
-   profissionais na faixa cinza do ContainerConteudo, como no resultado. Sem Figma: composto com os
-   tokens e estilos de texto que já existem. */
+/* Blog: a lista (/blog) e os textos (/blog/[slug]). O texto é longo, numa coluna de leitura, com os
+   carrosséis de profissionais na faixa cinza do ContainerConteudo, como no resultado. Sem Figma:
+   composto com os tokens e estilos de texto que já existem. */
+
+/* A lista usa o fundo cinza da home, com os cards brancos do card-publico. */
+.blog-pagina {
+  background: var(--colors-neutral-50);
+}
+
+.blog {
+  gap: var(--spacing-24);
+  padding-top: var(--spacing-24);
+  padding-bottom: var(--spacing-48);
+}
+
+.blog .figma-section-heading h1 {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-4xl);
+  color: var(--colors-neutral-950);
+}
+
+/* Quantas colunas couberem com pelo menos 20rem cada: 1 no celular, 2 no tablet e 3 no container de 1080. */
+.blog-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+  gap: var(--spacing-16);
+}
 
 .guia-pagina {
   display: flex;
@@ -134,6 +158,11 @@
 }
 
 @media (min-width: 48em) {
+  .blog .figma-section-heading h1 {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-5xl);
+  }
+
   .guia-imagem {
     aspect-ratio: 4 / 1;
   }

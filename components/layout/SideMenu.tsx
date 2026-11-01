@@ -50,6 +50,12 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
     router.push(`/redes-de-apoio?tipo=${tipo}`);
   }
 
+  function irParaBlog() {
+    track("blog_menu_clicado", { rota });
+    onClose();
+    router.push("/blog");
+  }
+
   // Botão com router.push não tem o prefetch automático do <Link>, então sem isto a /profissionais só
   // começa a baixar no clique e a tela anterior fica parada até o servidor responder. Baixando quando
   // o menu abre, o clique já mostra o skeleton. As duas URLs são a mesma rota: o Next baixa uma vez só.
@@ -59,6 +65,7 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
     router.prefetch(urlDaEspecialidade("psiquiatra"));
     router.prefetch("/redes-de-apoio?tipo=publicas");
     router.prefetch("/redes-de-apoio?tipo=independentes");
+    router.prefetch("/blog");
   }, [open, router, soContatos]);
 
   useEffect(() => {
@@ -128,6 +135,10 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
               {OPCOES_REDE.map(({ valor, rotulo }) => (
                 <button key={valor} type="button" onClick={() => irParaRedesDeApoio(valor)}>{rotulo}</button>
               ))}
+            </div>
+            <h2>Conteúdo</h2>
+            <div className="side-menu-professionals">
+              <button type="button" onClick={irParaBlog}>Blog</button>
             </div>
           </>
         )}
