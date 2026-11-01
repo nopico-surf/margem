@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { InicioCliente } from "./InicioCliente";
 import { InicioCarregando } from "./InicioCarregando";
+
+// Sem canonical, o Google trata /inicio?utm_source=... (links do Instagram) como cópia.
+export const metadata: Metadata = {
+  alternates: { canonical: "/inicio" },
+};
 
 // A entrada da Margem desde 07/10/2026: juntou a /bem-vindo (sobre a Margem e o painel de dados e
 // cookies) com a antiga /inicio (campo livre e cards). Figma: Experiência do produto, seção "Fluxo -
