@@ -104,6 +104,13 @@
 .guia-texto a:not(.btn) {
   color: var(--colors-brand-primary-700);
   font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+/* Só o link dentro de texto corrido leva sublinhado: o verde sozinho não passa 3:1 contra o cinza do
+   parágrafo (WCAG 1.4.1). Os links soltos ("Ver todos…") ficam só verdes. */
+.guia-texto p a:not(.btn),
+.guia-texto li a:not(.btn) {
   text-decoration: underline;
   text-underline-offset: var(--spacing-2);
 }
