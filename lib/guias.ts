@@ -233,8 +233,9 @@ export const GUIAS: Guia[] = [
         resposta: "Pela busca pública do Conselho Federal de Medicina, que mostra o CRM e o RQE de especialista.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Psiquiatra de jaleco diante de um notebook, em videochamada com um paciente.",
+    imagemCard: true,
   },
   {
     slug: "psicologo-alcool-e-drogas",
