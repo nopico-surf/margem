@@ -352,6 +352,12 @@ export default async function GaleriaDeComponentes() {
               <CardPublico href="/blog" titulo="Por perto" texto="Para quem apoia alguém em uso" />
             </div>
           </div>
+          <div className="galeria-estado">
+            <p className="text-small-regular galeria-nota">Link, com data</p>
+            <div className="galeria-palco galeria-palco-cards">
+              <CardPublico href="/blog" foto="/assets/maos-sobre-mesa.webp" titulo="Por perto" data="Atualizado em 01/11/2026" texto="Para quem apoia alguém em uso" />
+            </div>
+          </div>
         </div>
       </section>
 

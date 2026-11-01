@@ -9,10 +9,12 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
-import { GUIAS, TEXTO_VER_TODOS, URL_PROFISSIONAIS, buscarGuia, caminhoDaImagem, type BlocoGuia, type Guia } from "@/lib/guias";
+import { GUIAS, TEXTO_VER_TODOS, URL_PROFISSIONAIS, buscarGuia, caminhoDaImagem, formatarDataDoGuia, type BlocoGuia, type Guia } from "@/lib/guias";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
+
+const URL_DO_SITE = "https://www.somosmargem.com.br";
 
 // Textos do blog (briefing de 31/10/2026). Tudo aqui é renderizado no servidor, então o texto chega
 // inteiro no HTML. Só o carrossel de profissionais depende de JavaScript, como no resto do site.
@@ -32,7 +34,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: guia.title,
     description: guia.descricao,
     alternates: { canonical: `/blog/${guia.slug}` },
-    openGraph: { type: "article", title: guia.title, description: guia.descricao, images: [imagem], siteName: OG_SITE_NAME },
+    openGraph: {
+      type: "article",
+      title: guia.title,
+      description: guia.descricao,
+      images: [imagem],
+      siteName: OG_SITE_NAME,
+      publishedTime: guia.publicadoEm,
+      modifiedTime: guia.atualizadoEm,
+    },
   };
 }
 
@@ -153,16 +163,31 @@ async function GuiaConteudo({ params }: Props) {
   const guia = buscarGuia(slug);
   if (!guia) notFound();
 
-  // Perguntas frequentes no formato que o Google lê, com o mesmo texto que aparece na página.
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: guia.perguntas.map(({ pergunta, resposta }) => ({
-      "@type": "Question",
-      name: pergunta,
-      acceptedAnswer: { "@type": "Answer", text: resposta },
-    })),
-  };
+  // O texto e as perguntas frequentes no formato que o Google lê, com o mesmo conteúdo que aparece na página.
+  const organizacao = { "@type": "Organization", name: "Margem", url: URL_DO_SITE };
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: guia.h1,
+      description: guia.descricao,
+      image: `${URL_DO_SITE}${guia.imagem ? caminhoDaImagem(guia) : OG_IMAGE_PADRAO.url}`,
+      datePublished: guia.publicadoEm,
+      dateModified: guia.atualizadoEm,
+      author: organizacao,
+      publisher: organizacao,
+      mainEntityOfPage: `${URL_DO_SITE}/blog/${guia.slug}`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: guia.perguntas.map(({ pergunta, resposta }) => ({
+        "@type": "Question",
+        name: pergunta,
+        acceptedAnswer: { "@type": "Answer", text: resposta },
+      })),
+    },
+  ];
 
   return (
     <article className="guia">
@@ -174,6 +199,14 @@ async function GuiaConteudo({ params }: Props) {
           )}
         </div>
         <h1>{guia.h1}</h1>
+        <p className="guia-data">
+          Publicado em <time dateTime={guia.publicadoEm}>{formatarDataDoGuia(guia.publicadoEm)}</time>
+          {guia.atualizadoEm !== guia.publicadoEm && (
+            <>
+              {" · "}Atualizado em <time dateTime={guia.atualizadoEm}>{formatarDataDoGuia(guia.atualizadoEm)}</time>
+            </>
+          )}
+        </p>
         <p>{guia.abertura}</p>
       </div>
 

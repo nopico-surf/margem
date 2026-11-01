@@ -26,6 +26,17 @@
   gap: var(--spacing-16);
 }
 
+/* Nos cards do blog, título, resumo e data ficam mais afastados que no card-publico da home. A data
+   vai pro pé do card, pra ficar alinhada entre os cards da mesma linha do grid. */
+.blog-lista .card-publico-texto {
+  flex: 1;
+  gap: var(--spacing-10);
+}
+
+.blog-lista .card-publico-data {
+  margin-top: auto;
+}
+
 .guia-pagina {
   display: flex;
   flex-direction: column;
@@ -134,6 +145,13 @@
 
 .guia-imagem img {
   object-fit: cover;
+}
+
+/* Data logo abaixo do H1, menor e mais apagada que o texto. */
+.guia-texto .guia-data {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-64);
 }
 
 .guia-botoes {

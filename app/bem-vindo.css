@@ -301,6 +301,13 @@
   text-box: trim-both cap alphabetic;
 }
 
+.card-publico-data {
+  margin: 0;
+  color: var(--colors-alpha-64);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-lg);
+}
+
 .card-publico-descricao {
   margin: 0;
   color: var(--colors-alpha-88);

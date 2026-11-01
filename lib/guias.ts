@@ -29,6 +29,10 @@ export type SecaoGuia = { titulo: string; blocos: BlocoGuia[] };
 
 export type Guia = {
   slug: string;
+  // Datas em AAAA-MM-DD, preenchidas à mão. Trocar `atualizadoEm` só quando o texto mudar de verdade:
+  // troca de imagem não conta. Ela aparece na página e vai pro JSON-LD, Open Graph e sitemap.
+  publicadoEm: string;
+  atualizadoEm: string;
   title: string;
   descricao: string;
   h1: string;
@@ -55,6 +59,8 @@ const p = (texto: string): BlocoGuia => ({ tipo: "paragrafo", texto });
 export const GUIAS: Guia[] = [
   {
     slug: "terapia-barata",
+    publicadoEm: "2026-10-31",
+    atualizadoEm: "2026-11-01",
     title: "Terapia barata: psicólogo online a partir de R$ 60 | Margem",
     descricao:
       "Sessão com psicólogo registrado no CRP, de R$ 60 a 200, a valor social. Você escolhe quanto paga dentro da faixa. Veja como funciona.",
@@ -138,6 +144,8 @@ export const GUIAS: Guia[] = [
   },
   {
     slug: "psiquiatra-barato",
+    publicadoEm: "2026-10-31",
+    atualizadoEm: "2026-11-01",
     title: "Psiquiatra barato: consulta online a partir de R$ 110 | Margem",
     descricao:
       "Consulta com psiquiatra, de R$ 110 a 290, online e com receita digital, a valor social. Veja como funciona e como conferir o CRM do médico.",
@@ -239,6 +247,8 @@ export const GUIAS: Guia[] = [
   },
   {
     slug: "psicologo-alcool-e-drogas",
+    publicadoEm: "2026-10-31",
+    atualizadoEm: "2026-11-01",
     title: "Dependência química e álcool: terapia a valor social | Margem",
     descricao:
       "Psicólogo e psiquiatra pra quem quer mudar a relação com álcool e outras drogas, a valor social e com sigilo. Sem julgamento e sem internação.",
@@ -335,6 +345,8 @@ export const GUIAS: Guia[] = [
   },
   {
     slug: "como-saber-se-o-psicologo-e-registrado",
+    publicadoEm: "2026-10-31",
+    atualizadoEm: "2026-10-31",
     title: "Como consultar o CRP do psicólogo e o CRM do psiquiatra | Margem",
     descricao:
       "Antes de começar terapia ou consulta online, confira se o profissional é registrado. Leva poucos minutos e é de graça no site dos conselhos.",
@@ -441,6 +453,8 @@ export const GUIAS: Guia[] = [
   // aos quatro por substância e de volta. Mesma exceção de copy do briefing, autorizada de novo pelo Vitor.
   {
     slug: "reducao-de-danos",
+    publicadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-01",
     title: "Redução de danos: o que é e como funciona na prática | Margem",
     descricao:
       "Redução de danos é cuidar de quem usa álcool ou outras drogas sem exigir que a pessoa pare. Entenda o que é, para quem serve e como começar.",
@@ -551,6 +565,8 @@ export const GUIAS: Guia[] = [
   },
   {
     slug: "como-parar-de-beber",
+    publicadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-01",
     title: "Como parar de beber: sinais, riscos e onde buscar apoio | Margem",
     descricao:
       "Quer parar ou diminuir a bebida? Veja quando parar de uma vez pode ser perigoso, o que acontece no corpo e onde encontrar apoio sem julgamento.",
@@ -699,6 +715,8 @@ export const GUIAS: Guia[] = [
   },
   {
     slug: "como-parar-de-fumar",
+    publicadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-01",
     title: "Como parar de fumar: abstinência, SUS e apoio | Margem",
     descricao:
       "Parar de fumar pode levar mais de uma tentativa. Veja o que sentir nos primeiros dias, como lidar com a vontade e como buscar tratamento gratuito.",
@@ -824,6 +842,8 @@ export const GUIAS: Guia[] = [
   },
   {
     slug: "como-parar-de-fumar-maconha",
+    publicadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-01",
     title: "Como parar de fumar maconha: abstinência e apoio | Margem",
     descricao:
       "Quer parar ou diminuir a maconha? Veja quanto tempo dura a abstinência, o que ajuda no sono e na irritação e onde encontrar apoio sem julgamento.",
@@ -955,6 +975,8 @@ export const GUIAS: Guia[] = [
   },
   {
     slug: "como-parar-de-usar-cocaina",
+    publicadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-01",
     title: "Como parar de usar cocaína: abstinência e apoio | Margem",
     descricao:
       "Quer parar ou diminuir o uso de cocaína? Entenda a abstinência, a fissura, os sinais de emergência e onde encontrar apoio com sigilo e sem julgamento.",
@@ -1116,6 +1138,11 @@ export function caminhoDaImagem(guia: Guia) {
 
 export function caminhoDaImagemDoCard(guia: Guia) {
   return guia.imagemCard ? `/blog/${guia.slug}-card.webp` : caminhoDaImagem(guia);
+}
+
+// De AAAA-MM-DD pra DD/MM/AAAA, sem passar por Date: assim o fuso do servidor não muda o dia.
+export function formatarDataDoGuia(data: string) {
+  return data.split("-").reverse().join("/");
 }
 
 export function buscarGuia(slug: string) {

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,6 +12,8 @@ type CardPublicoProps = {
   sizesDaFoto?: string;
   titulo: string;
   tituloComo?: "h2" | "h3";
+  // Linha de data depois do texto (cards do /blog).
+  data?: ReactNode;
   texto: string;
   // Com href, o card inteiro vira link (cards do /blog).
   href?: string;
@@ -22,6 +25,7 @@ export function CardPublico({
   sizesDaFoto = "(min-width: 48em) 34vw, 45vw",
   titulo,
   tituloComo: Titulo = "h3",
+  data,
   texto,
   href,
 }: CardPublicoProps) {
@@ -33,6 +37,7 @@ export function CardPublico({
       <div className="card-publico-texto">
         <Titulo className="card-publico-titulo">{titulo}</Titulo>
         <p className="card-publico-descricao">{texto}</p>
+        {data && <p className="card-publico-data">{data}</p>}
       </div>
     </>
   );
