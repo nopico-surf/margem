@@ -111,6 +111,7 @@ async function CarrosselComProfissionais({ guia, posicao }: { guia: Guia; posica
 
 function Carrossel({ guia, posicao }: { guia: Guia; posicao: "topo" | "fim" }) {
   if (guia.carrossel.length === 0) return null;
+  if (posicao === "topo" && !guia.carrosselTopo) return null;
   return (
     <div className="guia-carrossel">
       <Suspense

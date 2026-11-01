@@ -35,6 +35,9 @@ export type Guia = {
   abertura: string;
   // Quem aparece no carrossel do topo e do fim. Vazio: a página não tem carrossel.
   carrossel: EspecialidadeGuia[];
+  // false: o carrossel aparece só no fim da página (o guia do registro é de consulta, e quem lê
+  // chega aos profissionais depois de entender como conferir o registro).
+  carrosselTopo: boolean;
   secoes: SecaoGuia[];
   perguntas: { pergunta: string; resposta: string }[];
   // A imagem do topo fica em /public/guias/<slug>.webp. Enquanto o arquivo não existir, `imagem` fica
@@ -56,6 +59,7 @@ export const GUIAS: Guia[] = [
     abertura:
       "Cuidar da cabeça não deveria ser luxo. Mesmo assim, o preço da terapia é um dos motivos mais comuns pra muita gente adiar esse cuidado. Não é falta de vontade, é conta que não fecha. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e quem decide quanto paga dentro dessa faixa é você.",
     carrossel: ["psicologo"],
+    carrosselTopo: true,
     secoes: [
       {
         titulo: "O que é terapia a valor social?",
@@ -137,6 +141,7 @@ export const GUIAS: Guia[] = [
     abertura:
       "Uma consulta com psiquiatra particular pesa no bolso de muita gente, e a espera pelo SUS pode demorar. No meio disso, muita gente fica sem cuidado justamente quando mais precisa. Na Margem, a consulta com psiquiatra custa de R$ 110 a R$ 290. Você escolhe o valor dentro dessa faixa e não precisa explicar por quê: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
     carrossel: ["psiquiatra"],
+    carrosselTopo: true,
     secoes: [
       {
         titulo: "O que faz um psiquiatra?",
@@ -238,6 +243,7 @@ export const GUIAS: Guia[] = [
     // O banco não tem campo que diga quem atende álcool e outras drogas (só tags livres), então
     // aparecem todos, como o briefing pede.
     carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
     secoes: [
       {
         titulo: "Psicólogo ajuda quem tem dependência química?",
@@ -328,7 +334,8 @@ export const GUIAS: Guia[] = [
     h1: "Como saber se o psicólogo ou o psiquiatra é registrado",
     abertura:
       "Quando o atendimento é barato e online, é normal bater a dúvida: será que essa pessoa é profissional mesmo? Desconfiar é um jeito de se cuidar. A boa notícia é que dá pra conferir sozinho, de graça, em poucos minutos.",
-    carrossel: [],
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: false,
     secoes: [
       {
         titulo: "Como consultar o CRP de um psicólogo",
@@ -394,13 +401,6 @@ export const GUIAS: Guia[] = [
         titulo: "E na Margem?",
         blocos: [
           p("Antes de entrar na Margem, cada profissional passa por aprovação. Mesmo assim, você tem todo o direito de conferir o registro de quem vai te atender, e a gente incentiva isso."),
-          {
-            tipo: "botoes",
-            botoes: [
-              { texto: "Ver psicólogos a valor social", href: URL_PROFISSIONAIS.psicologo },
-              { texto: "Ver psiquiatras a valor social", href: URL_PROFISSIONAIS.psiquiatra },
-            ],
-          },
         ],
       },
     ],
