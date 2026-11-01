@@ -71,7 +71,7 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
           </div>
         </div>
         {!compacto && (
-          <nav className="app-footer-redes" aria-labelledby="app-footer-guias-titulo">
+          <nav className="app-footer-redes app-footer-secao-guias" aria-labelledby="app-footer-guias-titulo">
             <p className="app-footer-title" id="app-footer-guias-titulo">Guias</p>
             <div className="app-footer-guias">
               {LINKS_GUIAS.map((link) => (

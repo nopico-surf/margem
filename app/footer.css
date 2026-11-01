@@ -79,6 +79,18 @@
   gap:var(--spacing-10);
 }
 
+/* No mobile os guias vão pro fim do rodapé, depois dos dois cards. O bloco dos contatos se desfaz
+   (display:contents) pra logo, contatos e guias virarem itens da coluna do rodapé, e o order empurra
+   os guias pra baixo. O gap do rodapé é o mesmo 16 do bloco, então o resto não se mexe. A partir de
+   48em o bloco volta a ser flex (ver abaixo) e os guias ficam embaixo dos contatos. */
+.app-footer:not([data-compacto="true"]) .app-footer-contatos {
+  display:contents;
+}
+
+.app-footer-secao-guias {
+  order:1;
+}
+
 /* Card do grupo do Facebook */
 
 .app-footer-card {
@@ -205,6 +217,10 @@
     column-gap:var(--spacing-24);
     row-gap:0;
     align-items:start;
+  }
+
+  .app-footer:not([data-compacto="true"]) .app-footer-contatos {
+    display:flex;
   }
 
   .app-footer-contatos {
