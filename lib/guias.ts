@@ -129,8 +129,8 @@ export const GUIAS: Guia[] = [
           "Dá, mas fora da Margem: a Margem não faz parte do SUS nem tem parceria com o governo. No SUS, a porta de entrada é a Unidade Básica de Saúde, e o CAPS atende sem encaminhamento. A espera costuma ser maior.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mulher sorrindo diante de um notebook, em videochamada com um psicólogo.",
   },
   {
     slug: "psiquiatra-barato",
