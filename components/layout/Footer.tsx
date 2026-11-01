@@ -71,12 +71,15 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
           </div>
         </div>
         {!compacto && (
-          <nav className="app-footer-guias" aria-label="Guias">
-            {LINKS_GUIAS.map((link) => (
-              <a key={link.href} className="app-footer-item" href={link.href}>
-                <span>{link.texto}</span>
-              </a>
-            ))}
+          <nav className="app-footer-redes" aria-labelledby="app-footer-guias-titulo">
+            <p className="app-footer-title" id="app-footer-guias-titulo">Guias</p>
+            <div className="app-footer-guias">
+              {LINKS_GUIAS.map((link) => (
+                <a key={link.href} className="app-footer-item" href={link.href}>
+                  <span>{link.texto}</span>
+                </a>
+              ))}
+            </div>
           </nav>
         )}
       </div>
