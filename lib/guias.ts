@@ -119,7 +119,8 @@ export const GUIAS: Guia[] = [
       },
       {
         pergunta: "Dá pra fazer terapia pelo SUS?",
-        resposta: "Dá. A porta de entrada é a Unidade Básica de Saúde, e o CAPS atende sem encaminhamento. A espera costuma ser maior.",
+        resposta:
+          "Dá, mas fora da Margem: a Margem não faz parte do SUS nem tem parceria com o governo. No SUS, a porta de entrada é a Unidade Básica de Saúde, e o CAPS atende sem encaminhamento. A espera costuma ser maior.",
       },
     ],
     imagem: false,
@@ -193,7 +194,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Dá pra consultar com psiquiatra pelo SUS?",
         blocos: [
-          p("Dá. O caminho começa na Unidade Básica de Saúde: o médico da unidade avalia e, se precisar, encaminha pra psiquiatra ou pro CAPS. O CAPS também atende sem encaminhamento, indo direto na unidade. A espera costuma ser maior."),
+          p("Dá, mas fora da Margem: a Margem não faz parte do SUS nem tem parceria com o governo. No SUS, o caminho começa na Unidade Básica de Saúde: o médico da unidade avalia e, se precisar, encaminha pra psiquiatra ou pro CAPS. O CAPS também atende sem encaminhamento, indo direto na unidade. A espera costuma ser maior."),
           p("Em crise, procure uma UPA ou ligue para o SAMU no 192. Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
         ],
       },
