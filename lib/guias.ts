@@ -57,7 +57,7 @@ export const GUIAS: Guia[] = [
       "Sessão com psicólogo registrado no CRP, de R$ 60 a 200, a valor social. Você escolhe quanto paga dentro da faixa. Veja como funciona.",
     h1: "Terapia barata com psicólogo registrado: como funciona o valor social",
     abertura:
-      "Cuidar da cabeça não deveria ser luxo. Mesmo assim, o valor das sessões é um dos motivos mais comuns pra muita gente adiar esse cuidado. Não é falta de vontade, é conta que não fecha. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e quem decide quanto paga dentro dessa faixa é você.",
+      "Cuidar da saúde mental não deveria ser luxo. Mesmo assim, o valor das sessões é um dos motivos mais comuns pra muita gente adiar esse cuidado. Não é falta de vontade, é conta que não fecha. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e quem decide quanto paga dentro dessa faixa é você.",
     carrossel: ["psicologo"],
     carrosselTopo: true,
     secoes: [

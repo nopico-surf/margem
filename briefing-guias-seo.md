@@ -113,7 +113,7 @@ Quando alguém abrir um perfil de profissional a partir de um guia, registrar de
 
 # Terapia barata com psicólogo registrado: como funciona o valor social
 
-Cuidar da cabeça não deveria ser luxo. Mesmo assim, o valor das sessões é um dos motivos mais comuns pra muita gente adiar esse cuidado. Não é falta de vontade, é conta que não fecha. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e quem decide quanto paga dentro dessa faixa é você.
+Cuidar da saúde mental não deveria ser luxo. Mesmo assim, o valor das sessões é um dos motivos mais comuns pra muita gente adiar esse cuidado. Não é falta de vontade, é conta que não fecha. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e quem decide quanto paga dentro dessa faixa é você.
 
 [CARROSSEL TOPO: psicólogos + link "Ver todos os psicólogos a valor social"]
 
