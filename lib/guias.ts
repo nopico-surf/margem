@@ -45,6 +45,9 @@ export type Guia = {
   // ela passa a ser também a imagem de Open Graph da página.
   imagem: boolean;
   imagemAlt: string;
+  // Recorte mais aproximado pro card da lista, em /public/blog/<slug>-card.webp (proporção próxima de 2:1).
+  // Sem ele, o card usa a imagem do topo.
+  imagemCard?: boolean;
 };
 
 const p = (texto: string): BlocoGuia => ({ tipo: "paragrafo", texto });
@@ -131,6 +134,7 @@ export const GUIAS: Guia[] = [
     ],
     imagem: true,
     imagemAlt: "Mulher sorrindo diante de um notebook, em videochamada com um psicólogo.",
+    imagemCard: true,
   },
   {
     slug: "psiquiatra-barato",
@@ -1100,6 +1104,10 @@ export const GUIAS: Guia[] = [
 
 export function caminhoDaImagem(guia: Guia) {
   return `/blog/${guia.slug}.webp`;
+}
+
+export function caminhoDaImagemDoCard(guia: Guia) {
+  return guia.imagemCard ? `/blog/${guia.slug}-card.webp` : caminhoDaImagem(guia);
 }
 
 export function buscarGuia(slug: string) {

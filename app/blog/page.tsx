@@ -3,7 +3,7 @@ import { GuiaCabecalho } from "./[slug]/GuiaCabecalho";
 import { CardPublico } from "@/components/bem-vindo/CardPublico";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { Footer } from "@/components/layout/Footer";
-import { GUIAS, caminhoDaImagem } from "@/lib/guias";
+import { GUIAS, caminhoDaImagemDoCard } from "@/lib/guias";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 
 const TITULO = "Blog: terapia a valor social, álcool e outras drogas | Margem";
@@ -35,7 +35,7 @@ export default function BlogPage() {
             <CardPublico
               key={guia.slug}
               href={`/blog/${guia.slug}`}
-              foto={guia.imagem ? caminhoDaImagem(guia) : undefined}
+              foto={guia.imagem ? caminhoDaImagemDoCard(guia) : undefined}
               sizesDaFoto="(min-width: 68em) 22rem, (min-width: 48em) 50vw, 100vw"
               titulo={guia.h1}
               tituloComo="h2"
