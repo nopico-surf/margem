@@ -84,10 +84,10 @@
   text-underline-offset: var(--spacing-2);
 }
 
-/* A abertura (imagem, H1 e primeiro parágrafo) fica mais junta que as seções. */
+/* A abertura (imagem, H1 e primeiro parágrafo) fica mais junta que as seções. O banner encosta no
+   header, sem espaço em cima. */
 .guia-abertura {
   gap: var(--spacing-16);
-  padding-top: var(--spacing-16);
 }
 
 /* Banner do topo, na largura inteira do container do texto. Faixa baixa de proporção fixa, pra a
@@ -136,10 +136,6 @@
 @media (min-width: 48em) {
   .guia-imagem {
     aspect-ratio: 4 / 1;
-  }
-
-  .guia-abertura {
-    padding-top: var(--spacing-24);
   }
 
   .guia-texto h1 {
