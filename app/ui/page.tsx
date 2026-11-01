@@ -322,8 +322,8 @@ export default async function GaleriaDeComponentes() {
         <h2 className="header-medium">Card público</h2>
         <p className="text-small-regular galeria-nota">
           Sem href, não tem clique nem hover. A foto se ancora pelo object-position. Com href (cards do
-          /blog), o card inteiro vira link: o hover sublinha o título e o foco leva o stroke do button.
-          Sem foto, o espaço dela fica com o fundo neutro.
+          /blog), o card inteiro vira link: o foco leva o stroke do button. Sem foto, o espaço dela fica
+          com o fundo neutro.
         </p>
         <div className="galeria-palco galeria-palco-cards">
           <CardPublico
@@ -336,12 +336,6 @@ export default async function GaleriaDeComponentes() {
         <div className="galeria-estados">
           <div className="galeria-estado">
             <p className="text-small-regular galeria-nota">Link, default</p>
-            <div className="galeria-palco galeria-palco-cards">
-              <CardPublico href="/blog" foto="/assets/maos-sobre-mesa.webp" titulo="Por perto" texto="Para quem apoia alguém em uso" />
-            </div>
-          </div>
-          <div className="galeria-estado" data-estado-forcado="hover">
-            <p className="text-small-regular galeria-nota">Link, hover</p>
             <div className="galeria-palco galeria-palco-cards">
               <CardPublico href="/blog" foto="/assets/maos-sobre-mesa.webp" titulo="Por perto" texto="Para quem apoia alguém em uso" />
             </div>
