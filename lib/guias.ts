@@ -949,8 +949,9 @@ export const GUIAS: Guia[] = [
           "Dá pra diminuir alguns riscos: evitar o uso diário, não prender a fumaça, não misturar com álcool ou tabaco e não dirigir depois de usar. Risco menor não é risco zero.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mão soltando um baseado sobre uma lixeira.",
+    imagemCard: true,
   },
   {
     slug: "como-parar-de-usar-cocaina",
