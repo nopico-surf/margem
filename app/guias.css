@@ -172,6 +172,11 @@
   gap: var(--spacing-8);
 }
 
+/* O container é uma coluna flex: sem isto o botão estica a largura toda e centraliza o texto. */
+.guia-texto .btn {
+  align-self: flex-start;
+}
+
 .guia-perguntas {
   gap: var(--spacing-20);
 }

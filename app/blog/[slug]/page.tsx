@@ -135,9 +135,9 @@ function Carrossel({ guia, posicao }: { guia: Guia; posicao: "topo" | "fim" }) {
       </Suspense>
       <div className="figma-section-inner guia-texto guia-ver-todos">
         {guia.carrossel.map((especialidade) => (
-          <Link key={especialidade} href={URL_PROFISSIONAIS[especialidade]}>
+          <Button key={especialidade} variante="transparent" tamanho="medium" semPadding href={URL_PROFISSIONAIS[especialidade]}>
             {TEXTO_VER_TODOS[especialidade]}
-          </Link>
+          </Button>
         ))}
       </div>
     </div>
@@ -244,7 +244,9 @@ async function GuiaConteudo({ params }: Props) {
             </div>
           ))}
         </section>
-        <Link href="/blog">Ver todos os textos do blog</Link>
+        <Button variante="transparent" tamanho="medium" semPadding href="/blog">
+          Ver todos os textos do blog
+        </Button>
       </div>
     </article>
   );
