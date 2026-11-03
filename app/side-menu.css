@@ -107,7 +107,7 @@
 .side-menu-contacts {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-12);
+  gap: var(--spacing-16);
 }
 
 .side-menu-contacts a {
