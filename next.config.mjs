@@ -19,6 +19,11 @@ const nextConfig = {
   // Canvas nativo da prévia do link de desafio da Mochila (lib/mochila/card-servidor.ts): o
   // binário .node não entra no bundle, fica em node_modules.
   serverExternalPackages: ["@napi-rs/canvas"],
+  // No Next 16 a lista de qualidades é obrigatória e o padrão é só [75]. O 60 existe pro banner dos
+  // textos do blog, que numa tela 2x é pedido em 2048 de largura e passava de 110 KB em q75.
+  images: {
+    qualities: [60, 75],
+  },
   // A /bem-vindo (e a etapa de proteção de dados, que já tinha virado o painel dela) se juntou à
   // /inicio em 07/10/2026.
   async redirects() {

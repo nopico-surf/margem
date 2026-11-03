@@ -43,7 +43,19 @@ export function CardProfissionais({
   const noGuia = variante === "guia";
   const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>("psicologo");
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
-  const urlsDasFotos = profissionais.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO));
+
+  // Guia com as duas especialidades (álcool e outras drogas): o seletor da home volta, e a faixa de
+  // preço e os cards seguem a aba escolhida. Com uma só, fica a faixa dela, sem seletor.
+  const comSeletor = noGuia && (especialidades?.length ?? 0) > 1;
+
+  // Sem seletor, só uma especialidade vai aparecer na tela: adiantar a foto das outras segura o
+  // carrossel no esqueleto sem servir pra nada. Com seletor a pessoa troca de aba a qualquer momento,
+  // então as duas listas precisam estar prontas antes.
+  const profissionaisDasFotos =
+    especialidades && !comSeletor
+      ? profissionais.filter((profissional) => (especialidades as string[]).includes(profissional.especialidade))
+      : profissionais;
+  const urlsDasFotos = profissionaisDasFotos.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO));
   const chaveDasFotos = urlsDasFotos.join("|");
 
   useEffect(() => {
@@ -67,10 +79,6 @@ export function CardProfissionais({
   // navegador, então o esqueleto fica até ela ser lida e os cards já nascem na ordem final.
   const [sessaoId, setSessaoId] = useState<string | null>(null);
   useEffect(() => setSessaoId(getOrCreateSessaoId()), []);
-
-  // Guia com as duas especialidades (álcool e outras drogas): o seletor da home volta, e a faixa de
-  // preço e os cards seguem a aba escolhida. Com uma só, fica a faixa dela, sem seletor.
-  const comSeletor = noGuia && (especialidades?.length ?? 0) > 1;
 
   // No guia a faixa de preço não depende da lista, então já aparece no esqueleto e a tela não pula.
   const valorDoGuia = (

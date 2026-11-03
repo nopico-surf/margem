@@ -31,12 +31,17 @@ export default function BlogPage() {
           description="Textos pra entender os valores das consultas e sessões, caminhos de cuidado e como conferir quem vai te atender."
         />
         <div className="blog-lista">
-          {GUIAS.map((guia) => (
+          {GUIAS.map((guia, index) => (
             <CardPublico
               key={guia.slug}
               href={`/blog/${guia.slug}`}
               foto={guia.imagem ? caminhoDaImagemDoCard(guia) : undefined}
-              sizesDaFoto="(min-width: 68em) 22rem, (min-width: 48em) 50vw, 100vw"
+              // A largura do slot, não a da viewport: o card perde os 16 de padding da página no
+              // celular e os 32 mais o gap do grid no tablet. Sem isso o navegador pede um degrau
+              // de imagem acima do que vai mostrar.
+              sizesDaFoto="(min-width: 68em) 22rem, (min-width: 48em) calc(50vw - 2.5rem), calc(100vw - 2rem)"
+              // Só o primeiro card nasce fora do lazy: é a imagem da dobra, o LCP da lista.
+              prioridade={index === 0}
               titulo={guia.h1}
               tituloComo="h2"
               data={

@@ -195,7 +195,16 @@ async function GuiaConteudo({ params }: Props) {
       <div className="figma-section-inner guia-texto guia-abertura">
         <div className="guia-imagem">
           {guia.imagem && (
-            <Image src={caminhoDaImagem(guia)} alt={guia.imagemAlt} fill priority sizes="(min-width: 68em) 64rem, 100vw" />
+            // q60 em vez do 75 padrão: é uma foto grande e suave, pedida em 2048 de largura numa tela
+            // 2x, e é a maior transferência da página. O 60 está na lista do next.config.mjs.
+            <Image
+              src={caminhoDaImagem(guia)}
+              alt={guia.imagemAlt}
+              fill
+              priority
+              quality={60}
+              sizes="(min-width: 68em) 64rem, calc(100vw - 2rem)"
+            />
           )}
         </div>
         <h1>{guia.h1}</h1>

@@ -182,6 +182,122 @@
   gap: var(--spacing-4);
 }
 
+/* ===== Carregando (/blog e /blog/[slug]) =====
+   Os dois esqueletos reaproveitam o container, a grade e a marcação do card-publico das telas
+   prontas: aqui só entram as medidas dos ossos, tiradas da tela pronta (h1 de 24, h2 de 20, linha
+   de texto de 16, data de 14, card de 18/12) e que precisam acompanhar se ela mudar. */
+
+/* A foto do card e o banner do texto: o mesmo shimmer do .figma-skeleton, só que o fundo neutro
+   do .card-publico-foto:empty e do .guia-imagem ganharia por especificidade. */
+.blog-osso-foto {
+  background: linear-gradient(90deg, var(--colors-neutral-100) 25%, var(--colors-neutral-50) 50%, var(--colors-neutral-100) 75%);
+  background-size: 200% 100%;
+  animation: figma-skeleton-shimmer var(--duration-1500) ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-osso-foto {
+    animation: none;
+  }
+}
+
+.blog-osso-h1 {
+  height: var(--font-size-2xl);
+  width: 100%;
+}
+
+/* 64 é o h1 do texto pronto no mobile: duas linhas de line-height-4xl. */
+.blog-osso-h1-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  min-height: 4rem;
+}
+
+.blog-osso-h2 {
+  height: var(--font-size-xl);
+  width: 70%;
+}
+
+.blog-osso-linha {
+  height: var(--font-size-md);
+  width: 100%;
+}
+
+.blog-osso-linha-curta {
+  width: 60%;
+}
+
+.blog-osso-data {
+  height: var(--font-size-sm);
+  width: 11rem;
+}
+
+/* As linhas do parágrafo guardam o ritmo do texto pronto: 16 de osso e 8 de respiro dão as mesmas
+   24 de line-height-2xl. */
+.blog-osso-paragrafo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+/* Cabeçalho da lista: o h1 cabe numa linha e o resumo vem em três, em font-size-sm. 96 é o que esse
+   bloco mede pronto no mobile. */
+.blog-osso-cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-10);
+  min-height: 6rem;
+}
+
+.blog-osso-cabecalho .blog-osso-linha {
+  height: var(--font-size-sm);
+}
+
+/* Card da lista: a foto tem a altura da pronta e o texto segue os 18 do título e os 12 do resumo. */
+.blog-osso-card .card-publico-foto {
+  flex-shrink: 0;
+}
+
+/* 161 é o texto de sete dos nove cards prontos no mobile (os outros dois têm uma linha a mais de
+   título). O osso da data desce pro pé, como a data pronta. */
+.blog-osso-card .card-publico-texto {
+  display: flex;
+  flex-direction: column;
+  min-height: 10.0625rem;
+}
+
+.blog-lista .blog-osso-data {
+  margin-top: auto;
+}
+
+.blog-osso-titulo {
+  height: var(--font-size-lg);
+  width: 90%;
+}
+
+.blog-lista .blog-osso-linha {
+  height: var(--font-size-xs);
+}
+
+.blog-lista .blog-osso-data {
+  width: 9rem;
+  height: var(--font-size-xs);
+}
+
+/* A linha da data na abertura tem o line-height-xl do parágrafo pronto, não só a altura da letra. */
+.guia-abertura .blog-osso-data {
+  height: var(--line-height-xl);
+}
+
+/* No lugar da faixa de preço, que muda entre psicólogo e psiquiatra: a altura da caixa pronta, 97 no
+   mobile (o texto quebra em duas linhas) e 79 no desktop (o selo e o texto ficam lado a lado). */
+.blog-osso-valor {
+  height: 6.0625rem;
+  width: 100%;
+  border-radius: var(--radius-xl);
+}
+
 @media (min-width: 48em) {
   .blog .figma-section-heading h1 {
     font-size: var(--font-size-3xl);
@@ -195,5 +311,32 @@
   .guia-texto h1 {
     font-size: var(--font-size-3xl);
     line-height: var(--line-height-5xl);
+  }
+
+  /* O h1 das duas telas vai pra font-size-3xl e cabe numa linha só (40). A abertura, que no celular
+     ocupa dez linhas, cabe em quatro. E a faixa de preço vira linha, com 79 de altura. */
+  .blog-osso-h1 {
+    height: var(--font-size-3xl);
+  }
+
+  .blog-osso-h1-bloco {
+    min-height: 2.5rem;
+  }
+
+  .blog-osso-h1-bloco .blog-osso-h1:nth-child(2) {
+    display: none;
+  }
+
+  .blog-osso-paragrafo-abertura .blog-osso-linha:nth-child(n + 5) {
+    display: none;
+  }
+
+  /* A linha curta é sempre a última que aparece: no desktop ela passa a ser a quarta. */
+  .blog-osso-paragrafo-abertura .blog-osso-linha:nth-child(4) {
+    width: 60%;
+  }
+
+  .blog-osso-valor {
+    height: 4.9375rem;
   }
 }

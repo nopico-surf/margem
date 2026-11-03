@@ -17,6 +17,9 @@ type CardPublicoProps = {
   texto: string;
   // Com href, o card inteiro vira link (cards do /blog).
   href?: string;
+  // Tira a foto do lazy. Só no primeiro card da lista do /blog, que é o LCP da tela: sem isso o
+  // navegador baixa a imagem que já está na dobra com prioridade baixa.
+  prioridade?: boolean;
 };
 
 export function CardPublico({
@@ -28,11 +31,14 @@ export function CardPublico({
   data,
   texto,
   href,
+  prioridade = false,
 }: CardPublicoProps) {
   const conteudo = (
     <>
       <div className="card-publico-foto">
-        {foto && <Image src={foto} alt="" fill sizes={sizesDaFoto} style={{ objectPosition: posicaoDaFoto }} />}
+        {foto && (
+          <Image src={foto} alt="" fill priority={prioridade} sizes={sizesDaFoto} style={{ objectPosition: posicaoDaFoto }} />
+        )}
       </div>
       <div className="card-publico-texto">
         <Titulo className="card-publico-titulo">{titulo}</Titulo>
