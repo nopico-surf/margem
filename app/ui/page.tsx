@@ -16,6 +16,7 @@ import { GlifoVerifiedUser } from "@/components/icons/glifos";
 import { IconeAgendarWhatsapp, IconeSetaResultado } from "@/components/icons";
 import { FaixaComoFunciona } from "@/components/app/FaixaComoFunciona";
 import { BlocoCannabis, SeloGiratorio } from "@/components/app/BlocoCannabis";
+import { BlocoMochila } from "@/components/app/BlocoMochila";
 import { CardHomeGroupGaleria } from "./CardHomeGaleria";
 import { CardPlanoGaleria, ContadorPixGaleria, InputTextGaleria } from "./ApoioGaleria";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
@@ -55,8 +56,8 @@ type PropsDeBotao = {
   tamanho?: "xx-small" | "x-small" | "small" | "medium";
   redondo?: boolean;
   larguraTotal?: boolean;
-};
   semPadding?: boolean;
+};
 
 type Combinacao = { titulo: string; usadaEm: string; props: PropsDeBotao; conteudo: ReactNode };
 
@@ -316,6 +317,17 @@ export default async function GaleriaDeComponentes() {
         </div>
         <div className="galeria-palco galeria-palco-largo">
           <BlocoCannabis />
+        </div>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Bloco Mochila do role</h2>
+        <p className="text-small-regular galeria-nota">
+          Mesmo bloco da cannabis, com o quadriculado e a mochila no lugar da foto. A partir de 768 pixels a
+          foto passa para a esquerda. O card inteiro leva para /mochila/cenarios.
+        </p>
+        <div className="galeria-palco galeria-palco-largo">
+          <BlocoMochila />
         </div>
       </section>
 

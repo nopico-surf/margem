@@ -9,6 +9,7 @@ import { HomeHero } from "@/components/app/HomeHero";
 import { FaixaComoFunciona } from "@/components/app/FaixaComoFunciona";
 import { CardHomeGroup } from "@/components/app/CardHomeGroup";
 import { BlocoCannabis } from "@/components/app/BlocoCannabis";
+import { BlocoMochila } from "@/components/app/BlocoMochila";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { CardPublico } from "@/components/bem-vindo/CardPublico";
 import { Button } from "@/components/ui/Button";
@@ -183,6 +184,10 @@ export function InicioCliente({ profissionais }: { profissionais: ProfissionalCa
 
           <div data-secao="profissionais">
             <CardProfissionais profissionais={profissionais} variante="home" />
+          </div>
+
+          <div data-secao="mochila">
+            <BlocoMochila />
           </div>
 
           <div data-secao="cannabis">

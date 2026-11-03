@@ -720,6 +720,64 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   }
 }
 
+/* ===== Bloco Mochila do role =====
+   Reusa .bloco-cannabis. O fundo é um recorte de 282x282 do quadriculado do Figma (11 colunas e 21
+   linhas, que fecham em número inteiro) repetido, em vez de uma imagem do tamanho do bloco. */
+
+.bloco-mochila-fundo {
+  background: var(--colors-brand-secondary-300) url("/assets/mochila-quadriculado.png") 0 0 / 17.625rem 17.625rem repeat;
+}
+
+/* 153,93 no Figma de 360 a 1920; cresce com a tela depois disso (257,85 em 2800). */
+.bloco-mochila-sprite {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9.625rem;
+  height: 9.625rem;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+}
+
+/* Botão de 288 (largura toda) no mobile e de 148 (do conteúdo) do tablet em diante, como no Figma. */
+.bloco-mochila .bloco-cannabis-copy,
+.bloco-mochila .bloco-cannabis-cabecalho {
+  align-self: stretch;
+}
+
+.bloco-mochila .btn {
+  align-self: stretch;
+}
+
+@media (min-width: 48em) {
+  .bloco-mochila .bloco-cannabis-foto {
+    order: -1;
+  }
+
+  .bloco-mochila .bloco-cannabis-copy,
+  .bloco-mochila .bloco-cannabis-cabecalho {
+    align-self: auto;
+  }
+
+  .bloco-mochila .btn {
+    align-self: flex-start;
+  }
+}
+
+@media (min-width: 120rem) {
+  .bloco-mochila-sprite {
+    width: calc(9.625rem + (100vw - 120rem) * 0.118);
+    height: calc(9.625rem + (100vw - 120rem) * 0.118);
+  }
+}
+
+/* 697 de largura do texto no desktop (Figma 1595:10866). */
+@container (min-width: 86rem) {
+  .bloco-mochila .bloco-cannabis-copy {
+    flex-basis: 43.5625rem;
+  }
+}
+
 /* ===== Selo giratório ===== 93 pixels de diâmetro, o miolo com 47, como no Figma. */
 
 .selo-giratorio {
