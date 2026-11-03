@@ -81,7 +81,7 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
               <p className="app-footer-title" id="app-footer-redes-titulo">Redes de apoio</p>
               <div className="app-footer-conteudo">
                 <a className="app-footer-item" href="/redes-de-apoio?tipo=publicas">
-                  <span>Profissionais</span>
+                  <span>Públicas</span>
                 </a>
                 <a className="app-footer-item" href="/redes-de-apoio?tipo=independentes">
                   <span>Independentes</span>

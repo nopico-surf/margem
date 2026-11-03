@@ -9,7 +9,7 @@ export function BlocoMochila() {
       <div className="bloco-cannabis-texto">
         <div className="bloco-cannabis-copy">
           <div className="bloco-cannabis-cabecalho">
-            <h2 id="bloco-mochila-titulo">Mochila do role</h2>
+            <h2 id="bloco-mochila-titulo">Mochila do rolê</h2>
             <p>
               Antes de sair, uma pergunta: o que vai na sua mochila? No fim,{" "}
               <strong>você descobre seu jeito de reduzir danos</strong>
