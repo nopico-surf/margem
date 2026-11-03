@@ -56,6 +56,7 @@ type PropsDeBotao = {
   redondo?: boolean;
   larguraTotal?: boolean;
 };
+  semPadding?: boolean;
 
 type Combinacao = { titulo: string; usadaEm: string; props: PropsDeBotao; conteudo: ReactNode };
 
@@ -63,10 +64,10 @@ type Combinacao = { titulo: string; usadaEm: string; props: PropsDeBotao; conteu
 // O Figma tem 246 variantes; o resto não está em uso, então não está aqui.
 const COMBINACOES: Combinacao[] = [
   {
-    titulo: "secondary / xx-small / canto 4",
-    usadaEm: "Header, botão Psicólogos e psiquiatras",
-    props: { variante: "secondary", tamanho: "xx-small" },
-    conteudo: "Psicólogos e psiquiatras",
+    titulo: "transparent / x-small / sem padding",
+    usadaEm: "Header, links Psicólogos e Psiquiatras",
+    props: { variante: "transparent", tamanho: "x-small", semPadding: true },
+    conteudo: "Psicólogos",
   },
   {
     titulo: "primary / x-small / redondo",
