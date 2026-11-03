@@ -4,7 +4,7 @@ import type { ComponentType } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { ContatoLink } from "@/components/ui/ContatoLink";
-import { IconeWhatsappRodape, IconeInstagramRodape, IconeEmailRodape, IconeFavorito, LogoMargem } from "@/components/icons";
+import { IconeWhatsappRodape, IconeInstagramRodape, IconeEmailRodape, IconeInstagramBotao, IconeFacebookBotao, LogoMargem } from "@/components/icons";
 import { CONTATOS, LINK_GRUPO_FACEBOOK, type TipoContato } from "@/lib/contatos";
 import { track } from "@/lib/mixpanel";
 
@@ -43,35 +43,66 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
     <footer className="app-footer" {...(compacto ? { "data-compacto": "true" } : {})}>
       <div className="app-footer-contatos">
         <LogoMargem className="app-footer-logo" />
-        <div className="app-footer-redes">
-          <p className="app-footer-title">Fale com a Margem</p>
-          <div className="app-footer-list">
-            {CONTATOS_RODAPE.map((contato) => {
-              const Icone = ICONES[contato.tipo];
-              return (
-                <ContatoLink
-                  key={contato.tipo}
-                  className="app-footer-item"
-                  href={contato.href}
-                  texto={contato.texto}
-                  externo={contato.externo}
-                  icone={<Icone />}
-                  onClick={() => track("contato_site_clicado", { origem: "rodape", tipo_contato: contato.tipo })}
-                />
-              );
-            })}
-          </div>
-        </div>
-        {!compacto && (
-          <nav className="app-footer-redes app-footer-secao-conteudo" aria-labelledby="app-footer-conteudo-titulo">
-            <p className="app-footer-title" id="app-footer-conteudo-titulo">Conteúdo</p>
-            <div className="app-footer-conteudo">
-              <a className="app-footer-item" href="/blog">
-                <span>Ler o blog</span>
-              </a>
+        <div className="app-footer-secoes">
+          <div className="app-footer-redes app-footer-secao-contatos">
+            <p className="app-footer-title">{compacto ? "Fale com a Margem" : "Contatos"}</p>
+            <div className="app-footer-list">
+              {CONTATOS_RODAPE.map((contato) => {
+                const Icone = ICONES[contato.tipo];
+                return (
+                  <ContatoLink
+                    key={contato.tipo}
+                    className="app-footer-item"
+                    href={contato.href}
+                    texto={contato.texto}
+                    externo={contato.externo}
+                    icone={<Icone />}
+                    onClick={() => track("contato_site_clicado", { origem: "rodape", tipo_contato: contato.tipo })}
+                  />
+                );
+              })}
             </div>
-          </nav>
-        )}
+          </div>
+          {!compacto && (
+            <nav className="app-footer-redes app-footer-secao-atendimento" aria-labelledby="app-footer-atendimento-titulo">
+              <p className="app-footer-title" id="app-footer-atendimento-titulo">Atendimento</p>
+              <div className="app-footer-conteudo">
+                <a className="app-footer-item" href="/profissionais">
+                  <span>Psicólogos</span>
+                </a>
+                <a className="app-footer-item" href="/profissionais?especialidade=medicos-psiquiatras">
+                  <span>Psiquiatras</span>
+                </a>
+              </div>
+            </nav>
+          )}
+          {!compacto && (
+            <nav className="app-footer-redes app-footer-secao-redes" aria-labelledby="app-footer-redes-titulo">
+              <p className="app-footer-title" id="app-footer-redes-titulo">Redes de apoio</p>
+              <div className="app-footer-conteudo">
+                <a className="app-footer-item" href="/redes-de-apoio?tipo=publicas">
+                  <span>Profissionais</span>
+                </a>
+                <a className="app-footer-item" href="/redes-de-apoio?tipo=independentes">
+                  <span>Independentes</span>
+                </a>
+              </div>
+            </nav>
+          )}
+          {!compacto && (
+            <nav className="app-footer-redes app-footer-secao-conteudo" aria-labelledby="app-footer-conteudo-titulo">
+              <p className="app-footer-title" id="app-footer-conteudo-titulo">Outros links</p>
+              <div className="app-footer-conteudo">
+                <a className="app-footer-item" href="/blog">
+                  <span>Blog</span>
+                </a>
+                <a className="app-footer-item" href="/mochila/cenarios">
+                  <span>Mochila do rolê</span>
+                </a>
+              </div>
+            </nav>
+          )}
+        </div>
       </div>
 
       {!compacto && (
@@ -85,9 +116,9 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
                 </h2>
                 <p>Informação, escuta e caminhos de cuidado sem julgamento para a sua rotina</p>
               </div>
-              <Button tamanho="x-small" href={LINK_INSTAGRAM} alvoExterno onClick={aoClicarNoInstagram}>
+              <Button tamanho="small" href={LINK_INSTAGRAM} alvoExterno onClick={aoClicarNoInstagram}>
+                <IconeInstagramBotao />
                 Seguir no Instagram
-                <IconeFavorito />
               </Button>
             </div>
             <div className="app-footer-card-foto">
@@ -101,9 +132,9 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
                 <h2 id="app-footer-card-titulo">Um espaço pra bater papo de perto</h2>
                 <p>Troca de ideias, conversas de perto e acolhimento na comunidade</p>
               </div>
-              <Button tamanho="x-small" href={LINK_GRUPO_FACEBOOK} alvoExterno onClick={aoClicarNoGrupo}>
+              <Button tamanho="small" href={LINK_GRUPO_FACEBOOK} alvoExterno onClick={aoClicarNoGrupo}>
+                <IconeFacebookBotao />
                 Participar no Facebook
-                <IconeFavorito />
               </Button>
             </div>
             <div className="app-footer-card-foto">

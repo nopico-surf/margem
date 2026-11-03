@@ -512,3 +512,11 @@ export function GlifoContentCopy({ className, color = "currentColor", opacity = 
     </svg>
   );
 }
+
+export function GlifoFacebook({ className, color = "currentColor", opacity = 1, size = 20 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M18.6021 10.2284C18.6021 5.55715 14.8163 1.77129 10.1451 1.77129C5.47389 1.77129 1.68803 5.55715 1.68803 10.2284C1.68803 14.1926 4.42006 17.5226 8.1035 18.4376V12.8117H6.35924V10.2284H8.1035V9.11506C8.1035 6.23768 9.4051 4.90305 12.2329 4.90305C12.7681 4.90305 13.6931 5.00876 14.073 5.11447V7.45338C13.8748 7.43356 13.5279 7.42034 13.0951 7.42034C11.7077 7.42034 11.1725 7.94561 11.1725 9.30997V10.2284H13.9342L13.4585 12.8117H11.1692V18.6226C15.3581 18.1172 18.6021 14.5527 18.6021 10.2284Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}

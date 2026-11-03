@@ -6,7 +6,7 @@ import { BotaoFecharMenu } from "@/components/ui/BotaoFecharMenu";
 import { MenuContatos } from "./MenuContatos";
 import { track } from "@/lib/mixpanel";
 import { urlDaEspecialidade, type Especialidade } from "@/components/conversa/FiltroEspecialidade";
-import { OPCOES_REDE, type TipoRede } from "@/lib/redes-apoio";
+import type { TipoRede } from "@/lib/redes-apoio";
 
 type SideMenuProps = {
   open: boolean;
@@ -56,6 +56,12 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
     router.push("/blog");
   }
 
+  function irParaMochila() {
+    track("mochila_menu_clicado", { rota });
+    onClose();
+    router.push("/mochila/cenarios");
+  }
+
   // Botão com router.push não tem o prefetch automático do <Link>, então sem isto a /profissionais só
   // começa a baixar no clique e a tela anterior fica parada até o servidor responder. Baixando quando
   // o menu abre, o clique já mostra o skeleton. As duas URLs são a mesma rota: o Next baixa uma vez só.
@@ -66,6 +72,7 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
     router.prefetch("/redes-de-apoio?tipo=publicas");
     router.prefetch("/redes-de-apoio?tipo=independentes");
     router.prefetch("/blog");
+    router.prefetch("/mochila/cenarios");
   }, [open, router, soContatos]);
 
   useEffect(() => {
@@ -128,22 +135,22 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
             <h2>Atendimento</h2>
             <div className="side-menu-professionals">
               <button type="button" onClick={() => irParaProfissionais("psicologo")}>Psicólogos</button>
-              <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Médicos e psiquiatras</button>
+              <button type="button" onClick={() => irParaProfissionais("psiquiatra")}>Psiquiatras</button>
             </div>
             <h2>Redes de apoio</h2>
             <div className="side-menu-professionals">
-              {OPCOES_REDE.map(({ valor, rotulo }) => (
-                <button key={valor} type="button" onClick={() => irParaRedesDeApoio(valor)}>{rotulo}</button>
-              ))}
+              <button type="button" onClick={() => irParaRedesDeApoio("publicas")}>Públicas</button>
+              <button type="button" onClick={() => irParaRedesDeApoio("independentes")}>Independentes</button>
             </div>
-            <h2>Conteúdo</h2>
+            <h2>Outros links</h2>
             <div className="side-menu-professionals">
               <button type="button" onClick={irParaBlog}>Blog</button>
+              <button type="button" onClick={irParaMochila}>Mochila do rolê</button>
             </div>
           </>
         )}
-        <h2>Fale com a Margem</h2>
-        <MenuContatos />
+        <h2>{soContatos ? "Fale com a Margem" : "Contatos e redes"}</h2>
+        <MenuContatos comGrupo={!soContatos} />
       </aside>
     </div>
   );

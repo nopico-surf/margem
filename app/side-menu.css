@@ -31,7 +31,7 @@
   justify-content: center;
   width: var(--size-48);
   min-height: 100svh;
-  padding: var(--spacing-14) var(--spacing-8);
+  padding: var(--spacing-8);
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -59,7 +59,7 @@
   z-index: var(--z-index-base);
   width: min(360px, calc(100vw - var(--size-48)));
   min-height: 100svh;
-  padding: var(--spacing-20) var(--spacing-24);
+  padding: var(--spacing-24);
   overflow: hidden;
   background: var(--colors-brand-primary-100);
   will-change: transform;
@@ -90,7 +90,7 @@
 .side-menu-professionals {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-12);
+  gap: var(--spacing-16);
 }
 
 .side-menu-professionals button {
@@ -186,11 +186,6 @@
   }
 }
 
-@media (max-width: 420px) {
-  .side-menu-panel {
-    padding: var(--spacing-20) var(--spacing-16);
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .side-menu--open .side-menu-backdrop,

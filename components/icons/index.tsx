@@ -13,7 +13,7 @@
 // assim e estender para `svg`.
 
 import {
-  GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoMenu, GlifoClose, GlifoArrowBack, GlifoDoubleArrowDown, GlifoCheckBox,
+  GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoFacebook, GlifoMenu, GlifoClose, GlifoArrowBack, GlifoDoubleArrowDown, GlifoCheckBox,
   GlifoQuestionAnswer, GlifoPanTool, GlifoLink, GlifoPlace, GlifoPhone, GlifoMessageFlye,
   GlifoInfo, GlifoLock, GlifoCached, GlifoSick, GlifoSentimentDissatisfied,
   GlifoPersonAddAlt1, GlifoSupport, GlifoMotionPhotosPaused, GlifoCheckCircle, GlifoMode,
@@ -108,6 +108,11 @@ const CONTATO = { color: "var(--colors-neutral-950)", opacity: 0.88 } as const;
 export const IconeWhatsappMenu = (p: IconProps) => <GlifoWhatsapp {...p} {...CONTATO} size={20} />;
 export const IconeInstagramMenu = (p: IconProps) => <GlifoInstagram {...p} {...CONTATO} size={20} />;
 export const IconeEmailMenu = (p: IconProps) => <GlifoEmail {...p} {...CONTATO} size={20} />;
+export const IconeFacebookMenu = (p: IconProps) => <GlifoFacebook {...p} {...CONTATO} size={20} />;
+
+// Ícone do botão do card do rodapé: segue a cor do botão (Figma: 12px, antes do texto).
+export const IconeInstagramBotao = (p: IconProps) => <GlifoInstagram {...p} />;
+export const IconeFacebookBotao = (p: IconProps) => <GlifoFacebook {...p} />;
 
 export const IconeWhatsappRodape = (p: IconProps) => <GlifoWhatsapp {...p} {...CONTATO} size={16} />;
 export const IconeInstagramRodape = (p: IconProps) => <GlifoInstagram {...p} {...CONTATO} size={16} />;

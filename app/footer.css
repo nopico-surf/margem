@@ -83,12 +83,27 @@
    (display:contents) pra logo, contatos e blog virarem itens da coluna do rodapé, e o order empurra
    o blog pra baixo. O gap do rodapé é o mesmo 16 do bloco, então o resto não se mexe. A partir de
    48em o bloco volta a ser flex (ver abaixo) e o blog fica embaixo dos contatos. */
-.app-footer:not([data-compacto="true"]) .app-footer-contatos {
+.app-footer:not([data-compacto="true"]) .app-footer-contatos,
+.app-footer:not([data-compacto="true"]) .app-footer-secoes {
   display:contents;
 }
 
-.app-footer-secao-conteudo {
+/* Figma: Contatos, Atendimento, Redes de apoio e Outros links, nessa ordem no mobile e no desktop. No
+   mobile as seções vêm depois dos cards; todas com o mesmo order, ficam na ordem do markup. */
+.app-footer-secoes > * {
   order:1;
+}
+
+/* Título e itens a 10 (o compacto segue com o espaço antigo). */
+.app-footer:not([data-compacto="true"]) .app-footer-redes {
+  gap:var(--spacing-10);
+}
+
+/* Fora do rodapé compacto o bloco das seções é solto; no compacto ele só carrega os contatos. */
+.app-footer-secoes {
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-16);
 }
 
 /* Card do grupo do Facebook */
@@ -136,13 +151,6 @@
   text-wrap:pretty;
 }
 
-/* O ícone do botão é 12 neste rodapé (o padrão do botão é 16). */
-.app-footer-card .btn img,
-.app-footer-card .btn svg {
-  width:12px;
-  height:12px;
-}
-
 /* Card inteiro clicável: o ::after do link (o botão) cobre o card, acima da foto. Sem o afundar do
    pressed, senão o botão vira o bloco de referência do ::after e ele encolhe no meio do clique. */
 .app-footer-card {
@@ -160,7 +168,9 @@
   transform:none;
 }
 
+/* Figma: no mobile os cards não têm foto. */
 .app-footer-card-foto {
+  display:none;
   position:relative;
   height:188.425px; /* Figma: 188,425 */
   border-radius:var(--radius-lg);
@@ -213,18 +223,19 @@
   .app-footer:not([data-compacto="true"]) {
     display:grid;
     grid-template-columns:repeat(2, calc((100% - 4 * var(--spacing-24)) / 3)) minmax(0, 1fr);
-    grid-template-rows:auto auto auto;
+    grid-template-rows:auto auto auto 1fr; /* a última linha absorve a altura dos contatos, pra os cards ficarem na altura do conteúdo */
     column-gap:var(--spacing-24);
     row-gap:0;
     align-items:start;
   }
 
-  .app-footer:not([data-compacto="true"]) .app-footer-contatos {
+  .app-footer:not([data-compacto="true"]) .app-footer-contatos,
+  .app-footer:not([data-compacto="true"]) .app-footer-secoes {
     display:flex;
   }
 
   .app-footer-contatos {
-    grid-row:1 / span 3;
+    grid-row:1 / span 4;
     gap:var(--spacing-32);
   }
 
@@ -233,7 +244,7 @@
     grid-row:1 / span 3;
     grid-template-rows:subgrid;
     row-gap:0;
-    align-self:stretch;
+    align-self:start;
   }
 
   .app-footer-card-texto {
@@ -253,6 +264,7 @@
   }
 
   .app-footer-card-foto {
+    display:block;
     grid-row:3;
   }
 
@@ -261,11 +273,10 @@
   }
 }
 
-/* Os contatos ficam todos numa linha ou todos um embaixo do outro, nunca quebrados. 28rem é a
-   largura deles juntos mais os espaços; abaixo disso empilham. Container query porque a coluna
-   dos contatos é metade da tela e a escala de breakpoints não mede isso. */
+/* Só o rodapé compacto põe os contatos em linha. No rodapé completo (Figma: rodape) eles são sempre
+   um embaixo do outro. */
 @container (min-width: 28rem) {
-  .app-footer-list {
+  .app-footer[data-compacto="true"] .app-footer-list {
     flex-direction:row;
     gap:var(--spacing-12);
   }
@@ -281,14 +292,11 @@
     display:inline;
   }
 
-  /* O card deita: texto na primeira metade, foto na segunda. As linhas de cima e de baixo (1fr) mantêm o
-     texto no centro da altura do card, e as duas do meio continuam sendo as mesmas nos dois cards. */
-  .app-footer {
-    grid-template-rows:1fr auto auto 1fr;
-  }
-
+  /* O card deita: texto ao lado da foto. As linhas 1 e 4 e o espaço extra das linhas 2 e 3 ficam em volta
+     do texto (título embaixo da linha 2, botão em cima da linha 3), que fica no centro da foto. A linha 5
+     (1fr) só absorve a altura dos contatos. */
   .app-footer-contatos {
-    grid-row:1 / span 4;
+    grid-row:1 / span 5;
   }
 
   .app-footer-card {
@@ -301,6 +309,7 @@
   .app-footer-card-cabecalho {
     grid-column:1;
     grid-row:2;
+    align-self:end;
     margin:0 var(--spacing-24);
   }
 
@@ -313,5 +322,13 @@
   .app-footer-card-foto {
     grid-column:2;
     grid-row:1 / span 4;
+  }
+}
+
+/* O próprio rodapé é o container (container:rodape), então a regra de cima não alcança as linhas dele:
+   aqui é media query, e a largura do rodapé é a da tela. */
+@media (min-width: 86rem) {
+  .app-footer:not([data-compacto="true"]) {
+    grid-template-rows:auto auto auto auto 1fr;
   }
 }
