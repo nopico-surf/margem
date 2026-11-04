@@ -1130,6 +1130,213 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Mão soltando um saquinho com pó branco sobre uma lixeira.",
     imagemCard: true,
   },
+  // Texto sobre a Lei de Drogas (03/11/2026). Mesma exceção de copy, autorizada pelo Vitor pra SEO. Conferido
+  // na tese do Tema 506 e na lei, sem revisão de advogado. Se o CNJ regulamentar ou a PEC 45 andar, atualizar.
+  {
+    slug: "lei-de-drogas",
+    publicadoEm: "2026-11-03",
+    atualizadoEm: "2026-11-03",
+    title: "Lei de Drogas: artigo 28, 40 g de maconha e STF | Margem",
+    descricao:
+      "Entenda a Lei de Drogas: artigos 28 e 33, o limite de 40 g de maconha definido pelo STF, seus direitos numa abordagem e onde encontrar apoio sem julgamento.",
+    h1: "Lei de Drogas: o que diz o artigo 28, o que mudou com o STF e onde buscar apoio",
+    abertura:
+      "Muita gente procura a Lei de Drogas com medo: depois de uma abordagem, por causa de alguém que ama, ou pra saber se o próprio uso pode dar problema com a polícia. A lei é confusa, e a decisão do Supremo Tribunal Federal (STF) sobre maconha mudou parte dela, não tudo. Aqui a gente explica o que vale hoje e onde encontrar apoio. Este texto informa, mas não substitui a orientação de um advogado ou da Defensoria Pública sobre o seu caso.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que é a Lei de Drogas?",
+        blocos: [
+          p("É a Lei nº 11.343, de 2006. Ela reúne as regras sobre prevenção, cuidado e repressão ao tráfico no Brasil. Os dois artigos mais procurados são o 28, sobre uso pessoal, e o 33, sobre tráfico."),
+          p("O que conta como droga pra essa lei é definido por uma lista do Ministério da Saúde, a Portaria SVS/MS nº 344, de 1998. Álcool e tabaco ficam fora dessa regra, mesmo podendo causar dependência e pedir cuidado."),
+        ],
+      },
+      {
+        titulo: "O que diz o artigo 28 da Lei de Drogas?",
+        blocos: [
+          p("O artigo 28 trata de quem compra, guarda, transporta ou leva droga consigo pra consumo pessoal, e também de quem cultiva uma pequena quantidade pra uso próprio. A lei não prevê prisão nesses casos. As medidas previstas no texto são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Advertência sobre os efeitos da droga",
+              "Prestação de serviços à comunidade",
+              "Comparecimento a programa ou curso educativo",
+            ],
+          },
+          p("Pra decidir se a droga era pra uso pessoal, o juiz olha a substância e a quantidade, o local e as condições da apreensão, as circunstâncias sociais e pessoais e os antecedentes da pessoa."),
+          p("O texto da lei nunca definiu uma quantidade. Na prática, isso deixou a diferença entre uso e tráfico nas mãos da polícia e da Justiça, e diferentes estudos mostram que o peso caiu mais sobre pessoas negras e pobres."),
+        ],
+      },
+      {
+        titulo: "O que diz o artigo 33 da Lei de Drogas?",
+        blocos: [
+          p("O artigo 33 trata do tráfico, e vai além de vender: inclui também oferecer, transportar, guardar ou entregar droga a alguém, mesmo de graça. A pena é de 5 a 15 anos de reclusão, mais multa. O tráfico é equiparado a crime hediondo, o que torna mais duras as regras de cumprimento da pena."),
+          p("Existe uma exceção importante, chamada tráfico privilegiado. A pena pode cair de um sexto a dois terços quando a pessoa é primária, tem bons antecedentes, não se dedica a atividades criminosas e não integra organização criminosa. O STF definiu, na Súmula Vinculante 63, que esse caso não é crime hediondo."),
+          p("Desde março de 2026, a Lei nº 15.358 também prevê pena em dobro quando o crime é cometido por integrante de organização criminosa ultraviolenta, grupo paramilitar ou milícia privada."),
+        ],
+      },
+      {
+        titulo: "O que o STF decidiu sobre o porte de maconha?",
+        blocos: [
+          p("Em junho de 2024, no julgamento conhecido como Tema 506 (Recurso Extraordinário 635.659), o STF decidiu que ter maconha pra consumo pessoal não é crime. Em fevereiro de 2025, o tribunal rejeitou por unanimidade os recursos contra essa decisão. O que vale hoje:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Comprar, guardar, transportar ou levar maconha pra consumo pessoal não é infração penal",
+              "Continua sendo proibido: a droga é apreendida e a conduta segue ilícita, só que fora da área criminal",
+              "A polícia apreende a maconha e notifica a pessoa pra comparecer à Justiça",
+              "O juiz pode aplicar advertência e curso educativo, sem nenhum efeito criminal. Serviços à comunidade ficam de fora",
+              "O STF mandou o Conselho Nacional de Justiça (CNJ) regulamentar esse procedimento. Até isso acontecer, os casos ficam nos Juizados Especiais Criminais, sem efeito penal na sentença",
+            ],
+          },
+          p("A decisão não legalizou a maconha. Vender continua sendo tráfico, e fumar em local público continua proibido."),
+        ],
+      },
+      {
+        titulo: "Quantas gramas de maconha é considerado uso pessoal?",
+        blocos: [
+          p("Até 40 gramas ou seis plantas fêmeas. Quem está nesse limite é presumido usuário, e a regra vale até o Congresso aprovar uma lei sobre isso. Só que esse número não funciona como garantia, e também não define tráfico sozinho."),
+          p("Com menos de 40 gramas, a polícia ainda pode prender por tráfico se houver elementos que indiquem venda, como:"),
+          {
+            tipo: "lista",
+            itens: [
+              "A forma como a droga está embalada",
+              "As circunstâncias da apreensão",
+              "A variedade de substâncias",
+              "Balança",
+              "Registros de vendas",
+              "Celular com contatos de pessoas que compram ou vendem",
+            ],
+          },
+          p("Nesses casos, o delegado precisa justificar em detalhes, sem critérios subjetivos arbitrários, e o juiz avalia essas razões na audiência de custódia."),
+          p("Com mais de 40 gramas, o juiz ainda pode concluir que era uso pessoal, se houver prova suficiente. Ao julgar os recursos, o relator do caso, ministro Gilmar Mendes, reforçou que a quantidade é só um dos critérios."),
+        ],
+      },
+      {
+        titulo: "A decisão do STF vale pra cocaína e outras drogas?",
+        blocos: [
+          p("Não. Ela vale só pra maconha. Ao julgar os recursos, o relator também afirmou que o entendimento não se estende a haxixe nem a skunk."),
+          p("Pra cocaína, crack, MDMA e as outras substâncias da lista, continua valendo o artigo 28 como está na lei. Ter essas drogas pra uso pessoal segue sendo crime, mas sem pena de prisão e sem prisão em flagrante: a pessoa vai ao juiz ou assina um compromisso de comparecer, e é feito um termo circunstanciado, o registro da ocorrência. Pra essas drogas não existe quantidade definida, e o juiz decide pelos critérios do artigo 28."),
+        ],
+      },
+      {
+        titulo: "O que acontece se eu for pego com maconha?",
+        blocos: [
+          p("Se a polícia entender que é uso pessoal, ela apreende a maconha e notifica você pra comparecer à Justiça. Ainda assim, a polícia pode levar a pessoa à delegacia, principalmente se suspeitar de tráfico, e a ocorrência pode ficar registrada. A aplicação da decisão também ainda varia de um lugar pra outro."),
+          p("Se a polícia entender que há indícios de venda, pode haver prisão em flagrante por tráfico, e aí valem as regras do artigo 33. Nesse caso, ter um advogado ou defensor desde o começo faz muita diferença."),
+        ],
+      },
+      {
+        titulo: "Quais são os meus direitos numa abordagem policial?",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "A revista sem mandado depende de fundada suspeita, baseada em algo concreto. O STJ tem decidido que nervosismo isolado ou denúncia anônima sem outros elementos não bastam",
+              "Você tem direito de ficar em silêncio e não precisa produzir prova contra si",
+              "Ninguém pode sofrer tortura nem tratamento desumano ou degradante",
+              "Se houver prisão, você tem direito a advogado ou defensor, a avisar a família e a saber quem está prendendo",
+            ],
+          },
+          p("Se você achar que seus direitos não foram respeitados, costuma ser mais seguro questionar depois do que durante a abordagem. Vale anotar local, horário e o que conseguir identificar dos policiais e da viatura. Em alguns casos, a Justiça anula provas de uma revista ilegal."),
+          p("Se você não tem como pagar advogado, a Defensoria Pública do seu estado atende de graça quem não tem condições."),
+        ],
+      },
+      {
+        titulo: "Porte de drogas deixa ficha suja?",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "Maconha pra uso pessoal: o STF afastou o registro na ficha de antecedentes criminais",
+              "Outras drogas pra uso pessoal: o Superior Tribunal de Justiça (STJ) entende que a condenação pelo artigo 28 não gera reincidência, e há decisões afastando também os maus antecedentes. O processo, porém, continua existindo",
+              "Tráfico: a condenação gera antecedentes criminais e pode gerar reincidência",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "O que é a PEC das Drogas e em que pé ela está?",
+        blocos: [
+          p("É a Proposta de Emenda à Constituição nº 45, de 2023, apresentada pelo senador Rodrigo Pacheco durante o julgamento do STF. Ela quer colocar na Constituição que a posse e o porte de droga sem autorização são crime, em qualquer quantidade, mantendo a distinção entre traficante e usuário."),
+          p("O Senado aprovou o texto em abril de 2024, e a Comissão de Constituição e Justiça da Câmara aprovou a admissibilidade em junho do mesmo ano. A partir daí, a proposta parou. Em novembro de 2026, a ficha da Câmara mostra que ela ainda aguarda a formação da comissão especial. Enquanto não for aprovada pelos deputados e promulgada, a PEC não muda nada, e segue valendo a decisão do STF."),
+        ],
+      },
+      {
+        titulo: "Contar sobre o uso pra um profissional pode me complicar?",
+        blocos: [
+          p("Psicólogos e médicos têm sigilo profissional garantido pelos seus códigos de ética. Eles não avisam polícia, família nem trabalho sobre o que você conta. As exceções são raras e envolvem risco sério à vida. Conversar com esses profissionais também não leva a internação. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Preciso parar de usar pra procurar ajuda?",
+        blocos: [
+          p("Não. Nem toda pessoa que usa quer ou precisa parar, e dá pra buscar cuidado do jeito que você está. Pra algumas pessoas, o caminho é parar de vez. Pra outras, é usar menos e com menos risco. [Ler sobre redução de danos](/blog/reducao-de-danos)"),
+          p("Vale prestar atenção se você precisa de mais pra sentir o mesmo efeito, já tentou diminuir e não conseguiu, ou o uso começou a atrapalhar o trabalho, os estudos ou as suas relações. [Ler sobre como parar de fumar maconha](/blog/como-parar-de-fumar-maconha) [Ler sobre como parar de usar cocaína](/blog/como-parar-de-usar-cocaina)"),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio?",
+        blocos: [
+          p("Na Margem, você escolhe o valor dentro da faixa e não precisa explicar por quê. A sessão com psicólogo registrado no CRP custa de R$ 60 a R$ 200, e a consulta online com psiquiatra registrado no CRM, de R$ 110 a R$ 290. [Ver como conferir o registro de um profissional](/blog/como-saber-se-o-psicologo-e-registrado)"),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Narcóticos Anônimos e Alcoólicos Anônimos têm reuniões presenciais e online, sem custo. Pra familiares, existe o Nar-Anon. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Porte de maconha é crime?",
+        resposta:
+          "Pra consumo pessoal, não. Em 2024, o STF decidiu que não é infração penal, mas continua proibido: a droga é apreendida e o juiz pode aplicar advertência e curso educativo, sem efeito criminal. Vender continua sendo tráfico.",
+      },
+      {
+        pergunta: "Posso ser preso com menos de 40 gramas de maconha?",
+        resposta:
+          "Pode, se houver elementos que indiquem venda, como balança, registros de vendas ou a forma de embalar. Nesse caso, o delegado precisa justificar em detalhes, e o juiz avalia as razões na audiência de custódia.",
+      },
+      {
+        pergunta: "Mais de 40 gramas de maconha é tráfico?",
+        resposta:
+          "Não automaticamente. O juiz pode concluir que era uso pessoal, se houver prova suficiente. A quantidade é só um dos critérios.",
+      },
+      {
+        pergunta: "Fumar maconha na rua é permitido?",
+        resposta: "Não. A decisão do STF não legalizou a maconha, e fumar em local público continua proibido.",
+      },
+      {
+        pergunta: "A decisão do STF vale pra cocaína?",
+        resposta:
+          "Não, ela vale só pra maconha. Ter cocaína pra uso pessoal segue sendo crime pelo artigo 28, mas sem pena de prisão.",
+      },
+      {
+        pergunta: "Porte de drogas gera antecedentes criminais?",
+        resposta:
+          "Pra maconha de uso pessoal, o STF afastou o registro na ficha de antecedentes. Pra outras drogas, o STJ entende que a condenação pelo artigo 28 não gera reincidência, e há decisões afastando também os maus antecedentes. Já a condenação por tráfico gera antecedentes criminais.",
+      },
+      {
+        pergunta: "Tenho uma condenação antiga por maconha. A decisão do STF me ajuda?",
+        resposta:
+          "Pode ajudar. O STF não limitou a decisão no tempo e mandou fazer mutirões pra revisar prisões fora dos novos parâmetros. Cada caso depende do processo, e a Defensoria Pública pode orientar.",
+      },
+      {
+        pergunta: "A PEC das Drogas já está valendo?",
+        resposta:
+          "Não. O Senado aprovou o texto em 2024, mas em novembro de 2026 ele ainda aguardava a formação de uma comissão especial na Câmara.",
+      },
+      {
+        pergunta: "Preciso parar de usar pra fazer terapia na Margem?",
+        resposta:
+          "Não. Você pode começar do jeito que está e, junto com o profissional, escolher o caminho: parar de vez ou usar menos e com menos risco.",
+      },
+    ],
+    // Sem imagem por enquanto. Ao subir /public/blog/lei-de-drogas.webp, virar pra true e preencher o alt.
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
