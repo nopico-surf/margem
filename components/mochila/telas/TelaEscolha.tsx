@@ -14,9 +14,12 @@ export function TelaEscolha() {
   useEffect(() => setCenarios(CENARIOS.filter((c) => cenarioAtivo(c))), []);
   return (
     <>
-      <header className="mochila-cabeca mochila-cabeca-linha">
-        <h1 className="mochila-titulo">Pra onde você vai?</h1>
-        <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} />
+      <header className="mochila-cabeca">
+        <div className="mochila-cabeca-linha">
+          <h1 className="mochila-titulo">Pra onde você vai?</h1>
+          <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} />
+        </div>
+        <p className="mochila-instrucao">Se não for pra nenhum desses lugares, escolha algum apenas para simular.</p>
       </header>
       <div className="mochila-painel">
         {/* Quem volta pra cá vê marcado o cenário em que estava; tocar nele de novo não apaga a mochila. */}

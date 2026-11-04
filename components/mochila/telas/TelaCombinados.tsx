@@ -31,10 +31,12 @@ export function TelaCombinados() {
     <>
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
-          <h1 className="mochila-titulo">Tem coisa que não ocupa espaço</h1>
+          <div className="mochila-cabeca-texto">
+            <h1 className="mochila-titulo">Tem coisa que não ocupa espaço</h1>
+            <p className="mochila-instrucao">Uns combinados antes de sair também vão junto. Marca os que você vai fazer.</p>
+          </div>
           <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} />
         </div>
-        <p className="mochila-instrucao">Uns combinados antes de sair também vão junto. Marca os que você vai fazer.</p>
       </header>
       <div className="mochila-painel mochila-painel-montagem">
         <fieldset className="mochila-combinados">

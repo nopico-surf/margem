@@ -16,10 +16,12 @@ export function TelaTribo() {
     <>
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
-          <h1 className="mochila-titulo">Que som te leva pro rolê?</h1>
+          <div className="mochila-cabeca-texto">
+            <h1 className="mochila-titulo">Que som te leva pro rolê?</h1>
+            <p className="mochila-instrucao">Toca no que mais combina com o seu rolê.</p>
+          </div>
           <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-aberta")} />
         </div>
-        <p className="mochila-instrucao">Toca no que mais combina com o seu rolê.</p>
       </header>
       <div className="mochila-painel mochila-painel-montagem">
         <div className="mochila-opcoes" data-colunas="3">
