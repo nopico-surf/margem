@@ -46,7 +46,7 @@ export default function CarregandoGuia() {
           <ContainerConteudo id="guia-profissionais-topo">
             <CardHeader title="Profissionais que podem ajudar" />
             <span className="figma-skeleton blog-osso-valor" />
-            <ActionRow className="figma-professionals-row figma-professionals-row--esquerda" origem="profissionais">
+            <ActionRow className="figma-professionals-row" origem="profissionais">
               {[0, 1, 2, 3, 4].map((i) => (
                 <CardProfissionalSkeleton key={i} />
               ))}

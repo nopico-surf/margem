@@ -242,7 +242,8 @@
   margin-right:auto;
 }
 
-/* Psicólogos e psiquiatras começam na esquerda, em vez de centralizar quando os cards cabem. */
+/* Dentro de um container (resultado, blog) os cards que cabem na fileira ficam centralizados. Só a home,
+   que não tem container, começa na esquerda. */
 .figma-professionals-row--esquerda>:first-child {
   margin-left:0;
 }

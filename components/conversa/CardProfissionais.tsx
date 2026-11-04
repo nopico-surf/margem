@@ -93,7 +93,7 @@ export function CardProfissionais({
           <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
         )}
         {valorDoGuia}
-        <ActionRow className="figma-professionals-row figma-professionals-row--esquerda" origem="profissionais">
+        <ActionRow className="figma-professionals-row" origem="profissionais">
           {[0, 1, 2, 3, 4].map((i) => <CardProfissionalSkeleton key={i} />)}
         </ActionRow>
       </ContainerConteudo>
@@ -162,7 +162,7 @@ export function CardProfissionais({
         ) : profissionaisFiltrados.length === 1 ? (
           <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} origem={origem} />
         ) : (
-          <ActionRow className="figma-professionals-row figma-professionals-row--esquerda" origem="profissionais">
+          <ActionRow className="figma-professionals-row" origem="profissionais">
             {profissionaisFiltrados.map((profissional, index) => (
               <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} origem={origem} key={profissional.id} />
             ))}
@@ -185,7 +185,7 @@ export function CardProfissionais({
       ) : profissionaisFiltrados.length === 1 ? (
         <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} />
       ) : (
-        <ActionRow className="figma-professionals-row figma-professionals-row--esquerda" origem="profissionais">
+        <ActionRow className={naHome ? "figma-professionals-row figma-professionals-row--esquerda" : "figma-professionals-row"} origem="profissionais">
           {profissionaisFiltrados.map((profissional, index) => (
             <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
           ))}
