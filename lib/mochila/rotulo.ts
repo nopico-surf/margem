@@ -33,9 +33,11 @@ export function rotulo(cenario: CenarioId, itens: string[], combinados: number[]
 // O item de cuidado de menor prioridade que não foi levado. Item sem prioridade (rolê e nível 2)
 // nunca entra: cobrar um cuidado de uso de quem talvez nem precise soa como acusação.
 export function ficouDeFora(cenario: CenarioId, itens: string[]): string | null {
-  const oferecidos = CENARIOS.find((c) => c.id === cenario)?.itens ?? [];
+  const dados = CENARIOS.find((c) => c.id === cenario);
+  const oferecidos = dados?.itens ?? [];
+  const semCobrar = dados?.semCobrar ?? [];
   const candidatos = oferecidos
-    .filter((id) => !itens.includes(id) && ITENS[id].prioridade !== null)
+    .filter((id) => !itens.includes(id) && !semCobrar.includes(id) && ITENS[id].prioridade !== null)
     .sort((a, b) => (ITENS[a].prioridade ?? 0) - (ITENS[b].prioridade ?? 0));
   return candidatos[0] ?? null;
 }

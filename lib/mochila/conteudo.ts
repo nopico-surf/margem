@@ -35,6 +35,8 @@ export type Cenario = {
   combinados: string[];
   // Índices dos combinados de ponto de encontro ou de volta (eixo Volta x Presença).
   combinadosVolta: number[];
+  // Itens oferecidos que não fazem sentido cobrar como "ficou de fora" neste cenário.
+  semCobrar?: string[];
   // Janela do cenário sazonal (ISO, inclusive). Fora dela some da escolha; link de desafio continua.
   fim?: string;
   selo?: string;
@@ -91,6 +93,8 @@ export const CENARIOS: Cenario[] = [
     itens: [...COMUNS_IDS, "remedio", "caixa-de-som", "maquiagem"],
     combinados: ["Combinar com quem você volta.", "Avisar alguém que horas pretende chegar.", "Saber o endereço exato da festa.", COPO],
     combinadosVolta: [0],
+    // Ninguém leva água pra casa dos outros.
+    semCobrar: ["garrafa"],
   },
   {
     id: "show",

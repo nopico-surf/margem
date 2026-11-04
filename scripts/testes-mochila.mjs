@@ -121,10 +121,16 @@ teste("toda frase de rótulo começa igual", () => {
 });
 
 teste("ficou de fora: menor prioridade e nunca item de nível 2", () => {
-  assert.equal(ficouDeFora("festa", []), "garrafa");
+  assert.equal(ficouDeFora("show", []), "garrafa");
   assert.equal(ficouDeFora("festa", ["garrafa", "telefone"]), "dinheiro");
   const todos = CENARIOS[0].itens.filter((id) => ITENS[id].prioridade !== null);
   assert.equal(ficouDeFora("festa", todos), null);
+});
+
+teste("ficou de fora: festa na casa de alguém não cobra a água", () => {
+  assert.equal(ficouDeFora("festa", []), "telefone");
+  const semAgua = CENARIOS[0].itens.filter((id) => id !== "garrafa" && ITENS[id].prioridade !== null);
+  assert.equal(ficouDeFora("festa", semAgua), null);
 });
 
 teste("cada cenário oferece 17 itens e mais de 9 espaços", () => {
