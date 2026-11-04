@@ -1143,7 +1143,8 @@ export const GUIAS: Guia[] = [
     abertura:
       "Muita gente procura a Lei de Drogas com medo: depois de uma abordagem, por causa de alguém que ama, ou pra saber se o próprio uso pode dar problema com a polícia. A lei é confusa, e a decisão do Supremo Tribunal Federal (STF) sobre maconha mudou parte dela, não tudo. Aqui a gente explica o que vale hoje e onde encontrar apoio. Este texto informa, mas não substitui a orientação de um advogado ou da Defensoria Pública sobre o seu caso.",
     carrossel: ["psicologo", "psiquiatra"],
-    carrosselTopo: true,
+    // No topo, logo depois de falar da lei, "Profissionais que podem ajudar" parecia oferecer advogado.
+    carrosselTopo: false,
     secoes: [
       {
         titulo: "O que é a Lei de Drogas?",
