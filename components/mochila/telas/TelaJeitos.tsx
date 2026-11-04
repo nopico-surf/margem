@@ -31,12 +31,10 @@ export function TelaJeitos() {
     <>
       <header className="mochila-cabeca">
         <div className="mochila-cabeca-linha">
-          <div className="mochila-cabeca-texto">
-            <h1 className="mochila-titulo">E qual é o seu jeito no rolê?</h1>
-            <p className="mochila-instrucao">Escolhe dois jeitos que combinam com você.</p>
-          </div>
+          <h1 className="mochila-titulo">E qual é o seu jeito no rolê?</h1>
           <SpriteMochila className="mochila-sprite-cabeca" src={spriteDe("mochila-fechada")} />
         </div>
+        <p className="mochila-instrucao">Escolhe dois jeitos que combinam com você.</p>
       </header>
       <div className="mochila-painel mochila-painel-montagem">
         <div className="mochila-painel-topo">
