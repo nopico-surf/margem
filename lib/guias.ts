@@ -1361,9 +1361,9 @@ export const GUIAS: Guia[] = [
           "Não. Você pode começar do jeito que está e, junto com o profissional, escolher o caminho: parar de vez ou usar menos e com menos risco.",
       },
     ],
-    // Sem imagem por enquanto. Ao subir /public/blog/lei-de-drogas.webp, virar pra true e preencher o alt.
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Juiz batendo o martelo em frente a um cigarro de maconha embalado sobre a mesa.",
+    imagemCard: true,
   },
 ];
 
