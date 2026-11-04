@@ -171,7 +171,9 @@
 .guia-tabela table {
   width: 100%;
   min-width: 44rem;
-  border-collapse: collapse;
+  /* Com collapse, a borda da coluna parada some ao rolar: ela fica na tabela, não na célula. */
+  border-collapse: separate;
+  border-spacing: 0;
   font-family: var(--font-inter), sans-serif;
   font-size: var(--font-size-sm);
   line-height: var(--line-height-xl);
@@ -214,6 +216,11 @@
   position: sticky;
   left: 0;
   width: 8rem;
+}
+
+/* A última coluna não precisa: quem fecha a tabela é a borda da faixa. */
+.guia-tabela th:not(:last-child),
+.guia-tabela td:not(:last-child) {
   border-right: var(--border-width-thin) solid var(--colors-neutral-200);
 }
 
