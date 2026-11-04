@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GuiaCabecalho } from "./GuiaCabecalho";
+import { GuiaEsqueleto } from "./GuiaEsqueleto";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
@@ -144,13 +145,14 @@ function Carrossel({ guia, posicao }: { guia: Guia; posicao: "topo" | "fim" }) {
   );
 }
 
-// O params fica dentro do Suspense (exigência da navegação instantânea). Como os slugs saem do
-// generateStaticParams, o HTML gerado no build já vem com o guia inteiro, sem o fallback vazio.
+// O params fica dentro do Suspense (exigência da navegação instantânea). É este Suspense que a tela
+// pinta enquanto o texto chega, não o loading.tsx da rota: aquele só abre se a própria página
+// suspender, e ela devolve na hora. Por isso o fallback é o esqueleto, e não um `.guia` vazio.
 export default function GuiaPage({ params }: Props) {
   return (
     <main className="figma-result-page guia-pagina">
       <GuiaCabecalho />
-      <Suspense fallback={<div className="guia" />}>
+      <Suspense fallback={<GuiaEsqueleto />}>
         <GuiaConteudo params={params} />
       </Suspense>
       <Footer />
