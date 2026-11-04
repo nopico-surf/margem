@@ -23,6 +23,8 @@ export type BlocoGuia =
   | { tipo: "paragrafo"; texto: string }
   | { tipo: "lista-numerada"; itens: string[] }
   | { tipo: "lista"; itens: string[] }
+  // A primeira célula de cada linha é o título da linha.
+  | { tipo: "tabela"; legenda: string; colunas: string[]; linhas: string[][] }
   | { tipo: "botoes"; botoes: { texto: string; href: string }[] };
 
 export type SecaoGuia = { titulo: string; blocos: BlocoGuia[] };
@@ -1222,6 +1224,26 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "Qual a diferença entre usuário e traficante na Lei de Drogas?",
+        blocos: [
+          p("A diferença está na finalidade, não só na quantidade: o artigo 28 trata de quem tem droga pra consumo pessoal, e o artigo 33, de quem vende ou fornece. Esta tabela resume como cada situação é tratada hoje:"),
+          {
+            tipo: "tabela",
+            legenda: "Como a lei trata a maconha pra uso pessoal, as outras drogas pra uso pessoal e o tráfico",
+            colunas: ["Ponto", "Maconha pra uso pessoal", "Outras drogas pra uso pessoal", "Tráfico"],
+            linhas: [
+              ["Artigo da lei", "Artigo 28, com a decisão do STF", "Artigo 28", "Artigo 33"],
+              ["É crime?", "Não. É um ilícito fora da área criminal", "Sim, de menor potencial ofensivo", "Sim. É equiparado a hediondo, menos no tráfico privilegiado"],
+              ["Quantidade", "Até 40 g ou 6 plantas fêmeas é presumido uso pessoal, mas essa presunção pode ser afastada", "Não há quantidade definida. O juiz decide pelos critérios do artigo 28", "Não há quantidade definida. Conta o que indica venda ou fornecimento"],
+              ["O que a lei prevê", "Advertência e curso educativo, sem efeito criminal", "Advertência, serviços à comunidade ou curso educativo", "De 5 a 15 anos de reclusão e multa"],
+              ["O que a polícia faz", "Apreende a droga e notifica a pessoa pra comparecer à Justiça", "Faz o termo circunstanciado, sem prisão em flagrante", "Pode prender em flagrante e abrir inquérito"],
+              ["Ficha", "Sem registro de antecedentes criminais", "Não gera reincidência, segundo o STJ, e há decisões afastando os maus antecedentes", "Gera antecedentes criminais e pode gerar reincidência"],
+            ],
+          },
+          p("A tabela mostra a regra geral. A polícia pode entender uma situação de um jeito e a Justiça decidir de outro, e cada caso depende das circunstâncias. Responder a um processo não impede de buscar cuidado."),
+        ],
+      },
+      {
         titulo: "O que acontece se eu for pego com maconha?",
         blocos: [
           p("Se a polícia entender que é uso pessoal, ela apreende a maconha e notifica você pra comparecer à Justiça. Ainda assim, a polícia pode levar a pessoa à delegacia, principalmente se suspeitar de tráfico, e a ocorrência pode ficar registrada. A aplicação da decisão também ainda varia de um lugar pra outro."),
@@ -1293,6 +1315,11 @@ export const GUIAS: Guia[] = [
         pergunta: "Porte de maconha é crime?",
         resposta:
           "Pra consumo pessoal, não. Em 2024, o STF decidiu que não é infração penal, mas continua proibido: a droga é apreendida e o juiz pode aplicar advertência e curso educativo, sem efeito criminal. Vender continua sendo tráfico.",
+      },
+      {
+        pergunta: "Qual a diferença entre usuário e traficante?",
+        resposta:
+          "A diferença está na finalidade: o artigo 28 trata de quem tem droga pra consumo pessoal, e o artigo 33, de quem vende ou fornece, mesmo de graça. Pra maconha, até 40 gramas ou seis plantas fêmeas é presumido uso pessoal, mas essa presunção pode ser afastada.",
       },
       {
         pergunta: "Posso ser preso com menos de 40 gramas de maconha?",

@@ -90,6 +90,34 @@ function Bloco({ bloco }: { bloco: BlocoGuia }) {
           ))}
         </ul>
       );
+    case "tabela":
+      // A faixa rola no celular: o tabIndex deixa rolar pelo teclado, e o role e o nome explicam o foco.
+      return (
+        <div className="guia-tabela" role="region" aria-label={bloco.legenda} tabIndex={0}>
+          <table>
+            <caption>{bloco.legenda}</caption>
+            <thead>
+              <tr>
+                {bloco.colunas.map((coluna) => (
+                  <th key={coluna} scope="col">
+                    {coluna}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bloco.linhas.map(([titulo, ...celulas]) => (
+                <tr key={titulo}>
+                  <th scope="row">{titulo}</th>
+                  {celulas.map((celula, index) => (
+                    <td key={index}>{celula}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
     case "botoes":
       return (
         <div className="guia-botoes">

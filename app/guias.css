@@ -160,6 +160,63 @@
   gap: var(--spacing-12);
 }
 
+/* Tabela de comparação. No celular ela não cabe: a faixa rola de lado, sem empurrar a página, e a
+   primeira coluna fica parada pra não perder de vista qual é a linha. */
+.guia-tabela {
+  overflow-x: auto;
+  border: var(--border-width-thin) solid var(--colors-neutral-200);
+  border-radius: var(--radius-lg);
+}
+
+.guia-tabela table {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+/* A legenda fica só pro leitor de tela e pro Google: o parágrafo acima já apresenta a tabela, e
+   visível ela teria a largura da tabela inteira e cortaria no celular. */
+.guia-tabela caption {
+  position: absolute;
+  width: var(--spacing-1);
+  height: var(--spacing-1);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.guia-tabela th,
+.guia-tabela td {
+  padding: var(--spacing-12);
+  border-top: var(--border-width-thin) solid var(--colors-neutral-200);
+  text-align: left;
+  vertical-align: top;
+}
+
+.guia-tabela th {
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--colors-neutral-950);
+}
+
+.guia-tabela thead th {
+  border-top: var(--border-width-none);
+  background: var(--colors-neutral-50);
+}
+
+.guia-tabela tbody th {
+  background: var(--colors-neutral-0);
+}
+
+.guia-tabela th:first-child {
+  position: sticky;
+  left: 0;
+  width: 8rem;
+  border-right: var(--border-width-thin) solid var(--colors-neutral-200);
+}
+
 /* O carrossel e os links "Ver todos" ficam na mesma faixa cinza. */
 .guia-carrossel {
   display: flex;
