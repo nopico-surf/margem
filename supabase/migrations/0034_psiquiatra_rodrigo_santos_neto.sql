@@ -14,7 +14,7 @@ values
   'gratuito', 'geral', '72768', '/assets/professional-rodrigo-santos-neto.webp',
   $bio$Minha experiência é construída a partir de 9 anos de prática médica e a vivência em diferentes contextos de cuidado em saúde mental, incluindo atendimento ambulatorial em psiquiatria e atuação em CAPS.$bio$,
   '["Redução de Danos","Depressão","Ansiedade","Manejo de Abstinência","TDAH","Cannabis Medicinal"]',
-  'https://wa.me/5511968996977', true, null,
+  'https://wa.me/5511966289223', true, null,
   '[{"curso":"Medicina","nivel":"Graduação","conclusao":2017,"instituicao":null},
     {"curso":"Medicina de Família e Comunidade","nivel":"Título com RQE","conclusao":null,"instituicao":null},
     {"curso":"Psiquiatria","nivel":"Pós-graduação","conclusao":2024,"instituicao":"EBRAMED, Escola Brasileira de Medicina"},

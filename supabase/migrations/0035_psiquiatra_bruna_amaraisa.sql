@@ -13,7 +13,7 @@ values
   'gratuito', 'geral', '239473', '/assets/professional-bruna-amaraisa-da-silva.webp',
   $bio$Atendo Psiquiatria há 3 anos, CAPS, ambulatório de psiquiatria, e consultório particular.$bio$,
   '["Avaliação Diagnóstica","Psicofarmacologia Clínica","Depressão","Transtorno Bipolar","Ansiedade","TDAH","Transtornos Mentais Graves","Cannabis Medicinal"]',
-  'https://wa.me/5516997736676', true, null,
+  'https://wa.me/5511966289223', true, null,
   '[{"curso":"Medicina","nivel":"Graduação","conclusao":2022,"instituicao":"FAM"},
     {"curso":"Psiquiatria","nivel":"Pós-graduação","conclusao":2026,"instituicao":"Mandic"}]',
   2022
