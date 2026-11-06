@@ -739,14 +739,14 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   object-fit: contain;
 }
 
-/* Botão de 288 (largura toda) no mobile e de 148 (do conteúdo) do tablet em diante, como no Figma. */
+/* Botão do conteúdo (hug) em todas as telas. No mobile o Figma desenha 288 (fill), mas a decisão foi hug. */
 .bloco-mochila .bloco-cannabis-copy,
 .bloco-mochila .bloco-cannabis-cabecalho {
   align-self: stretch;
 }
 
 .bloco-mochila .btn {
-  align-self: stretch;
+  align-self: flex-start;
 }
 
 @media (min-width: 48em) {
@@ -757,10 +757,6 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   .bloco-mochila .bloco-cannabis-copy,
   .bloco-mochila .bloco-cannabis-cabecalho {
     align-self: auto;
-  }
-
-  .bloco-mochila .btn {
-    align-self: flex-start;
   }
 }
 
