@@ -2684,7 +2684,7 @@ export const GUIAS: Guia[] = [
         blocos: [
           p("MDMA é a sigla de metilenodioximetanfetamina, uma substância feita em laboratório, parente das anfetaminas. Ela é estimulante, dá energia e deixa a pessoa mais acordada, e também muda a forma de sentir: aumenta a sensação de proximidade com os outros, o prazer com a música e com o toque, e às vezes altera um pouco a percepção de cores e sons."),
           p("Ela age no cérebro liberando de uma vez grandes quantidades de serotonina, dopamina e noradrenalina, substâncias ligadas ao humor, ao prazer e à energia. É por isso que o efeito é tão intenso e também por isso que muita gente se sente para baixo nos dias seguintes."),
-          p("No Brasil, o MDMA está na lista de substâncias proibidas da Anvisa e não tem uso médico aprovado. Por isso, o que circula é sempre feito e vendido sem nenhum controle."),
+          p("No Brasil, o MDMA está na lista de substâncias proibidas da Anvisa e não tem uso médico aprovado. Por isso, o que circula é sempre feito e vendido sem nenhum controle. [Entender o que diz a Lei de Drogas](/blog/lei-de-drogas)"),
         ],
       },
       {
@@ -2877,7 +2877,7 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "MDMA é ilegal?",
         resposta:
-          "Sim. No Brasil, o MDMA está na lista de substâncias proibidas da Anvisa. Ter pra uso pessoal é crime, mas sem pena de prisão. [Entender o que diz a Lei de Drogas](/blog/lei-de-drogas)",
+          "Sim. No Brasil, o MDMA está na lista de substâncias proibidas da Anvisa. Ter pra uso pessoal é crime, mas sem pena de prisão.",
       },
       {
         pergunta: "MDMA é usado em tratamento?",
@@ -2890,8 +2890,9 @@ export const GUIAS: Guia[] = [
           "Pode, mas é raro. As mortes costumam envolver calor do corpo muito alto, água demais, mistura com outras substâncias ou comprimido com outra droga dentro. Se a pessoa está muito quente, confusa, desmaia ou tem convulsão, ligue para o SAMU no 192.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mão segurando um saquinho plástico fechado com cristais cor de âmbar, com uma cozinha clara e plantas desfocadas ao fundo.",
+    imagemCard: true,
   },
 ];
 
