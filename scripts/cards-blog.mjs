@@ -30,6 +30,7 @@ const RECORTES = {
   "como-parar-de-usar-cocaina": { sujeito: [880, 1360], topo: 160, largura: 1800 },
   "lei-de-drogas": { sujeito: [600, 1570], topo: 50, largura: 1900 },
   "como-parar-de-usar-drogas": { sujeito: [700, 1370], topo: 100, largura: 1800 },
+  "o-que-e-terapia": { sujeito: [210, 1555], topo: 60, largura: 1760 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {

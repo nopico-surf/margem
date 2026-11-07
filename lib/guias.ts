@@ -1708,8 +1708,9 @@ export const GUIAS: Guia[] = [
           "Depende do profissional. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e você escolhe o valor dentro da faixa. Pelo SUS e em clínicas-escola de faculdades, o atendimento é gratuito, com espera maior.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mulher sentada à mesa em videochamada com um terapeuta pelo notebook.",
+    imagemCard: true,
   },
   // Guia de abstinência (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
   // sintomas-de-abstinencia.md). Formato dos títulos: perguntas (os guias alternam com o afirmativo pra comparar,
