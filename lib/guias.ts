@@ -1544,6 +1544,172 @@ export const GUIAS: Guia[] = [
     imagem: false,
     imagemAlt: "",
   },
+  // Guia de entrada sobre terapia (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/o-que-e-terapia.md). A pedido do Vitor, os títulos das seções são afirmativos e as
+  // perguntas ficam só nas perguntas frequentes. Mesma exceção de copy dos outros guias.
+  {
+    slug: "o-que-e-terapia",
+    publicadoEm: "2026-11-06",
+    atualizadoEm: "2026-11-06",
+    title: "O que é terapia, como funciona e quando procurar | Margem",
+    descricao:
+      "Entenda o que é terapia, como é uma sessão, os principais tipos, o que fica em sigilo e onde fazer, inclusive a valor social. Sem precisar estar em crise.",
+    h1: "O que é terapia, como funciona e quando procurar",
+    abertura:
+      "Muita gente pensa em fazer terapia e adia porque não sabe direito como é. Não sabe o que vai acontecer na primeira sessão, o que falar, quanto custa ou se o que está vivendo é sério o bastante. Aqui você encontra o básico pra decidir com mais calma: o que é terapia, como ela funciona na prática e onde dá pra começar.",
+    carrossel: ["psicologo"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "Terapia é uma conversa com método",
+        blocos: [
+          p("Terapia, ou psicoterapia, é um acompanhamento feito por um profissional preparado pra isso, em geral um psicólogo, em que você fala sobre o que está sentindo, pensando e vivendo. Parece uma conversa, mas não é uma conversa qualquer: o profissional tem formação, segue uma abordagem estudada, guarda sigilo sobre o que você conta e não está ali pra te julgar."),
+          p("Também não é o lugar de receber conselho pronto. O psicólogo escuta, faz perguntas, aponta repetições que você talvez não tenha percebido e ajuda você a encontrar os seus próprios jeitos de lidar com o que está difícil. O ritmo e os assuntos são construídos junto com você."),
+        ],
+      },
+      {
+        titulo: "Pra que serve a terapia",
+        blocos: [
+          p("A terapia pode ajudar em situações bem diferentes. Algumas das mais comuns:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Ansiedade, tristeza que não passa, irritação ou cansaço constante",
+              "Luto, separação, demissão e outras mudanças grandes",
+              "Brigas e dificuldades em casa, no relacionamento ou no trabalho",
+              "Uso de álcool ou outras drogas que está pesando, ou que você só quer entender melhor",
+              "Conviver com alguém que usa álcool ou outras drogas",
+              "Situações de violência, traumas e lembranças que continuam doendo",
+              "Vontade de se entender melhor e tomar decisões com mais clareza",
+            ],
+          },
+          p("Ninguém consegue garantir o resultado de uma terapia. O que ela oferece é um espaço regular, com alguém preparado, pra olhar pro que está acontecendo com mais calma do que o dia a dia permite."),
+        ],
+      },
+      {
+        titulo: "Não precisa estar em crise pra começar",
+        blocos: [
+          p("Muita gente espera a situação ficar insustentável pra procurar ajuda. Não precisa. Terapia não é só pra quem tem um diagnóstico ou está no limite: dá pra começar com uma dúvida, um incômodo ou uma fase mais pesada. E começar mais cedo costuma ser mais leve do que começar no meio de uma crise."),
+          p("Alguns sinais de que pode valer a pena: o mesmo assunto ocupa sua cabeça há semanas, o sono ou o apetite mudaram, você está se afastando das pessoas, ou alguém próximo comentou que está preocupado com você."),
+        ],
+      },
+      {
+        titulo: "Como é uma sessão de terapia",
+        blocos: [
+          p("Uma sessão costuma durar entre 40 e 60 minutos e, no começo, é comum ser uma vez por semana. A frequência e o valor são combinados com o profissional, de acordo com o que você está vivendo e com o que cabe no seu mês."),
+          p("A primeira sessão serve pra vocês se conhecerem. O psicólogo vai perguntar o que te trouxe até ali, um pouco da sua história e o que você espera. Você não precisa contar tudo de uma vez nem chegar com nada preparado. Também pode perguntar como ele trabalha, como funciona o sigilo e o que fazer se precisar faltar."),
+          p("Se você não souber o que dizer, pode começar exatamente por aí. Silêncio, confusão e \"não sei por onde começar\" também são assunto de terapia, e faz parte do trabalho do psicólogo ajudar você a encontrar o fio."),
+        ],
+      },
+      {
+        titulo: "Os principais tipos de terapia",
+        blocos: [
+          p("Existem várias abordagens, que são os jeitos diferentes de entender o sofrimento e de conduzir as sessões. As mais conhecidas no Brasil:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Terapia cognitivo-comportamental (TCC): olha pra relação entre pensamentos, emoções e comportamentos, com foco no presente e, às vezes, com tarefas entre as sessões",
+              "Psicanálise: trabalha com a sua história, os desejos e o que fica fora da consciência, a partir do que você fala livremente",
+              "Abordagens humanistas, como a Gestalt-terapia: dão ênfase à sua experiência no momento presente e às suas escolhas",
+              "Terapia sistêmica: olha pra família, o casal e os padrões das relações, e pode ser feita com mais de uma pessoa na sala",
+            ],
+          },
+          p("Nenhuma abordagem é a certa pra todo mundo. Mais do que a teoria, costuma pesar a confiança que você sente no profissional. Se quiser, pergunte na primeira sessão qual abordagem ele usa e como isso aparece no dia a dia."),
+        ],
+      },
+      {
+        titulo: "Psicólogo, terapeuta e psiquiatra não são a mesma coisa",
+        blocos: [
+          {
+            tipo: "tabela",
+            legenda: "Diferença entre psicólogo, terapeuta e psiquiatra",
+            colunas: ["Quem", "Formação", "O que faz"],
+            linhas: [
+              ["Psicólogo", "Graduação em psicologia e registro no Conselho Regional de Psicologia (CRP)", "Faz psicoterapia e avaliação psicológica. Não receita remédio"],
+              ["Psiquiatra", "Medicina, especialização em psiquiatria e registro no Conselho Regional de Medicina (CRM)", "Avalia, diagnostica e pode receitar remédio. Alguns também fazem psicoterapia"],
+              ["Terapeuta", "Depende de quem usa o nome", "É um nome amplo, que qualquer pessoa pode usar, com ou sem formação reconhecida"],
+            ],
+          },
+          p("Por isso vale conferir o registro de quem vai te atender. Leva poucos minutos. [Ver como conferir o registro de um psicólogo](/blog/como-saber-se-o-psicologo-e-registrado)"),
+          p("Às vezes faz sentido ter psicólogo e psiquiatra juntos: um cuida da conversa e do que está por baixo do que você sente, o outro avalia se um remédio pode ajudar. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Terapia ocupacional é outra profissão, com conselho próprio. O terapeuta ocupacional trabalha a autonomia nas atividades do dia a dia, como cuidar de si, estudar e trabalhar, e não é o mesmo que fazer psicoterapia."),
+        ],
+      },
+      {
+        titulo: "O que você fala na terapia fica entre vocês",
+        blocos: [
+          p("O sigilo é um dever do psicólogo, previsto no Código de Ética da profissão. O que você conta não vai pra sua família, pro seu trabalho nem pra polícia. Ele só pode ser quebrado em situações muito específicas, como um risco sério à sua vida ou à de outra pessoa, e mesmo assim só no que for estritamente necessário."),
+          p("Com quem tem menos de 18 anos, o psicólogo pode conversar com os responsáveis sobre o que for essencial pro cuidado. Isso costuma ser combinado logo no começo, e dá pra perguntar como vai funcionar no seu caso."),
+        ],
+      },
+      {
+        titulo: "Dá pra falar de álcool e outras drogas na terapia",
+        blocos: [
+          p("Dá, e você não precisa ter parado de usar pra começar. A terapia pode ajudar a entender o que o uso está resolvendo na sua vida, o que vem antes da vontade e o que você quer fazer com isso: parar, diminuir ou só usar com menos risco, que é o que se chama de [redução de danos](/blog/reducao-de-danos). Abordagens como a entrevista motivacional foram pensadas justamente pra quem ainda está em dúvida sobre mudar."),
+          p("Contar sobre o seu uso não leva a internação nem a denúncia. Se você convive com alguém que usa, a terapia também é um espaço pra você, mesmo que a outra pessoa não queira buscar ajuda agora. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Online ou presencial",
+        blocos: [
+          p("Os dois formatos funcionam. Pesquisas que compararam terapia por vídeo e presencial encontraram resultados parecidos em muitas situações, como ansiedade e depressão, e no Brasil o atendimento online é regulamentado pelo Conselho Federal de Psicologia."),
+          p("O online facilita pra quem mora longe, tem pouco tempo ou não tem dinheiro pro transporte. O que importa é ter um lugar em que você consiga falar sem medo de ser ouvido: muita gente faz a sessão no carro, numa praça mais vazia ou andando com fone de ouvido."),
+        ],
+      },
+      {
+        titulo: "Quanto tempo dura e como perceber se está ajudando",
+        blocos: [
+          p("Não existe um número certo de sessões. Algumas pessoas fazem por alguns meses pra atravessar uma fase específica, outras ficam anos. Isso é revisto com o profissional ao longo do caminho."),
+          p("A mudança costuma ser gradual. Alguns sinais de que a terapia está ajudando: você entende melhor o que sente, reage de um jeito um pouco diferente a situações que antes te derrubavam, ou consegue falar de assuntos que antes evitava. Também é normal algumas sessões serem pesadas: mexer em coisas difíceis pode incomodar antes de aliviar."),
+          p("Se você não se sentir à vontade com o profissional, pode falar isso com ele ou procurar outro. Trocar de psicólogo é comum e não significa que a terapia não é pra você."),
+        ],
+      },
+      {
+        titulo: "Onde fazer terapia",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, online, e você escolhe o valor dentro dessa faixa, sem precisar justificar. Todo profissional passa por uma aprovação antes de entrar. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
+          p("Fora da Margem, a porta de entrada do SUS é a Unidade Básica de Saúde do seu bairro, e o CAPS atende sem precisar de encaminhamento. Muitas faculdades de psicologia têm clínicas-escola, com atendimento feito por estudantes supervisionados por professores. A espera costuma ser maior, mas é um caminho real. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+          p("Se você está num momento muito difícil e precisa conversar agora, o CVV atende 24 horas pelo 188."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "O que é terapia?",
+        resposta:
+          "É um acompanhamento feito por um profissional preparado, em geral um psicólogo, em que você fala sobre o que sente, pensa e vive. Tem método, sigilo e não é o lugar de receber julgamento nem conselho pronto.",
+      },
+      {
+        pergunta: "Como é feita uma terapia?",
+        resposta:
+          "Em sessões de 40 a 60 minutos, presenciais ou online, em geral uma vez por semana no começo. Na primeira, vocês se conhecem e o psicólogo pergunta o que te trouxe até ali. Você não precisa chegar com nada preparado.",
+      },
+      {
+        pergunta: "Qual a diferença entre psicólogo e terapeuta?",
+        resposta:
+          "Psicólogo é formado em psicologia e tem registro no CRP. Terapeuta é um nome amplo, que qualquer pessoa pode usar. Por isso vale conferir o registro de quem vai te atender.",
+      },
+      {
+        pergunta: "Quais são os tipos de terapia?",
+        resposta:
+          "As abordagens mais conhecidas no Brasil são a terapia cognitivo-comportamental, a psicanálise, as abordagens humanistas, como a Gestalt-terapia, e a terapia sistêmica. Nenhuma é a certa pra todo mundo.",
+      },
+      {
+        pergunta: "O que eu falo na terapia fica em sigilo?",
+        resposta:
+          "Fica. O sigilo é um dever do psicólogo, previsto no Código de Ética da profissão. Ele só pode ser quebrado em situações muito específicas, como risco sério à vida, e só no que for estritamente necessário.",
+      },
+      {
+        pergunta: "Quanto custa fazer terapia?",
+        resposta:
+          "Depende do profissional. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e você escolhe o valor dentro da faixa. Pelo SUS e em clínicas-escola de faculdades, o atendimento é gratuito, com espera maior.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
