@@ -17,6 +17,9 @@ import { semMedicao, track } from "@/lib/mixpanel";
 // textos apareceram. Ele vai, sem nada que identifique a pessoa, pra tabela buscas_blog (rota
 // /api/blog/busca), quando a pessoa para de digitar, aperta Enter ou sai da página. Na aba ele fica
 // guardado (sessionStorage), pra a busca continuar lá quando a pessoa volta de um texto.
+//
+// Como o campo fica embaixo, o resultado aparece acima dele. No Enter a página rola até o primeiro
+// resultado (ou até o aviso de sem resultado), pra quem busca ver que a lista mudou.
 
 const CHAVE_SESSAO = "margem-busca-blog";
 const ESPERA_PRA_GRAVAR_MS = 1500;
@@ -55,6 +58,15 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
   const pendente = useRef<{ termo: string; resultados: number } | null>(null);
   const ultimaGravada = useRef("");
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const listaRef = useRef<HTMLDivElement>(null);
+  const vaziaRef = useRef<HTMLDivElement>(null);
+
+  function rolarAteOResultado() {
+    const alvo = listaRef.current?.firstElementChild ?? vaziaRef.current;
+    if (!alvo) return;
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    alvo.scrollIntoView({ block: "start", behavior: semMovimento ? "auto" : "smooth" });
+  }
 
   function gravarPendente() {
     clearTimeout(timer.current);
@@ -111,9 +123,10 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
   function aoTeclar(evento: KeyboardEvent<HTMLInputElement>) {
     if (evento.key === "Enter") {
       evento.preventDefault();
-      // Fecha o teclado do celular e grava na hora.
+      // Fecha o teclado do celular, grava na hora e mostra o resultado.
       evento.currentTarget.blur();
       gravarPendente();
+      if (encontrados) rolarAteOResultado();
     }
     if (evento.key === "Escape" && busca) {
       evento.preventDefault();
@@ -129,13 +142,13 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
   return (
     <>
       {lista.length > 0 ? (
-        <div className="blog-lista">
+        <div className="blog-lista" ref={listaRef}>
           {lista.map((item) => (
             <Fragment key={item.slug}>{item.card}</Fragment>
           ))}
         </div>
       ) : (
-        <div className="blog-busca-vazia">
+        <div className="blog-busca-vazia" ref={vaziaRef}>
           <p className="text-medium-regular">Ainda não tem texto sobre isso. Faça outra busca ou vá para o início.</p>
           <Button variante="secondary" href="/inicio">
             Ir para o início

@@ -88,6 +88,12 @@
   margin: 0;
 }
 
+/* O Enter da busca rola até aqui: um respiro em cima, pra o card não colar na borda da tela. */
+.blog-lista > *,
+.blog-busca-vazia {
+  scroll-margin-top: var(--spacing-16);
+}
+
 .guia-pagina {
   display: flex;
   flex-direction: column;
