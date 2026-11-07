@@ -247,14 +247,16 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Psiquiatra de jaleco diante de um notebook, em videochamada com um paciente, num consultório.",
     imagemCard: true,
   },
+  // Revisado em 06/11/2026 com a pesquisa dos 10 primeiros do Google pra "psicólogo para dependência química"
+  // (docs/pesquisas-blog/psicologo-alcool-e-drogas.md). O h1 passou a ter o termo da busca. Títulos em pergunta.
   {
     slug: "psicologo-alcool-e-drogas",
     publicadoEm: "2026-10-31",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Dependência química e álcool: terapia a valor social | Margem",
     descricao:
       "Psicólogo e psiquiatra pra quem quer mudar a relação com álcool e outras drogas, a valor social e com sigilo. Sem julgamento e sem internação.",
-    h1: "Psicólogo e psiquiatra para álcool e drogas, a valor social",
+    h1: "Psicólogo e psiquiatra para dependência química, álcool e drogas",
     abertura:
       "Se você está aqui, alguma coisa no seu uso de álcool ou de outras drogas, ou no de alguém que você ama, está pedindo atenção. Isso não faz de ninguém uma pessoa fraca. Muita gente usa pra aliviar algo que dói, cansa ou falta, e funciona por um tempo, até começar a cobrar caro. Na Margem, você encontra psicólogos e psiquiatras a valor social que conversam sobre isso sem julgamento.",
     // O banco não tem campo que diga quem atende álcool e outras drogas (só tags livres), então
@@ -266,6 +268,22 @@ export const GUIAS: Guia[] = [
         titulo: "Psicólogo ajuda quem tem dependência química?",
         blocos: [
           p("Ajuda. A terapia não começa perguntando como parar, e sim o que o uso está resolvendo na sua vida. Quando isso fica claro, dá pra buscar outros jeitos de cuidar daquilo que está por baixo. Parar sem mexer no que está por baixo costuma levar de volta ao mesmo lugar."),
+          p("Na prática, o psicólogo ajuda a reconhecer o que costuma vir antes da vontade de usar, a montar um plano pra atravessar a fissura, a lidar com ansiedade, tristeza e conflitos sem depender da substância e a pensar no que fazer se acontecer uma recaída."),
+        ],
+      },
+      {
+        titulo: "Qual a melhor terapia pra dependência química?",
+        blocos: [
+          p("Não existe uma única melhor pra todo mundo. Algumas abordagens têm bastante pesquisa no cuidado com álcool e outras drogas:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Terapia cognitivo-comportamental (TCC), que trabalha os pensamentos e as situações ligadas ao uso",
+              "Entrevista motivacional, que ajuda a pessoa a encontrar os próprios motivos pra mudar, sem pressão",
+              "Prevenção de recaída, que prepara pros momentos de maior risco",
+            ],
+          },
+          p("Muitos profissionais combinam essas abordagens. Tão importante quanto a técnica é você se sentir à vontade com quem atende. Se não rolar com um profissional, tudo bem procurar outro."),
         ],
       },
       {
@@ -307,6 +325,19 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "Dá pra internar alguém contra a vontade?",
+        blocos: [
+          p("A lei brasileira permite a internação involuntária só em situações específicas: um médico precisa avaliar e autorizar, ela só acontece quando outros tratamentos não deram conta e dura o tempo necessário pra desintoxicação. A internação precisa ser comunicada ao Ministério Público."),
+          p("Na maior parte das vezes, o cuidado funciona melhor quando a pessoa participa da decisão. Antes de pensar em internação, o CAPS AD pode ajudar a família a entender o momento e os caminhos possíveis, e uma terapia pra você ajuda a atravessar esse período."),
+        ],
+      },
+      {
+        titulo: "E se acontecer uma recaída?",
+        blocos: [
+          p("Recaída não quer dizer que o tratamento falhou nem que você voltou à estaca zero. Ela acontece com muita gente e pode mostrar o que precisa de mais apoio. Contar pro profissional que te acompanha ajuda a ajustar o caminho."),
+        ],
+      },
+      {
         titulo: "Grupos de apoio também ajudam",
         blocos: [
           p("Alcoólicos Anônimos e Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Pra familiares, existem o Al-Anon e o Nar-Anon. Muita gente combina grupo e terapia. Pelo SUS, o CAPS AD é especializado em álcool e outras drogas e atende sem encaminhamento. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
@@ -322,6 +353,11 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Psicólogo trata dependência química?",
         resposta: "Trata. A terapia ajuda a entender o que o uso resolve na sua vida e a buscar outros jeitos de lidar com isso.",
+      },
+      {
+        pergunta: "Qual a melhor terapia para dependência química?",
+        resposta:
+          "Não existe uma única melhor pra todo mundo. Terapia cognitivo-comportamental, entrevista motivacional e prevenção de recaída têm bastante pesquisa, e muitos profissionais combinam essas abordagens.",
       },
       {
         pergunta: "Preciso parar de beber ou usar pra começar a terapia?",
@@ -565,10 +601,12 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Homem tatuado, de óculos escuros, bebendo água num copo, sentado ao balcão de um bar.",
     imagemCard: true,
   },
+  // Revisado em 06/11/2026 com a pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/como-parar-de-beber.md).
+  // Títulos em pergunta.
   {
     slug: "como-parar-de-beber",
     publicadoEm: "2026-11-01",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Como parar de beber: sinais, riscos e onde buscar apoio | Margem",
     descricao:
       "Quer parar ou diminuir a bebida? Veja quando parar de uma vez pode ser perigoso, o que acontece no corpo e onde encontrar apoio sem julgamento.",
@@ -637,6 +675,8 @@ export const GUIAS: Guia[] = [
               "Intercalar com água ou refrigerante, ou escolher bebidas com menos álcool",
               "Contar pra alguém de confiança o que você está tentando fazer",
               "Evitar, por um tempo, lugares e horários em que a vontade costuma aparecer",
+              "Tirar a bebida de casa, ou deixar só o que você decidiu beber",
+              "Ter à mão uma bebida sem álcool de que você goste. Pra algumas pessoas a cerveja sem álcool ajuda, pra outras lembra demais a bebida: vale reparar como é com você",
               "Colocar outra coisa na hora que era da bebida",
             ],
           },
@@ -644,9 +684,24 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "Dá pra parar de beber sozinho?",
+        blocos: [
+          p("Muita gente consegue diminuir ou parar sem tratamento. Mas sozinho não precisa querer dizer sem ninguém: contar pra uma pessoa de confiança, ir a um grupo ou conversar com um profissional costuma deixar o caminho mais leve."),
+          p("Tem uma exceção importante: se você sente tremor, suor, enjoo ou ansiedade quando fica sem beber, parar sem acompanhamento pode ser perigoso. Nesse caso, fale com um médico antes."),
+        ],
+      },
+      {
+        titulo: "O que acontece quando eu paro de beber?",
+        blocos: [
+          p("Nos primeiros dias, quem bebia com frequência pode ter os sintomas de abstinência descritos acima. O sono costuma ficar bagunçado no começo e melhorar depois de algumas semanas. A ansiedade e o humor também podem oscilar nesse período."),
+          p("Com algumas semanas sem beber, muita gente nota mais disposição, sono melhor e mais dinheiro sobrando no fim do mês. O fígado começa a se recuperar, principalmente se ainda não tem uma lesão avançada, e a pressão pode baixar. Cada corpo tem o seu tempo, e um mês sem beber já pode mostrar bastante coisa sobre a sua relação com a bebida."),
+        ],
+      },
+      {
         titulo: "Existe remédio pra parar de beber?",
         blocos: [
-          p("Existe. Alguns remédios ajudam a reduzir a vontade de beber ou a evitar uma recaída, e o médico avalia se eles fazem sentido no seu caso. Tomar por conta própria pode ser perigoso."),
+          p("Existe. Naltrexona, acamprosato e dissulfiram são alguns dos remédios usados pra reduzir a vontade de beber ou ajudar a evitar uma recaída. Todos pedem receita, e o médico avalia se algum faz sentido no seu caso. Tomar por conta própria pode ser perigoso: o dissulfiram, por exemplo, provoca uma reação forte se a pessoa beber."),
+          p("Remédio caseiro, bicarbonato e chás não têm evidência de que ajudem a parar de beber. Desconfie de produto que promete resultado em poucos dias."),
         ],
       },
       {
@@ -707,6 +762,20 @@ export const GUIAS: Guia[] = [
         resposta: "Existe. Alguns ajudam a reduzir a vontade de beber ou a evitar uma recaída, e quem avalia é o médico.",
       },
       {
+        pergunta: "Remédio caseiro ajuda a parar de beber?",
+        resposta: "Não há evidência de que remédio caseiro, bicarbonato ou chá ajudem a parar de beber. Os remédios que ajudam pedem receita e acompanhamento médico.",
+      },
+      {
+        pergunta: "Dá pra parar de beber sozinho?",
+        resposta:
+          "Muita gente consegue, e ter apoio costuma deixar o caminho mais leve. Se você sente tremor, suor, enjoo ou ansiedade quando fica sem beber, fale com um médico antes de parar.",
+      },
+      {
+        pergunta: "O que acontece depois de 30 dias sem beber?",
+        resposta:
+          "Muita gente nota sono melhor, mais disposição e o humor mais estável. O fígado começa a se recuperar, principalmente se ainda não tem uma lesão avançada. Cada corpo tem o seu tempo.",
+      },
+      {
         pergunta: "Onde conseguir ajuda pra parar de beber sem pagar?",
         resposta: "No CAPS AD, que atende pelo SUS sem encaminhamento, e nos Alcoólicos Anônimos, que têm reuniões presenciais e online.",
       },
@@ -715,10 +784,12 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Garrafa de cerveja vazia sendo solta por uma mão sobre uma lixeira.",
     imagemCard: true,
   },
+  // Revisado em 06/11/2026 com a pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/como-parar-de-fumar.md).
+  // Títulos em pergunta.
   {
     slug: "como-parar-de-fumar",
     publicadoEm: "2026-11-01",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Como parar de fumar: abstinência, SUS e apoio | Margem",
     descricao:
       "Parar de fumar pode levar mais de uma tentativa. Veja o que sentir nos primeiros dias, como lidar com a vontade e como buscar tratamento gratuito.",
@@ -753,9 +824,26 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "Quais são os benefícios de parar de fumar?",
+        blocos: [
+          p("O corpo começa a responder rápido, mesmo enquanto a vontade ainda incomoda:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Em 20 minutos, a pressão e os batimentos começam a voltar ao normal",
+              "Em cerca de 12 horas, o monóxido de carbono no sangue volta ao nível normal",
+              "Em 2 ou 3 dias, o olfato e o paladar começam a melhorar",
+              "Em algumas semanas, a respiração fica mais fácil e a circulação melhora",
+              "Em 1 ano, o risco de infarto cai pela metade",
+            ],
+          },
+          p("Os primeiros três dias costumam ser os mais difíceis pra vontade, justamente quando o corpo já está melhorando. Também sobra dinheiro: vale fazer a conta do que ia pro cigarro."),
+        ],
+      },
+      {
         titulo: "Como lidar com a vontade de fumar?",
         blocos: [
-          p("A vontade forte costuma durar poucos minutos. Nem sempre é fácil atravessar esses minutos, e pode ajudar ter um plano:"),
+          p("A vontade forte costuma durar poucos minutos. Com algumas semanas sem fumar, ela aparece cada vez menos, mas pode voltar por meses em situações ligadas ao cigarro, como uma festa ou um dia de nervoso. Nem sempre é fácil atravessar esses minutos, e pode ajudar ter um plano:"),
           {
             tipo: "lista",
             itens: [
@@ -781,6 +869,7 @@ export const GUIAS: Guia[] = [
         titulo: "Cigarro eletrônico ajuda a parar de fumar?",
         blocos: [
           p("O cigarro eletrônico não faz parte do tratamento oferecido pelo SUS, e a venda é proibida no Brasil pela Anvisa. Muitos têm nicotina, então a dependência pode continuar. Se você usa vape ou quer parar com ele, pode falar disso na consulta do mesmo jeito."),
+          p("Pra parar com o pod valem os mesmos passos do cigarro: escolher uma data, não deixar o aparelho e o refil à mão e ter um plano pra vontade. Muitos pods têm bastante nicotina, então a abstinência pode ser forte nos primeiros dias, e o tratamento do SUS também serve pra quem usa vape."),
         ],
       },
       {
@@ -805,6 +894,12 @@ export const GUIAS: Guia[] = [
             ],
           },
           p("Se você também fuma maconha com tabaco, a nicotina entra nessa conta. [Ler sobre como parar de fumar maconha](/blog/como-parar-de-fumar-maconha)"),
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém a parar de fumar?",
+        blocos: [
+          p("A decisão é da outra pessoa, mas apoio faz diferença. Pergunte como você pode ajudar, não fume perto dela, tenha paciência com a irritação dos primeiros dias e não trate uma recaída como fracasso. Contar onde tem tratamento gratuito também ajuda."),
         ],
       },
       {
@@ -837,15 +932,32 @@ export const GUIAS: Guia[] = [
         pergunta: "Cigarro eletrônico ajuda a parar de fumar?",
         resposta: "Ele não faz parte do tratamento oferecido pelo SUS, e a venda é proibida no Brasil pela Anvisa. Muitos têm nicotina, então a dependência pode continuar.",
       },
+      {
+        pergunta: "O que acontece em 3 dias sem fumar?",
+        resposta:
+          "O olfato e o paladar começam a melhorar, e o monóxido de carbono no sangue já voltou ao nível normal. Também costumam ser os dias em que a vontade de fumar está mais forte.",
+      },
+      {
+        pergunta: "Quanto tempo leva pra passar a vontade de fumar?",
+        resposta:
+          "Cada vontade forte costuma durar poucos minutos. Com algumas semanas sem fumar, ela aparece cada vez menos, mas pode voltar por meses em situações ligadas ao cigarro.",
+      },
+      {
+        pergunta: "Como parar de usar pod?",
+        resposta:
+          "Com os mesmos passos do cigarro: escolher uma data, não deixar o aparelho à mão e ter um plano pra vontade. O tratamento gratuito do SUS também serve pra quem usa vape.",
+      },
     ],
     imagem: true,
     imagemAlt: "Mão soltando uma bituca de cigarro sobre uma lixeira.",
     imagemCard: true,
   },
+  // Revisado em 06/11/2026 com a pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/como-parar-de-fumar-maconha.md).
+  // Títulos em pergunta.
   {
     slug: "como-parar-de-fumar-maconha",
     publicadoEm: "2026-11-01",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Como parar de fumar maconha: abstinência e apoio | Margem",
     descricao:
       "Quer parar ou diminuir a maconha? Veja quanto tempo dura a abstinência, o que ajuda no sono e na irritação e onde encontrar apoio sem julgamento.",
@@ -914,9 +1026,17 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "O que melhora quando eu paro de fumar maconha?",
+        blocos: [
+          p("Depois das primeiras semanas, muita gente percebe o sono mais regular, a memória e a concentração melhores e mais disposição de manhã. Os sonhos podem ficar intensos no começo, e isso tende a passar."),
+          p("A fumaça da maconha irrita os pulmões e pode causar tosse e catarro. Parar de fumar costuma melhorar esses sintomas, ainda mais se você misturava com tabaco."),
+        ],
+      },
+      {
         titulo: "Terapia ajuda a parar de fumar maconha? Existe remédio?",
         blocos: [
           p("A conversa e a orientação são o primeiro caminho recomendado. Não existe um remédio aprovado especificamente pra abstinência de maconha, mas um psiquiatra pode avaliar sintomas como ansiedade e insônia. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("O canabidiol (CBD) vem sendo estudado pra ajudar quem quer parar, mas ainda não é um tratamento estabelecido. Se você pensa em usar, converse antes com um médico."),
           p("A terapia ajuda a entender o que a maconha resolve na sua vida e a encontrar outras formas de lidar com isso. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
         ],
       },
@@ -937,6 +1057,12 @@ export const GUIAS: Guia[] = [
             ],
           },
           p("Maconha também pode provocar pânico ou paranoia. Costuma ajudar ir pra um lugar calmo com alguém de confiança. Se vier confusão intensa, dor no peito ou se os sintomas não passarem, ligue para o SAMU no 192."),
+        ],
+      },
+      {
+        titulo: "Como ajudar um filho ou alguém próximo a parar de fumar maconha?",
+        blocos: [
+          p("Ameaça e briga costumam afastar. Ajuda mais escolher um momento calmo, dizer o que você está vendo sem acusar e perguntar o que a maconha está resolvendo pra pessoa. Se for um adolescente, os riscos são maiores e vale buscar orientação: o CAPS AD e o CAPS infantojuvenil atendem pelo SUS, e uma terapia pra você ajuda a atravessar esse momento. Pra familiares, existe também o Nar-Anon."),
         ],
       },
       {
@@ -966,6 +1092,16 @@ export const GUIAS: Guia[] = [
           "Não existe um remédio aprovado especificamente pra abstinência de maconha, mas um psiquiatra pode avaliar sintomas como ansiedade e insônia.",
       },
       {
+        pergunta: "Canabidiol ajuda a parar de fumar maconha?",
+        resposta:
+          "O canabidiol (CBD) vem sendo estudado pra isso, mas ainda não é um tratamento estabelecido. Se você pensa em usar, converse antes com um médico.",
+      },
+      {
+        pergunta: "Parar de fumar maconha melhora o pulmão?",
+        resposta:
+          "A fumaça da maconha irrita os pulmões e pode causar tosse e catarro. Parar costuma melhorar esses sintomas, ainda mais se você misturava com tabaco.",
+      },
+      {
         pergunta: "Dá pra usar maconha com menos risco?",
         resposta:
           "Dá pra diminuir alguns riscos: evitar o uso diário, não prender a fumaça, não misturar com álcool ou tabaco e não dirigir depois de usar. Risco menor não é risco zero.",
@@ -975,10 +1111,12 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Mão soltando um baseado sobre uma lixeira.",
     imagemCard: true,
   },
+  // Revisado em 06/11/2026 com a pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/como-parar-de-usar-cocaina.md).
+  // Títulos em pergunta.
   {
     slug: "como-parar-de-usar-cocaina",
     publicadoEm: "2026-11-01",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Como parar de usar cocaína: abstinência e apoio | Margem",
     descricao:
       "Quer parar ou diminuir o uso de cocaína? Entenda a abstinência, a fissura, os sinais de emergência e onde encontrar apoio com sigilo e sem julgamento.",
@@ -1003,6 +1141,13 @@ export const GUIAS: Guia[] = [
             ],
           },
           p("Se a cocaína costuma vir junto com a bebida, cuidar das duas coisas pode ajudar. Se você bebe muito há bastante tempo, vale falar com um médico antes de parar o álcool de repente. [Ler sobre como parar de beber](/blog/como-parar-de-beber)"),
+        ],
+      },
+      {
+        titulo: "Dá pra parar de usar cocaína sozinho?",
+        blocos: [
+          p("Tem gente que consegue. Mas a queda de humor e a fissura das primeiras semanas costumam ser mais leves com alguém do lado: uma pessoa de confiança, um grupo ou um profissional. Sozinho não precisa querer dizer sem ninguém."),
+          p("Se junto com a cocaína você usa muito álcool ou calmantes, fale com um médico antes de parar: parar essas substâncias de repente pode ser perigoso."),
         ],
       },
       {
@@ -1036,13 +1181,21 @@ export const GUIAS: Guia[] = [
               "Não ficar com dinheiro à mão",
             ],
           },
+          p("Trocar a cocaína por outra droga ou por remédio tomado por conta própria costuma só mudar o problema de lugar. O que ajuda a ocupar o espaço é o que dá algum alívio de verdade: dormir, comer, gente por perto, uma atividade que prenda a atenção."),
           p("Se você voltar a usar, isso não apaga o que você já construiu. Pode ser uma forma de entender onde você precisa de mais apoio."),
+        ],
+      },
+      {
+        titulo: "Quanto tempo a cocaína fica no corpo?",
+        blocos: [
+          p("O efeito passa em menos de uma hora, mas o que o corpo produz ao processar a cocaína fica mais tempo. No exame de urina, costuma aparecer por 2 a 4 dias depois do último uso. Em quem usa muito e com frequência, pode aparecer por mais tempo. No exame de cabelo, aparece por meses."),
+          p("Sair do corpo não é o mesmo que passar a fissura: a vontade pode continuar aparecendo depois que o exame já não mostra nada."),
         ],
       },
       {
         titulo: "Existe remédio pra parar de usar cocaína?",
         blocos: [
-          p("Até aqui, não existe um remédio aprovado especificamente pra isso, e vale desconfiar de quem promete cura rápida. Um psiquiatra pode tratar o que vem junto, como depressão, ansiedade e insônia. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Até aqui, não existe um remédio aprovado especificamente pra isso, e vale desconfiar de quem promete cura rápida. Remédio natural, chá e simpatia também não têm evidência. Um psiquiatra pode tratar o que vem junto, como depressão, ansiedade e insônia. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
           p("A terapia ajuda a entender o que o uso está resolvendo na sua vida e a montar outros jeitos de lidar com isso. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
         ],
       },
@@ -1107,6 +1260,16 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Quanto tempo dura a abstinência de cocaína?",
         resposta: "Os sintomas aparecem pouco depois do último uso e podem durar de várias semanas a alguns meses.",
+      },
+      {
+        pergunta: "Dá pra parar de usar cocaína sozinho?",
+        resposta:
+          "Tem gente que consegue, e ter apoio costuma deixar as primeiras semanas mais leves. Se você também usa muito álcool ou calmantes, fale com um médico antes de parar.",
+      },
+      {
+        pergunta: "Quanto tempo a cocaína fica no corpo?",
+        resposta:
+          "No exame de urina, costuma aparecer por 2 a 4 dias depois do último uso, e por mais tempo em quem usa muito e com frequência. No exame de cabelo, aparece por meses.",
       },
       {
         pergunta: "Existe remédio pra parar de usar cocaína?",
@@ -1396,7 +1559,7 @@ export const GUIAS: Guia[] = [
             ],
           },
           p("Se você usa mais de uma substância, vale olhar pra elas juntas. Muitas vezes uma puxa a outra, como a bebida que abre caminho pra cocaína."),
-          p("Cada substância tem seus próprios riscos e cuidados. Se você quer entender uma delas mais a fundo: [Ler sobre como parar de beber](/blog/como-parar-de-beber) [Ler sobre como parar de fumar maconha](/blog/como-parar-de-fumar-maconha) [Ler sobre como parar de usar cocaína](/blog/como-parar-de-usar-cocaina) [Ler sobre como parar de fumar cigarro](/blog/como-parar-de-fumar)"),
+          p("Cada substância tem seus próprios riscos e cuidados. Se você quer entender uma delas mais a fundo: [Ler sobre como parar de beber](/blog/como-parar-de-beber) [Ler sobre como parar de fumar maconha](/blog/como-parar-de-fumar-maconha) [Ler sobre como parar de usar cocaína](/blog/como-parar-de-usar-cocaina) [Ler sobre como parar de fumar cigarro](/blog/como-parar-de-fumar) [Ler sobre opioides](/blog/opioides)"),
         ],
       },
       {
@@ -1898,6 +2061,212 @@ export const GUIAS: Guia[] = [
         pergunta: "O que fazer para passar a abstinência?",
         resposta:
           "Beber água, comer algo leve, manter horários de sono, ficar num lugar calmo e com alguém por perto. Um profissional pode indicar remédios que aliviam, e convulsão, confusão ou febre são emergência: ligue para o SAMU no 192.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
+  // Guia de opioides (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
+  // opioides.md). Formato dos títulos: afirmativo (o anterior, sintomas-de-abstinencia, usou perguntas).
+  // Prazos e cuidados da abstinência batem com os guias de abstinência e de como parar de usar drogas.
+  // Mesma exceção de copy dos outros guias.
+  {
+    slug: "opioides",
+    publicadoEm: "2026-11-06",
+    atualizadoEm: "2026-11-06",
+    title: "Opioides: o que são, efeitos, riscos e abstinência | Margem",
+    descricao:
+      "Entenda o que são opioides, quais são os mais comuns, os efeitos, a abstinência, os sinais de overdose e onde buscar apoio sem julgamento.",
+    h1: "Opioides: o que são, quais são os mais comuns, riscos e onde buscar apoio",
+    abertura:
+      "Talvez um médico tenha receitado um opioide e você queira entender o que está tomando. Talvez você esteja usando mais do que devia, ou sem receita, e já sinta falta quando atrasa uma dose. Ou talvez seja alguém próximo de você. Opioides são remédios importantes contra a dor e, ao mesmo tempo, pedem cuidado. Nada disso é falta de caráter: tem a ver com o efeito da substância no corpo, e existem caminhos pra cada uma dessas situações.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que são opioides",
+        blocos: [
+          p("Opioides são substâncias que agem no cérebro e na medula diminuindo a sensação de dor. Também dão sono, relaxamento e, em algumas pessoas, uma sensação forte de bem-estar."),
+          p("Alguns vêm da papoula, como a morfina e a codeína. Outros são modificados em laboratório a partir deles, como a oxicodona e a heroína. E outros são feitos inteiramente em laboratório, como o tramadol, a metadona e o fentanil. Opiáceo é o nome dos que vêm direto da papoula. Opioide é o nome do grupo todo."),
+          p("A maioria é remédio, vendido só com receita especial, que fica retida na farmácia. A heroína não tem uso médico no Brasil."),
+        ],
+      },
+      {
+        titulo: "Os opioides mais comuns, dos mais fracos aos mais fortes",
+        blocos: [
+          {
+            tipo: "tabela",
+            legenda: "Opioides mais comuns, do mais fraco ao mais forte, e onde costumam aparecer",
+            colunas: ["Opioide", "Força", "Onde costuma aparecer"],
+            linhas: [
+              ["Codeína", "Mais fraco", "Remédios pra dor e pra tosse, muitas vezes junto com paracetamol"],
+              ["Tramadol", "Mais fraco", "Remédios pra dor moderada"],
+              ["Morfina", "Forte", "Dor intensa, como depois de cirurgia, em câncer e em cuidados paliativos"],
+              ["Oxicodona", "Forte", "Dor intensa ou que dura muito tempo"],
+              ["Metadona", "Forte", "Dor intensa que dura muito tempo e tratamento de quem quer parar outros opioides"],
+              ["Fentanil", "Muito forte, muitas vezes mais que a morfina", "Anestesia e dor intensa, em injeção ou adesivo"],
+              ["Heroína", "Muito forte", "Não tem uso médico no Brasil"],
+            ],
+          },
+          p("Mais fraco não quer dizer sem risco. Codeína e tramadol também podem causar dependência e abstinência, principalmente em doses altas ou por muito tempo."),
+        ],
+      },
+      {
+        titulo: "A diferença entre um analgésico comum e um opioide",
+        blocos: [
+          p("Todo opioide é um analgésico, mas nem todo analgésico é um opioide. Dipirona, paracetamol e ibuprofeno são analgésicos comuns: aliviam a dor de outro jeito, não dão a sensação de bem-estar dos opioides e não causam esse tipo de dependência. Isso não quer dizer que não tenham riscos. Em dose alta, o paracetamol pode fazer mal ao fígado, por exemplo."),
+          p("Alguns remédios juntam os dois num comprimido só, como paracetamol com codeína. Se você não sabe se o seu remédio tem opioide, a bula e o farmacêutico respondem. Uma pista: os que têm costumam exigir receita especial."),
+        ],
+      },
+      {
+        titulo: "Pra que servem os opioides",
+        blocos: [
+          p("Pra dor moderada e intensa: depois de cirurgia, fratura ou queimadura, em câncer, em cuidados paliativos e em algumas dores que duram muito tempo. Também são usados na anestesia e, em alguns casos, contra tosse."),
+          p("Usados com acompanhamento médico, são seguros e muito importantes. O medo de opioide também faz mal: tem gente que deixa de tratar uma dor forte por receio de ficar dependente. Se esse é o seu caso, vale conversar sobre isso com quem receitou."),
+        ],
+      },
+      {
+        titulo: "Os efeitos e os efeitos colaterais dos opioides",
+        blocos: [
+          p("Além de aliviar a dor, os opioides costumam causar:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Sono e moleza",
+              "Prisão de ventre",
+              "Enjoo e vômito",
+              "Coceira",
+              "Pupilas pequenas",
+              "Confusão, principalmente em pessoas mais velhas",
+            ],
+          },
+          p("O efeito mais perigoso é a respiração ficar lenta demais. Esse risco aumenta com doses altas, com opioides mais fortes e quando eles são misturados com álcool, calmantes como clonazepam e diazepam, remédios pra dormir ou outros opioides."),
+        ],
+      },
+      {
+        titulo: "Tomar opioide com receita e o risco de dependência",
+        blocos: [
+          p("Usar opioide por alguns dias pra uma dor forte, com acompanhamento médico, raramente leva à dependência. O risco cresce com o uso por semanas ou meses, com doses altas e quando o remédio passa a ser usado pra outras coisas além da dor."),
+          p("Com o uso contínuo, o corpo se acostuma e o mesmo efeito pede uma dose maior. Isso se chama tolerância, e pode acontecer com qualquer pessoa que usa por um tempo. Ter tolerância não quer dizer, sozinho, que o uso virou um problema. Alguns sinais de que vale conversar com alguém:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Tomar mais do que foi receitado, ou por mais tempo",
+              "Usar pra dormir, pra acalmar a ansiedade ou pra aguentar o dia, e não só pra dor",
+              "Ficar mal quando atrasa uma dose",
+              "Procurar receita com mais de um médico ou usar remédio de outra pessoa",
+              "Esconder quanto está usando",
+              "Querer diminuir e não conseguir",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "A abstinência de opioides e o cuidado ao parar",
+        blocos: [
+          p("Quando alguém que usa opioide com frequência para ou diminui de repente, o corpo reage. Os sintomas costumam começar algumas horas depois da última dose, e os mais fortes passam em cerca de uma semana. O sono e a vontade de usar podem levar mais tempo."),
+          {
+            tipo: "lista",
+            itens: [
+              "Dor no corpo e nos ossos",
+              "Diarreia, cólica, enjoo e vômito",
+              "Nariz escorrendo, olhos lacrimejando e muitos bocejos",
+              "Suor, arrepios e calafrio",
+              "Ansiedade, irritação e insônia",
+              "Vontade forte de usar",
+            ],
+          },
+          p("A abstinência de opioides é muito desconfortável, mas não costuma ser perigosa pro corpo. Vômito e diarreia fortes podem desidratar, e o médico pode indicar remédios que aliviam. Se você toma opioide receitado, não pare nem mude a dose por conta própria: quem receitou pode diminuir aos poucos com você. Se você está grávida, converse com um profissional antes de mudar qualquer coisa, porque parar de repente também afeta o bebê."),
+          p("Se aparecer uma tristeza muito pesada ou pensamentos de morte, vale buscar um profissional o quanto antes. Se precisa conversar agora, o CVV atende 24 horas pelo 188. [Ler sobre sintomas de abstinência](/blog/sintomas-de-abstinencia)"),
+        ],
+      },
+      {
+        titulo: "Os sinais de overdose de opioide e o que fazer",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "A pessoa não acorda ou não responde, mesmo chamando alto",
+              "Respiração muito lenta, fraca, parada ou com um ronco estranho",
+              "Lábios ou unhas arroxeados",
+              "Pupilas muito pequenas",
+              "Pele fria ou pálida",
+            ],
+          },
+          p("Nesses casos, ligue para o SAMU no 192 na hora e, se puder, diga o que foi usado. Os serviços de emergência têm um remédio, a naloxona, que pode reverter a overdose de opioide, por isso ligar rápido faz diferença. Enquanto espera, chame a pessoa pelo nome e não deixe ela sozinha. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+          p("Mesmo que a pessoa melhore, ela precisa ser avaliada: o efeito de alguns opioides dura mais do que o do remédio que reverte a overdose."),
+        ],
+      },
+      {
+        titulo: "Como usar opioides com menos risco",
+        blocos: [
+          p("Nem toda pessoa que usa quer ou consegue parar agora, e dá pra buscar cuidado do jeito que você está. Usar com menos risco também é um caminho, e se chama [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero, mas alguns cuidados fazem diferença:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não misturar com álcool, calmantes, remédios pra dormir ou outros opioides",
+              "Não usar sozinho e estar com alguém de confiança que saiba o que fazer numa emergência",
+              "Começar com pouco e esperar, principalmente com uma substância ou um remédio novo",
+              "Depois de alguns dias sem usar, começar com bem menos: o corpo perde a tolerância, e a quantidade de antes pode ser demais",
+              "Desconfiar de comprimido comprado sem receita: a dose e a composição podem não ser as que dizem",
+              "Não compartilhar seringa nem agulha",
+              "Guardar o remédio longe de crianças e de outras pessoas da casa",
+              "Não dirigir depois de usar",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "O tratamento pro uso de opioides",
+        blocos: [
+          p("Existe tratamento, e ele não começa necessariamente com internação. Na maior parte das vezes, o cuidado acontece com consultas, terapia, CAPS AD e grupos de apoio. A internação costuma ser indicada em situações mais graves, como risco à vida ou crise de saúde mental."),
+          p("Pra opioides, existem remédios que ajudam a passar a abstinência e a evitar recaídas. Alguns, como a metadona e a buprenorfina, ocupam o lugar do opioide de forma controlada e são diminuídos aos poucos ou mantidos por um tempo. No Brasil, esse tratamento ainda não está disponível em todo lugar, e quem avalia se faz sentido é o médico. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Se o uso começou por causa de uma dor, a dor também precisa de cuidado. Parar o remédio sem tratar o que dói costuma não se sustentar. A terapia ajuda com o que vem junto, como ansiedade, insônia e o que o uso estava aliviando. Conversar com psicólogo ou psiquiatra sobre o seu uso não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que usa opioides",
+        blocos: [
+          p("Você não controla a decisão da outra pessoa, mas pode fazer diferença. Ajuda falar do que você está vendo, sem acusação, escutar mais do que aconselhar e mostrar os caminhos de apoio quando ela estiver aberta. Brigas, ameaças e humilhação costumam afastar, não aproximar."),
+          p("Vale também conhecer os sinais de overdose e o que fazer, principalmente se a pessoa mistura opioide com álcool ou calmantes. Cuidar de você também conta. O Nar-Anon reúne familiares e amigos de pessoas que usam drogas, sem custo, e uma terapia pra você também é cuidado, mesmo que a outra pessoa não queira buscar ajuda agora."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa."),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, a Unidade Básica de Saúde pode fazer o primeiro acolhimento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Quais são as drogas opioides?",
+        resposta:
+          "Os mais comuns são codeína, tramadol, morfina, oxicodona, metadona e fentanil, que são remédios vendidos com receita especial, e a heroína, que não tem uso médico no Brasil.",
+      },
+      {
+        pergunta: "Quais são os opioides mais fortes?",
+        resposta:
+          "Entre os mais usados, o fentanil é o mais forte, muitas vezes mais que a morfina. Morfina, oxicodona e metadona também são fortes. Codeína e tramadol são os mais fracos, mas também podem causar dependência.",
+      },
+      {
+        pergunta: "Qual a diferença entre analgésico e opioide?",
+        resposta:
+          "Todo opioide é um analgésico, mas nem todo analgésico é opioide. Dipirona, paracetamol e ibuprofeno são analgésicos comuns e não causam o mesmo tipo de dependência. Os opioides são mais fortes e pedem receita especial.",
+      },
+      {
+        pergunta: "O Tramal é morfina?",
+        resposta:
+          "Não. Tramal é um dos nomes comerciais do tramadol, que é um opioide mais fraco que a morfina. Mesmo assim, pode causar dependência e abstinência, e a dose deve ser a que o médico receitou.",
+      },
+      {
+        pergunta: "Opioide pode matar?",
+        resposta:
+          "Pode, principalmente em dose alta ou misturado com álcool e calmantes, porque a respiração fica lenta demais. Se a pessoa não acorda, respira muito devagar ou está com os lábios arroxeados, ligue para o SAMU no 192.",
       },
     ],
     imagem: false,
