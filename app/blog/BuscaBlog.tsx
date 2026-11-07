@@ -8,7 +8,8 @@ import { buscarNoBlog, termosDaBusca, type EntradaIndiceBlog } from "@/lib/busca
 import { HOST_LOCAL } from "@/lib/host-local";
 import { semMedicao, track } from "@/lib/mixpanel";
 
-// Busca da lista do blog. Os cards chegam prontos do servidor (app/blog/page.tsx), na ordem de
+// Busca da lista do blog, com o campo depois de todos os cards (pedido de 07/11/2026). Os cards
+// chegam prontos do servidor (app/blog/page.tsx), na ordem de
 // lib/guias.ts, e aqui só se escolhe quais aparecem e em que ordem. Sem busca, aparecem todos: é o
 // que vai no HTML, pro Google chegar em cada texto.
 //
@@ -127,6 +128,20 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
 
   return (
     <>
+      {lista.length > 0 ? (
+        <div className="blog-lista">
+          {lista.map((item) => (
+            <Fragment key={item.slug}>{item.card}</Fragment>
+          ))}
+        </div>
+      ) : (
+        <div className="blog-busca-vazia">
+          <p className="text-medium-regular">Ainda não tem texto sobre isso. Faça outra busca ou vá para o início.</p>
+          <Button variante="secondary" href="/inicio">
+            Ir para o início
+          </Button>
+        </div>
+      )}
       <div role="search" className="blog-busca">
         <InputText
           id={ID_CAMPO}
@@ -153,20 +168,6 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
           {anunciado}
         </p>
       </div>
-      {lista.length > 0 ? (
-        <div className="blog-lista">
-          {lista.map((item) => (
-            <Fragment key={item.slug}>{item.card}</Fragment>
-          ))}
-        </div>
-      ) : (
-        <div className="blog-busca-vazia">
-          <p className="text-medium-regular">Ainda não tem texto sobre isso. Faça outra busca ou vá para o início.</p>
-          <Button variante="secondary" href="/inicio">
-            Ir para o início
-          </Button>
-        </div>
-      )}
     </>
   );
 }
