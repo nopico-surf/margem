@@ -48,3 +48,13 @@ Duas perguntas frequentes novas: "Psicólogo tem CRP ou CRM?" e "Como é o núme
 - Busca extra **"psicólogo é obrigado a ter carimbo CFP"**: os primeiros resultados são a Resolução CFP 06/2019 comentada e o manual de documentos do CFP (PDFs, não abertos), e a visão de IA resume: o carimbo é opcional, mas o documento precisa ter o nome completo e o número do CRP; documento digital usa assinatura eletrônica. O [CRP-16](https://crp16.org.br/orientacoes/como-montar-um-consultorio/) explica como fazer o carimbo, sem dizer que é obrigatório.
 
 Mudou no guia: "Sinais de alerta" ganhou um parágrafo sobre exercício ilegal e denúncia; duas perguntas frequentes novas ("Psicólogo precisa ter carimbo?" e "O que fazer se o psicólogo não tem registro?"). Título, h1 e seções existentes não mudaram.
+
+## Ajuste pelo Search Console (07/11/2026)
+
+O Search Console mostrou a página aparecendo pra "psicólogo tem crm" e variações ("psicologo tem crm?", "crm de psicologo", "psicóloga tem crm", "psicólogo tem crm ou crp", "crm e crp"): umas 90 impressões e 1 clique. A página respondia isso só nas perguntas frequentes, no fim.
+
+- A descrição passou a responder a pergunta e chamar pro passo a passo: "Não: psicólogo tem CRP, e CRM é de médico, como o psiquiatra. Veja como conferir os dois registros de graça e como saber se estão ativos."
+- Seção nova no topo: "Psicólogo tem CRM?", com a resposta direta.
+- Título e h1 não mudaram, pra não arriscar a citação na visão geral de IA da busca principal.
+
+Rever por volta de 05/12/2026: cliques, impressões e posição média dessas consultas. Se a posição estiver entre 1 e 5 e os cliques continuarem perto de zero, considerar mexer no título. Se estiver em 8 ou pior, o caminho é fortalecer a página (links de outros guias), não o snippet.

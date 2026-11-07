@@ -459,16 +459,22 @@ export const GUIAS: Guia[] = [
   {
     slug: "como-saber-se-o-psicologo-e-registrado",
     publicadoEm: "2026-10-31",
-    atualizadoEm: "2026-11-06",
+    atualizadoEm: "2026-11-07",
     title: "Como consultar o CRP do psicólogo e o CRM do psiquiatra | Margem",
     descricao:
-      "Antes de começar terapia ou consulta online, confira se o profissional é registrado. Leva poucos minutos e é de graça no site dos conselhos.",
+      "Não: psicólogo tem CRP, e CRM é de médico, como o psiquiatra. Veja como conferir os dois registros de graça e como saber se estão ativos.",
     h1: "Como saber se o psicólogo ou o psiquiatra é registrado",
     abertura:
       "Quando o atendimento é barato e online, é normal bater a dúvida: será que essa pessoa é profissional mesmo? Desconfiar é um jeito de se cuidar. A boa notícia é que dá pra conferir sozinho, de graça, em poucos minutos.",
     carrossel: ["psicologo", "psiquiatra"],
     carrosselTopo: false,
     secoes: [
+      {
+        titulo: "Psicólogo tem CRM?",
+        blocos: [
+          p("Não. Psicólogo tem CRP, o registro no Conselho Regional de Psicologia. CRM é o registro dos médicos, como o psiquiatra."),
+        ],
+      },
       {
         titulo: "Como consultar o CRP de um psicólogo",
         blocos: [
