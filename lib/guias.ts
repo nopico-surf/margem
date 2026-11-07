@@ -1,6 +1,6 @@
 // Conteúdo dos textos do blog (/blog e /blog/[slug]). Os quatro primeiros vieram aprovados do briefing de
-// 31/10/2026 e vão exatamente como estão: as regras de copy da seção 7 do CLAUDE.md não valem aqui (H2 em
-// pergunta e termos de busca como "dependência química" são de propósito).
+// 31/10/2026 e ganharam acréscimos na revisão de 06/11/2026: as regras de copy da seção 7 do CLAUDE.md não
+// valem aqui (H2 em pergunta e termos de busca como "dependência química" são de propósito).
 //
 // Links internos ficam no próprio texto, no formato markdown `[texto](/rota)` (ver TextoComLinks em
 // app/blog/[slug]/page.tsx). Este arquivo é lido só no servidor.
