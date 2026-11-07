@@ -1,12 +1,13 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { InputText } from "@/components/ui/InputText";
 import { Button } from "@/components/ui/Button";
 import { IconeBusca, IconeLimparBusca } from "@/components/icons";
 import { buscarNoBlog, termosDaBusca, type EntradaIndiceBlog } from "@/lib/busca-blog";
 import { HOST_LOCAL } from "@/lib/host-local";
 import { semMedicao, track } from "@/lib/mixpanel";
+import { useLinhaDoTeclado } from "@/lib/use-linha-do-teclado";
 
 // Busca da lista do blog, com o campo depois de todos os cards (pedido de 07/11/2026). Os cards
 // chegam prontos do servidor (app/blog/page.tsx), na ordem de
@@ -20,6 +21,14 @@ import { semMedicao, track } from "@/lib/mixpanel";
 //
 // Como o campo fica embaixo, o resultado aparece acima dele. No Enter a página rola até o primeiro
 // resultado (ou até o aviso de sem resultado), pra quem busca ver que a lista mudou.
+//
+// No celular, enquanto a pessoa está no campo, ele fica preso logo acima do teclado, como o campo
+// aberto da home (a detecção do teclado é uma cópia da de lá: lib/use-linha-do-teclado.ts). O lugar
+// dele na página fica reservado e ele desliza até a linha do teclado e de volta.
+//
+// Quando a lista muda de tamanho (letra, X, Esc), a página rola pra compensar: o campo fica parado na
+// tela, e preso no teclado é o fim da lista que encosta nele. Sem isso, o X trazia os 16 textos de
+// volta acima do campo e jogava a pessoa no meio da lista, com o campo fora da tela.
 
 const CHAVE_SESSAO = "margem-busca-blog";
 const ESPERA_PRA_GRAVAR_MS = 1500;
@@ -27,6 +36,18 @@ const ESPERA_PRA_ANUNCIAR_MS = 600;
 const ID_CAMPO = "busca-blog";
 
 type CardDaLista = { slug: string; card: ReactNode };
+
+// Os tokens de movimento (tokens.css), lidos na hora: a Web Animations API não aceita var(). Mesma
+// leitura do HomeHero: o build reescreve "420ms" como ".42s".
+function tokenDeMovimento() {
+  const estilo = getComputedStyle(document.documentElement);
+  const duracao = estilo.getPropertyValue("--duration-420").trim();
+  const numero = parseFloat(duracao) || 0;
+  return {
+    duration: duracao.endsWith("ms") ? numero : duracao.endsWith("s") ? numero * 1000 : numero,
+    easing: estilo.getPropertyValue("--easing-out-expo").trim() || "ease-out",
+  };
+}
 
 function anuncio(quantidade: number) {
   if (quantidade === 0) return "Nenhum texto encontrado";
@@ -60,6 +81,65 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const listaRef = useRef<HTMLDivElement>(null);
   const vaziaRef = useRef<HTMLDivElement>(null);
+  const lugarRef = useRef<HTMLDivElement>(null);
+  const buscaRef = useRef<HTMLDivElement>(null);
+  const [fixo, setFixo] = useState(false);
+  // Onde a caixa do campo estava antes de prender ou soltar, pro deslize.
+  const caixaAntes = useRef<DOMRect | null>(null);
+  // Onde o lugar do campo estava antes da lista mudar, pra a página compensar.
+  const lugarAntes = useRef<number | null>(null);
+
+  useLinhaDoTeclado();
+
+  function medirCaixa() {
+    return buscaRef.current?.querySelector(".input-text-caixa")?.getBoundingClientRect() ?? null;
+  }
+
+  function mudarBusca(valor: string) {
+    lugarAntes.current = lugarRef.current?.getBoundingClientRect().top ?? null;
+    setBusca(valor);
+  }
+
+  function prender() {
+    if (fixo || !window.matchMedia("(pointer: coarse)").matches) return;
+    caixaAntes.current = medirCaixa();
+    // O lugar fica com a altura do campo pra a página de cima não descer.
+    if (lugarRef.current && buscaRef.current) lugarRef.current.style.height = `${buscaRef.current.offsetHeight}px`;
+    setFixo(true);
+  }
+
+  function soltar() {
+    if (!fixo) return;
+    caixaAntes.current = medirCaixa();
+    setFixo(false);
+  }
+
+  // O deslize: o campo vai do lugar onde estava até o novo (FLIP), com o movimento do campo da home.
+  useLayoutEffect(() => {
+    const antes = caixaAntes.current;
+    caixaAntes.current = null;
+    if (!fixo && lugarRef.current) lugarRef.current.style.height = "";
+    const busca = buscaRef.current;
+    const depois = medirCaixa();
+    if (!busca || !antes || !depois) return;
+    busca.getAnimations().forEach((animacao) => animacao.cancel());
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    busca.animate(
+      [{ transform: `translate(${antes.left - depois.left}px, ${antes.top - depois.top}px)` }, { transform: "none" }],
+      tokenDeMovimento(),
+    );
+  }, [fixo]);
+
+  // A lista mudou de tamanho: a página rola pra o campo ficar onde estava. Preso no teclado, o lugar
+  // dele (o fim da lista) vai pra junto do campo.
+  useLayoutEffect(() => {
+    const antes = lugarAntes.current;
+    lugarAntes.current = null;
+    const lugar = lugarRef.current;
+    if (antes === null || !lugar) return;
+    const alvo = fixo && buscaRef.current ? buscaRef.current.getBoundingClientRect().top : antes;
+    window.scrollBy(0, lugar.getBoundingClientRect().top - alvo);
+  }, [lista]);
 
   function rolarAteOResultado() {
     const alvo = listaRef.current?.firstElementChild ?? vaziaRef.current;
@@ -128,14 +208,15 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
       gravarPendente();
       if (encontrados) rolarAteOResultado();
     }
-    if (evento.key === "Escape" && busca) {
+    if (evento.key === "Escape") {
       evento.preventDefault();
-      setBusca("");
+      if (busca) mudarBusca("");
+      evento.currentTarget.blur();
     }
   }
 
   function limpar() {
-    setBusca("");
+    mudarBusca("");
     document.getElementById(ID_CAMPO)?.focus();
   }
 
@@ -155,31 +236,52 @@ export function BuscaBlog({ indice, cards }: { indice: EntradaIndiceBlog[]; card
           </Button>
         </div>
       )}
-      <div role="search" className="blog-busca">
-        <InputText
-          id={ID_CAMPO}
-          rotulo="Buscar no blog"
-          value={busca}
-          onChange={setBusca}
-          onKeyDown={aoTeclar}
-          tipo="search"
-          enterKeyHint="search"
-          autoComplete="off"
-          autoCapitalize="off"
-          spellCheck={false}
-          maxLength={100}
-          iconeInicio={<IconeBusca />}
-          iconeFim={
-            busca ? (
-              <button type="button" className="blog-busca-limpar" onClick={limpar} aria-label="Limpar busca">
-                <IconeLimparBusca />
-              </button>
-            ) : undefined
-          }
-        />
-        <p className="blog-busca-anuncio" aria-live="polite">
-          {anunciado}
-        </p>
+      <div className="blog-busca-lugar" ref={lugarRef}>
+        <div
+          role="search"
+          className="blog-busca"
+          ref={buscaRef}
+          data-fixo={fixo ? "true" : "false"}
+          onFocus={(evento) => {
+            if (evento.target instanceof HTMLInputElement) prender();
+          }}
+          onBlur={(evento) => {
+            if (!evento.currentTarget.contains(evento.relatedTarget as Node | null)) soltar();
+          }}
+        >
+          <InputText
+            id={ID_CAMPO}
+            rotulo="Buscar no blog"
+            value={busca}
+            onChange={mudarBusca}
+            onKeyDown={aoTeclar}
+            tipo="search"
+            enterKeyHint="search"
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            maxLength={100}
+            iconeInicio={<IconeBusca />}
+            iconeFim={
+              busca ? (
+                // Sem o preventDefault, tocar no X tira o foco do campo, ele solta do teclado no meio do
+                // toque e o clique cai fora do botão (mesma regra do MessageInput da home).
+                <button
+                  type="button"
+                  className="blog-busca-limpar"
+                  onMouseDown={(evento) => evento.preventDefault()}
+                  onClick={limpar}
+                  aria-label="Limpar busca"
+                >
+                  <IconeLimparBusca />
+                </button>
+              ) : undefined
+            }
+          />
+          <p className="blog-busca-anuncio" aria-live="polite">
+            {anunciado}
+          </p>
+        </div>
       </div>
     </>
   );

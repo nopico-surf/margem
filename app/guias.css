@@ -39,9 +39,38 @@
 
 /* Busca da lista (BuscaBlog). O campo é o input-text do Figma com a lupa e o X das laterais; o resto
    é composto com tokens, sem Figma, como a lista. No desktop o campo não atravessa o container. */
-.blog-busca {
+.blog-busca-lugar {
   width: 100%;
   max-width: 40rem;
+}
+
+/* No celular, com o campo em uso, ele fica preso logo acima do teclado (BuscaBlog e
+   lib/use-linha-do-teclado.ts). A faixa cinza vai do campo até o fim da tela, como o verde do campo
+   aberto da home: o teclado cobre o resto, e uma estimativa menor que o teclado real nunca mostra a
+   página por baixo do campo. Sem teclado (baixado sem sair do campo), o campo fica no pé da tela. */
+.blog-busca[data-fixo="true"] {
+  --busca-faixa: calc(var(--size-64) + 2 * var(--spacing-8));
+  position: fixed;
+  top: calc(var(--busca-teclado-linha, calc(var(--busca-teclado-topo, var(--spacing-0)) + 100dvh)) - var(--busca-faixa));
+  right: 0;
+  left: 0;
+  z-index: calc(var(--z-index-panel) - 1);
+  height: calc(var(--busca-teclado-topo, var(--spacing-0)) + 100dvh - var(--busca-teclado-linha, 100dvh) + var(--busca-faixa));
+  padding: var(--spacing-8) var(--pagina-padding-lateral);
+  background: var(--colors-neutral-50);
+  /* Quando a reserva provisória do teclado é corrigida pelo valor real, o campo escorrega até o lugar
+     certo em vez de saltar (mesma transição da home). */
+  transition:
+    top var(--duration-420) var(--easing-out-expo),
+    height var(--duration-420) var(--easing-out-expo);
+}
+
+/* A compensação de rolagem quando a lista muda é do BuscaBlog: o navegador não escolhe um card como
+   âncora e rola por conta própria junto. */
+.blog-lista,
+.blog-busca-vazia,
+.blog-busca-lugar {
+  overflow-anchor: none;
 }
 
 /* O X tem 16, como no Figma, mas o toque precisa de mais: o botão tem 40 e a margem negativa deixa o
@@ -322,6 +351,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .blog-busca[data-fixo="true"] {
+    transition: none;
+  }
+
   .blog-osso-foto {
     animation: none;
   }
