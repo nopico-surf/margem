@@ -2471,6 +2471,428 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Mão segurando um pequeno frasco de vidro com líquido transparente, com um quarto claro e plantas desfocados ao fundo.",
     imagemCard: true,
   },
+  // Guia de ketamina (07/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
+  // ketamina.md). Formato dos títulos: perguntas (o anterior, opioides, usou afirmativos).
+  // Mesma exceção de copy dos outros guias.
+  {
+    slug: "ketamina",
+    publicadoEm: "2026-11-07",
+    atualizadoEm: "2026-11-07",
+    title: "Ketamina: o que é, para que serve, efeitos e riscos | Margem",
+    descricao:
+      "Entenda o que é ketamina (cetamina), para que serve na medicina e na depressão, os efeitos, os riscos do uso fora do hospital e onde buscar apoio sem julgamento.",
+    h1: "Ketamina: o que é, para que serve, efeitos, riscos e onde buscar apoio",
+    abertura:
+      "Talvez você tenha visto a ketamina numa notícia e queira entender o que ela é. Talvez um médico tenha falado dela pra tratar uma depressão. Talvez você use em festa, ou já esteja usando mais do que gostaria. Ou talvez seja alguém próximo de você. A ketamina é um remédio importante no hospital e, fora dele, pede cuidado. Aqui a gente explica as duas coisas, sem julgamento, e mostra onde encontrar apoio.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que é ketamina?",
+        blocos: [
+          p("A ketamina, também escrita cetamina ou quetamina, é um anestésico. Foi criada nos anos 1960 e é usada até hoje em hospitais, em cirurgias, em emergências e pra aliviar dor forte. Ela é chamada de anestésico dissociativo porque, além de tirar a dor, dá a sensação de que a mente se separa do corpo e do ambiente."),
+          p("Como remédio, no Brasil, ela vem em líquido pra injeção, com nomes comerciais como Ketamin e Cetamin. É um medicamento controlado, que só pode ser usado com receita e acompanhamento. Fora do hospital, costuma circular em pó, cheirado, e também é conhecida como \"K\" ou \"Special K\"."),
+          p("Ela também é usada em veterinária, inclusive em animais grandes, e é por isso que tanta gente fala em \"remédio de cavalo\". A substância é a mesma, mas a ketamina desviada de clínicas veterinárias ou feita fora de qualquer controle pode vir com outra concentração ou misturada com outras coisas."),
+        ],
+      },
+      {
+        titulo: "Pra que é indicada a ketamina?",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "Anestesia em cirurgias e exames, principalmente quando é importante manter a respiração e a pressão estáveis",
+              "Sedação em emergências e em UTI",
+              "Alívio de dor forte, em doses menores",
+              "Tratamento de depressão que não melhorou com outros remédios, em clínica e com acompanhamento",
+            ],
+          },
+          p("Nesses usos, quem aplica é um profissional, a dose é calculada pra pessoa e alguém acompanha a pressão, o coração e a respiração o tempo todo."),
+        ],
+      },
+      {
+        titulo: "Como a ketamina é usada no tratamento da depressão?",
+        blocos: [
+          p("Em algumas pessoas com depressão que não melhorou com pelo menos dois antidepressivos, ou com pensamentos de morte muito fortes, a ketamina pode aliviar os sintomas em horas ou dias, bem mais rápido que os antidepressivos comuns."),
+          p("No Brasil, existe a escetamina em spray nasal, aprovada pela Anvisa pra esses casos. Ela é aplicada no consultório ou na clínica, junto com um antidepressivo, e a pessoa fica em observação depois de cada sessão. Alguns psiquiatras também usam a ketamina na veia, fora do que está escrito na bula. Nos dois casos, o efeito costuma diminuir com o tempo e o tratamento pede várias sessões, então não é uma solução de uma vez só."),
+          p("Esse tratamento não serve pra todo mundo. Pressão alta sem controle, alguns problemas no coração e histórico de psicose, por exemplo, pedem uma avaliação cuidadosa. Usar ketamina por conta própria pra se tratar não é a mesma coisa: sem a dose certa, o ambiente certo e alguém acompanhando, os riscos são outros."),
+          p("Se você está com depressão e os remédios não estão ajudando, um psiquiatra pode avaliar quais caminhos fazem sentido pra você. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+        ],
+      },
+      {
+        titulo: "O que a ketamina faz no cérebro?",
+        blocos: [
+          p("A ketamina bloqueia um dos receptores do glutamato, uma substância que o cérebro usa pra passar mensagens entre os neurônios. Com isso, a comunicação entre o que o corpo sente e o que a mente percebe fica alterada: a dor diminui, o tempo e o espaço parecem diferentes e a pessoa pode sentir que está fora do próprio corpo."),
+          p("Esse mesmo mecanismo parece ajudar o cérebro a formar novas conexões, e é isso que os pesquisadores estudam no tratamento da depressão."),
+        ],
+      },
+      {
+        titulo: "Quais são os efeitos e os efeitos colaterais da ketamina?",
+        blocos: [
+          p("Cheirada, o efeito costuma começar em poucos minutos e durar cerca de uma hora, mas a pessoa pode seguir confusa ou cansada por mais algumas horas. Os efeitos mais comuns são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Sensação de leveza, de flutuar ou de estar sonhando",
+              "Percepção diferente do tempo, do espaço, dos sons e das luzes",
+              "Dificuldade de se mexer, de manter o equilíbrio e de falar",
+              "Dormência e pouca sensação de dor",
+              "Enjoo e vômito",
+              "Coração acelerado e pressão alta",
+              "Confusão e esquecimento do que aconteceu",
+            ],
+          },
+          p("Em dose alta, a pessoa pode entrar no chamado K-hole: fica desligada do corpo e do ambiente, sem conseguir se mexer ou falar direito. Pra algumas pessoas é uma experiência muito assustadora, com medo, pânico ou sensação de estar morrendo. Também podem aparecer alucinações e pensamentos confusos, principalmente em quem já teve psicose."),
+        ],
+      },
+      {
+        titulo: "Ketamina causa dependência?",
+        blocos: [
+          p("Pode causar. O corpo se acostuma rápido, e com o uso frequente o mesmo efeito pede uma dose maior. Algumas pessoas passam a usar cada vez mais vezes e sentem uma vontade forte de usar quando ficam sem. Alguns sinais de que vale conversar com alguém:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Usar com mais frequência ou em mais quantidade do que planejava",
+              "Usar sozinho, pra dormir, pra aliviar tristeza ou ansiedade, e não só em festa",
+              "Precisar de cada vez mais pra sentir o mesmo efeito",
+              "Esquecer coisas, ter dificuldade de concentração ou perder compromissos",
+              "Querer diminuir e não conseguir",
+            ],
+          },
+          p("Quem para depois de um tempo usando com frequência costuma sentir vontade forte de usar, ansiedade, cansaço, tristeza e dificuldade pra dormir. Em geral não são sintomas perigosos pro corpo, mas podem ser difíceis de atravessar sem apoio. [Ler sobre sintomas de abstinência](/blog/sintomas-de-abstinencia)"),
+          p("O uso frequente também pode machucar a bexiga. Os primeiros sinais são dor pra urinar, vontade de urinar o tempo todo e com urgência, sangue na urina e dor na barriga, embaixo do umbigo. Quando o uso para cedo, a bexiga costuma melhorar. Se continuar, o dano pode ficar. Se você notar algum desses sinais, procure um médico e conte que usa ketamina: isso muda o tratamento, e o que você conta fica em sigilo."),
+        ],
+      },
+      {
+        titulo: "Quando a ketamina é perigosa e o que fazer?",
+        blocos: [
+          p("Boa parte dos problemas graves com ketamina vem de acidentes. Como ela tira a dor, a coordenação e a noção do que está acontecendo, a pessoa pode cair, se queimar, se afogar ou ficar exposta em lugar inseguro sem conseguir reagir. O risco também cresce muito quando ela é misturada com álcool, calmantes como clonazepam e diazepam, opioides ou GHB, porque a respiração pode ficar lenta demais e a pessoa pode vomitar sem acordar."),
+          p("Ligue para o SAMU no 192 se a pessoa:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não acorda ou não responde, mesmo chamando alto",
+              "Respira com dificuldade, muito devagar ou com um ronco estranho",
+              "Tem convulsão",
+              "Sente dor no peito ou o coração muito disparado",
+              "Está muito agitada, confusa ou com medo e não melhora",
+            ],
+          },
+          p("Enquanto espera, não deixe a pessoa sozinha. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito. Se puder, diga à equipe o que foi usado e se teve mistura. Se ela estiver assustada, mas acordada, um lugar calmo, com pouca luz e pouco barulho, e alguém de confiança falando com calma, costumam ajudar."),
+        ],
+      },
+      {
+        titulo: "Como usar ketamina com menos risco?",
+        blocos: [
+          p("Nem toda pessoa que usa quer ou consegue parar agora, e dá pra buscar cuidado do jeito que você está. Usar com menos risco também é um caminho, e se chama [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero, mas alguns cuidados fazem diferença:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não misturar com álcool, calmantes, opioides ou GHB",
+              "Não usar sozinho e estar com alguém de confiança que não esteja usando",
+              "Nunca usar perto de água, como banheira, piscina, mar ou rio",
+              "Estar sentado ou deitado, num lugar seguro, antes de o efeito começar",
+              "Começar com pouco e esperar, principalmente com uma ketamina nova",
+              "Desconfiar da procedência: o pó pode ter outra concentração ou outra substância",
+              "Não compartilhar canudo ou nota pra cheirar",
+              "Dar intervalos entre um uso e outro, pra não aumentar a dose e pra poupar a bexiga",
+              "Não dirigir depois de usar",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Ketamina é crime?",
+        blocos: [
+          p("Usar ketamina com receita, num tratamento ou numa anestesia, não é crime. Fora disso, a ketamina está na lista de substâncias controladas do Ministério da Saúde, a mesma que define o que conta como droga pra Lei de Drogas. Por isso, ter ketamina sem receita pode ser enquadrado nessa lei."),
+          p("Pra uso pessoal, a lei não prevê prisão: as medidas são advertência, serviços à comunidade ou curso educativo. Vender ou passar pra outra pessoa pode ser tratado como tráfico. A decisão do STF sobre uso pessoal vale só pra maconha. Se você passou por uma abordagem, vale buscar a Defensoria Pública ou um advogado. [Entender o que diz a Lei de Drogas](/blog/lei-de-drogas)"),
+        ],
+      },
+      {
+        titulo: "Qual é o tratamento pro uso de ketamina?",
+        blocos: [
+          p("Existe tratamento, e ele não começa necessariamente com internação. Na maior parte das vezes, o cuidado acontece com consultas, terapia, CAPS AD e grupos de apoio. A internação costuma ser indicada em situações mais graves, como risco à vida ou crise de saúde mental."),
+          p("Não existe um remédio específico pro uso de ketamina. O médico pode ajudar com o que vem junto, como insônia, ansiedade, depressão e os problemas na bexiga. A terapia ajuda a entender o que o uso estava aliviando e a montar outro jeito de lidar com isso. Conversar com psicólogo ou psiquiatra sobre o seu uso não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que usa ketamina?",
+        blocos: [
+          p("Você não controla a decisão da outra pessoa, mas pode fazer diferença. Ajuda falar do que você está vendo, sem acusação, escutar mais do que aconselhar e mostrar os caminhos de apoio quando ela estiver aberta. Brigas, ameaças e humilhação costumam afastar, não aproximar."),
+          p("Se vocês saem juntos, vale conhecer os sinais de emergência e combinar de não deixar ninguém sozinho. Cuidar de você também conta. O Nar-Anon reúne familiares e amigos de pessoas que usam drogas, sem custo, e uma terapia pra você também é cuidado, mesmo que a outra pessoa não queira buscar ajuda agora."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio?",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa."),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, a Unidade Básica de Saúde pode fazer o primeiro acolhimento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Ketamina e cetamina são a mesma coisa?",
+        resposta:
+          "Sim. Ketamina, cetamina e quetamina são nomes da mesma substância. A escetamina é uma forma derivada dela, usada no tratamento da depressão.",
+      },
+      {
+        pergunta: "A cetamina é um opioide?",
+        resposta:
+          "Não. A ketamina é um anestésico dissociativo e age de outro jeito no cérebro. Mas misturar ketamina com opioides, álcool ou calmantes aumenta o risco de a respiração ficar lenta demais.",
+      },
+      {
+        pergunta: "Ketamina é sedativo?",
+        resposta:
+          "Ela é usada pra sedação no hospital, mas não é um calmante como o clonazepam. É um anestésico dissociativo: além de dar sono em dose alta, muda a percepção do corpo e do ambiente.",
+      },
+      {
+        pergunta: "O que aconteceu com Matthew Perry e a ketamina?",
+        resposta:
+          "O ator de Friends morreu em 2023. A autópsia apontou os efeitos agudos da ketamina como causa da morte, com o afogamento entre os fatores. Ele fazia tratamento com ketamina pra depressão, mas a última sessão tinha sido dias antes e não explicava a quantidade encontrada. É um exemplo de como a ketamina perto da água e sem acompanhamento pode ser perigosa.",
+      },
+      {
+        pergunta: "Ketamina pode matar?",
+        resposta:
+          "Pode, principalmente por acidentes, como quedas e afogamento, e quando é misturada com álcool, calmantes ou opioides. Se a pessoa não acorda, respira com dificuldade ou tem convulsão, ligue para o SAMU no 192.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
+  // Guia de MDMA (07/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
+  // mdma.md). Formato dos títulos: afirmativo (o anterior, ketamina, usou perguntas).
+  // Efeitos, riscos e misturas conferidos com o NIDA e o MSD. Mesma exceção de copy dos outros guias.
+  {
+    slug: "mdma",
+    publicadoEm: "2026-11-07",
+    atualizadoEm: "2026-11-07",
+    title: "MDMA, bala e MD: o que é, efeitos e riscos | Margem",
+    descricao:
+      "Entenda o que é MDMA, a diferença entre bala, MD, molly e MDA, os efeitos, os riscos, como reduzir danos, o que fazer se alguém passar mal e onde buscar apoio.",
+    h1: "MDMA, bala e MD: o que é, efeitos, riscos e como reduzir danos",
+    abertura:
+      "Talvez você vá usar bala ou MD numa festa e queira saber o que está tomando. Talvez já tenha usado e esteja se sentindo estranho nos dias seguintes. Talvez esteja usando mais vezes do que gostaria. Ou talvez seja alguém próximo de você. Aqui a gente explica o que é o MDMA, o que ele faz no corpo e como diminuir os riscos, sem julgamento e sem exagero, e mostra onde encontrar apoio.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que é MDMA",
+        blocos: [
+          p("MDMA é a sigla de metilenodioximetanfetamina, uma substância feita em laboratório, parente das anfetaminas. Ela é estimulante, dá energia e deixa a pessoa mais acordada, e também muda a forma de sentir: aumenta a sensação de proximidade com os outros, o prazer com a música e com o toque, e às vezes altera um pouco a percepção de cores e sons."),
+          p("Ela age no cérebro liberando de uma vez grandes quantidades de serotonina, dopamina e noradrenalina, substâncias ligadas ao humor, ao prazer e à energia. É por isso que o efeito é tão intenso e também por isso que muita gente se sente para baixo nos dias seguintes."),
+          p("No Brasil, o MDMA está na lista de substâncias proibidas da Anvisa e não tem uso médico aprovado. Por isso, o que circula é sempre feito e vendido sem nenhum controle."),
+        ],
+      },
+      {
+        titulo: "A diferença entre MDMA, bala, MD, molly e MDA",
+        blocos: [
+          p("Os nomes se misturam, e nenhum deles garante o que tem dentro:"),
+          {
+            tipo: "tabela",
+            legenda: "Nomes mais comuns do MDMA e de substâncias parecidas, e como costumam aparecer",
+            colunas: ["Nome", "Como costuma aparecer", "O que é, em tese"],
+            linhas: [
+              ["Bala, balinha ou ecstasy", "Comprimido colorido, muitas vezes com um desenho", "MDMA, mas é a forma que mais vem misturada ou trocada por outra coisa"],
+              ["MD", "Cristal ou pó, colocado na boca com o dedo, diluído em bebida ou em cápsula", "MDMA em cristal, vendido como mais puro do que a bala"],
+              ["Molly", "Cristal, pó ou cápsula", "Nome usado nos Estados Unidos pro MDMA em cristal"],
+              ["MDA", "Cristal, pó ou comprimido, muitas vezes vendido como MD", "Outra substância, parecida com o MDMA, com efeito mais longo e mais visual"],
+              ["Droga do amor", "Qualquer uma das formas acima", "Apelido do MDMA, por causa da sensação de proximidade"],
+            ],
+          },
+          p("Bala é o MDMA em comprimido, e MD é o MDMA em cristal. Na prática, a diferença está mais na forma de vender do que no conteúdo. Análises de comprimidos e cristais apreendidos no Brasil e em outros países já encontraram de tudo: pouco ou nenhum MDMA, MDA, metanfetamina, cafeína, ketamina e catinonas sintéticas. Cristal não quer dizer puro, e um comprimido igual ao da última vez pode ter outra coisa dentro."),
+          p("O MDA costuma durar mais, de 6 a 8 horas, e dar mais alteração visual. É considerado mais arriscado que o MDMA, principalmente pro calor do corpo, e quem toma achando que é MD pode se surpreender com a força e a duração."),
+        ],
+      },
+      {
+        titulo: "Os efeitos do MDMA e quanto tempo duram",
+        blocos: [
+          p("O efeito costuma começar entre 30 minutos e 1 hora depois de tomar, e dura em média de 3 a 6 horas. No estômago cheio, pode demorar mais pra começar. Durante o efeito, é comum sentir:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Euforia, energia e vontade de dançar",
+              "Mais vontade de conversar e de estar perto das pessoas",
+              "Tato, música e luzes mais intensos",
+              "Calor e suor",
+              "Mandíbula travada e dentes rangendo",
+              "Coração acelerado e pressão mais alta",
+              "Pupilas grandes",
+              "Falta de fome e de sono",
+            ],
+          },
+          p("Quando o efeito vai embora, costumam vir cansaço, fome, dificuldade pra dormir e uma queda no humor. Isso pode durar alguns dias, como a gente explica mais abaixo."),
+        ],
+      },
+      {
+        titulo: "Os riscos do MDMA",
+        blocos: [
+          p("A maioria das pessoas que usa MDMA não passa por uma emergência, mas ela acontece, inclusive na primeira vez e com pouca quantidade. Os riscos mais importantes são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Calor do corpo subir demais: o MDMA aumenta a temperatura, e lugar quente, cheio e com muita dança soma a isso. É a causa mais comum das emergências graves",
+              "Desidratação, principalmente com álcool e sem pausas",
+              "Água demais: beber muita água de uma vez pode baixar o sódio do sangue, o que causa dor de cabeça, vômito, confusão e, em casos graves, convulsão",
+              "Coração e pressão: o risco é maior pra quem tem problema no coração, pressão alta ou já teve AVC",
+              "Ansiedade, ataque de pânico e, mais raramente, paranoia",
+              "Comprimido ou cristal com outra substância, que pode ter efeitos diferentes e mais fortes",
+              "Fígado: raro, mas pode acontecer",
+            ],
+          },
+          p("Na gravidez, o MDMA pode afetar o bebê. Se você está grávida, o mais seguro é não usar."),
+        ],
+      },
+      {
+        titulo: "As misturas mais perigosas",
+        blocos: [
+          p("Muitas emergências com MDMA envolvem mistura. Merecem atenção especial:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Antidepressivos, principalmente os da classe IMAO, mas também fluoxetina, sertralina, escitalopram e outros: podem causar síndrome serotoninérgica, uma reação grave com febre, tremor, rigidez e confusão. Alguns também cortam o efeito do MDMA, e a pessoa acaba tomando mais",
+              "Tramadol, lítio e alguns remédios pra HIV",
+              "Álcool: desidrata ainda mais e faz a pessoa perceber menos o que está sentindo",
+              "Cocaína, anfetamina e outros estimulantes: sobrecarregam o coração e aumentam o calor",
+              "Outra bala ou mais MD em pouco tempo",
+            ],
+          },
+          p("Se você toma algum remédio de uso contínuo, não pare por conta própria pra poder usar. Vale conversar com quem receitou: o que você contar sobre uso de drogas fica em sigilo."),
+        ],
+      },
+      {
+        titulo: "Como usar MDMA com menos risco",
+        blocos: [
+          p("O jeito de não correr risco é não usar. Mas se você vai usar, alguns cuidados fazem diferença. Isso se chama [redução de danos](/blog/reducao-de-danos), e risco menor não é risco zero:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Começar com pouco, como metade da bala, e esperar pelo menos duas horas antes de pensar em tomar mais. Repetir porque \"não bateu\" é um dos jeitos mais comuns de passar mal",
+              "Fazer pausas pra sair da pista e se refrescar",
+              "Beber água aos poucos: mais ou menos meio litro por hora se estiver dançando, e menos se estiver parado. Uma bebida com sais, como isotônico, ajuda",
+              "Evitar álcool e outras drogas junto",
+              "Estar com alguém de confiança e combinar de um cuidar do outro",
+              "Saber onde fica o posto médico do evento",
+              "Comer antes e descansar depois",
+              "Levar camisinha: o MDMA aumenta a desinibição, e vale combinar antes os limites",
+              "Dar um intervalo longo entre um uso e outro, de semanas ou meses. Usar com frequência aumenta a ressaca e os riscos",
+            ],
+          },
+          p("Em alguns festivais e projetos de redução de danos, dá pra testar a substância com reagentes. O teste ajuda a saber se tem MDMA e alguns adulterantes, mas não mostra a quantidade nem tudo o que tem misturado."),
+        ],
+      },
+      {
+        titulo: "Os sinais de que alguém passou mal e o que fazer",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "Muito calor, pele quente e vermelha, ou suor que para de repente",
+              "Confusão, fala enrolada ou não reconhecer as pessoas",
+              "Desmaio, convulsão ou dificuldade pra acordar",
+              "Dor no peito ou coração muito acelerado que não diminui",
+              "Músculos duros, tremores fortes ou movimentos que a pessoa não controla",
+              "Dor de cabeça forte com vômito, principalmente depois de beber muita água",
+            ],
+          },
+          p("Nesses casos, ligue para o SAMU no 192 ou procure o posto médico do evento na hora, e conte o que a pessoa usou. Não esconder o que foi tomado ajuda a equipe a cuidar mais rápido. O SAMU é um serviço de saúde, não de polícia."),
+          p("Enquanto a ajuda não chega, leve a pessoa pra um lugar fresco e com ar, molhe a pele dela e abane, não deixe ela sozinha e não force a pessoa a beber muita água. Se ela estiver desacordada e respirando, deixe de lado, pra não engasgar com vômito."),
+          p("Ansiedade forte também acontece. Se a pessoa está assustada, mas consciente, ajuda ir pra um lugar mais calmo, com alguém de confiança, e lembrar que o efeito passa. Se piorar ou aparecer qualquer sinal da lista, peça ajuda."),
+        ],
+      },
+      {
+        titulo: "A ressaca dos dias seguintes",
+        blocos: [
+          p("Depois do efeito, o cérebro fica um tempo com menos serotonina disponível. Por isso, muita gente sente, um ou dois dias depois, tristeza, irritação, cansaço, dificuldade de concentração, ansiedade e sono ruim. Isso costuma passar em alguns dias."),
+          p("Ajuda dormir, comer bem, beber água, evitar álcool e outras drogas e não tomar outra bala pra melhorar, o que só adia e aumenta a queda. Também ajuda não tomar decisões importantes nesses dias."),
+          p("Se a tristeza estiver muito pesada, durar mais de uma semana ou vierem pensamentos de morte, vale buscar um profissional o quanto antes. Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
+        ],
+      },
+      {
+        titulo: "MDMA e dependência",
+        blocos: [
+          p("A maioria das pessoas que usa MDMA usa de vez em quando, em festas. Mas ele pode, sim, causar dependência, principalmente com uso frequente. Com o tempo, o corpo se acostuma, o efeito fica mais fraco e a ressaca, mais pesada. Alguns sinais de que vale conversar com alguém:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Usar com mais frequência, ou em mais situações além de festas",
+              "Precisar de mais quantidade pro mesmo efeito",
+              "Não conseguir se divertir ou se aproximar das pessoas sem usar",
+              "Ficar mal por dias depois de usar e mesmo assim voltar a usar",
+              "Faltar ao trabalho ou aos estudos por causa do uso ou da ressaca",
+              "Querer diminuir e não conseguir",
+            ],
+          },
+          p("Quem usa com frequência e para pode sentir cansaço, desânimo, sono e fome por um tempo. [Ler sobre sintomas de abstinência](/blog/sintomas-de-abstinencia)"),
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que usa MDMA",
+        blocos: [
+          p("Se você vai a uma festa com alguém que vai usar, conhecer os sinais de que a pessoa passou mal e o que fazer já é uma ajuda grande. Combinar de não deixar ninguém sozinho também."),
+          p("Se o uso está te preocupando, ajuda falar do que você está vendo, sem acusação, escutar mais do que aconselhar e mostrar os caminhos de apoio quando a pessoa estiver aberta. Brigas, ameaças e humilhação costumam afastar, não aproximar. Cuidar de você também conta, e uma terapia pra você também é cuidado, mesmo que a outra pessoa não queira buscar ajuda agora."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Conversar com um profissional sobre o seu uso não leva a internação, e o que você conta fica em sigilo. Você não precisa ter decidido parar pra buscar apoio. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa."),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, a Unidade Básica de Saúde pode fazer o primeiro acolhimento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Qual a diferença entre MDMA e bala?",
+        resposta:
+          "Bala é o nome popular do comprimido de ecstasy, que em tese tem MDMA. MD é o MDMA em cristal. Mas nem a bala nem o MD garantem o que tem dentro: os dois podem vir com pouco MDMA ou com outras substâncias.",
+      },
+      {
+        pergunta: "Qual a diferença entre MDMA e MDA?",
+        resposta:
+          "São substâncias diferentes, mas parecidas. O MDA costuma durar mais, de 6 a 8 horas, dá mais alteração visual e é considerado mais arriscado. Muitas vezes é vendido como se fosse MD.",
+      },
+      {
+        pergunta: "Quanto tempo dura o efeito do MD?",
+        resposta:
+          "O efeito costuma começar entre 30 minutos e 1 hora depois de tomar e durar de 3 a 6 horas. Cansaço e queda no humor podem durar alguns dias depois.",
+      },
+      {
+        pergunta: "Quanto tempo o MDMA fica no corpo?",
+        resposta:
+          "Na urina, costuma aparecer por 2 a 4 dias depois do uso. No exame toxicológico de cabelo, que é o pedido pra carteira de motorista profissional, pode aparecer por meses.",
+      },
+      {
+        pergunta: "Pode misturar MDMA com álcool?",
+        resposta:
+          "Não é recomendado. O álcool desidrata ainda mais, aumenta o risco de passar mal com o calor e faz a pessoa perceber menos o que está sentindo.",
+      },
+      {
+        pergunta: "MDMA é ilegal?",
+        resposta:
+          "Sim. No Brasil, o MDMA está na lista de substâncias proibidas da Anvisa. Ter pra uso pessoal é crime, mas sem pena de prisão. [Entender o que diz a Lei de Drogas](/blog/lei-de-drogas)",
+      },
+      {
+        pergunta: "MDMA é usado em tratamento?",
+        resposta:
+          "Ele vem sendo estudado junto com psicoterapia pro estresse pós-traumático, sempre com acompanhamento médico. Na Austrália, psiquiatras autorizados podem usar desde 2023. Nos Estados Unidos, a FDA recusou a aprovação em 2024 e pediu mais estudos. No Brasil, não é aprovado, e usar por conta própria não é tratamento.",
+      },
+      {
+        pergunta: "MDMA pode matar?",
+        resposta:
+          "Pode, mas é raro. As mortes costumam envolver calor do corpo muito alto, água demais, mistura com outras substâncias ou comprimido com outra droga dentro. Se a pessoa está muito quente, confusa, desmaia ou tem convulsão, ligue para o SAMU no 192.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
