@@ -2,6 +2,7 @@
 
 Data: 06/11/2026. Google Brasil (`hl=pt-BR&gl=br`), sem login. A primeira página trouxe 7 orgânicos (6 páginas e 1 vídeo); os 3 restantes vieram da segunda (`&start=10`).
 Guia resultante: `/blog/o-que-e-terapia` (`lib/guias.ts`).
+Formato dos títulos: afirmativo.
 
 ## 10 primeiros resultados
 

@@ -1711,6 +1711,197 @@ export const GUIAS: Guia[] = [
     imagem: false,
     imagemAlt: "",
   },
+  // Guia de abstinência (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
+  // sintomas-de-abstinencia.md). Formato dos títulos: perguntas (os guias alternam com o afirmativo pra comparar,
+  // ver .claude/skills/pesquisa-serp-blog). Prazos e sintomas batem com os guias de cada substância.
+  // Mesma exceção de copy dos outros guias.
+  {
+    slug: "sintomas-de-abstinencia",
+    publicadoEm: "2026-11-06",
+    atualizadoEm: "2026-11-06",
+    title: "Sintomas de abstinência: quanto duram e quando é perigoso | Margem",
+    descricao:
+      "Entenda os sintomas de abstinência de álcool, cigarro, maconha, cocaína, calmantes e opioides, quanto tempo duram, quando é emergência e onde buscar apoio.",
+    h1: "Sintomas de abstinência: o que são, quanto tempo duram e quando é perigoso",
+    abertura:
+      "Talvez você tenha parado ou diminuído o uso e o corpo esteja reclamando: tremor, suor, insônia, irritação, uma vontade que não larga. Talvez seja alguém próximo de você. Isso tem nome, abstinência, e não é fraqueza nem falta de força de vontade: é o corpo se reajustando sem uma substância com que ele já estava acostumado. Na maior parte das vezes, passa. Em alguns casos, pede cuidado médico.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que é abstinência?",
+        blocos: [
+          p("É o conjunto de sintomas que aparece quando alguém para ou diminui de repente uma substância que vinha usando com frequência. Com o uso repetido, o corpo e o cérebro se adaptam a funcionar com ela. Quando ela falta, leva um tempo pra se reorganizar, e é nesse tempo que vêm os sintomas."),
+          p("Isso pode acontecer com álcool, cigarro, vape, maconha, cocaína, crack e outras drogas, e também com remédios de uso contínuo, como calmantes e alguns analgésicos fortes. Quando alguém diz que uma pessoa está com abstinência, é disso que está falando."),
+          p("Abstinência e fissura andam juntas, mas não são a mesma coisa. A abstinência é o mal-estar do corpo e do humor nos dias ou semanas depois de parar. A fissura é a vontade forte de usar, que pode vir durante a abstinência e também voltar meses depois, diante de um lugar, uma pessoa ou uma emoção que lembram o uso."),
+        ],
+      },
+      {
+        titulo: "Quais são os sintomas de abstinência?",
+        blocos: [
+          p("Eles mudam de acordo com a substância, a quantidade, o tempo de uso e a saúde de cada pessoa. Os mais comuns no corpo são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Tremor, principalmente nas mãos",
+              "Suor e calafrio",
+              "Enjoo, vômito e diarreia",
+              "Dor de cabeça e dor no corpo",
+              "Coração acelerado",
+              "Cansaço ou sono demais, ou dificuldade pra dormir",
+              "Mudança no apetite",
+            ],
+          },
+          p("E no humor e na cabeça:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Ansiedade e inquietação",
+              "Irritação e raiva",
+              "Tristeza e desânimo",
+              "Dificuldade de concentração",
+              "Vontade forte de usar",
+            ],
+          },
+          p("Se aparecer uma tristeza muito pesada ou pensamentos de morte, vale buscar um profissional o quanto antes. Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
+        ],
+      },
+      {
+        titulo: "Como é a abstinência de cada substância?",
+        blocos: [
+          p("Os prazos abaixo são uma média. Cada corpo tem seu tempo, e quem usa mais de uma substância pode sentir uma mistura de sintomas."),
+          {
+            tipo: "tabela",
+            legenda: "Quando a abstinência costuma começar, quanto tempo dura e se parar de repente pede acompanhamento médico, por substância",
+            colunas: ["Substância", "Quando começa", "Quanto tempo costuma durar", "Parar de repente pede acompanhamento médico?"],
+            linhas: [
+              ["Álcool", "De 6 a 12 horas depois da última dose", "De 3 a 7 dias, e alguns sintomas podem levar mais tempo", "Sim, quando o uso é diário ou quase diário há bastante tempo"],
+              ["Calmantes e remédios pra dormir", "Depende do remédio, de algumas horas a alguns dias", "Pode levar semanas", "Sim. Costumam ser retirados aos poucos, com orientação médica"],
+              ["Opioides, como morfina, codeína e tramadol", "Algumas horas depois da última dose", "Os sintomas mais fortes costumam passar em cerca de uma semana", "Sim. O médico pode indicar remédios que aliviam"],
+              ["Cigarro, vape e pod", "Nas primeiras horas", "Mais forte nos primeiros dias, melhora em algumas semanas", "Não costuma ser perigoso, mas o tratamento ajuda a passar"],
+              ["Maconha", "De 24 a 48 horas depois do último uso", "De duas a três semanas quando o uso era intenso, e o sono pode levar mais", "Não costuma ser perigoso"],
+              ["Cocaína e crack", "Pouco depois do último uso", "De várias semanas a alguns meses", "Não costuma trazer risco físico, mas a queda no humor merece atenção"],
+            ],
+          },
+          p("Se você quer entender uma delas mais a fundo: [Ler sobre como parar de beber](/blog/como-parar-de-beber) [Ler sobre como parar de fumar cigarro](/blog/como-parar-de-fumar) [Ler sobre como parar de fumar maconha](/blog/como-parar-de-fumar-maconha) [Ler sobre como parar de usar cocaína](/blog/como-parar-de-usar-cocaina)"),
+        ],
+      },
+      {
+        titulo: "Qual a pior fase da abstinência?",
+        blocos: [
+          p("Pra maioria das substâncias, os primeiros dias são os mais difíceis. No álcool, os sintomas costumam ficar mais fortes entre o primeiro e o terceiro dia. No cigarro e na maconha, também nos primeiros dias. Depois disso, o corpo tende a melhorar aos poucos."),
+          p("O humor e o sono podem demorar mais do que o corpo pra voltar ao normal, principalmente depois de cocaína e crack. E a fissura pode aparecer de novo bem depois de os outros sintomas terem passado. Isso não quer dizer que você voltou pra estaca zero."),
+        ],
+      },
+      {
+        titulo: "Quanto tempo dura a abstinência de remédio?",
+        blocos: [
+          p("Depende do remédio, da dose e de há quanto tempo você toma. A abstinência de calmantes e remédios pra dormir, como clonazepam e diazepam, pode durar semanas, e parar de repente pode causar convulsão. Por isso eles costumam ser retirados aos poucos."),
+          p("Antidepressivos e outros remédios de uso contínuo também podem causar sintomas quando são interrompidos de uma vez, como tontura, enjoo e irritação. Se você quer parar ou diminuir um remédio receitado, converse antes com quem receitou. Se não tem mais contato com essa pessoa, um psiquiatra ou o médico da Unidade Básica de Saúde pode montar o plano com você."),
+        ],
+      },
+      {
+        titulo: "A abstinência pode ser perigosa?",
+        blocos: [
+          p("Na maioria das vezes, ela é muito desconfortável, mas não coloca a vida em risco. As exceções são o álcool, quando o uso é diário ou quase diário há bastante tempo, e os calmantes e remédios pra dormir: parar de repente pode causar convulsão e um estado de confusão grave. Nesses casos, o ideal é conversar com um profissional de saúde antes de parar, ou logo no começo."),
+          p("A abstinência de opioides não costuma ser perigosa pro corpo, mas vômito e diarreia fortes podem desidratar, e o médico pode indicar remédios que aliviam. Na abstinência de cocaína e crack, o maior cuidado é com a queda no humor."),
+          p("Também merece atenção quem tem problema no coração, convulsão em outra época, outra doença séria, está grávida ou já teve abstinência forte antes."),
+        ],
+      },
+      {
+        titulo: "O que ajuda a passar a abstinência?",
+        blocos: [
+          p("Quando não há sinal de risco, alguns cuidados aliviam os dias mais difíceis:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Beber água ao longo do dia e comer alguma coisa leve, mesmo sem fome",
+              "Manter horários pra dormir e acordar, mesmo que o sono demore a vir",
+              "Ficar num lugar calmo e com alguém por perto, principalmente nos primeiros dias",
+              "Fazer alguma atividade leve, como uma caminhada curta",
+              "Contar pra uma pessoa de confiança o que você está passando",
+              "Ter um plano pra quando a vontade apertar: com quem falar, pra onde ir, o que fazer até a onda baixar",
+              "Evitar trocar uma substância por outra, como beber pra conseguir dormir",
+            ],
+          },
+          p("Um profissional pode deixar esse caminho mais leve. Pra algumas substâncias, existem remédios que aliviam os sintomas, e eles sempre precisam de avaliação médica. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+        ],
+      },
+      {
+        titulo: "Quais sinais de abstinência são emergência?",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "Convulsão",
+              "Confusão, sem saber onde está ou sem reconhecer as pessoas",
+              "Ver ou ouvir coisas que não estão ali",
+              "Febre ou corpo muito quente",
+              "Tremor muito forte com agitação intensa",
+              "Dor ou aperto no peito, ou coração muito acelerado",
+              "Vômito ou diarreia que não param",
+              "Pensamentos de morte ou de se machucar",
+            ],
+          },
+          p("Nesses casos, ligue para o SAMU no 192 ou procure uma UPA ou um pronto-socorro. Se puder, diga o que a pessoa usava e quando parou: isso ajuda no atendimento. Enquanto espera, não deixe a pessoa sozinha."),
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que está em abstinência?",
+        blocos: [
+          p("Ficar perto já ajuda muito. Ofereça água e comida leve, deixe o ambiente calmo e fique atento aos sinais de emergência, principalmente se a pessoa bebia todos os dias ou tomava calmantes."),
+          p("A irritação e a tristeza fazem parte da abstinência. Sermão, briga e cobrança nesse momento costumam pesar mais do que ajudar. Escutar, lembrar que vai passar e mostrar os caminhos de apoio quando ela estiver aberta costuma fazer mais diferença."),
+          p("Cuidar de você também conta. O Al-Anon e o Nar-Anon reúnem familiares e amigos de pessoas que usam álcool e outras drogas, sem custo, e uma terapia pra você também é cuidado."),
+        ],
+      },
+      {
+        titulo: "E se eu voltar a usar?",
+        blocos: [
+          p("Voltar a usar pra aliviar a abstinência é comum e não apaga o que você já construiu. Pode ser um sinal de que você precisa de mais apoio nessa fase, e não de que não consegue."),
+          p("Um cuidado importante: depois de alguns dias sem usar, o corpo perde a tolerância. A quantidade de antes pode ser demais, principalmente com álcool, calmantes e opioides. Começar com menos, não misturar substâncias e não usar sozinho reduz esse risco. [Ler sobre redução de danos](/blog/reducao-de-danos)"),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio na abstinência?",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. O que você conta fica em sigilo, e conversar sobre o seu uso não leva a internação. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, a Unidade Básica de Saúde pode fazer o primeiro acolhimento e ajudar a parar de fumar, e os Alcoólicos Anônimos e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Quanto tempo dura a abstinência?",
+        resposta:
+          "Depende da substância. No álcool, costuma durar de 3 a 7 dias. No cigarro e na maconha, melhora em algumas semanas. Na cocaína e no crack, pode durar de várias semanas a alguns meses. A vontade de usar pode voltar mesmo depois disso.",
+      },
+      {
+        pergunta: "Qual a pior fase da abstinência?",
+        resposta:
+          "Pra maioria das substâncias, os primeiros dias. Depois o corpo tende a melhorar aos poucos, mas o humor e o sono podem demorar mais pra voltar ao normal.",
+      },
+      {
+        pergunta: "Quanto tempo dura a abstinência de remédio?",
+        resposta:
+          "Depende do remédio, da dose e do tempo de uso. A de calmantes e remédios pra dormir pode durar semanas, e parar de repente pode causar convulsão. Converse com quem receitou antes de parar ou diminuir.",
+      },
+      {
+        pergunta: "A abstinência pode matar?",
+        resposta:
+          "A de álcool, quando o uso é diário ou quase diário há bastante tempo, e a de calmantes podem ser graves e pedem acompanhamento médico. Na maioria das outras substâncias, a abstinência é muito desconfortável, mas não costuma colocar a vida em risco.",
+      },
+      {
+        pergunta: "O que fazer para passar a abstinência?",
+        resposta:
+          "Beber água, comer algo leve, manter horários de sono, ficar num lugar calmo e com alguém por perto. Um profissional pode indicar remédios que aliviam, e convulsão, confusão ou febre são emergência: ligue para o SAMU no 192.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {

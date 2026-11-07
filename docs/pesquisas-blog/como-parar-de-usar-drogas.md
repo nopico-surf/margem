@@ -2,6 +2,7 @@
 
 Data: 06/11/2026. Google Brasil (`hl=pt-BR&gl=br`), sem login, localização aproximada Florianópolis.
 Guia resultante: `/blog/como-parar-de-usar-drogas` (`lib/guias.ts`).
+Formato dos títulos: perguntas.
 
 ## 10 primeiros resultados
 
