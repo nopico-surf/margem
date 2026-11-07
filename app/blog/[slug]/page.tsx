@@ -122,7 +122,7 @@ function Bloco({ bloco }: { bloco: BlocoGuia }) {
       return (
         <div className="guia-botoes">
           {bloco.botoes.map((botao) => (
-            <Button key={botao.href} href={botao.href} tamanho="medium">
+            <Button key={botao.href} href={botao.href} tamanho="small">
               {botao.texto}
             </Button>
           ))}
