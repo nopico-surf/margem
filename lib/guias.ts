@@ -1541,8 +1541,9 @@ export const GUIAS: Guia[] = [
           "No CAPS AD, que atende pelo SUS sem encaminhamento, na Unidade Básica de Saúde e nos Narcóticos Anônimos, que têm reuniões presenciais e online.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mão aberta erguida em sinal de pare, com árvores desfocadas ao fundo.",
+    imagemCard: true,
   },
   // Guia de entrada sobre terapia (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google
   // (docs/pesquisas-blog/o-que-e-terapia.md). A pedido do Vitor, os títulos das seções são afirmativos e as
