@@ -2255,7 +2255,7 @@ export const GUIAS: Guia[] = [
       },
     ],
     imagem: true,
-    imagemAlt: "Homem sentado a uma mesa, com a mão na testa e os olhos fechados, ao lado de uma caneca, um caderno e um notebook fechado.",
+    imagemAlt: "Homem sentado a uma mesa, com a mão na testa e os olhos fechados, diante de um prato com sanduíche e batata chips e uma garrafa de água.",
     imagemCard: true,
   },
   // Guia de opioides (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
