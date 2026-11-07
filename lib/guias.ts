@@ -59,10 +59,12 @@ export type Guia = {
 const p = (texto: string): BlocoGuia => ({ tipo: "paragrafo", texto });
 
 export const GUIAS: Guia[] = [
+  // Os quatro primeiros guias foram revisados em 06/11/2026 com a pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/<slug>.md). Títulos em pergunta.
   {
     slug: "terapia-barata",
     publicadoEm: "2026-10-31",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Terapia barata: psicólogo online a partir de R$ 60 | Margem",
     descricao:
       "Sessão com psicólogo registrado no CRP, de R$ 60 a 200, a valor social. Você escolhe quanto paga dentro da faixa. Veja como funciona.",
@@ -83,6 +85,12 @@ export const GUIAS: Guia[] = [
         blocos: [
           p("De R$ 60 a R$ 200 por sessão. Você olha pro seu mês e escolhe um valor dentro dessa faixa. Se o orçamento apertar mais pra frente, dá pra conversar com o profissional sobre isso."),
           p("Você não precisa explicar por que escolheu esse valor. A Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas, e a faixa de valores é pensada pra isso."),
+        ],
+      },
+      {
+        titulo: "Como pedir valor social a um psicólogo?",
+        blocos: [
+          p("Fora da Margem, dá pra perguntar direto, já no primeiro contato: muitos psicólogos têm algumas vagas com valor reduzido. Diga quanto cabe no seu mês, sem precisar se justificar. Se não houver vaga, vale pedir indicação de colegas. Na Margem, o valor social já vem combinado: você escolhe dentro da faixa."),
         ],
       },
       {
@@ -113,7 +121,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "E se nem o valor social couber agora?",
         blocos: [
-          p("Acontece, e não diz nada sobre você. Pelo SUS, a porta de entrada é a Unidade Básica de Saúde do seu bairro, e o CAPS atende sem precisar de encaminhamento. Muitas faculdades de psicologia também têm clínicas-escola, com atendimento feito por estudantes supervisionados por professores. A fila costuma ser longa, mas é um caminho real. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+          p("Acontece, e não diz nada sobre você. Pelo SUS, a porta de entrada é a Unidade Básica de Saúde do seu bairro, e o CAPS atende sem precisar de encaminhamento. Muitas faculdades de psicologia também têm clínicas-escola, com atendimento feito por estudantes supervisionados por professores. Algumas atendem online. A fila costuma ser longa, mas é um caminho real. Projetos sociais e ONGs da sua cidade também podem ter atendimento gratuito. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
           p("Se você está num momento muito difícil e precisa conversar agora, o CVV atende 24 horas pelo 188."),
         ],
       },
@@ -139,6 +147,16 @@ export const GUIAS: Guia[] = [
         resposta:
           "Dá, mas fora da Margem: a Margem não faz parte do SUS nem tem parceria com o governo. No SUS, a porta de entrada é a Unidade Básica de Saúde, e o CAPS atende sem encaminhamento. A espera costuma ser maior.",
       },
+      {
+        pergunta: "Existe terapia online grátis?",
+        resposta:
+          "Algumas clínicas-escola de faculdades de psicologia e alguns projetos sociais atendem online sem custo, geralmente com fila. O CVV, no 188, não é terapia, mas atende 24 horas quem precisa conversar.",
+      },
+      {
+        pergunta: "Como pedir valor social a um psicólogo?",
+        resposta:
+          "Pergunte direto no primeiro contato e diga quanto cabe no seu mês, sem precisar se justificar. Na Margem, o valor social já vem combinado.",
+      },
     ],
     imagem: true,
     imagemAlt: "Psicóloga sorrindo diante de um notebook, em videochamada com um paciente.",
@@ -147,7 +165,7 @@ export const GUIAS: Guia[] = [
   {
     slug: "psiquiatra-barato",
     publicadoEm: "2026-10-31",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Psiquiatra barato: consulta online a partir de R$ 110 | Margem",
     descricao:
       "Consulta com psiquiatra, de R$ 110 a 290, online e com receita digital, a valor social. Veja como funciona e como conferir o CRM do médico.",
@@ -225,6 +243,16 @@ export const GUIAS: Guia[] = [
         pergunta: "Quanto custa uma consulta com psiquiatra barato na Margem?",
         resposta:
           "De R$ 110 a R$ 290 por consulta, e você escolhe o valor dentro dessa faixa. Não precisa justificar a escolha: a Margem existe pra que pessoas em situação de vulnerabilidade consigam ser atendidas.",
+      },
+      {
+        pergunta: "Quanto custa em média um psiquiatra?",
+        resposta:
+          "No particular, o valor varia muito de cidade pra cidade e costuma ficar acima da faixa da Margem, que vai de R$ 110 a R$ 290. Pelo SUS, a consulta é gratuita, com espera maior.",
+      },
+      {
+        pergunta: "Onde achar psiquiatra gratuito?",
+        resposta:
+          "Pelo SUS: na Unidade Básica de Saúde, que encaminha quando precisa, ou direto no CAPS, que atende sem encaminhamento. Em crise, procure uma UPA ou ligue para o SAMU no 192.",
       },
       {
         pergunta: "Precisa de encaminhamento pra ir ao psiquiatra?",
@@ -384,7 +412,7 @@ export const GUIAS: Guia[] = [
   {
     slug: "como-saber-se-o-psicologo-e-registrado",
     publicadoEm: "2026-10-31",
-    atualizadoEm: "2026-10-31",
+    atualizadoEm: "2026-11-06",
     title: "Como consultar o CRP do psicólogo e o CRM do psiquiatra | Margem",
     descricao:
       "Antes de começar terapia ou consulta online, confira se o profissional é registrado. Leva poucos minutos e é de graça no site dos conselhos.",
@@ -482,6 +510,15 @@ export const GUIAS: Guia[] = [
         pergunta: "Coach é psicólogo?",
         resposta: "Não. Coach não é uma profissão de saúde regulamentada.",
       },
+      {
+        pergunta: "Psicólogo tem CRP ou CRM?",
+        resposta: "CRP, o registro no Conselho Regional de Psicologia. CRM é o registro dos médicos, como o psiquiatra.",
+      },
+      {
+        pergunta: "Como é o número do CRP?",
+        resposta:
+          "Tem duas partes separadas por uma barra: o número da região do conselho, como 06 em São Paulo, e o número de inscrição do psicólogo. Por exemplo, CRP 06/12345.",
+      },
     ],
     imagem: true,
     imagemAlt: "Jovem de cabelo ruivo sentada num sofá, olhando para o celular.",
@@ -489,10 +526,11 @@ export const GUIAS: Guia[] = [
   },
   // Textos de redução de danos e de como parar (01/11/2026). Um texto central de redução de danos, ligado
   // aos quatro por substância e de volta. Mesma exceção de copy do briefing, autorizada de novo pelo Vitor.
+  // Revisado em 06/11/2026 com a pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/reducao-de-danos.md).
   {
     slug: "reducao-de-danos",
     publicadoEm: "2026-11-01",
-    atualizadoEm: "2026-11-01",
+    atualizadoEm: "2026-11-06",
     title: "Redução de danos: o que é e como funciona na prática | Margem",
     descricao:
       "Redução de danos é cuidar de quem usa álcool ou outras drogas sem exigir que a pessoa pare. Entenda o que é, para quem serve e como começar.",
@@ -565,6 +603,12 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "O que faz um redutor de danos?",
+        blocos: [
+          p("Redutores de danos são pessoas que vão até onde quem usa está: na rua, em festas, em comunidades. Muitas vezes trabalham com o CAPS AD ou com o Consultório na Rua. Elas conversam sem julgamento, levam informação e materiais como camisinha e ajudam a pessoa a chegar aos serviços de saúde quando ela quiser. Algumas têm experiência própria com o uso, o que ajuda a criar confiança."),
+        ],
+      },
+      {
         titulo: "Quando é emergência?",
         blocos: [
           p("Se alguém está desacordado, com dificuldade pra respirar, tem uma convulsão, dor forte no peito ou fica muito confuso, ligue para o SAMU no 192 e, se puder, diga o que foi usado: isso ajuda no atendimento. Enquanto espera, não deixe a pessoa sozinha. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
@@ -595,6 +639,11 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Onde encontrar redução de danos pelo SUS?",
         resposta: "No CAPS AD, serviço do SUS especializado em álcool e outras drogas, que atende sem encaminhamento.",
+      },
+      {
+        pergunta: "O que faz um redutor de danos?",
+        resposta:
+          "Vai até onde quem usa está, conversa sem julgamento, leva informação e materiais como camisinha e ajuda a pessoa a chegar aos serviços de saúde quando ela quiser.",
       },
     ],
     imagem: true,
@@ -2063,8 +2112,9 @@ export const GUIAS: Guia[] = [
           "Beber água, comer algo leve, manter horários de sono, ficar num lugar calmo e com alguém por perto. Um profissional pode indicar remédios que aliviam, e convulsão, confusão ou febre são emergência: ligue para o SAMU no 192.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Homem sentado a uma mesa, com a mão na testa e os olhos fechados, ao lado de uma caneca, um caderno e um notebook fechado.",
+    imagemCard: true,
   },
   // Guia de opioides (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
   // opioides.md). Formato dos títulos: afirmativo (o anterior, sintomas-de-abstinencia, usou perguntas).
