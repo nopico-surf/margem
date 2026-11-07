@@ -2660,8 +2660,9 @@ export const GUIAS: Guia[] = [
           "Pode, principalmente por acidentes, como quedas e afogamento, e quando é misturada com álcool, calmantes ou opioides. Se a pessoa não acorda, respira com dificuldade ou tem convulsão, ligue para o SAMU no 192.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Saquinho plástico com pó branco ao lado de um frasco de vidro com líquido transparente e rótulo prateado, sobre uma mesa de madeira, com um ambiente claro e plantas desfocados ao fundo.",
+    imagemCard: true,
   },
   // Guia de MDMA (07/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
   // mdma.md). Formato dos títulos: afirmativo (o anterior, ketamina, usou perguntas).
