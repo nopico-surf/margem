@@ -44,3 +44,13 @@ Parar de fumar em 5 dias; remédio caseiro pra parar de fumar urgente; tabela pr
 ## O que mudou no guia
 
 Seções novas: "Quais são os benefícios de parar de fumar?" (linha do tempo) e "Como ajudar alguém a parar de fumar?". "Como lidar com a vontade" ganhou quanto tempo ela leva pra diminuir. "Cigarro eletrônico" ganhou como parar com o pod. Três perguntas frequentes novas.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+O texto do [INCA](https://www.gov.br/inca/pt-br/assuntos/causas-e-prevencao-do-cancer/tabagismo/como-parar-de-fumar) foi lido inteiro: parada imediata como primeira opção, parada gradual em até duas semanas, data de parada, programa do SUS. O guia já seguia isso.
+
+2ª página, pra completar os 10: OPAS/OMS "Mais de 100 razões pra parar de fumar"; Unimed Fortaleza "4 métodos"; [Cochrane: reduzir antes de parar](https://www.cochrane.org/pt/evidence/CD013183_can-people-stop-smoking-cutting-down-amount-they-smoke-first) (51 estudos: resultados parecidos entre reduzir antes e parar de uma vez); Instagram do Drauzio; Dr. Consulta "7 dicas". A página do Drauzio continuou bloqueada.
+
+Busca extra **"remédio para parar de fumar"**: farmácias (Drogasil, Nissei, Raia), [H9J: medicamento pra parar de fumar](https://www.h9j.com.br/blog/medicamento-para-parar-de-fumar%E2%80%8B/) (reposição de nicotina, bupropiona, vareniclina), Cochrane, Prevent Senior. Pessoas também perguntam: "Qual remédio o SUS fornece pra parar de fumar?", "Quanto tempo tem que tomar bupropiona?", "Qual o melhor remédio aprovado pela Anvisa?". Buscas relacionadas: caseiro, sem receita, valor, antidepressivo.
+
+Mudou no guia: seção nova "Existe remédio pra parar de fumar?"; "Qual é a melhor forma" ganhou o resultado da revisão Cochrane; uma pergunta frequente nova.

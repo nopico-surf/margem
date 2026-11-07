@@ -43,3 +43,17 @@ Redução de danos psicologia; cartilha; Ministério da Saúde; CAPS; álcool; c
 ## O que mudou no guia
 
 Seção nova "O que faz um redutor de danos?" e uma pergunta frequente nova.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+Páginas lidas:
+
+- [Gov.br (Departamento de HIV/Aids)](https://www.gov.br/aids/pt-br/assuntos/prevencao-combinada/reducao-de-danos): redução de danos na prevenção de IST, HIV e hepatites, oferta de insumos e redução de estigma.
+- [Centro de Convivência É de Lei: práticas](https://edelei.org/atuacao/praticas-de-reducao-de-danos/): saúde, mas também cidadania e direitos humanos; prioridade pra quem está em situação de vulnerabilidade; vulnerabilidade como situação, não como característica da pessoa.
+- [Wikipédia](https://pt.wikipedia.org/wiki/Redu%C3%A7%C3%A3o_de_danos): objetivos, exemplos práticos, redução de danos no Brasil (ABORDA, REDUC), críticas.
+- CRP-MG: a página só tinha o título visível.
+- National Harm Reduction Coalition: o conteúdo ficou escondido atrás do aviso de cookies. Os princípios dela são conhecidos (encontrar a pessoa onde ela está, sem julgamento, a pessoa como protagonista, desigualdades sociais) e foram escritos no guia com as palavras da Margem.
+
+Lacuna: os dois primeiros resultados são sobre **princípios** da redução de danos, e o guia não tinha essa seção.
+
+Mudou no guia: seção nova "Quais são os princípios da redução de danos?" e uma pergunta frequente nova.

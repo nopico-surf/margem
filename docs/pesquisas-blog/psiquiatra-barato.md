@@ -43,3 +43,17 @@ Psiquiatra Florianópolis barato; psiquiatra barato perto de mim; psiquiatra bar
 ## O que mudou no guia
 
 Duas perguntas frequentes novas. Nenhuma seção mudou.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+Como a busca principal é local, entrou a busca vizinha **"psiquiatra online barato"**: PsyMeet (busca e artigo de valor social), Meu Psiquiatra Online, Cartão de Todos, PicDoc (a partir de R$ 138), SOS Psiquiatria Online, Telavita, consultórios online. Pessoas também perguntam: "Quanto custa uma consulta com psiquiatra online?", **"Tem psiquiatra online gratuito?"**, **"O atestado de psiquiatra online é válido?"**, "Vale a pena consultar um psiquiatra online?". Buscas relacionadas: online agora gratuito, WhatsApp grátis, valor social, 24 horas, "é confiável".
+
+Páginas lidas:
+
+- [PsyMeet: psiquiatria online a valor social](https://www.psymeetsocial.com/psiquiatra-online-valor-social): validade igual à presencial, inclusive atestado e laudo; controlados com assinatura ICP-Brasil; **limites do atendimento online** (urgência, exame físico, laudos extensos); R$ 70.
+- [PicDoc: psiquiatra online](https://picdoc.com.br/consultas/psiquiatra): receita, laudo e atestado só com indicação clínica.
+- Medprev (Florianópolis): o que o psiquiatra faz, quando procurar, o que dizer na consulta.
+
+Lacunas: atestado online e os limites da consulta online.
+
+Mudou no guia: seções novas "Quando a consulta online não é o melhor caminho?" e "Psiquiatra online pode dar atestado?"; duas perguntas frequentes novas ("Tem psiquiatra online gratuito?" e "Atestado de psiquiatra online é válido?").

@@ -40,3 +40,15 @@ Terapia online 30 reais; terapia barata online; PsyMeet; psicólogos online grá
 ## O que mudou no guia
 
 Seção nova "Como pedir valor social a um psicólogo?". "E se nem o valor social couber" ganhou clínica-escola online e projetos sociais. Duas perguntas frequentes novas.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+Páginas de plataforma lidas além das duas primeiras:
+
+- [PsiNote: terapia social por R$ 50](https://www.psinote.com.br/artigo/Terapiavalorsocial): o que é terapia social, quanto custa uma terapia normal, se terapia barata é confiável, quem deve procurar, se funciona.
+- Terappy e Terappia: páginas de busca de profissional, sem conteúdo editorial (Terappia: "a partir de R$ 40", contato por WhatsApp).
+- O UOL foi relido. É uma lista por estado de clínicas-escola e clínicas sociais, de 2021.
+
+Lacunas: confiança ("terapia barata é confiável?") e "quem pode pedir valor social". O guia já respondia qualidade e registro; faltava dizer que na Margem não se comprova renda e como checar uma opção barata.
+
+Mudou no guia: duas perguntas frequentes novas ("Preciso comprovar renda?" e "Como saber se uma terapia barata é confiável?").

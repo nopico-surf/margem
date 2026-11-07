@@ -45,3 +45,16 @@ Como parar de beber naturalmente; remédio caseiro pra parar de beber definitiva
 ## O que mudou no guia
 
 Seções novas: "Dá pra parar de beber sozinho?" e "O que acontece quando eu paro de beber?". "O que ajuda" ganhou bebida sem álcool e tirar a bebida de casa. "Existe remédio" passou a nomear os remédios, dizer que pedem receita e responder sobre remédio caseiro. Três perguntas frequentes novas.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+Páginas da 2ª página lidas: [Einstein: alcoolismo](https://www.einstein.br/n/glossario-de-saude/alcoolismo) (sintomas, causas, diagnóstico, tratamento, prevenção) e [Veja Saúde: como parar de beber](https://saude.abril.com.br/medicina/como-parar-de-beber-beneficios-saude/) (a OMS diz que não existe nível seguro de consumo; benefícios de parar). Drauzio Varella e CISA continuaram bloqueando o navegador automático.
+
+Buscas extras:
+
+- **"remédio para parar de beber"**: farmácias vendendo produto homeopático "pra parar de beber", Tua Saúde, CISA, Grupo Recanto. Pessoas também perguntam: "Qual é o nome do pó para parar de beber?", "O que fazer para uma pessoa parar de beber urgente?", "O que o naltrexona faz no corpo?". Buscas relacionadas: **"remédio pra parar de beber pra dar escondido"**, "em pó", "sem receita", "comprar na farmácia".
+- **"o que inibe a vontade de beber"**: NIAAA (Rethinking Drinking), alimentos que ajudam, Tua Saúde. Pessoas também perguntam: "Qual o pior dia da abstinência alcoólica?", "Existe receita caseira pra parar de beber cerveja?".
+
+Lacuna mais séria: muita gente procura um "pó" pra dar escondido. É o dissulfiram, e dar sem a pessoa saber pode ser perigoso. Ninguém no topo explica isso direto.
+
+Mudou no guia: seção nova "Existe pó pra parar de beber? Dá pra dar escondido?"; a abstinência diz quando os sintomas ficam mais fortes; "Dá pra diminuir" ganhou a frase da OMS; duas perguntas frequentes novas ("Existe pó pra parar de beber?" e "Qual o pior dia da abstinência de álcool?").

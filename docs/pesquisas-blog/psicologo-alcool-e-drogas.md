@@ -46,3 +46,14 @@ Psicólogo especialista em dependência química online; carteira de terapeuta e
 ## O que mudou no guia
 
 h1 com "dependência química". Seções novas: "Qual a melhor terapia pra dependência química?", "Dá pra internar alguém contra a vontade?" e "E se acontecer uma recaída?". "Psicólogo ajuda" ganhou um parágrafo sobre o que o psicólogo faz na prática. Uma pergunta frequente nova.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+Como a busca principal é local (diretórios), entraram duas buscas vizinhas sem intenção de cidade:
+
+- **"psicólogo para alcoolismo"**: Doctoralia, Mundo Psicólogos, Psicólogo e Terapia "como ajudar pessoas que enfrentam o alcoolismo", Terappy, Central Terapia, Psitto (guia de alcoolismo), Neuroflux "TCC pra superar". Pessoas também perguntam: "Qual a melhor terapia para alcoolismo?", "Qual o melhor profissional para tratar o alcoolismo?", "Quais são as 4 fases do alcoolismo?". Buscas relacionadas: "como ajudar um alcoólatra que não quer ajuda" (a busca aparece com o rótulo), psiquiatra especialista em alcoolismo.
+- **"terapia para dependência química"**: Psitto, Scielo (terapia multifamiliar), Hospital Santa Mônica (tipos de tratamento), cursos de pós, ISSUP. Pessoas também perguntam: "Quais são os gatilhos?", "Como tratar sem internação?". Buscas relacionadas: tratamento pelo SUS, gratuito, sem internação, **"terapeuta em dependência química" (curso e carteira)**.
+
+Lacunas: terapia familiar não estava na lista de abordagens; a família que lida com quem não quer ajuda; e a confusão entre "terapeuta em dependência química" (curso) e psicólogo (profissão com registro).
+
+Mudou no guia: terapia familiar na lista; seção nova "Terapeuta em dependência química é psicólogo?"; parágrafo pra família quando a pessoa não quer ajuda; duas perguntas frequentes novas.

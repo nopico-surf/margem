@@ -46,3 +46,11 @@ Tem como parar de usar cocaína sozinho; remédio pra parar de usar cocaína; re
 ## O que mudou no guia
 
 Seções novas: "Dá pra parar de usar cocaína sozinho?" e "Quanto tempo a cocaína fica no corpo?". A fissura ganhou um parágrafo sobre não trocar por outra droga. O remédio ganhou a resposta sobre remédio natural e simpatia. Duas perguntas frequentes novas.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+Na segunda consulta, o [Manual MSD: cocaína](https://www.msdmanuals.com/pt/casa/assuntos-especiais/entorpecentes-e-intoxicantes/coca%C3%ADna) entrou na primeira página. Ele cobre crack, sinais de intoxicação, overdose, efeitos no longo prazo, abstinência e tratamento. Também foi lida a [Clínica Revitale: tratamento pra cocaína](https://clinicarevitale.net/tratamento/tratamento-para-cocaina/), que fala de recaída, remédios, família e TCC e vende internação.
+
+Lacuna: o MSD trata crack junto com cocaína, e a busca "como parar de usar crack" apareceu nas relacionadas de "como parar de usar drogas". O guia só citava crack na redução de danos.
+
+Mudou no guia: seção nova "E se o uso é de crack?" e uma pergunta frequente nova ("Como parar de usar crack?").

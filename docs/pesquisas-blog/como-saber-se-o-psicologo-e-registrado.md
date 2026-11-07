@@ -39,4 +39,12 @@ Consultar registro de psicologia; cadastro nacional de psicólogos; CRP consulta
 
 ## O que mudou no guia
 
-Duas perguntas frequentes novas: "Psicólogo tem CRP ou CRM?" e "Como é o número do CRP?". A do carimbo ficou de fora: não achei fonte segura sobre a obrigatoriedade.
+Duas perguntas frequentes novas: "Psicólogo tem CRP ou CRM?" e "Como é o número do CRP?". A do carimbo ficou de fora na primeira rodada.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+- [CFP: como saber se uma pessoa é psicóloga(o)](https://site.cfp.org.br/fale-conosco/outras-questoes/como-saber-se-uma-pessoa-e-psicologo/): precisa de formação e inscrição ativa no CRP do estado; **atuar sem registro é exercício ilegal da profissão (contravenção penal) e pode ser denunciado**.
+- CRP-SC (Cadastro Nacional) e CRP-RS (consulta de inscritos): páginas de busca, sem texto.
+- Busca extra **"psicólogo é obrigado a ter carimbo CFP"**: os primeiros resultados são a Resolução CFP 06/2019 comentada e o manual de documentos do CFP (PDFs, não abertos), e a visão de IA resume: o carimbo é opcional, mas o documento precisa ter o nome completo e o número do CRP; documento digital usa assinatura eletrônica. O [CRP-16](https://crp16.org.br/orientacoes/como-montar-um-consultorio/) explica como fazer o carimbo, sem dizer que é obrigatório.
+
+Mudou no guia: "Sinais de alerta" ganhou um parágrafo sobre exercício ilegal e denúncia; duas perguntas frequentes novas ("Psicólogo precisa ter carimbo?" e "O que fazer se o psicólogo não tem registro?"). Título, h1 e seções existentes não mudaram.

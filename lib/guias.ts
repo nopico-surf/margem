@@ -157,6 +157,15 @@ export const GUIAS: Guia[] = [
         resposta:
           "Pergunte direto no primeiro contato e diga quanto cabe no seu mês, sem precisar se justificar. Na Margem, o valor social já vem combinado.",
       },
+      {
+        pergunta: "Preciso comprovar renda pra pagar valor social na Margem?",
+        resposta: "Não. Você escolhe o valor dentro da faixa, de R$ 60 a R$ 200, sem precisar comprovar nada nem explicar por quê.",
+      },
+      {
+        pergunta: "Como saber se uma terapia barata é confiável?",
+        resposta:
+          "Confira o registro do psicólogo no Cadastro Nacional do Conselho Federal de Psicologia, pergunte o que está incluído, como a duração da sessão e se é por vídeo, e desconfie de quem promete resultado garantido.",
+      },
     ],
     imagem: true,
     imagemAlt: "Psicóloga sorrindo diante de um notebook, em videochamada com um paciente.",
@@ -200,9 +209,21 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "Quando a consulta online não é o melhor caminho?",
+        blocos: [
+          p("Em crise, com risco à vida ou quando alguém não está conseguindo se proteger, o caminho é o atendimento de urgência: UPA, pronto-socorro ou SAMU no 192. A consulta online também tem limite quando o médico precisa de um exame físico. Nesses casos, ele pode pedir um encontro presencial ou exames."),
+        ],
+      },
+      {
         titulo: "Psiquiatra online pode passar receita?",
         blocos: [
           p("Pode. A receita digital tem a mesma validade da receita em papel e vem com assinatura eletrônica. Pra alguns remédios controlados, vale confirmar com a farmácia como ela recebe a receita antes de ir."),
+        ],
+      },
+      {
+        titulo: "Psiquiatra online pode dar atestado?",
+        blocos: [
+          p("Pode, quando há indicação médica. Atestado, laudo e receita emitidos na consulta online têm a mesma validade dos emitidos na presencial. Quem decide se cabe um atestado é o médico, a partir do que avaliou na consulta."),
         ],
       },
       {
@@ -253,6 +274,15 @@ export const GUIAS: Guia[] = [
         pergunta: "Onde achar psiquiatra gratuito?",
         resposta:
           "Pelo SUS: na Unidade Básica de Saúde, que encaminha quando precisa, ou direto no CAPS, que atende sem encaminhamento. Em crise, procure uma UPA ou ligue para o SAMU no 192.",
+      },
+      {
+        pergunta: "Tem psiquiatra online gratuito?",
+        resposta:
+          "O atendimento gratuito com psiquiatra é pelo SUS, em geral presencial, na Unidade Básica de Saúde ou no CAPS. Na Margem, a consulta online custa de R$ 110 a R$ 290, e você escolhe o valor dentro da faixa.",
+      },
+      {
+        pergunta: "Atestado de psiquiatra online é válido?",
+        resposta: "É. Atestado, laudo e receita da consulta online têm a mesma validade dos da presencial, quando há indicação médica.",
       },
       {
         pergunta: "Precisa de encaminhamento pra ir ao psiquiatra?",
@@ -309,9 +339,16 @@ export const GUIAS: Guia[] = [
               "Terapia cognitivo-comportamental (TCC), que trabalha os pensamentos e as situações ligadas ao uso",
               "Entrevista motivacional, que ajuda a pessoa a encontrar os próprios motivos pra mudar, sem pressão",
               "Prevenção de recaída, que prepara pros momentos de maior risco",
+              "Terapia familiar, que inclui quem convive com a pessoa",
             ],
           },
           p("Muitos profissionais combinam essas abordagens. Tão importante quanto a técnica é você se sentir à vontade com quem atende. Se não rolar com um profissional, tudo bem procurar outro."),
+        ],
+      },
+      {
+        titulo: "Terapeuta em dependência química é psicólogo?",
+        blocos: [
+          p("Nem sempre. \"Terapeuta em dependência química\" é nome de curso, não de profissão regulamentada. Quem se apresenta como psicólogo precisa ter registro no CRP, e quem se apresenta como psiquiatra precisa ter CRM e RQE. [Ver como conferir o registro de um psicólogo](/blog/como-saber-se-o-psicologo-e-registrado)"),
         ],
       },
       {
@@ -350,6 +387,7 @@ export const GUIAS: Guia[] = [
         titulo: "Estou aqui por alguém que eu amo. E agora?",
         blocos: [
           p("Acompanhar alguém que faz uso cansa e assusta. Você também merece cuidado, e não precisa esperar a outra pessoa aceitar ajuda pra buscar o seu. Uma terapia pra você pode ajudar a entender o que está ao seu alcance e o que não está."),
+          p("Se a pessoa não quer ajuda agora, cobrança e ultimato costumam afastar. Costuma funcionar melhor dizer o que você está vendo, sem acusar, deixar claro que você está por perto e mostrar os caminhos quando ela estiver pronta. Grupos como Al-Anon e Nar-Anon reúnem familiares que passam pela mesma coisa."),
         ],
       },
       {
@@ -386,6 +424,15 @@ export const GUIAS: Guia[] = [
         pergunta: "Qual a melhor terapia para dependência química?",
         resposta:
           "Não existe uma única melhor pra todo mundo. Terapia cognitivo-comportamental, entrevista motivacional e prevenção de recaída têm bastante pesquisa, e muitos profissionais combinam essas abordagens.",
+      },
+      {
+        pergunta: "Qual o melhor profissional para tratar o alcoolismo?",
+        resposta:
+          "Psicólogo e psiquiatra costumam trabalhar juntos: o psicólogo conduz a terapia, e o psiquiatra avalia se um remédio ajuda e acompanha a abstinência quando ela pode ser perigosa.",
+      },
+      {
+        pergunta: "Terapeuta em dependência química é psicólogo?",
+        resposta: "Nem sempre. É nome de curso, não de profissão regulamentada. Psicólogo precisa ter registro no CRP.",
       },
       {
         pergunta: "Preciso parar de beber ou usar pra começar a terapia?",
@@ -480,6 +527,7 @@ export const GUIAS: Guia[] = [
               "Receita remédio sem ser médico",
             ],
           },
+          p("Atender como psicólogo sem registro ativo no CRP é exercício ilegal da profissão. Se isso acontecer, dá pra denunciar ao Conselho Regional de Psicologia do estado."),
         ],
       },
       {
@@ -519,6 +567,16 @@ export const GUIAS: Guia[] = [
         resposta:
           "Tem duas partes separadas por uma barra: o número da região do conselho, como 06 em São Paulo, e o número de inscrição do psicólogo. Por exemplo, CRP 06/12345.",
       },
+      {
+        pergunta: "Psicólogo precisa ter carimbo?",
+        resposta:
+          "Não precisa ser carimbo. Todo documento assinado por psicólogo precisa trazer o nome completo e o número do CRP, que podem vir impressos ou digitados. Em documento digital, vale a assinatura eletrônica.",
+      },
+      {
+        pergunta: "O que fazer se o psicólogo não tem registro?",
+        resposta:
+          "Atender como psicólogo sem registro ativo é exercício ilegal da profissão. Dá pra denunciar ao Conselho Regional de Psicologia do estado.",
+      },
     ],
     imagem: true,
     imagemAlt: "Jovem de cabelo ruivo sentada num sofá, olhando para o celular.",
@@ -545,6 +603,22 @@ export const GUIAS: Guia[] = [
         blocos: [
           p("É um conjunto de práticas, serviços e políticas que buscam diminuir os problemas ligados ao uso de álcool e outras drogas, sem colocar a abstinência como condição pra cuidar de alguém. Esses problemas podem ser de saúde, mas também sociais e legais: perder o trabalho, ficar sem ter onde morar, ter medo de ir ao posto de saúde."),
           p("A lógica é parecida com a do cinto de segurança. Ele não elimina o risco de andar de carro, mas reduz o estrago se algo der errado."),
+        ],
+      },
+      {
+        titulo: "Quais são os princípios da redução de danos?",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "Começar de onde a pessoa está, e não de onde alguém acha que ela deveria estar",
+              "Cuidar sem julgamento e sem exigir que a pessoa pare",
+              "Reconhecer que quem decide sobre o próprio uso é a pessoa",
+              "Valorizar qualquer mudança que diminua riscos, mesmo pequena",
+              "Lembrar que moradia, trabalho, preconceito e acesso à saúde também pesam nos danos",
+              "Ouvir quem usa na hora de pensar serviços e políticas",
+            ],
+          },
         ],
       },
       {
@@ -645,6 +719,11 @@ export const GUIAS: Guia[] = [
         resposta:
           "Vai até onde quem usa está, conversa sem julgamento, leva informação e materiais como camisinha e ajuda a pessoa a chegar aos serviços de saúde quando ela quiser.",
       },
+      {
+        pergunta: "Quais são os princípios da redução de danos?",
+        resposta:
+          "Começar de onde a pessoa está, cuidar sem julgamento e sem exigir que ela pare, respeitar a decisão de quem usa e valorizar qualquer mudança que diminua riscos.",
+      },
     ],
     imagem: true,
     imagemAlt: "Homem tatuado, de óculos escuros, bebendo água num copo, sentado ao balcão de um bar.",
@@ -675,7 +754,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Quais são os sintomas de abstinência de álcool?",
         blocos: [
-          p("Costumam começar de 6 a 12 horas depois da última dose e, na maioria das vezes, duram de 3 a 7 dias. Alguns podem levar mais tempo pra passar. Os mais comuns são:"),
+          p("Costumam começar de 6 a 12 horas depois da última dose, ficam mais fortes entre o primeiro e o terceiro dia e, na maioria das vezes, duram de 3 a 7 dias. Alguns podem levar mais tempo pra passar. Os mais comuns são:"),
           {
             tipo: "lista",
             itens: [
@@ -711,6 +790,7 @@ export const GUIAS: Guia[] = [
         titulo: "Dá pra diminuir a bebida em vez de parar?",
         blocos: [
           p("Pra muita gente, dá. Dependendo da sua saúde e de como foram as tentativas anteriores, um profissional pode sugerir parar em vez de diminuir. E, se você tem sintomas de abstinência, mesmo uma redução grande e repentina pede orientação médica."),
+          p("A Organização Mundial da Saúde considera que não existe quantidade de álcool sem risco. Isso não quer dizer que só parar vale a pena: cada dose a menos já diminui o risco."),
         ],
       },
       {
@@ -751,6 +831,13 @@ export const GUIAS: Guia[] = [
         blocos: [
           p("Existe. Naltrexona, acamprosato e dissulfiram são alguns dos remédios usados pra reduzir a vontade de beber ou ajudar a evitar uma recaída. Todos pedem receita, e o médico avalia se algum faz sentido no seu caso. Tomar por conta própria pode ser perigoso: o dissulfiram, por exemplo, provoca uma reação forte se a pessoa beber."),
           p("Remédio caseiro, bicarbonato e chás não têm evidência de que ajudem a parar de beber. Desconfie de produto que promete resultado em poucos dias."),
+        ],
+      },
+      {
+        titulo: "Existe pó pra parar de beber? Dá pra dar escondido?",
+        blocos: [
+          p("O pó que muita gente procura costuma ser o dissulfiram. Ele não tira a vontade de beber: faz a pessoa passar muito mal se beber depois de tomar. Os sintomas incluem vermelhidão no rosto, enjoo, vômito, coração acelerado, queda de pressão e falta de ar, e a reação pode ser grave."),
+          p("Por isso ele só pode ser usado com a pessoa sabendo e com acompanhamento médico. Dar escondido, na comida ou na bebida, coloca a vida dela em risco. Produtos vendidos sem receita que prometem tirar a vontade de beber também não têm evidência."),
         ],
       },
       {
@@ -811,6 +898,16 @@ export const GUIAS: Guia[] = [
         resposta: "Existe. Alguns ajudam a reduzir a vontade de beber ou a evitar uma recaída, e quem avalia é o médico.",
       },
       {
+        pergunta: "Existe pó pra parar de beber?",
+        resposta:
+          "O pó que muita gente procura costuma ser o dissulfiram, que faz a pessoa passar muito mal se beber. Ele só pode ser usado com a pessoa sabendo e com acompanhamento médico. Dar escondido coloca a vida dela em risco.",
+      },
+      {
+        pergunta: "Qual o pior dia da abstinência de álcool?",
+        resposta:
+          "Os sintomas costumam ficar mais fortes entre o primeiro e o terceiro dia depois da última dose. Convulsão, confusão e ver coisas que não estão ali são sinais de emergência: ligue para o SAMU no 192.",
+      },
+      {
         pergunta: "Remédio caseiro ajuda a parar de beber?",
         resposta: "Não há evidência de que remédio caseiro, bicarbonato ou chá ajudem a parar de beber. Os remédios que ajudam pedem receita e acompanhamento médico.",
       },
@@ -853,6 +950,7 @@ export const GUIAS: Guia[] = [
         blocos: [
           p("O Instituto Nacional de Câncer (INCA) apresenta dois caminhos. O primeiro, e mais recomendado, é a parada imediata: você escolhe uma data e, a partir dela, deixa de fumar. Vale afastar os cigarros e planejar algo pra se distrair nesse dia."),
           p("O segundo é a parada gradual: ir reduzindo a quantidade de cigarros por dia ou atrasando o horário do primeiro. Nesse caso, a orientação é não levar mais de duas semanas no processo."),
+          p("Uma revisão de dezenas de estudos encontrou resultados parecidos entre quem parou de uma vez e quem reduziu antes de parar. Então vale escolher o caminho que parece mais possível pra você agora."),
         ],
       },
       {
@@ -912,6 +1010,21 @@ export const GUIAS: Guia[] = [
         blocos: [
           p("Tem, e é gratuito. O programa é coordenado pelo INCA e inclui consultas, grupos de apoio e acompanhamento. Quando a equipe indica, também oferece adesivo, goma e pastilha de nicotina e bupropiona, um remédio que ajuda a reduzir os sintomas."),
           p("A porta de entrada é a Unidade Básica de Saúde. O Disque Saúde, no 136, pode ajudar a descobrir onde o tratamento é oferecido na sua cidade. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+        ],
+      },
+      {
+        titulo: "Existe remédio pra parar de fumar?",
+        blocos: [
+          p("Existe. Os mais usados são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Reposição de nicotina, em adesivo, goma ou pastilha, que diminui os sintomas da falta do cigarro",
+              "Bupropiona, que ajuda na vontade de fumar e no humor",
+              "Vareniclina, que diminui a vontade e o prazer de fumar",
+            ],
+          },
+          p("Bupropiona e vareniclina precisam de receita. A reposição de nicotina é vendida em farmácia, mas com orientação de um profissional fica mais fácil acertar a dose e o tempo de uso. Remédio caseiro não tem evidência de que ajude a parar de fumar."),
         ],
       },
       {
@@ -980,6 +1093,11 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Cigarro eletrônico ajuda a parar de fumar?",
         resposta: "Ele não faz parte do tratamento oferecido pelo SUS, e a venda é proibida no Brasil pela Anvisa. Muitos têm nicotina, então a dependência pode continuar.",
+      },
+      {
+        pergunta: "Existe remédio pra parar de fumar?",
+        resposta:
+          "Existe. Os mais usados são a reposição de nicotina, em adesivo, goma ou pastilha, a bupropiona e a vareniclina. Bupropiona e vareniclina precisam de receita, e o SUS oferece reposição de nicotina e bupropiona de graça.",
       },
       {
         pergunta: "O que acontece em 3 dias sem fumar?",
@@ -1112,6 +1230,12 @@ export const GUIAS: Guia[] = [
         titulo: "Como ajudar um filho ou alguém próximo a parar de fumar maconha?",
         blocos: [
           p("Ameaça e briga costumam afastar. Ajuda mais escolher um momento calmo, dizer o que você está vendo sem acusar e perguntar o que a maconha está resolvendo pra pessoa. Se for um adolescente, os riscos são maiores e vale buscar orientação: o CAPS AD e o CAPS infantojuvenil atendem pelo SUS, e uma terapia pra você ajuda a atravessar esse momento. Pra familiares, existe também o Nar-Anon."),
+        ],
+      },
+      {
+        titulo: "E se eu voltar a fumar maconha?",
+        blocos: [
+          p("Acontece com muita gente e não apaga o que você já mudou. Vale reparar no que veio antes: um dia ruim, uma companhia, uma noite sem sono. Isso mostra onde você vai precisar de mais apoio se decidir tentar de novo."),
         ],
       },
       {
@@ -1255,6 +1379,13 @@ export const GUIAS: Guia[] = [
         ],
       },
       {
+        titulo: "E se o uso é de crack?",
+        blocos: [
+          p("Crack é cocaína em forma de pedra, fumada. O efeito chega mais rápido e passa mais rápido, então a fissura costuma ser mais forte e o uso em sequência mais comum. Os caminhos de cuidado são os mesmos deste texto: o CAPS AD atende sem encaminhamento, o Consultório na Rua vai até quem está em situação de rua e os Narcóticos Anônimos têm reuniões sem custo."),
+          p("Pra quem vai usar, ter o próprio cachimbo, não compartilhar e cuidar dos lábios e das mãos contra queimaduras diminui riscos. Comer, beber água e dormir entre um uso e outro também faz diferença."),
+        ],
+      },
+      {
         titulo: "E se eu não quero parar de usar cocaína agora?",
         blocos: [
           p("Você ainda pode diminuir riscos. É o que se chama de [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero, mas estes cuidados fazem diferença:"),
@@ -1331,6 +1462,11 @@ export const GUIAS: Guia[] = [
           "Na maior parte das vezes, não. A internação costuma ser indicada em situações mais graves de saúde ou quando o cuidado sem internação já foi tentado várias vezes sem funcionar.",
       },
       {
+        pergunta: "Como parar de usar crack?",
+        resposta:
+          "Os caminhos são os mesmos da cocaína: apoio de alguém da saúde, um plano pra fissura e menos acesso fácil. O CAPS AD atende sem encaminhamento, e o Consultório na Rua vai até quem está em situação de rua.",
+      },
+      {
         pergunta: "Por que é perigoso misturar cocaína e álcool?",
         resposta: "Juntos, eles formam uma substância mais tóxica pro coração e pro fígado, que fica mais tempo no corpo.",
       },
@@ -1346,10 +1482,11 @@ export const GUIAS: Guia[] = [
   },
   // Texto sobre a Lei de Drogas (03/11/2026). Mesma exceção de copy, autorizada pelo Vitor pra SEO. Conferido
   // na tese do Tema 506 e na lei, sem revisão de advogado. Se o CNJ regulamentar ou a PEC 45 andar, atualizar.
+  // Revisado em 06/11/2026 com a pesquisa do Google (docs/pesquisas-blog/lei-de-drogas.md): só uma pergunta frequente.
   {
     slug: "lei-de-drogas",
     publicadoEm: "2026-11-03",
-    atualizadoEm: "2026-11-03",
+    atualizadoEm: "2026-11-06",
     title: "Lei de Drogas: artigo 28, 40 g de maconha e STF | Margem",
     descricao:
       "Entenda a Lei de Drogas: artigos 28 e 33, o limite de 40 g de maconha definido pelo STF, seus direitos numa abordagem e onde encontrar apoio sem julgamento.",
@@ -1546,6 +1683,11 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Fumar maconha na rua é permitido?",
         resposta: "Não. A decisão do STF não legalizou a maconha, e fumar em local público continua proibido.",
+      },
+      {
+        pergunta: "A maconha foi legalizada no Brasil?",
+        resposta:
+          "Não. O STF decidiu que ter maconha pra consumo pessoal não é crime, mas continua proibido: a droga é apreendida e o caso vai pra Justiça fora da área criminal. Vender continua sendo tráfico.",
       },
       {
         pergunta: "A decisão do STF vale pra cocaína?",

@@ -43,3 +43,16 @@ Desintoxicação de canabinoides; simpatia pra parar de fumar droga; como parar 
 ## O que mudou no guia
 
 Seções novas: "O que melhora quando eu paro de fumar maconha?" e "Como ajudar um filho ou alguém próximo a parar de fumar maconha?". A seção de remédio ganhou o canabidiol. Duas perguntas frequentes novas.
+
+## Ampliação (06/11/2026, segunda rodada)
+
+Páginas lidas que tinham ficado de fora:
+
+- [Clínica Renasce: passos práticos e apoio](https://clinicarenasce.com.br/blog/como-parar-de-fumar-maconha/): parar é possível, gradual ou abrupta, abstinência, ajuda profissional. Nas perguntas frequentes: quanto tempo leva, como ajudar alguém, **o que fazer diante de uma recaída**.
+- [Central de Recuperação: síndrome de abstinência](https://centralderecuperacao.com.br/blog/sindrome-de-abstinencia-da-maconha-sintomas-e-como-lidar/): sintomas emocionais e físicos, duração, estratégias, quando buscar ajuda urgente.
+
+A Cochrane sobre remédios pra cannabis já tinha sido considerada: não há remédio com evidência suficiente, o que bate com o guia.
+
+Lacuna: o guia não falava de recaída, que dois resultados cobrem.
+
+Mudou no guia: seção nova "E se eu voltar a fumar maconha?".

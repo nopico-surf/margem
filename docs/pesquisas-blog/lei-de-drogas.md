@@ -1,7 +1,8 @@
 # Pesquisa: "lei de drogas"
 
 Data: 06/11/2026. Google Brasil (`hl=pt-BR&gl=br`), sem login, localização aproximada Florianópolis.
-Guia: `/blog/lei-de-drogas` (`lib/guias.ts`), publicado em 03/11/2026. **Não mudou nesta revisão.**
+Guia: `/blog/lei-de-drogas` (`lib/guias.ts`), publicado em 03/11/2026 e revisado com esta pesquisa.
+Formato dos títulos: perguntas (o guia já existia assim; revisão não entra no teste de formato).
 
 ## 10 primeiros resultados
 
@@ -30,6 +31,14 @@ Não apareceu.
 
 Lei de drogas PDF; atualizada; resumo; PDF atualizada 2026; artigo 33; art 28; compilado.
 
-## Por que o guia não mudou
+## Buscas vizinhas (segunda rodada)
 
-Quem busca "lei de drogas" quer o texto da lei, e o Planalto vai continuar na frente. As buscas relacionadas que a Margem pode disputar (resumo, artigo 28, artigo 33) o guia já cobre, inclusive a decisão do STF e a PEC. Mudar título ou h1 agora arriscaria o que o guia já tem sem ganho claro.
+Como a busca principal é pelo texto da lei, entraram três buscas que a Margem pode disputar:
+
+- **"lei de drogas resumo"**: Aurum (principais artigos), Gran Cursos (esquematizada), MPSP (comentada), Juridico.ai (art. 28), Estratégia Concursos, Gov.br, Jusbrasil. Público de concurso e de direito. Sem "Pessoas também perguntam".
+- **"art 28 lei de drogas"**: Planalto, Jusbrasil, IBCCRIM (inconstitucionalidade), Juridico.ai, Dizer o Direito, **Conjur "Lei de Drogas descriminalizou porte para uso próprio?"**, artigos acadêmicos. Relacionadas: pena, STF, procedimento, prescrição.
+- **"quantas gramas de maconha é considerado uso pessoal"**: STF (40 gramas), Agência Brasil, TJDFT (Tema 506), Conjur, STJ, Jusbrasil, Dizer o Direito. Pessoas também perguntam: "Quem for pego com 40g?", "É crime portar drogas para consumo pessoal?". Relacionadas: haxixe, "40 gramas dá quantos cigarros", Tema 506.
+
+## O que mudou no guia
+
+O guia já cobre o artigo 28, o artigo 33, o STF, as 40 gramas, o haxixe, a ficha e a PEC. Faltava responder direto se a maconha foi "liberada" (Conjur e as relacionadas), então entrou uma pergunta frequente: "A maconha foi legalizada no Brasil?". Título e h1 não mudaram: quem busca só "lei de drogas" quer o texto da lei, e o Planalto vai continuar na frente.
