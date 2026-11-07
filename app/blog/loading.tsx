@@ -33,6 +33,7 @@ export default function CarregandoBlog() {
           <span className="figma-skeleton blog-osso-linha" />
           <span className="figma-skeleton blog-osso-linha blog-osso-linha-curta" />
         </div>
+        <span className="figma-skeleton blog-osso-busca" />
         <div className="blog-lista">
           {GUIAS.map((guia) => (
             <CardOsso key={guia.slug} />

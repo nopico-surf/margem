@@ -19,6 +19,9 @@ import { BlocoCannabis, SeloGiratorio } from "@/components/app/BlocoCannabis";
 import { BlocoMochila } from "@/components/app/BlocoMochila";
 import { CardHomeGroupGaleria } from "./CardHomeGaleria";
 import { CardPlanoGaleria, ContadorPixGaleria, InputTextGaleria } from "./ApoioGaleria";
+import { BuscaBlog } from "@/app/blog/BuscaBlog";
+import { GUIAS } from "@/lib/guias";
+import { montarIndiceBlog } from "@/lib/busca-blog";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import "./galeria.css";
@@ -429,6 +432,21 @@ export default async function GaleriaDeComponentes() {
           texto; com foco ou valor, sobe pequeno. O primeiro aceita digitação.
         </p>
         <InputTextGaleria />
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Busca do blog</h2>
+        <p className="text-small-regular galeria-nota">
+          BuscaBlog, com três textos de verdade. Digite &quot;psiquiatra&quot; pra ver resultado e &quot;xyz&quot; pra ver o
+          estado sem resultado. Em localhost nada é gravado.
+        </p>
+        <BuscaBlog
+          indice={montarIndiceBlog(GUIAS.slice(0, 3))}
+          cards={GUIAS.slice(0, 3).map((guia) => ({
+            slug: guia.slug,
+            card: <CardPublico href={`/blog/${guia.slug}`} titulo={guia.h1} tituloComo="h3" texto={guia.descricao} />,
+          }))}
+        />
       </section>
 
       <section className="galeria-secao">

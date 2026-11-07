@@ -37,6 +37,57 @@
   margin-top: auto;
 }
 
+/* Busca da lista (BuscaBlog). O campo é o input-text do Figma com a lupa e o X das laterais; o resto
+   é composto com tokens, sem Figma, como a lista. No desktop o campo não atravessa o container. */
+.blog-busca {
+  width: 100%;
+  max-width: 40rem;
+}
+
+/* O X tem 16, como no Figma, mas o toque precisa de mais: o botão tem 40 e a margem negativa deixa o
+   desenho a 8 da borda, onde o Figma põe o ícone. */
+.blog-busca-limpar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-40);
+  height: var(--size-40);
+  margin: calc(-1 * var(--spacing-12));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.blog-busca-limpar:focus-visible {
+  outline: var(--border-width-strong) solid var(--colors-brand-secondary-400);
+}
+
+/* Só pro leitor de tela: quantos textos apareceram. */
+.blog-busca-anuncio {
+  position: absolute;
+  width: var(--spacing-1);
+  height: var(--spacing-1);
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.blog-busca-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-16);
+  color: var(--colors-neutral-950);
+}
+
+.blog-busca-vazia p {
+  margin: 0;
+}
+
 .guia-pagina {
   display: flex;
   flex-direction: column;
@@ -321,6 +372,14 @@
 
 .blog-osso-cabecalho .blog-osso-linha {
   height: var(--font-size-sm);
+}
+
+/* O campo da busca: a caixa de 64 do input-text, com a mesma largura máxima. */
+.blog-osso-busca {
+  width: 100%;
+  max-width: 40rem;
+  height: var(--size-64);
+  border-radius: var(--radius-sm);
 }
 
 /* Card da lista: a foto tem a altura da pronta e o texto segue os 18 do título e os 12 do resumo. */

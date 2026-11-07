@@ -16,7 +16,7 @@ import {
   GlifoEmail, GlifoWhatsapp, GlifoInstagram, GlifoFacebook, GlifoMenu, GlifoClose, GlifoArrowBack, GlifoDoubleArrowDown, GlifoCheckBox,
   GlifoQuestionAnswer, GlifoPanTool, GlifoLink, GlifoPlace, GlifoPhone, GlifoMessageFlye,
   GlifoInfo, GlifoLock, GlifoCached, GlifoSick, GlifoSentimentDissatisfied,
-  GlifoPersonAddAlt1, GlifoSupport, GlifoMotionPhotosPaused, GlifoCheckCircle, GlifoMode,
+  GlifoPersonAddAlt1, GlifoSupport, GlifoMotionPhotosPaused, GlifoCheckCircle, GlifoMode, GlifoSearch,
 } from "./glifos";
 // O caminho da foto padrão mora no `avatar`, em components/ui. Aqui ele serve só à chave `avatar`
 // de ICONES_ACAO, que vem do banco, e ao preload de URLS_DE_ICONE.
@@ -57,6 +57,11 @@ export const IconeFecharMenu = (p: IconProps) => <GlifoClose {...p} size={32} co
 // X do header no campo aberto em tela cheia da home: mesma cor e tamanho do menu que ele substitui.
 export const IconeFecharHeader = (p: IconProps) => <GlifoClose {...p} color="var(--colors-neutral-950)" />;
 export const IconeFecharModal = (p: IconProps) => <GlifoClose {...p} color="var(--colors-brand-primary-950)" />;
+
+// Os dois ícones das laterais do input-text na busca do blog. 16, na cor do ícone do campo
+// (.input-text-icone), que muda com erro e sucesso.
+export const IconeBusca = (p: IconProps) => <GlifoSearch {...p} size={16} />;
+export const IconeLimparBusca = (p: IconProps) => <GlifoClose {...p} size={16} />;
 
 /* Setas */
 

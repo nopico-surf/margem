@@ -26,7 +26,7 @@ function sincronizarSemMedicao() {
   } catch {}
 }
 
-function semMedicao() {
+export function semMedicao() {
   try {
     return window.localStorage.getItem(CHAVE_SEM_MEDICAO) === "1";
   } catch {

@@ -12,10 +12,12 @@
   width: 100%;
 }
 
+/* A caixa é uma linha: ícone do começo, campo (rótulo e texto) e ícone do fim, 8 entre eles. Sem
+   ícone, o campo ocupa a caixa toda. */
 .input-text-caixa {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-8);
   height: var(--size-64);
   padding: 0 var(--spacing-8);
   border: var(--border-width-thin) solid var(--colors-neutral-400);
@@ -26,6 +28,20 @@
     background-color var(--duration-350) ease,
     border-color var(--duration-350) ease,
     outline-color var(--duration-350) ease;
+}
+
+.input-text-campo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.input-text-icone {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--colors-neutral-700);
 }
 
 .input-text label {
@@ -62,9 +78,9 @@
 
 /* `focus`, `texting` e `filled`: rótulo pequeno em cima, campo aberto embaixo. O espaço de 8 entre os
    dois só existe com o campo aberto; fechado, o rótulo fica no meio da caixa. */
-.input-text .input-text-caixa:focus-within,
-.input-text[data-preenchido="true"] .input-text-caixa,
-.input-text[data-estado-forcado="focus"] .input-text-caixa {
+.input-text .input-text-caixa:focus-within .input-text-campo,
+.input-text[data-preenchido="true"] .input-text-campo,
+.input-text[data-estado-forcado="focus"] .input-text-campo {
   gap: var(--spacing-8);
 }
 
@@ -108,6 +124,7 @@
 }
 
 .input-text[data-erro="true"] input,
+.input-text[data-erro="true"] .input-text-icone,
 .input-text[data-erro="true"] .input-text-descricao {
   color: var(--colors-status-error-900);
 }
@@ -119,8 +136,15 @@
 }
 
 .input-text[data-sucesso="true"] input,
+.input-text[data-sucesso="true"] .input-text-icone,
 .input-text[data-sucesso="true"] .input-text-descricao {
   color: var(--colors-status-success-900);
+}
+
+/* O X nativo do type="search" sai: o do Figma é o do ícone do fim, igual em todo navegador. */
+.input-text input[type="search"]::-webkit-search-cancel-button,
+.input-text input[type="search"]::-webkit-search-decoration {
+  appearance: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

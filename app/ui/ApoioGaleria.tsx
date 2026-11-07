@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { InputText } from "@/components/ui/InputText";
+import { IconeBusca, IconeLimparBusca } from "@/components/icons";
 import { CardPlano } from "@/components/apoio/CardPlano";
 import { ContadorPix } from "@/components/apoio/ContadorPix";
 
@@ -49,6 +50,27 @@ export function InputTextGaleria() {
       </Estado>
       <Estado nome="default com descrição">
         <InputText id="galeria-input-descricao" rotulo="Nome completo" value="" onChange={nada} descricao="Description" />
+      </Estado>
+      <Estado nome="ícones, vazio (busca do blog)">
+        <InputText id="galeria-input-icone" rotulo="Buscar no blog" value="" onChange={nada} tipo="search" iconeInicio={<IconeBusca />} />
+      </Estado>
+      <Estado nome="ícones, foco">
+        <InputText id="galeria-input-icone-foco" rotulo="Buscar no blog" value="" onChange={nada} tipo="search" iconeInicio={<IconeBusca />} estadoForcado="focus" />
+      </Estado>
+      <Estado nome="ícones, filled com o X">
+        <InputText
+          id="galeria-input-icone-cheio"
+          rotulo="Buscar no blog"
+          value="maconha"
+          onChange={nada}
+          tipo="search"
+          iconeInicio={<IconeBusca />}
+          iconeFim={
+            <button type="button" className="blog-busca-limpar" aria-label="Limpar busca">
+              <IconeLimparBusca />
+            </button>
+          }
+        />
       </Estado>
     </div>
   );

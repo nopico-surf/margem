@@ -37,6 +37,7 @@
 //   GlifoExpandLess       expand_less         (Navigation)
 //   GlifoCheckCircle      check_circle        (Action)
 //   GlifoMode             mode                (Editor)
+//   GlifoSearch           search              (Action)
 //
 // Não há divergência entre os dois lados: todo componente aqui tem o nome do componente no Figma.
 //
@@ -517,6 +518,14 @@ export function GlifoFacebook({ className, color = "currentColor", opacity = 1, 
   return (
     <svg className={className} width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M18.6021 10.2284C18.6021 5.55715 14.8163 1.77129 10.1451 1.77129C5.47389 1.77129 1.68803 5.55715 1.68803 10.2284C1.68803 14.1926 4.42006 17.5226 8.1035 18.4376V12.8117H6.35924V10.2284H8.1035V9.11506C8.1035 6.23768 9.4051 4.90305 12.2329 4.90305C12.7681 4.90305 13.6931 5.00876 14.073 5.11447V7.45338C13.8748 7.43356 13.5279 7.42034 13.0951 7.42034C11.7077 7.42034 11.1725 7.94561 11.1725 9.30997V10.2284H13.9342L13.4585 12.8117H11.1692V18.6226C15.3581 18.1172 18.6021 14.5527 18.6021 10.2284Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoSearch({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M15.5 14H14.71L14.43 13.73C15.63 12.33 16.25 10.42 15.91 8.39C15.44 5.61 13.12 3.39 10.32 3.05C6.09 2.53 2.53 6.09 3.05 10.32C3.39 13.12 5.61 15.44 8.39 15.91C10.42 16.25 12.33 15.63 13.73 14.43L14 14.71V15.5L18.25 19.75C18.66 20.16 19.33 20.16 19.74 19.75C20.15 19.34 20.15 18.67 19.74 18.26L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill={color} fillOpacity={opacity}/>
     </svg>
   );
 }
