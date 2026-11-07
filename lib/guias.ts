@@ -2319,8 +2319,9 @@ export const GUIAS: Guia[] = [
           "Pode, principalmente em dose alta ou misturado com álcool e calmantes, porque a respiração fica lenta demais. Se a pessoa não acorda, respira muito devagar ou está com os lábios arroxeados, ligue para o SAMU no 192.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Mão segurando um pequeno frasco de vidro com líquido transparente, com um quarto claro e plantas desfocados ao fundo.",
+    imagemCard: true,
   },
 ];
 
