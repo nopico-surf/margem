@@ -1365,6 +1365,185 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Juiz batendo o martelo em frente a um cigarro de maconha embalado sobre a mesa.",
     imagemCard: true,
   },
+  // Guia geral (06/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
+  // como-parar-de-usar-drogas.md). Mesma exceção de copy dos outros guias.
+  {
+    slug: "como-parar-de-usar-drogas",
+    publicadoEm: "2026-11-06",
+    atualizadoEm: "2026-11-06",
+    title: "Como parar de usar drogas: primeiros passos e apoio | Margem",
+    descricao:
+      "Quer parar ou diminuir o uso de drogas? Veja os primeiros passos, como lidar com a vontade, quando parar de vez é arriscado e onde buscar apoio sem julgamento.",
+    h1: "Como parar de usar drogas: primeiros passos, fissura e onde buscar apoio",
+    abertura:
+      "Talvez você já tenha prometido pra si mesmo que ia parar, e não deu. Talvez o uso esteja pesando no corpo, no bolso, no trabalho ou em casa. Ou talvez você só queira entender o que está acontecendo. Nada disso é falta de caráter ou de força de vontade: tem a ver com o efeito da substância e com o que está acontecendo na sua vida. Existem caminhos pra quem quer parar, pra quem quer diminuir e pra quem ainda não sabe.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "Como parar de usar drogas?",
+        blocos: [
+          p("Não existe uma receita que sirva pra todo mundo. O que funciona depende da substância, de há quanto tempo e com que frequência você usa, e do que o uso está resolvendo na sua vida. Alguns passos que muita gente usa pra começar:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Reparar nos gatilhos: horários, lugares, pessoas, emoções e situações em que a vontade aparece",
+              "Dificultar o acesso, como apagar o contato de quem vende e andar com menos dinheiro nos dias mais difíceis",
+              "Contar pra uma pessoa de confiança o que você está tentando fazer",
+              "Ter um plano pros momentos de vontade: com quem falar, pra onde ir, o que fazer até passar",
+              "Cuidar do básico: dormir, comer e ter algo pra fazer nas horas que eram do uso",
+              "Conversar com um profissional de saúde, principalmente antes de parar álcool, calmantes ou opioides",
+            ],
+          },
+          p("Se você usa mais de uma substância, vale olhar pra elas juntas. Muitas vezes uma puxa a outra, como a bebida que abre caminho pra cocaína."),
+          p("Cada substância tem seus próprios riscos e cuidados. Se você quer entender uma delas mais a fundo: [Ler sobre como parar de beber](/blog/como-parar-de-beber) [Ler sobre como parar de fumar maconha](/blog/como-parar-de-fumar-maconha) [Ler sobre como parar de usar cocaína](/blog/como-parar-de-usar-cocaina) [Ler sobre como parar de fumar cigarro](/blog/como-parar-de-fumar)"),
+        ],
+      },
+      {
+        titulo: "Dá pra parar de usar drogas sozinho?",
+        blocos: [
+          p("Algumas pessoas conseguem diminuir ou parar sem tratamento formal. Mas sozinho não precisa significar isolado. Ter com quem contar costuma fazer diferença, seja um amigo, um grupo de apoio ou um profissional de saúde."),
+          p("Também não é preciso esperar chegar no fundo do poço pra buscar cuidado. Dá pra conversar com alguém agora, do jeito que você está, mesmo sem ter decidido se quer parar."),
+        ],
+      },
+      {
+        titulo: "É perigoso parar de usar de uma vez?",
+        blocos: [
+          p("Depende da substância. Pra algumas, parar de repente pode ser arriscado e pede acompanhamento médico:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Álcool, quando o uso é diário ou quase diário há bastante tempo: a abstinência pode causar convulsão e confusão mental",
+              "Calmantes e remédios pra dormir, como clonazepam e diazepam: também podem causar convulsão e, por isso, costumam ser retirados aos poucos, com orientação médica",
+              "Opioides, como morfina, codeína, tramadol e outros analgésicos fortes: a abstinência é muito desconfortável, e o médico pode indicar remédios que ajudam",
+            ],
+          },
+          p("Pra cocaína, crack e maconha, parar de uma vez não costuma trazer esse risco físico, mas a abstinência pode pesar no humor e no sono. Em qualquer caso, se aparecer uma tristeza muito forte ou pensamentos de morte, vale buscar um profissional o quanto antes. Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
+        ],
+      },
+      {
+        titulo: "O que diminui a vontade de usar drogas?",
+        blocos: [
+          p("A vontade forte de usar, a fissura, costuma vir em ondas: sobe, chega num pico e baixa. Ela pode aparecer mesmo depois de bastante tempo sem usar, e isso não significa que você fracassou. Na hora em que ela vem, pode ajudar:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Sair do lugar em que você está",
+              "Ligar ou mandar mensagem pra alguém que saiba o que você está tentando fazer",
+              "Comer, beber água e ocupar as mãos e a cabeça até a onda baixar",
+              "Fazer alguma atividade física, mesmo uma caminhada curta",
+              "Ficar longe da bebida nesse momento, se o álcool costuma puxar o uso",
+              "Ler os motivos que fizeram você querer mudar, anotados antes no celular pra essas horas",
+            ],
+          },
+          p("Com o tempo, a terapia ajuda a entender o que está por trás da vontade e a montar outros jeitos de lidar com ela. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
+        ],
+      },
+      {
+        titulo: "Existe remédio pra parar de usar drogas?",
+        blocos: [
+          p("Depende da droga. Pra álcool, cigarro e opioides, existem remédios que ajudam a reduzir a vontade ou a evitar recaídas. Pra cocaína, crack e maconha, até aqui não existe um remédio aprovado especificamente pra isso, mas um psiquiatra pode tratar o que vem junto, como ansiedade, depressão e insônia. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Remédio pra isso precisa de avaliação médica: tomar por conta própria pode ser perigoso. Vale desconfiar de quem promete cura rápida, remédio milagroso ou um remédio pra colocar escondido na comida de alguém. Se a fé faz parte da sua vida, ela pode ser um apoio importante, junto com o cuidado de saúde, não no lugar dele."),
+        ],
+      },
+      {
+        titulo: "Preciso me internar pra parar de usar drogas?",
+        blocos: [
+          p("Na maior parte das vezes, não. Muita gente faz o cuidado sem sair de casa, com consultas, terapia, CAPS AD e grupos de apoio. A internação costuma ser indicada em situações mais graves, como abstinência perigosa, risco à vida ou crise de saúde mental, ou quando o cuidado sem internação já foi tentado várias vezes sem funcionar."),
+          p("Conversar com psicólogo ou psiquiatra sobre o seu uso não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "E se eu não quero parar de usar agora?",
+        blocos: [
+          p("Nem toda pessoa que usa quer ou precisa parar, e dá pra buscar cuidado do jeito que você está. Usar menos e com menos risco também é um caminho, e se chama [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero, mas alguns cuidados valem pra quase toda substância:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não misturar drogas entre si, nem com álcool ou remédios",
+              "Começar com pouco e esperar, porque a força e a composição variam muito",
+              "Não usar sozinho e estar com alguém de confiança que possa ajudar numa emergência",
+              "Não compartilhar canudo, cachimbo ou seringa",
+              "Definir antes um limite de quantidade e de dinheiro",
+              "Beber água, comer e descansar",
+              "Não dirigir depois de usar",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "E se eu voltar a usar?",
+        blocos: [
+          p("Voltar a usar é comum em quem está tentando parar e não apaga o que você já construiu. Pode ser uma forma de entender onde você precisa de mais apoio: o que veio antes, que situação pesou, o que faltou."),
+          p("Um cuidado importante: depois de um tempo sem usar, o corpo perde a tolerância. Se você voltar a usar, a quantidade de antes pode ser demais, principalmente com álcool, calmantes e opioides. Começar com menos e não estar sozinho reduz esse risco."),
+        ],
+      },
+      {
+        titulo: "Quais são os sinais de emergência?",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "A pessoa não acorda ou não responde",
+              "Respiração muito lenta, fraca ou com um ronco estranho",
+              "Lábios ou unhas arroxeados",
+              "Dor ou aperto no peito, ou coração muito acelerado",
+              "Convulsão",
+              "Corpo muito quente",
+              "Confusão, pânico ou paranoia muito fortes",
+            ],
+          },
+          p("Nesses casos, ligue para o SAMU no 192 e, se puder, diga o que foi usado: isso ajuda no atendimento. Enquanto espera, não deixe a pessoa sozinha. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que quer parar de usar drogas?",
+        blocos: [
+          p("Você não controla a decisão da outra pessoa, mas pode fazer diferença. Ajuda falar do que você está vendo, sem acusação, escutar mais do que aconselhar e mostrar os caminhos de apoio quando ela estiver aberta. Brigas, ameaças e humilhação costumam afastar, não aproximar."),
+          p("Cuidar de você também conta. O Nar-Anon reúne familiares e amigos de pessoas que usam drogas, sem custo, e uma terapia pra você também é cuidado, mesmo que a outra pessoa não queira buscar ajuda agora."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio pra parar de usar drogas?",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa."),
+          p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, a Unidade Básica de Saúde pode fazer o primeiro acolhimento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Muita gente combina mais de um desses caminhos. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Dá pra parar de usar drogas sozinho?",
+        resposta:
+          "Algumas pessoas conseguem diminuir ou parar sem tratamento formal, mas ter com quem contar costuma fazer diferença. Pra álcool, calmantes e opioides, parar de repente pode ser perigoso e pede acompanhamento médico.",
+      },
+      {
+        pergunta: "O que diminui a vontade de usar drogas?",
+        resposta:
+          "A vontade costuma vir em ondas. Sair do lugar, falar com alguém de confiança, comer, beber água e ocupar a cabeça ajudam a esperar a onda baixar. A terapia ajuda a lidar com o que está por trás dela.",
+      },
+      {
+        pergunta: "Existe remédio pra parar de usar drogas?",
+        resposta:
+          "Pra álcool, cigarro e opioides, existem remédios que ajudam. Pra cocaína, crack e maconha, ainda não existe um aprovado especificamente pra isso, mas um psiquiatra pode tratar o que vem junto. Remédio pra isso sempre precisa de avaliação médica.",
+      },
+      {
+        pergunta: "Preciso me internar pra parar de usar drogas?",
+        resposta:
+          "Na maior parte das vezes, não. A internação costuma ser indicada em situações mais graves, como abstinência perigosa, risco à vida ou crise de saúde mental.",
+      },
+      {
+        pergunta: "Onde conseguir ajuda pra parar de usar drogas sem pagar?",
+        resposta:
+          "No CAPS AD, que atende pelo SUS sem encaminhamento, na Unidade Básica de Saúde e nos Narcóticos Anônimos, que têm reuniões presenciais e online.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
