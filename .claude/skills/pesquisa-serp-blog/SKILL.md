@@ -59,5 +59,5 @@ A pauta entra no plano de até 10 linhas (CLAUDE.md, seção 10) junto com a tab
 - Seguir o formato dos guias existentes em `lib/guias.ts` (abertura, seções, lista, FAQ, botão "Contar o que está acontecendo").
 - Zero travessão, pessoa antes da situação, sem "viciado", "dependente" como rótulo ou culpa.
 - Links internos pros guias relacionados e pra `/redes-de-apoio`.
-- `imagem: false` até a imagem existir.
+- `imagem: false` até a imagem existir. A imagem sai da skill `imagem-blog-margem`.
 - Comentário acima do guia apontando pro arquivo da pesquisa e dizendo o formato dos títulos.
