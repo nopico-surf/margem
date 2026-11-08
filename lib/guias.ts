@@ -2895,6 +2895,191 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Mão segurando um saquinho plástico fechado com cristais cor de âmbar, com uma cozinha clara e plantas desfocadas ao fundo.",
     imagemCard: true,
   },
+  // Guia do CAPS AD (08/11/2026), escrito depois da pesquisa dos 10 primeiros do Google (docs/pesquisas-blog/
+  // caps-ad.md). Formato dos títulos: perguntas (o anterior, mdma, usou afirmativos). Tipos, porta aberta e
+  // encaminhamentos conferidos com a página do Ministério da Saúde. O carrossel fica só no fim: quem chega
+  // aqui quer o serviço gratuito primeiro. Mesma exceção de copy dos outros guias.
+  {
+    slug: "caps-ad",
+    publicadoEm: "2026-11-08",
+    atualizadoEm: "2026-11-08",
+    title: "CAPS AD: o que é, como funciona e como ser atendido | Margem",
+    descricao:
+      "Entenda o que é o CAPS AD, o que ele oferece, como dar entrada sem encaminhamento, se precisa parar de usar pra ir, se interna e o que fazer se a sua cidade não tem.",
+    h1: "CAPS AD: o que é, como funciona e como ser atendido pelo SUS",
+    abertura:
+      "Talvez alguém tenha falado do CAPS AD pra você e você não saiba direito o que acontece lá. Talvez dê medo de ir: de ser julgado, de ser internado, de alguém ficar sabendo. Ou talvez você esteja procurando um lugar pra alguém que você ama. Aqui a gente explica o que é o CAPS AD, como chegar e o que esperar, pra que a primeira ida pese menos.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: false,
+    secoes: [
+      {
+        titulo: "O que é o CAPS AD?",
+        blocos: [
+          p("CAPS AD é a sigla de Centro de Atenção Psicossocial Álcool e Drogas. O \"AD\" quer dizer álcool e outras drogas, não adulto. É um serviço público do SUS, gratuito e aberto à comunidade, que cuida de pessoas cujo uso de álcool ou de outras drogas está trazendo sofrimento ou problemas, e também das famílias delas."),
+          p("Ele faz parte da Rede de Atenção Psicossocial, a rede de saúde mental do SUS, junto com as Unidades Básicas de Saúde, os hospitais gerais e outros serviços. A ideia é cuidar perto de onde a pessoa vive, sem afastá-la da rotina, da família e do trabalho."),
+        ],
+      },
+      {
+        titulo: "O que o CAPS AD oferece?",
+        blocos: [
+          p("A equipe é formada por profissionais de várias áreas, como psicólogo, psiquiatra, médico clínico, enfermeiro, assistente social e terapeuta ocupacional. O que cada unidade oferece varia, mas costuma incluir:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Acolhimento e escuta, sem precisar marcar hora na primeira vez",
+              "Atendimentos individuais e em grupo",
+              "Consultas médicas e, quando necessário, remédios",
+              "Oficinas e atividades, como arte, música, esporte e geração de renda",
+              "Atendimento e grupos para familiares",
+              "Ajuda com questões sociais, como documentos, trabalho e moradia",
+              "Visitas em casa, em algumas situações",
+            ],
+          },
+          p("O remédio é uma ferramenta entre outras, usado em situações específicas, como fissura, ansiedade, insônia ou sintomas de abstinência. Boa parte do cuidado acontece nas conversas e nas atividades."),
+        ],
+      },
+      {
+        titulo: "Quais são os tipos de CAPS AD?",
+        blocos: [
+          {
+            tipo: "tabela",
+            legenda: "Tipos de CAPS AD e o que muda pra quem vai",
+            colunas: ["Tipo", "Onde existe", "Funcionamento"],
+            linhas: [
+              ["CAPS AD (ou AD II)", "Cidades ou regiões a partir de 70 mil habitantes", "Durante o dia, em geral de segunda a sexta"],
+              ["CAPS AD III", "Cidades ou regiões a partir de 150 mil habitantes", "24 horas, inclusive fins de semana e feriados, com acolhimento noturno"],
+              ["CAPS AD IV", "Cidades com mais de 500 mil habitantes", "24 horas"],
+            ],
+          },
+          p("Existem também outros tipos de CAPS: o CAPS I, II e III, que atendem saúde mental em geral, e o CAPS i, pra crianças e adolescentes. Em cidades menores, que não têm CAPS AD, são eles que atendem quem tem questões com álcool e outras drogas."),
+        ],
+      },
+      {
+        titulo: "Como dar entrada no CAPS AD?",
+        blocos: [
+          p("O CAPS AD funciona em regime de porta aberta: dá pra ir direto à unidade, sem encaminhamento e sem marcar consulta pra primeira conversa. Também é possível chegar encaminhado pela Unidade Básica de Saúde, por uma UPA, por um hospital ou por serviços de assistência social."),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Descubra qual é o CAPS AD de referência do seu bairro, na Unidade Básica de Saúde ou na Secretaria de Saúde da sua cidade",
+              "Se der, ligue antes pra confirmar o horário de acolhimento",
+              "Leve um documento com foto e o cartão do SUS, se tiver",
+              "Na chegada, um profissional conversa com você sobre o que está acontecendo, sua história e o que você precisa",
+              "Se o CAPS AD for o lugar certo, vocês montam juntos um plano de cuidado, o Projeto Terapêutico Singular",
+            ],
+          },
+          p("Se a equipe avaliar que outro serviço combina mais com o seu momento, ela deve ajudar a encaminhar, e não só dispensar."),
+        ],
+      },
+      {
+        titulo: "Preciso parar de usar pra ir ao CAPS AD?",
+        blocos: [
+          p("Não. Não é preciso ter parado, nem ter decidido parar. O plano de cuidado é construído com você, e a meta pode ser parar ou diminuir o uso e os riscos, o que se chama [redução de danos](/blog/reducao-de-danos). Muita gente chega sem saber o que quer, e isso também cabe na conversa."),
+        ],
+      },
+      {
+        titulo: "O CAPS AD interna?",
+        blocos: [
+          p("Não no sentido que muita gente teme. O CAPS AD foi criado justamente pra cuidar sem internação, perto da vida da pessoa. Nos CAPS AD III e IV existe o acolhimento noturno: a pessoa pode passar alguns dias e noites na unidade num momento mais difícil, como uma abstinência ou uma crise, e depois segue o cuidado normalmente."),
+          p("Quando a equipe avalia que é preciso uma internação, por exemplo por risco à vida, ela encaminha pra um leito em hospital geral. É exceção, não o caminho comum. [Entender quando a internação é indicada](/blog/como-parar-de-usar-drogas)"),
+        ],
+      },
+      {
+        titulo: "O que eu contar no CAPS AD fica em sigilo?",
+        blocos: [
+          p("Sim. Os profissionais de saúde têm o dever de sigilo, e o que você conta no atendimento não vai pra sua família, pro seu trabalho ou pra polícia. Ir ao CAPS AD não é se denunciar. A quebra do sigilo é exceção, prevista em situações de risco sério à vida."),
+          p("Se você está com medo de alguém descobrir, vale dizer isso logo no acolhimento. A equipe pode explicar como o cuidado vai ser organizado."),
+        ],
+      },
+      {
+        titulo: "A família pode procurar o CAPS AD sozinha?",
+        blocos: [
+          p("Pode. Muitos CAPS AD atendem familiares mesmo quando a pessoa que usa não quer ir, com conversas individuais e grupos de família. É um lugar pra entender o que está acontecendo, pensar em como se aproximar e cuidar de você também."),
+          p("Ninguém é obrigado a se tratar no CAPS AD: o cuidado depende da vontade da pessoa. Brigas, ameaças e humilhação costumam afastar. O Nar-Anon e o Al-Anon reúnem familiares e amigos, sem custo. [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+        ],
+      },
+      {
+        titulo: "Adolescente pode ser atendido no CAPS AD?",
+        blocos: [
+          p("Depende da cidade. O Ministério da Saúde diz que o CAPS AD atende todas as idades, mas algumas unidades atendem a partir de 18 anos e encaminham adolescentes pro CAPS i ou pra Unidade Básica de Saúde. Vale perguntar na unidade da sua cidade. Pra quem é menor de 18, conversar com um responsável pode ajudar, mas o adolescente pode procurar o serviço e ser escutado."),
+        ],
+      },
+      {
+        titulo: "Quanto tempo a pessoa fica no CAPS AD?",
+        blocos: [
+          p("Não existe um prazo fixo. O tempo e a frequência são combinados no plano de cuidado e mudam com o tempo: tem quem vá quase todos os dias no começo e depois espaçe, e tem quem vá uma vez por semana. Quando a pessoa está melhor, o acompanhamento pode continuar na Unidade Básica de Saúde. Se o uso voltar, dá pra procurar o CAPS AD de novo."),
+        ],
+      },
+      {
+        titulo: "Quem faz tratamento no CAPS AD tem direito a benefícios?",
+        blocos: [
+          p("O tratamento, por si só, não dá direito automático a benefício. O que existe:"),
+          {
+            tipo: "lista",
+            itens: [
+              "O CAPS AD pode fornecer declaração de comparecimento e relatório de acompanhamento, que ajudam em pedidos de afastamento",
+              "Quem contribui com o INSS e fica sem condições de trabalhar pode pedir o benefício por incapacidade temporária, que depende de perícia médica do INSS",
+              "Pra quem está em situação de vulnerabilidade, o CRAS da sua região orienta sobre os benefícios da assistência social",
+              "Algumas cidades têm passe livre no transporte pra quem faz tratamento contínuo, mas a regra é local",
+            ],
+          },
+          p("A assistente social do CAPS AD costuma ser quem ajuda a entender o que vale no seu caso."),
+        ],
+      },
+      {
+        titulo: "E se a minha cidade não tem CAPS AD?",
+        blocos: [
+          p("Em cidades menores, o cuidado com álcool e outras drogas costuma ficar com o CAPS I ou II ou com a Unidade Básica de Saúde. Algumas regiões têm um CAPS AD que atende várias cidades. A Secretaria de Saúde do seu município sabe dizer qual é a referência."),
+          p("Também dá pra combinar com caminhos online, como terapia e grupos de apoio, que não dependem de onde você mora."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar o CAPS AD e outros apoios?",
+        blocos: [
+          p("Pra achar o CAPS AD mais perto, pergunte na Unidade Básica de Saúde do seu bairro ou na Secretaria de Saúde da sua cidade. Na Margem, reunimos serviços públicos e grupos de apoio, presenciais e online. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("A Margem não faz parte do SUS. Se a fila estiver longa ou você preferir um atendimento online, a sessão com psicólogo na Margem custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Você escolhe o valor dentro da faixa, e dá pra combinar com o CAPS AD. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "O que é o CAPS AD?",
+        resposta:
+          "É o Centro de Atenção Psicossocial Álcool e Drogas, um serviço gratuito do SUS que cuida de pessoas com sofrimento ou problemas ligados ao uso de álcool e outras drogas, e das famílias delas.",
+      },
+      {
+        pergunta: "Precisa de encaminhamento pra ir ao CAPS AD?",
+        resposta:
+          "Não. O CAPS AD funciona em regime de porta aberta: dá pra ir direto à unidade, sem marcar consulta pra primeira conversa. Levar documento com foto e cartão do SUS ajuda.",
+      },
+      {
+        pergunta: "Preciso parar de usar pra ser atendido no CAPS AD?",
+        resposta:
+          "Não. O plano de cuidado é feito com você, e a meta pode ser parar ou diminuir o uso e os riscos.",
+      },
+      {
+        pergunta: "O CAPS AD interna?",
+        resposta:
+          "O CAPS AD cuida sem internação. Os CAPS AD III e IV têm acolhimento noturno por alguns dias em momentos difíceis. Internação em hospital é exceção, pra casos de risco à vida.",
+      },
+      {
+        pergunta: "Quais são os tipos de CAPS?",
+        resposta:
+          "CAPS I, II e III atendem saúde mental em geral, o CAPS i atende crianças e adolescentes, e os CAPS AD, AD III e AD IV são especializados em álcool e outras drogas. Os tipos III e IV funcionam 24 horas.",
+      },
+      {
+        pergunta: "Quem faz tratamento no CAPS AD tem direito a benefícios?",
+        resposta:
+          "Não de forma automática. O CAPS AD pode dar declaração e relatório de acompanhamento, e o benefício por incapacidade do INSS depende de perícia. O CRAS orienta sobre os benefícios da assistência social.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Roda de conversa num centro de saúde claro, com pessoas sentadas em cadeiras de madeira em círculo ao redor de uma mesa baixa com jarra de água e copos.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
