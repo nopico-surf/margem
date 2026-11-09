@@ -3080,6 +3080,208 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Roda de conversa num centro de saúde claro, com pessoas sentadas em cadeiras de madeira em círculo ao redor de uma mesa baixa com jarra de água e copos.",
     imagemCard: true,
   },
+  // Guia de clonazepam (08/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/clonazepam.md). Formato dos títulos: afirmativo (o anterior, caps-ad, usou perguntas).
+  // Abstinência e mistura com álcool batem com os guias de abstinência, opioides e como parar de usar drogas.
+  // Sem dose de propósito: quem define é o médico. Mesma exceção de copy dos outros guias.
+  {
+    slug: "clonazepam",
+    publicadoEm: "2026-11-08",
+    atualizadoEm: "2026-11-08",
+    title: "Clonazepam: para que serve, efeitos, riscos e como parar | Margem",
+    descricao:
+      "Entenda o que é o clonazepam, para que serve, os efeitos, o risco de misturar com álcool, por que não parar de repente e onde buscar apoio sem julgamento.",
+    h1: "Clonazepam: para que serve, efeitos, riscos e como parar com segurança",
+    abertura:
+      "Talvez um médico tenha receitado clonazepam e você queira entender o que está tomando. Talvez você tome há anos, já não consiga dormir sem ele e pense em parar. Talvez use sem receita, ou mais do que foi receitado. Ou talvez seja alguém próximo de você. O clonazepam é um remédio importante e, ao mesmo tempo, pede cuidado. Ficar preso a ele não é falta de força de vontade: tem a ver com o jeito como ele age no corpo, e existem caminhos pra cada uma dessas situações.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que é o clonazepam",
+        blocos: [
+          p("O clonazepam é um calmante da família dos benzodiazepínicos, a mesma do diazepam, do alprazolam e do lorazepam. Ele diminui a atividade do cérebro e, por isso, acalma, dá sono, relaxa os músculos e ajuda a controlar convulsões."),
+          p("Rivotril é o nome comercial mais conhecido. Clonazepam é o nome da substância, e o genérico tem a mesma substância do Rivotril. Ele vem em comprimido, comprimido que dissolve embaixo da língua e gotas. A dose de cada forma é diferente, então trocar uma pela outra por conta própria pode confundir a quantidade."),
+          p("No Brasil, o clonazepam é tarja preta: só é vendido com receita azul, que fica retida na farmácia e vale por 30 dias."),
+        ],
+      },
+      {
+        titulo: "Para que serve o clonazepam",
+        blocos: [
+          p("Os usos mais comuns são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Epilepsia e alguns tipos de convulsão, em crianças e adultos",
+              "Crises de pânico",
+              "Ansiedade forte, em geral por um período curto, enquanto outro tratamento começa a fazer efeito",
+              "Em alguns casos, junto com outros remédios, em quadros como transtorno bipolar e síndrome das pernas inquietas",
+            ],
+          },
+          p("Quem decide se ele faz sentido, a dose e por quanto tempo é o médico, olhando pra sua história. Usado com acompanhamento, ele pode ajudar muito, principalmente nos momentos mais difíceis."),
+        ],
+      },
+      {
+        titulo: "Clonazepam pra dormir",
+        blocos: [
+          p("Muita gente começa a tomar clonazepam pra conseguir dormir. Ele dá sono e, por algumas noites, pode ajudar. O problema é o uso por muito tempo: o corpo se acostuma, o mesmo comprimido passa a fazer menos efeito e, quando a pessoa tenta ficar sem, a insônia costuma voltar mais forte do que antes."),
+          p("O efeito costuma começar em até uma hora e dura bastante. Por isso a sonolência, a lentidão e a dificuldade de concentração podem continuar na manhã seguinte. Se a insônia já dura semanas, vale conversar com o médico sobre o que está por trás dela. A terapia tem caminhos pra insônia que não dependem de remédio."),
+        ],
+      },
+      {
+        titulo: "Os efeitos e os efeitos colaterais do clonazepam",
+        blocos: [
+          p("Os efeitos colaterais mais comuns são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Sono e moleza",
+              "Tontura e falta de equilíbrio",
+              "Reflexo mais lento e dificuldade de concentração",
+              "Esquecimento, principalmente do que aconteceu logo depois de tomar",
+              "Fala mais lenta ou enrolada em doses altas",
+            ],
+          },
+          p("Em pessoas mais velhas, o risco de queda e de confusão é maior. Em algumas pessoas, o efeito vem ao contrário, com agitação, irritação ou comportamento diferente do habitual. Se aparecer tristeza muito pesada ou pensamentos de se machucar, vale falar com o médico o quanto antes. Como o reflexo fica mais lento, dirigir depois de tomar aumenta o risco de acidente."),
+        ],
+      },
+      {
+        titulo: "O perigo de misturar clonazepam com álcool",
+        blocos: [
+          p("Álcool e clonazepam diminuem a atividade do cérebro, e um aumenta o efeito do outro. Juntos, mesmo em quantidades que separadas pareceriam pequenas, podem causar:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Apagão: a pessoa faz coisas e não lembra depois",
+              "Quedas e acidentes",
+              "Sono tão profundo que a pessoa não acorda",
+              "Respiração lenta demais",
+              "Vômito sem acordar, com risco de engasgar",
+            ],
+          },
+          p("O mesmo vale pra mistura com opioides, outros calmantes, remédios pra dormir, GHB e ketamina. Sozinho, o clonazepam raramente leva a uma overdose fatal. Misturado, o risco cresce muito. [Ler sobre opioides](/blog/opioides)"),
+        ],
+      },
+      {
+        titulo: "Tolerância e dependência de clonazepam",
+        blocos: [
+          p("Tomando clonazepam todo dia por várias semanas, o corpo se acostuma. O mesmo efeito passa a pedir uma dose maior, e o corpo estranha quando fica sem. Isso pode acontecer com qualquer pessoa, mesmo tomando do jeito que foi receitado, e não quer dizer, sozinho, que o uso virou um problema."),
+          p("Alguns sinais de que vale conversar com alguém:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Tomar mais do que foi receitado, ou com mais frequência",
+              "Sentir que não consegue dormir ou sair de casa sem ele",
+              "Ficar mal, ansioso ou com tremor quando atrasa uma dose",
+              "Buscar receita com mais de um médico ou usar remédio de outra pessoa",
+              "Esconder quanto está tomando",
+              "Querer diminuir e não conseguir",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Como parar de tomar clonazepam com segurança",
+        blocos: [
+          p("Se você toma clonazepam todo dia há mais de algumas semanas, não pare de uma vez. Parar de repente pode causar abstinência, e no caso dos calmantes ela pode ser perigosa: em algumas pessoas, causa convulsão."),
+          p("Os sintomas mais comuns da abstinência são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Ansiedade e insônia que voltam mais fortes",
+              "Irritação e inquietação",
+              "Tremor e suor",
+              "Dificuldade de concentração",
+              "Sensibilidade maior a luz e barulho",
+              "Em casos mais graves, confusão e convulsão",
+            ],
+          },
+          p("O caminho mais seguro é diminuir aos poucos, com o médico, ao longo de semanas ou meses. O ritmo é combinado com você e pode ser ajustado se ficar difícil. Ao mesmo tempo, a terapia ajuda a cuidar do que o remédio estava segurando, como a ansiedade, o pânico ou a insônia. Se você está grávida, converse com um profissional antes de mudar qualquer coisa. [Ler sobre sintomas de abstinência](/blog/sintomas-de-abstinencia)"),
+          p("Se aparecer uma tristeza muito pesada ou pensamentos de morte, vale buscar um profissional o quanto antes. Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
+        ],
+      },
+      {
+        titulo: "Os sinais de overdose e o que fazer",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "A pessoa não acorda ou não responde, mesmo chamando alto",
+              "Respiração muito lenta, fraca ou com um ronco estranho",
+              "Lábios ou unhas arroxeados",
+              "Fala muito enrolada, confusão e falta de equilíbrio forte",
+            ],
+          },
+          p("Nesses casos, ligue para o SAMU no 192 na hora e, se puder, diga o que foi tomado e se teve álcool ou outra substância junto. Enquanto espera, chame a pessoa pelo nome e não deixe ela sozinha. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+        ],
+      },
+      {
+        titulo: "Como usar clonazepam com menos risco",
+        blocos: [
+          p("Nem toda pessoa que usa quer ou consegue parar agora, e dá pra buscar cuidado do jeito que você está. Usar com menos risco também é um caminho, e se chama [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero, mas alguns cuidados fazem diferença:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não misturar com álcool, opioides, outros calmantes ou remédios pra dormir",
+              "Não tomar uma dose a mais quando a anterior parece não ter feito efeito: o efeito pode demorar",
+              "Desconfiar de comprimido comprado sem receita: a dose e a composição podem não ser as que dizem",
+              "Não usar sozinho se for misturar com outra coisa, e estar com alguém de confiança que saiba o que fazer numa emergência",
+              "Não dirigir nem operar máquina depois de tomar",
+              "Guardar o remédio longe de crianças e de outras pessoas da casa",
+              "Contar ao médico tudo o que você usa, inclusive álcool e outras drogas, pra ele ajustar o cuidado",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que toma clonazepam",
+        blocos: [
+          p("Você não controla a decisão da outra pessoa, mas pode fazer diferença. Ajuda falar do que você está vendo, sem acusação, escutar mais do que aconselhar e mostrar os caminhos de apoio quando ela estiver aberta. Esconder ou jogar fora o remédio de alguém que toma todo dia pode provocar abstinência, que pode ser perigosa."),
+          p("Vale também conhecer os sinais de overdose e o que fazer, principalmente se a pessoa mistura o remédio com álcool. Cuidar de você também conta: uma terapia pra você é cuidado, mesmo que a outra pessoa não queira buscar ajuda agora."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. Conversar com psiquiatra sobre diminuir o clonazepam não leva a internação, e o que você conta fica em sigilo. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Fora da Margem, a Unidade Básica de Saúde pode acompanhar o uso e a retirada do remédio, e o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento quando o uso já está pesando. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Qual a diferença entre Rivotril e clonazepam?",
+        resposta:
+          "Nenhuma na substância. Clonazepam é o nome do remédio, e Rivotril é o nome comercial mais conhecido. O genérico tem a mesma substância e o mesmo efeito.",
+      },
+      {
+        pergunta: "Para que é indicado o clonazepam?",
+        resposta:
+          "Principalmente pra epilepsia, crises de pânico e ansiedade forte, em geral por um período curto. Quem define o uso, a dose e o tempo é o médico.",
+      },
+      {
+        pergunta: "Quantas horas o clonazepam faz dormir?",
+        resposta:
+          "Não existe um número certo: depende da dose, do corpo e de há quanto tempo a pessoa toma. O efeito começa em até uma hora e dura bastante, por isso a sonolência pode continuar na manhã seguinte.",
+      },
+      {
+        pergunta: "O que pode acontecer com a pessoa que toma clonazepam?",
+        resposta:
+          "Os efeitos mais comuns são sono, tontura, reflexo mais lento e esquecimento. Usado todo dia por semanas, o corpo se acostuma e parar de repente pode causar abstinência. Misturado com álcool, pode deixar a respiração lenta demais.",
+      },
+      {
+        pergunta: "Pode beber tomando clonazepam?",
+        resposta:
+          "Não é recomendado. Álcool e clonazepam somam o efeito, e juntos podem causar apagão, quedas e respiração lenta demais. Se a pessoa não acorda ou respira muito devagar, ligue para o SAMU no 192.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Mesa de cabeceira de madeira clara ao lado de uma cama com roupa verde e branca, com um copo de água, uma caixinha branca fechada e a mão de uma pessoa apoiada no tampo, com plantas na janela ao fundo.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {

@@ -36,6 +36,7 @@ const RECORTES = {
   "mdma": { sujeito: [820, 1250], topo: 130, largura: 1500 },
   "ketamina": { sujeito: [615, 1315], topo: 215, largura: 1500 },
   "caps-ad": { sujeito: [190, 1900], topo: 150, largura: 1800 },
+  "clonazepam": { sujeito: [935, 1730], topo: 250, largura: 1300 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {

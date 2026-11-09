@@ -12,7 +12,6 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 - internação involuntária
 - alcoólicos anônimos
 - comunidade terapêutica
-- clonazepam
 - overdose o que fazer
 - pode beber tomando remédio
 - cocaína e álcool
@@ -25,3 +24,5 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 ## Publicadas
 
 Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
+
+- 2026-11-08: clonazepam (/blog/clonazepam)
