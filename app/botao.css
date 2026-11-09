@@ -4,7 +4,7 @@
    eixos: tamanho, variante e se o canto é redondo. Os outros eixos do Figma (`mode`, `padding`,
    `function=danger`) não aparecem em tela nenhuma e por isso não existem aqui.
 
-   Entre os estados muda a cor, e o pressed afunda o botão. O focus ganha um stroke de 2px por
+   Entre os estados muda a cor, e o pressed afunda o botão. O focus ganha um stroke de 2 px por
    dentro, para não empurrar o layout. */
 
 /* [data-estado-forcado] existe para a galeria /ui poder mostrar hover, pressed e focus parados,
@@ -127,7 +127,7 @@
   padding: var(--spacing-2) 0;
 }
 
-/* O frame externo não tem padding lateral, mas o conteúdo por dentro tem 6px de cada lado, em
+/* O frame externo não tem padding lateral, mas o conteúdo por dentro tem 6 px de cada lado, em
    todos os tamanhos. É esse espaço que dá folga entre a borda do hover e o texto. */
 .btn[data-sem-padding="true"] .btn-conteudo {
   padding: 0 var(--spacing-6);

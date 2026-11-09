@@ -307,6 +307,7 @@
   --z-index-raised: 2;
   --z-index-panel: 20;
   --z-index-menu: 30;
+  --z-index-toast: 50;
   --z-index-modal: 100;
 
   /* Duração e easing */
