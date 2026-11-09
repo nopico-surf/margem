@@ -8,6 +8,9 @@ export type Orientation = {
   checklist_agora: string[];
   checklist_proximo: string[];
   perguntas_aprofundamento: Array<{ pergunta: string; opcoes: string[] }>;
+  // Sinal, não conteúdo: diz se a mensagem fala de uso, pra tela decidir se mostra serviços públicos e
+  // espaços de apoio. Não é gravado em `respostas`. Ausente ou fora do formato vale como true (mostra tudo).
+  fala_de_substancia?: boolean;
 };
 
 // Não existe resposta genérica de reserva: quando o Gemini falha, quem chama recebe o motivo e decide
@@ -83,6 +86,7 @@ export async function gerarOrientacao(texto: string): Promise<ResultadoGemini> {
         checklist_agora: (parsed.checklist_agora as unknown[]).filter((item): item is string => typeof item === "string"),
         checklist_proximo: (parsed.checklist_proximo as unknown[]).filter((item): item is string => typeof item === "string"),
         perguntas_aprofundamento: parsed.perguntas_aprofundamento as Orientation["perguntas_aprofundamento"],
+        fala_de_substancia: parsed.fala_de_substancia !== false,
       },
     };
   } catch (err) {

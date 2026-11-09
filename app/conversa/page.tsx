@@ -19,7 +19,14 @@ const MENSAGEM_ERRO_GEMINI = "Desculpe, houve um erro ao carregar suas informaç
 type OrientacaoDaApi = OrientationResult & {
   risco?: { emergency?: boolean };
   foi_cache_hit?: boolean;
+  fala_de_substancia?: boolean;
 };
+
+// Serviços públicos e espaços de apoio só ficam de fora quando a pessoa não falou de substância e
+// não houve termo de risco (o CVV e o SAMU estão nos serviços públicos). Campo ausente mostra tudo.
+function mostrarRedeCompleta(orientacao: OrientacaoDaApi) {
+  return orientacao.fala_de_substancia !== false || Boolean(orientacao.risco?.emergency);
+}
 
 type RecursosDaApi = {
   profissionais: ProfissionalCadastrado[];
@@ -158,6 +165,8 @@ export default function ConversaPage() {
         gemini_falhou: false,
         foi_cache_hit: Boolean(result.foi_cache_hit),
         risco_detectado: Boolean(result.risco?.emergency),
+        fala_de_substancia: result.fala_de_substancia !== false,
+        rede_completa: mostrarRedeCompleta(result),
         tempo_gemini_ms: result.tempo_gemini_ms ?? null,
         tempo_resposta_ms: Math.round(performance.now() - inicio),
         qtd_profissionais: result.profissionais?.length ?? 0,
@@ -220,6 +229,7 @@ export default function ConversaPage() {
       resources={resources}
       error={error}
       onRetry={tentarNovamente}
+      mostrarRedeCompleta={orientation ? mostrarRedeCompleta(orientation) : true}
     />
   );
 }

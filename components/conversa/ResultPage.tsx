@@ -30,9 +30,12 @@ type ResultPageProps = {
   } | null;
   error: string | null;
   onRetry: () => void;
+  // false quando a pessoa não falou de substância e não houve risco: a tela mostra só profissionais e
+  // os checklists, sem serviços públicos e espaços de apoio.
+  mostrarRedeCompleta?: boolean;
 };
 
-export function ResultPage({ message, orientation, isLoading, isResourcesLoading, resources, error, onRetry }: ResultPageProps) {
+export function ResultPage({ message, orientation, isLoading, isResourcesLoading, resources, error, onRetry, mostrarRedeCompleta = true }: ResultPageProps) {
   const realSteps = orientation?.checklist_agora ?? [];
   const planningSteps = orientation?.checklist_proximo ?? [];
   const profissionais = resources?.profissionais ?? [];
@@ -64,13 +67,13 @@ export function ResultPage({ message, orientation, isLoading, isResourcesLoading
       <SideMenu open={menuOpen} onClose={fecharMenu} rota="/conversa" />
       <div className="figma-result-main">
         <Messages message={message} orientation={orientation} isLoading={isLoading} error={error} onRetry={onRetry} />
-        {mostrarSecoes && <BlocoMaisOpcoes isLoading={Object.values(isResourcesLoading).some(Boolean)} />}
+        {mostrarSecoes && <BlocoMaisOpcoes isLoading={Object.values(isResourcesLoading).some(Boolean)} mostrarRedeCompleta={mostrarRedeCompleta} />}
       </div>
       {mostrarSecoes && (
         <div className="figma-result-sections">
           <CardProfissionais profissionais={profissionais} isLoading={isResourcesLoading.profissionais} />
-          <CardsServicosPublicos services={servicosPublicos} isLoading={isResourcesLoading.servicosPublicos} />
-          <CardsInstituicoes spaces={instituicoes} isLoading={isResourcesLoading.instituicoes} />
+          {mostrarRedeCompleta && <CardsServicosPublicos services={servicosPublicos} isLoading={isResourcesLoading.servicosPublicos} />}
+          {mostrarRedeCompleta && <CardsInstituicoes spaces={instituicoes} isLoading={isResourcesLoading.instituicoes} />}
           <SecaoPassos
             passo="agora"
             title="Passos reais, para fazer agora"

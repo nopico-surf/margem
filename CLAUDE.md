@@ -63,7 +63,7 @@ Não há mais card de emergência (CVV 188, SAMU 192, Polícia 190, Disque Socia
 
 **Recusar não bloqueia a navegação, só a personalização.** "Navegar sem personalização" fecha o painel e a pessoa segue navegando, e a medição anônima continua. Conversar exige o aceite: sem ele, cada tentativa na `/inicio` (clicar num card ou enviar o campo livre) reabre o painel em vez de seguir, e nada é gravado nem enviado à IA até a pessoa aceitar. Se ela recusar de novo, o card não abre, o texto continua no campo e nada acontece. O aceite grava em `localStorage`, em `sessoes.consentimento_lgpd` e em um cookie `margem-consentimento=true` que sobrevive por 400 dias (`lib/consentimento.ts`). Quem já consentiu não vê o painel de novo. A recusa não grava cookie: fica só na aba (`sessionStorage`), pra o painel não voltar a cada tela, e quem recusou vê o painel de novo ao abrir `/` numa próxima visita.
 
-**Medição.** O Mixpanel mede navegação mesmo depois da recusa (o painel avisa; legítimo interesse). Card e texto do campo livre só chegam a ele depois do aceite: `card_selecionado` e `card_titulo` levam o título do card, `texto_livre_enviado` só o tamanho do texto. `consentimento_concedido` e `consentimento_recusado` levam `rota` e `gatilho` (`abertura`, `card` ou `texto_livre`), nunca o card nem o texto. O `identify` usa o mesmo UUID de sessão do Supabase, de propósito.
+**Medição.** O Mixpanel mede navegação mesmo depois da recusa (o painel avisa; legítimo interesse). Card e texto do campo livre só chegam a ele depois do aceite: `card_selecionado` e `card_titulo` levam o título do card, `texto_livre_enviado` só o tamanho do texto. `orientacao_recebida` leva `fala_de_substancia` e `rede_completa` (se a tela mostrou serviços públicos e espaços de apoio), nunca o texto. `consentimento_concedido` e `consentimento_recusado` levam `rota` e `gatilho` (`abertura`, `card` ou `texto_livre`), nunca o card nem o texto. O `identify` usa o mesmo UUID de sessão do Supabase, de propósito.
 
 **Meta (pixel via GTM).** Decidido em 16/10/2026: mede todo mundo, sem depender do aceite, e a `/privacidade` avisa. A conversão é o evento `agendar_whatsapp` no `dataLayer`, disparado em qualquer botão "Agendar por WhatsApp" (card e página do profissional), sem nenhum parâmetro. Card e texto nunca vão pra Meta. A configuração das tags fica no GTM, não no código.
 
@@ -76,6 +76,8 @@ Não há mais card de emergência (CVV 188, SAMU 192, Polícia 190, Disque Socia
 **Sempre, em paralelo.** Checagem dos `termos_risco` contra o texto original. Se bater, **não desvia o fluxo e não abre tela separada**: apenas reordena a resposta, subindo os contatos de emergência pro topo junto com a mensagem de escalação já escrita no banco. Essa detecção é nossa, hardcoded, e nunca é responsabilidade do Gemini.
 
 **Montagem da resposta.** A plataforma junta o que veio do Gemini (ou do cache) com profissionais, instituições, serviços públicos e telefones buscados no nosso banco por `categoria_resposta_relevante`. Quem decide o que exibir e em que ordem somos nós, não a IA.
+
+**Quando a pessoa não fala de substância** (decidido em 09/11/2026). No campo livre, se o Gemini devolve `fala_de_substancia: false` e não bateu termo de risco, a tela mostra só profissionais e os dois checklists: serviços públicos e espaços de apoio ficam de fora, e os links deles saem do "Além disso, você pode ver". Com risco, mostra tudo, porque o CVV e o SAMU estão nos serviços públicos. Campo ausente mostra tudo. Os cards sempre mostram tudo. O texto do Gemini segue a mesma regra: sem menção a uso, ele não fala de substância.
 
 **Ordem dos serviços públicos.** Vem do banco, nunca de heurística sobre o texto do serviço. A coluna `natureza` diz o que o serviço é, e a ordem de exibição é a ordem de declaração do enum: `saude_drogas`, `saude_mental`, `saude_geral`, `assistencia_social`, `seguranca`. Dentro de cada natureza, a coluna `ordem` (int) é prioridade manual, preenchida no dashboard do Supabase, provisória até existir uma regra baseada no relato da pessoa. Na rede de apoio (`instituicoes_apoio`) existe só a `ordem`. Cadastrar serviço novo sem definir a `natureza` não é possível: a coluna é `not null`.
 
@@ -91,6 +93,8 @@ Toda query que lista serviço ou instituição ordena explicitamente. Sem `order
 
 O Gemini gera **seis coisas e só seis**: `acolhimento`, `orientacao`, `pilula_espiritual`, `checklist_agora`, `checklist_proximo`, `perguntas_aprofundamento`.
 
+Além delas, devolve um sinal que não vira texto na tela: `fala_de_substancia` (boolean), se a mensagem menciona uso. Serve só pra decidir se serviços públicos e espaços de apoio aparecem (ver seção 3). Não é gravado em `respostas`. Ausente ou fora do formato vale como `true`, e não conta como falha do Gemini.
+
 Ele **nunca** gera telefone, endereço, nome de profissional, nome de instituição ou número de emergência. Se qualquer um desses aparecer no texto gerado, é bug: descarta e trata como falha do Gemini (ver abaixo). Essa checagem ainda não está implementada.
 
 Saída esperada:
@@ -104,7 +108,8 @@ Saída esperada:
   "checklist_proximo": ["string"],
   "perguntas_aprofundamento": [
     { "pergunta": "string", "opcoes": ["string"] }
-  ]
+  ],
+  "fala_de_substancia": true
 }
 ```
 
@@ -167,7 +172,7 @@ Não são preferência de estilo. São critério de aceite.
 - **Zero travessão** (`—`) em qualquer texto de interface. Sinaliza texto gerado por IA.
 - **CTA sempre no infinitivo e sempre específico.** "Ver psicólogo parceiro", nunca "Ver profissional", nunca "Clique aqui", nunca "Saiba mais" solto.
 - **Copy conversacional não tem título de seção.** Prosa corrida, uma pessoa falando com outra.
-- **Conteúdo é aditivo, nunca filtrante.** Responder uma pergunta acrescenta conteúdo na tela. Nada desaparece com base no que a pessoa respondeu.
+- **Conteúdo é aditivo, nunca filtrante.** Responder uma pergunta acrescenta conteúdo na tela. Nada desaparece com base no que a pessoa respondeu. A regra vale para o que some depois de a pessoa interagir, não para o conjunto que entra na montagem inicial da resposta (ex.: sem serviços públicos quando ela não fala de substância, seção 3).
 - **Nunca exibir que o sistema consulta banco, documento ou IA.** Sem "estou buscando", sem "de acordo com nossa base", sem spinner narrado.
 - **WhatsApp usa ícone distinto do telefone.**
 - **Sem notificação push.** É gatilho de recaída documentado.
@@ -189,7 +194,7 @@ Se aparecer alguma dessas, o escopo vazou:
 
 - motor de regras, rapidfuzz, fuzzy matching, dicionário de gírias
 - Google Maps API (é link de redirect com parâmetros, e só)
-- Gemini como classificador
+- Gemini como classificador (única exceção: o sinal `fala_de_substancia`, seção 4)
 - login, conta, histórico de longo prazo
 - embeddings ou busca semântica
 - dashboard de qualquer tipo
