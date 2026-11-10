@@ -47,7 +47,7 @@ export async function lerModulo(numero: number): Promise<Modulo | null> {
   const { dados, corpo } = separarFrontmatter(markdown);
   const cenarioSimulador = await cenarioExistente(texto(dados.cenario_simulador));
   const blocos = lerBlocosMarkdown(corpo);
-  // O "Ensaiar no treino" de cada item abre o cenário do item ou, sem ele, o do módulo. Cenário que
+  // O botão do treino ("Treinar a primeira conversa" etc.) de cada item abre o cenário do item ou, sem ele, o do módulo. Cenário que
   // ainda não tem arquivo em content/familia/cenarios fica nulo, e o botão não aparece.
   for (const bloco of blocos) {
     if (bloco.tipo === "exercicio") bloco.cenario = bloco.cenario ? await cenarioExistente(bloco.cenario) : cenarioSimulador;

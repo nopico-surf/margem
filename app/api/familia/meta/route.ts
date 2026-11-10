@@ -1,12 +1,13 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
-import { dataDoDia, dataValida, diaDaSemana, sanitizarMeta, segundaDaSemana, type Meta } from "@/lib/familia/escala";
+import { alternarDiaFeito, dataValida, sanitizarMeta, segundaDaSemana, type Meta } from "@/lib/familia/escala";
 
 // Meta da semana (componentes-parte1, C1).
 // GET: a meta ativa (ou null).
 // POST { meta, hoje, modulo? }: cria a meta da semana de `hoje`, ou edita a ativa ("Editar minha
 //   meta" mantém a semana e os dias já feitos). Do módulo 1, marca o item "Como está a sua vida"; do
 //   módulo 7, o item "Escolher a meta".
-// PATCH { hoje }: "Marcar que fiz hoje". Só vale num dia marcado, dentro da semana da meta.
+// PATCH { data, hoje }: marca ou desmarca um dia da meta (briefing 00, item 6). Vale hoje e qualquer
+//   dia que já passou na semana da meta, planejado ou não.
 // `hoje` vem do aparelho (AAAA-MM-DD): o dia que conta é o da pessoa, não o do servidor.
 
 const CAMPOS = "id, area, texto, dias, momento, confianca, obstaculo_plano, semana_inicio, status, dias_feitos";
@@ -54,23 +55,20 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   const sessao = await usuarioDaRequisicao(request);
   if (!sessao) return naoAutorizado();
-  const corpo = (await request.json().catch(() => null)) as { hoje?: unknown } | null;
-  if (!dataValida(corpo?.hoje)) return Response.json({ error: "data_invalida" }, { status: 400 });
-  const hoje = corpo.hoje as string;
+  const corpo = (await request.json().catch(() => null)) as { hoje?: unknown; data?: unknown } | null;
+  if (!dataValida(corpo?.hoje) || !dataValida(corpo?.data)) return Response.json({ error: "data_invalida" }, { status: 400 });
   const atual = await metaAtiva(sessao);
   if (!atual) return Response.json({ error: "sem_meta" }, { status: 404 });
-  const dia = diaDaSemana(hoje);
-  if (!atual.dias.includes(dia) || dataDoDia(atual.semana_inicio, dia) !== hoje) return Response.json({ error: "dia_nao_marcado" }, { status: 400 });
-  if (!atual.dias_feitos.includes(hoje)) {
-    const { error } = await sessao.supabase
-      .from("familia_meta_semana")
-      .update({ dias_feitos: [...atual.dias_feitos, hoje], atualizado_em: new Date().toISOString() })
-      .eq("id", atual.id)
-      .eq("user_id", sessao.user.id);
-    if (error) {
-      console.error("[familia] marcar dia da meta falhou:", error.message);
-      return Response.json({ error: "falha_ao_salvar" }, { status: 500 });
-    }
+  const dias_feitos = alternarDiaFeito(atual, corpo.data as string, corpo.hoje as string);
+  if (!dias_feitos) return Response.json({ error: "dia_fora_da_semana" }, { status: 400 });
+  const { error } = await sessao.supabase
+    .from("familia_meta_semana")
+    .update({ dias_feitos, atualizado_em: new Date().toISOString() })
+    .eq("id", atual.id)
+    .eq("user_id", sessao.user.id);
+  if (error) {
+    console.error("[familia] marcar dia da meta falhou:", error.message);
+    return Response.json({ error: "falha_ao_salvar" }, { status: 500 });
   }
   return Response.json({ meta: await metaAtiva(sessao) });
 }

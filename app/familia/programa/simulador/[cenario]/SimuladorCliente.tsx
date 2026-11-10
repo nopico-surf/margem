@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { GlifoMicNone, GlifoVolumeOff, GlifoVolumeUp } from "@/components/icons/glifos";
 import { MessageInput } from "@/components/app/MessageInput";
 import { AvisoIA } from "@/components/familia/AvisoIA";
@@ -15,8 +15,7 @@ import { chamarApi } from "@/lib/familia/auth-cliente";
 import { SIMULADOR_MAX_CARACTERES, SIMULADOR_MAX_MENSAGENS } from "@/lib/familia/config";
 import type { Cenario } from "@/lib/familia/conteudo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
-import { REACAO_DO_DIAGNOSTICO, REACOES_SIMULADOR, type Fala, type Feedback, type ReacaoSimulador } from "@/lib/familia/simulador";
-import { CardHeader } from "@/components/conversa/CardHeader";
+import { REACAO_DO_DIAGNOSTICO, REACOES_SIMULADOR, tituloDoTreino, type Fala, type Feedback, type ReacaoSimulador } from "@/lib/familia/simulador";
 import { track } from "@/lib/mixpanel";
 
 type Etapa = "carregando" | "inicio" | "conversa" | "seguranca" | "feedback";
@@ -30,7 +29,7 @@ const MENSAGEM_BLOQUEIO: Record<string, string> = {
 };
 
 // O mesmo erro da /conversa (app/conversa/page.tsx), com o mesmo "Tentar novamente" (ResponseError).
-const MENSAGEM_ERRO = "Desculpe, houve um erro ao carregar suas informações";
+const MENSAGEM_ERRO = "Não foi possível carregar o treino agora.";
 
 // Reconhecimento de voz do navegador (Web Speech API). Só a interface: o áudio não é gravado nem
 // enviado pra Margem, vira texto no campo. Tipos mínimos, porque nem todo lib.dom traz a API.
@@ -59,6 +58,9 @@ function construtorDeVoz(): ConstrutorReconhecimento | null {
 // /conversa (UserMessage, figma-response-copy, ResponseLoading, ResponseError). O microfone e o
 // "Ouvir as respostas" usam a voz do próprio navegador; nenhuma voz é gravada.
 export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
+  // Módulo de onde a pessoa veio (?modulo=N, posto pelo botão do exercício); sem ele, volta ao painel.
+  const moduloParam = Number(useSearchParams().get("modulo"));
+  const moduloDeOrigem = Number.isInteger(moduloParam) && moduloParam >= 1 && moduloParam <= 8 ? moduloParam : null;
   const router = useRouter();
   const [etapa, setEtapa] = useState<Etapa>("carregando");
   const [apelido, setApelido] = useState("");
@@ -199,7 +201,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
       return;
     }
     if (!resposta?.ok || dados?.tipo !== "fala" || !dados.texto) {
-      // A mensagem fica na tela; "Tentar novamente" pede a resposta de novo, sem digitar tudo.
+      // A mensagem fica na tela; "Tentar carregar o treino de novo" pede a resposta de novo, sem digitar tudo.
       setFalha(() => () => void responder(falas));
       return;
     }
@@ -225,7 +227,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   }
 
   const aviso = <AvisoIA>{t("Isto é um treino com IA. A IA pode cometer erros, não é {{apelido}} e não substitui um profissional.")}</AvisoIA>;
-  const erro = falha && <ResponseError error={MENSAGEM_ERRO} onRetry={falha} />;
+  const erro = falha && <ResponseError error={MENSAGEM_ERRO} onRetry={falha} rotuloTentar="Tentar carregar o treino de novo" />;
 
   if (etapa === "carregando") {
     return (
@@ -238,11 +240,12 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   if (etapa === "seguranca") {
     return (
       <section className="familia-secao">
-        <CardHeader
-          as="h1"
-          title="Sua segurança vem primeiro"
-          description={mensagemSeguranca ?? "Se você ou alguém da casa está em perigo agora, peça ajuda já. Nenhuma conversa vale mais do que a sua segurança."}
-        />
+        <header className="familia-titulo">
+          <h1 className="header-large">Sua segurança vem primeiro</h1>
+          <p className="text-large">
+            {mensagemSeguranca ?? "Se você ou alguém da casa está em perigo agora, peça ajuda já. Nenhuma conversa vale mais do que a sua segurança."}
+          </p>
+        </header>
         <ContatosEmergencia />
       </section>
     );
@@ -251,24 +254,24 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   if (etapa === "feedback" && feedback) {
     return (
       <section className="familia-secao">
-        <CardHeader as="h1" title="Como foi o seu treino" />
+        <h1 className="header-large">Como foi o seu treino</h1>
         <AvisoIA>Este retorno foi escrito por uma IA e pode ter erros. Use o que fizer sentido pra você.</AvisoIA>
-        <h2 className="header-small">O que funcionou</h2>
-        <ul className="familia-lista text-medium-regular">
+        <h2 className="header-medium">O que funcionou</h2>
+        <ul className="familia-lista text-large">
           {feedback.o_que_funcionou.map((item) => (
             <li key={item}>{t(item)}</li>
           ))}
         </ul>
-        <h2 className="header-small">O que tentar diferente</h2>
-        <ul className="familia-lista text-medium-regular">
+        <h2 className="header-medium">O que tentar diferente</h2>
+        <ul className="familia-lista text-large">
           {feedback.o_que_tentar_diferente.map((item) => (
             <li key={item}>{t(item)}</li>
           ))}
         </ul>
-        <h2 className="header-small">Uma frase para levar</h2>
-        <p className="familia-fala text-medium-regular">{t(feedback.frase_para_levar)}</p>
-        <Button tamanho="medium" larguraTotal href="/familia/programa/modulo/1">
-          Voltar para o módulo 1
+        <h2 className="header-medium">Uma frase para levar</h2>
+        <p className="familia-fala text-large">{t(feedback.frase_para_levar)}</p>
+        <Button tamanho="medium" larguraTotal href={moduloDeOrigem ? `/familia/programa/modulo/${moduloDeOrigem}` : "/familia/programa"}>
+          {moduloDeOrigem ? `Voltar para o módulo ${moduloDeOrigem}` : "Voltar ao painel"}
         </Button>
       </section>
     );
@@ -277,22 +280,25 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   if (etapa === "inicio") {
     return (
       <section className="familia-secao">
-        <CardHeader as="h1" title={cenario.titulo} description={t(cenario.contexto)} />
+        <header className="familia-titulo">
+          <h1 className="header-large">{tituloDoTreino(cenario.titulo)}</h1>
+          <p className="text-large">{t(cenario.contexto)}</p>
+        </header>
         {aviso}
-        <p className="text-medium-regular">
+        <p className="text-large">
           <strong>Seu objetivo:</strong> {cenario.objetivoDoFamiliar}
         </p>
 
         {bloqueio ? (
           <>
-            <p className="text-medium-regular" role="status">
+            <p className="text-large" role="status">
               {MENSAGEM_BLOQUEIO[bloqueio]}
             </p>
             {bloqueio === "bloqueado_seguranca" && <ContatosEmergencia />}
           </>
         ) : (
           <>
-            <h2 className="header-small">{t("Como {{apelido}} costuma reagir?")}</h2>
+            <h2 className="header-medium">{t("Como {{apelido}} costuma reagir?")}</h2>
             <div className="familia-chips">
               {REACOES_SIMULADOR.map((reacao) => (
                 <Button
@@ -306,7 +312,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
                 </Button>
               ))}
             </div>
-            <p className="text-small-regular familia-texto-suave">
+            <p className="text-medium-regular familia-texto-suave">
               Você escreve ou fala até {SIMULADOR_MAX_MENSAGENS} mensagens. Quando quiser, termine e veja o retorno.
             </p>
             {erro}
@@ -323,7 +329,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
 
   return (
     <section className="familia-secao">
-      <CardHeader as="h1" title={cenario.titulo} />
+      <h1 className="header-large">{tituloDoTreino(cenario.titulo)}</h1>
       {aviso}
       {vozDisponivel.ouvir && (
         <div className="familia-exercicio-acoes">

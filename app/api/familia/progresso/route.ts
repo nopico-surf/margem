@@ -1,6 +1,17 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
 
 // Início e conclusão de módulo. Na Fase 1 só o módulo 1 existe; a liberação semanal é da Fase 2.
+// GET devolve { modulos: { [n]: { iniciado_em, concluido_em } } } pro painel do programa.
+export async function GET(request: Request) {
+  const sessao = await usuarioDaRequisicao(request);
+  if (!sessao) return naoAutorizado();
+  const { data, error } = await sessao.supabase.from("familia_progresso").select("modulo, iniciado_em, concluido_em").eq("user_id", sessao.user.id).order("modulo");
+  if (error) console.error("[familia] ler progresso falhou:", error.message);
+  return Response.json({
+    modulos: Object.fromEntries((data ?? []).map((linha) => [linha.modulo, { iniciado_em: linha.iniciado_em, concluido_em: linha.concluido_em }])),
+  });
+}
+
 export async function POST(request: Request) {
   const sessao = await usuarioDaRequisicao(request);
   if (!sessao) return naoAutorizado();

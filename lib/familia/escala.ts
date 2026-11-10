@@ -47,7 +47,7 @@ export const TEXTOS_META = {
   titulo: "Sua meta para esta semana",
   campoAcaoRotulo: "O que você vai fazer",
   campoAcaoDica: "Toque num exemplo ou escreva do seu jeito.",
-  campoQuandoRotulo: "Em quais dias",
+  campoQuandoRotulo: "Em quais dias da semana",
   momentoRotulo: "Em que momento do dia?",
   confiancaPergunta: "De 0 a 10, quanta certeza você tem de que consegue cumprir isso nesta semana?",
   confiancaBaixa:
@@ -59,8 +59,9 @@ export const TEXTOS_META = {
   ],
   obstaculoRotulo: "O que pode atrapalhar? E o que você faz se acontecer?",
   obstaculoDica: "Exemplo: Se o dia ficar corrido, então eu faço só 5 minutos antes de dormir.",
-  salva: "Meta salva. Ela fica no seu painel, e a cada dia que você cumprir é só tocar em 'Marcar que fiz hoje'.",
+  salva: "Meta salva. Ela fica no seu painel. A cada dia que você cumprir, toque no dia para marcar.",
   feitoRetorno: "Boa. Isso é você se cuidando.",
+  diaFuturo: "Esse dia ainda não chegou.",
 };
 
 export const MAXIMO_ACAO = 120;
@@ -150,6 +151,32 @@ export function areaMuitoBaixa(notas: Notas): AreaId | null {
 // Datas locais no formato AAAA-MM-DD (o dia da pessoa, não o do servidor).
 export function dataLocal(data = new Date()) {
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
+}
+
+// "2026-11-10" ou ISO completo -> "10/11" (o "Concluído em DD/MM" do programa).
+export function diaMes(valor: string) {
+  const data = valor.length === 10 ? valor : dataLocal(new Date(valor));
+  return `${data.slice(8, 10)}/${data.slice(5, 7)}`;
+}
+
+// "2 de 3 dias concluídos" e, se fez em dia que não estava planejado, ", 1 a mais".
+export function resumoDosDias(dias: Dia[], diasFeitos: string[], semanaInicio: string) {
+  const planejadas = dias.map((dia) => dataDoDia(semanaInicio, dia));
+  const feitosNoPlano = diasFeitos.filter((data) => planejadas.includes(data)).length;
+  const aMais = diasFeitos.length - feitosNoPlano;
+  const base = `${feitosNoPlano} de ${planejadas.length} ${planejadas.length === 1 ? "dia concluído" : "dias concluídos"}`;
+  return aMais > 0 ? `${base}, ${aMais} a mais` : base;
+}
+
+// Dia da meta que dá pra marcar: dentro da semana da meta e até hoje.
+export function diaMarcavel(data: string, semanaInicio: string, hoje: string) {
+  return segundaDaSemana(data) === semanaInicio && data <= hoje;
+}
+
+// Toque num dia da meta: marca ou desmarca. Fora da semana da meta ou no futuro, devolve null.
+export function alternarDiaFeito(meta: { semana_inicio: string; dias_feitos: string[] }, data: string, hoje: string) {
+  if (!diaMarcavel(data, meta.semana_inicio, hoje)) return null;
+  return meta.dias_feitos.includes(data) ? meta.dias_feitos.filter((feito) => feito !== data) : [...meta.dias_feitos, data].sort();
 }
 
 export function dataValida(valor: unknown): valor is string {

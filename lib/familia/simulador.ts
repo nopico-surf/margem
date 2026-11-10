@@ -27,6 +27,24 @@ export const REACAO_DO_DIAGNOSTICO: Record<string, ReacaoSimulador> = {
   se_afasta: "se_fecha",
 };
 
+// Botão que abre o treino: diz o que vai ser treinado (briefing 00, item 7).
+export const ROTULO_TREINO: Record<string, string> = {
+  "primeira-conversa": "Treinar a primeira conversa",
+  "nega-o-problema": "Treinar quando {{apelido}} nega o problema",
+  "elogiar-sem-ironia": "Treinar um elogio",
+  "convite-para-ajuda": "Treinar o convite",
+  "pedido-de-dinheiro": "Treinar como dizer não a um pedido de dinheiro",
+  "pedido-de-desculpa-pro-trabalho": "Treinar como dizer não a uma desculpa",
+};
+
+// Cenário que ainda não tem rótulo próprio na tabela do briefing 00.
+export const ROTULO_TREINO_PADRAO = "Treinar a conversa";
+
+// Título da tela do simulador: "Treino: a primeira conversa".
+export function tituloDoTreino(titulo: string) {
+  return `Treino: ${titulo.charAt(0).toLowerCase()}${titulo.slice(1)}`;
+}
+
 export type MotivoFalhaSimulador = "sem_chave" | "tempo_esgotado" | "erro_google" | "resposta_vazia" | "formato_invalido" | "erro_inesperado";
 
 const TIMEOUT_MS = 30000;

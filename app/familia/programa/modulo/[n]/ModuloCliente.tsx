@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { GlifoCheckCircle } from "@/components/icons/glifos";
 import { AudioPlayer } from "@/components/ui/AudioPlayer";
 import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
@@ -9,10 +10,10 @@ import { chamarApi } from "@/lib/familia/auth-cliente";
 import { CHAVE_POSICAO_AUDIO } from "@/lib/familia/config";
 import type { Modulo } from "@/lib/familia/conteudo";
 import { aplicarApelido, ROTULO_PROBLEMA, type Problema } from "@/lib/familia/diagnostico";
+import { diaMes } from "@/lib/familia/escala";
 import { carregarEstado, contextoDo, itensDoExercicio, marcarFeito, type EstadoExercicio } from "@/lib/familia/exercicio-cliente";
 import { condicoesBatem, opcoesDaEscolha, type BlocoMarkdown, type Contexto, type Trecho } from "@/lib/familia/markdown";
 import { ExercicioSemana } from "@/components/familia/ExercicioSemana";
-import { CardHeader } from "@/components/conversa/CardHeader";
 import { track } from "@/lib/mixpanel";
 
 type Diagnostico = { apelido: string; problemas: Problema[]; reacoes: string[]; resultado: { safetyMode: boolean } };
@@ -42,7 +43,7 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }:
   return (
     <>
       {blocos.map((bloco, indice) => {
-        if (bloco.tipo === "titulo") return <h2 key={indice} className="header-small">{aplicarApelido(bloco.texto, apelido)}</h2>;
+        if (bloco.tipo === "titulo") return <h2 key={indice} className="header-medium">{aplicarApelido(bloco.texto, apelido)}</h2>;
         if (bloco.tipo === "link")
           return (
             <div key={indice} className="familia-exercicio-acoes">
@@ -58,7 +59,7 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }:
           const escolhida = contexto.escolhas?.[bloco.id];
           return (
             <Fragment key={indice}>
-              <h2 className="header-small">{aplicarApelido(pergunta, apelido)}</h2>
+              <h2 className="header-medium">{aplicarApelido(pergunta, apelido)}</h2>
               <div className="familia-chips" role="group" aria-label={aplicarApelido(pergunta, apelido)}>
                 {opcoes.map((opcao) => (
                   <Button
@@ -77,14 +78,14 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }:
         }
         if (bloco.tipo === "paragrafo")
           return (
-            <p key={indice} className="text-medium-regular">
+            <p key={indice} className="text-large">
               <Trechos trechos={bloco.trechos} apelido={apelido} />
             </p>
           );
         if (bloco.tipo === "lista") {
           const Lista = bloco.ordenada ? "ol" : "ul";
           return (
-            <Lista key={indice} className="familia-lista text-medium-regular">
+            <Lista key={indice} className="familia-lista text-large">
               {bloco.itens.map((item, posicao) => (
                 <li key={posicao}>
                   <Trechos trechos={item} apelido={apelido} />
@@ -116,7 +117,8 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }:
 export function ModuloCliente({ modulo }: { modulo: Modulo }) {
   const router = useRouter();
   const [diagnostico, setDiagnostico] = useState<Diagnostico | null>(null);
-  const [concluido, setConcluido] = useState(false);
+  // Data em que o módulo foi concluído (a primeira vez vale), ou null.
+  const [concluidoEm, setConcluidoEm] = useState<string | null>(null);
   const [concluindo, setConcluindo] = useState(false);
   const [estado, setEstado] = useState<EstadoExercicio>({});
   // Respostas dos seletores do módulo (":::escolha"). Ficam só nesta tela: o check-in que pré-marcaria
@@ -131,6 +133,11 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
       if (!resposta.ok) return;
       setDiagnostico((await resposta.json()) as Diagnostico);
       setEstado(await carregarEstado(modulo.numero));
+      const progresso = await chamarApi("/api/familia/progresso");
+      if (progresso?.ok) {
+        const { modulos } = (await progresso.json()) as { modulos: Record<string, { concluido_em: string | null }> };
+        setConcluidoEm(modulos[modulo.numero]?.concluido_em ?? null);
+      }
       track(modulo.numero === 1 ? "modulo1_iniciado" : "modulo_iniciado", { modulo: modulo.numero });
       void chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "iniciar" }) });
     })();
@@ -160,14 +167,20 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
     const resposta = await chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "concluir" }) });
     setConcluindo(false);
     if (resposta?.ok) {
-      setConcluido(true);
+      setConcluidoEm(new Date().toISOString());
       track("modulo_concluido", { modulo: modulo.numero });
     }
   }
 
   return (
     <article className="familia-secao familia-modulo">
-      <CardHeader as="h1" title={modulo.titulo} description={`Módulo ${modulo.numero}${modulo.minutos ? ` · ${modulo.minutos} min de leitura` : ""}`} />
+      <header className="familia-titulo">
+        <span className="label-small-medium familia-texto-suave">
+          Módulo {modulo.numero}
+          {modulo.minutos ? ` · ${modulo.minutos} min de leitura` : ""}
+        </span>
+        <h1 className="header-large">{modulo.titulo}</h1>
+      </header>
 
       {modulo.video && (
         // Vídeo vertical, no formato dos reels da Margem. Sem vídeo, nada aparece.
@@ -176,7 +189,7 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
       {modulo.audio && (
         <AudioPlayer
           src={modulo.audio}
-          rotulo={modulo.minutos ? `Prefere ouvir? ${modulo.minutos} min` : "Prefere ouvir?"}
+          rotulo={modulo.minutos ? `Ouvir este módulo (${modulo.minutos} min)` : "Prefere ouvir este módulo?"}
           chave={`${CHAVE_POSICAO_AUDIO}-${modulo.numero}`}
         />
       )}
@@ -191,10 +204,11 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
       />
 
       <div className="familia-acoes">
-        {concluido ? (
-          <p className="label-medium-medium" role="status">
-            Módulo {modulo.numero} concluído.
-          </p>
+        {concluidoEm ? (
+          <span className="familia-status label-small-medium" data-estado="feito" role="status">
+            <GlifoCheckCircle size={20} color="var(--colors-status-success-500)" />
+            Concluído em {diaMes(concluidoEm)}
+          </span>
         ) : (
           <Button tamanho="medium" larguraTotal carregando={concluindo} onClick={concluir}>
             Concluir o módulo {modulo.numero}

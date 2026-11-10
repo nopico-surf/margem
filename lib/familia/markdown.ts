@@ -4,7 +4,7 @@
 // pode ficar dentro de outro, ex.: variação por problema dentro de um item do exercício):
 // - ":::se chave=valor ..." só aparece quando todas as condições batem (ver condicoesBatem);
 // - ":::exercicio id=... acao=marcar,diario cenario=... ..." é um item do exercício da semana, com
-//   botões; cenario é o treino do botão "Ensaiar no treino" (sem ele, vale o do módulo);
+//   botões; cenario é o treino do botão do treino (sem ele, vale o do módulo);
 // - ":::escolha id=versao" é um seletor: o parágrafo de dentro é a pergunta e cada item "- valor:
 //   rótulo" uma opção. O valor escolhido vira condição (versao=aceitou) pros blocos ":::se";
 // - ":::alcool" (formato antigo) aparece pra quem marcou aquele problema.

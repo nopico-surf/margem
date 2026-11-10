@@ -14,15 +14,15 @@ export type Anotacao = {
 };
 
 export const CAMPOS_DIARIO: Array<{ chave: "antes" | "percebeu" | "reagiu" | "depois"; rotulo: string }> = [
-  { chave: "antes", rotulo: "O que aconteceu antes" },
-  { chave: "percebeu", rotulo: "O que você percebeu" },
-  { chave: "reagiu", rotulo: "Como você reagiu" },
-  { chave: "depois", rotulo: "Como foi depois" },
+  { chave: "antes", rotulo: "O que aconteceu logo antes" },
+  { chave: "percebeu", rotulo: "O que você percebeu em {{apelido}}" },
+  { chave: "reagiu", rotulo: "Como você reagiu nesse momento" },
+  { chave: "depois", rotulo: "Como ficaram as coisas depois" },
 ];
 
 export const TAMANHO_MAXIMO_CAMPO = 280;
 
-// O item "Observe sem reagir" do módulo 1 fica feito quando a pessoa salva a primeira anotação.
+// O item "Anotar os momentos difíceis" do módulo 1 fica feito quando a pessoa salva a primeira anotação.
 export const ITEM_DO_DIARIO = { modulo: 1, item: "observe" };
 
 // O cenário "primeira-conversa" concluído marca o item "conversa" do módulo 1.

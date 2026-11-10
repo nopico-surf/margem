@@ -2,7 +2,7 @@ import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor"
 import { ITEM_DO_DIARIO, sanitizarAnotacao } from "@/lib/familia/diario";
 
 // Diário (ajuste de 10/11/2026: disponível desde o módulo 1). GET devolve as anotações mais recentes;
-// POST grava uma e marca o item "Observe sem reagir" do módulo 1 como feito.
+// POST grava uma e marca o item "Anotar os momentos difíceis" do módulo 1 como feito.
 
 export async function GET(request: Request) {
   const sessao = await usuarioDaRequisicao(request);

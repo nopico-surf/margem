@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
-import { CardHeader } from "@/components/conversa/CardHeader";
 import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { EscalaNota } from "@/components/familia/EscalaNota";
 import { Button } from "@/components/ui/Button";
@@ -12,6 +11,7 @@ import { Loader } from "@/components/ui/Loader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
+import { alternarDiaDaMeta } from "@/lib/familia/meta-cliente";
 import {
   AREA_OPCIONAL,
   AREAS,
@@ -43,8 +43,8 @@ import {
 // meta, 12 meta salva.
 //
 // ?origem=modulo1 (padrão) | modulo7 (refazer e comparar) | painel
-// ?etapa=meta: abre direto no resultado, com as notas da última escala ("Escolher minha meta").
-// ?etapa=editar: abre a criação da meta preenchida com a meta ativa ("Editar minha meta").
+// ?etapa=meta: abre direto no resultado, com as notas da última escala ("Escolher minha meta da semana").
+// ?etapa=editar: abre a criação da meta preenchida com a meta ativa ("Editar minha meta da semana").
 
 type Diagnostico = { apelido: string; problemas: string[] };
 type Etapa = { tela: "intro" } | { tela: "area"; indice: number } | { tela: "resultado" } | { tela: "meta" } | { tela: "salva" };
@@ -63,7 +63,7 @@ export function EscalaCliente() {
   const [origem, setOrigem] = useState<OrigemEscala>("modulo1");
   const [etapa, setEtapa] = useState<Etapa>({ tela: "intro" });
   const [notas, setNotas] = useState<Notas>({});
-  // Escala anterior, pro "antes → agora" do módulo 7.
+  // Escala anterior, pro "módulo 1 → agora" do módulo 7.
   const [anterior, setAnterior] = useState<Notas | null>(null);
   const [salvandoEscala, setSalvandoEscala] = useState(false);
 
@@ -178,9 +178,12 @@ export function EscalaCliente() {
             <GlifoArrowBack size={24} />
           </button>
         </div>
-        <CardHeader as="h1" title={origem === "modulo7" ? TEXTOS_ESCALA.introTituloModulo7 : TEXTOS_ESCALA.introTitulo} description={TEXTOS_ESCALA.introTexto} />
+        <header className="familia-titulo">
+          <h1 className="header-large">{origem === "modulo7" ? TEXTOS_ESCALA.introTituloModulo7 : TEXTOS_ESCALA.introTitulo}</h1>
+          <p className="text-large">{TEXTOS_ESCALA.introTexto}</p>
+        </header>
         <Button tamanho="medium" larguraTotal onClick={() => irPara({ tela: "area", indice: 0 })}>
-          Começar
+          Começar a dar as notas
         </Button>
       </section>
     );
@@ -208,7 +211,10 @@ export function EscalaCliente() {
           </span>
         </div>
 
-        <CardHeader as="h1" title={atual.nome} description={atual.dica} />
+        <header className="familia-titulo">
+          <h1 className="header-large">{atual.nome}</h1>
+          <p className="text-large">{atual.dica}</p>
+        </header>
         <p className="label-medium-medium">{TEXTOS_ESCALA.pergunta}</p>
         <EscalaNota
           minimo={1}
@@ -247,13 +253,16 @@ export function EscalaCliente() {
     const textoResultado = tudoAlto(notas) ? TEXTOS_ESCALA.tudoAlto : comparar ? TEXTOS_ESCALA.resultadoTextoModulo7 : TEXTOS_ESCALA.resultadoTexto;
     return (
       <section className="familia-pergunta">
-        <CardHeader as="h1" title={TEXTOS_ESCALA.resultadoTitulo} description={textoResultado} />
+        <header className="familia-titulo">
+          <h1 className="header-large">{TEXTOS_ESCALA.resultadoTitulo}</h1>
+          <p className="text-large">{textoResultado}</p>
+        </header>
 
         {sugerida && (
           <div className="familia-cartao familia-cartao-destaque">
-            <p className="label-medium-medium">
+            <h2 className="header-small">
               Comece por aqui: {nomeDaArea(sugerida)} · nota {notas[sugerida]}
-            </p>
+            </h2>
             <Button tamanho="medium" larguraTotal onClick={() => escolherArea(sugerida)}>
               Criar minha meta para {nomeDaArea(sugerida)}
             </Button>
@@ -262,14 +271,14 @@ export function EscalaCliente() {
 
         {muitoBaixa && (
           <div className="familia-cartao">
-            <p className="text-medium-regular">{TEXTOS_ESCALA.muitoBaixo.replace("{{area_nome}}", nomeDaArea(muitoBaixa))}</p>
+            <p className="text-large">{TEXTOS_ESCALA.muitoBaixo.replace("{{area_nome}}", nomeDaArea(muitoBaixa))}</p>
             <Button variante="secondary" tamanho="medium" larguraTotal href="/profissionais">
               Ver psicólogo parceiro
             </Button>
           </div>
         )}
 
-        <p className="text-small-regular familia-texto-suave">{TEXTOS_ESCALA.outraArea}</p>
+        <p className="text-medium-regular familia-texto-suave">{TEXTOS_ESCALA.outraArea}</p>
         <ul className="escala-resultado">
           {AREAS.map((item) => {
             const nota = notas[item.id];
@@ -279,7 +288,7 @@ export function EscalaCliente() {
                 <button type="button" className="escala-resultado-area" onClick={() => escolherArea(item.id)} data-area={item.id}>
                   <span className="label-small-medium">{item.nome}</span>
                   {typeof nota !== "number" ? (
-                    <span className="text-small-regular familia-texto-suave">{TEXTOS_ESCALA.naoSeAplica}</span>
+                    <span className="text-medium-regular familia-texto-suave">{TEXTOS_ESCALA.naoSeAplica}</span>
                   ) : comparar ? (
                     <span className="label-small-medium">
                       {typeof antes === "number" ? antes : "-"} → {nota}
@@ -311,18 +320,18 @@ export function EscalaCliente() {
             <GlifoArrowBack size={24} />
           </button>
         </div>
-        <CardHeader as="h1" title={TEXTOS_META.titulo} />
+        <h1 className="header-large">{TEXTOS_META.titulo}</h1>
 
         <div className="escala-meta-area">
           <span className="escala-chip label-small-medium">{nomeDaArea(area)}</span>
           <Button variante="transparent" tamanho="small" onClick={() => irPara({ tela: "resultado" })}>
-            Trocar de área
+            Escolher outra área
           </Button>
         </div>
 
         <div className="familia-cartao">
-          <p className="text-medium-regular">Uma meta que funciona é assim:</p>
-          <ul className="familia-lista text-medium-regular">
+          <p className="text-large">Uma meta que funciona é assim:</p>
+          <ul className="familia-lista text-large">
             <li>
               <strong>dá para saber se você fez</strong> (&quot;caminhar 15 minutos&quot;, não &quot;me cuidar mais&quot;);
             </li>
@@ -336,7 +345,7 @@ export function EscalaCliente() {
               <strong>depende só de você</strong>, não de {apelido}.
             </li>
           </ul>
-          <p className="text-medium-regular">Uma meta pequena cumprida vale mais do que uma grande abandonada.</p>
+          <p className="text-large">Uma meta pequena cumprida vale mais do que uma grande abandonada.</p>
         </div>
 
         <div className="familia-chips escala-chips" role="group" aria-label={`Exemplos de meta para ${nomeDaArea(area)}`}>
@@ -391,8 +400,8 @@ export function EscalaCliente() {
           />
           {confiancaBaixa && (
             <div className="familia-cartao familia-cartao-destaque">
-              <p className="text-medium-regular">{TEXTOS_META.confiancaBaixa}</p>
-              <ul className="familia-lista text-medium-regular">
+              <p className="text-large">{TEXTOS_META.confiancaBaixa}</p>
+              <ul className="familia-lista text-large">
                 {TEXTOS_META.confiancaBaixaOpcoes.map((opcao) => (
                   <li key={opcao}>{opcao}</li>
                 ))}
@@ -406,10 +415,10 @@ export function EscalaCliente() {
                   campo?.focus();
                 }}
               >
-                Ajustar minha meta
+                Ajustar minha meta da semana
               </Button>
               <Button variante="transparent" tamanho="small" onClick={() => setManterConfianca(true)}>
-                Manter assim
+                Manter a meta assim
               </Button>
             </div>
           )}
@@ -441,9 +450,18 @@ export function EscalaCliente() {
       </p>
       {metaSalva && (
         <div className="familia-cartao">
-          <span className="label-small-medium familia-texto-suave">{nomeDaArea(metaSalva.area)}</span>
-          <p className="text-medium-regular">{metaSalva.texto}</p>
-          <DiasDaMeta dias={metaSalva.dias} diasFeitos={metaSalva.dias_feitos} semanaInicio={metaSalva.semana_inicio ?? segundaDaSemana(hoje)} hoje={hoje} />
+          <span className="label-small-medium familia-texto-suave">Sua meta · {nomeDaArea(metaSalva.area)}</span>
+          <h2 className="header-small">{metaSalva.texto}</h2>
+          <DiasDaMeta
+            dias={metaSalva.dias}
+            diasFeitos={metaSalva.dias_feitos}
+            semanaInicio={metaSalva.semana_inicio ?? segundaDaSemana(hoje)}
+            hoje={hoje}
+            onAlternar={async (data) => {
+              const nova = await alternarDiaDaMeta(data, hoje);
+              if (nova) setMetaSalva(nova);
+            }}
+          />
         </div>
       )}
       <div className="familia-acoes">

@@ -10,7 +10,7 @@
 // x-familia-dev, que a rota só aceita fora de produção.
 
 import { ITEM_DO_DIARIO } from "./diario";
-import { dataDoDia, dataValida, diaDaSemana, sanitizarMeta, sanitizarNotas, segundaDaSemana, type Meta } from "./escala";
+import { alternarDiaFeito, dataValida, sanitizarMeta, sanitizarNotas, segundaDaSemana, type Meta } from "./escala";
 
 export const MODO_DEV_DISPONIVEL = process.env.NODE_ENV !== "production";
 
@@ -20,6 +20,7 @@ const CHAVE_EXERCICIOS = "margem-familia-dev-exercicios";
 const CHAVE_DIARIO = "margem-familia-dev-diario";
 const CHAVE_ESCALAS = "margem-familia-dev-escalas";
 const CHAVE_META = "margem-familia-dev-meta";
+const CHAVE_PROGRESSO = "margem-familia-dev-progresso";
 
 // A primeira vez vale, como no banco.
 function marcarItem(modulo: number, item: string) {
@@ -88,7 +89,17 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
     return guardadas ? montar(guardadas) : json({ error: "sem_diagnostico" }, 404);
   }
 
-  if (caminho === "/api/familia/progresso") return json({ ok: true });
+  // Início e conclusão de módulo, guardados no aparelho (a primeira vez de cada um vale, como no banco).
+  if (caminho === "/api/familia/progresso") {
+    const modulos = JSON.parse(ler(CHAVE_PROGRESSO) ?? "{}") as Record<string, { iniciado_em: string; concluido_em: string | null }>;
+    if (metodo !== "POST") return json({ modulos });
+    const numero = String(corpo.modulo);
+    const agora = new Date().toISOString();
+    modulos[numero] ??= { iniciado_em: agora, concluido_em: null };
+    if (corpo.acao === "concluir") modulos[numero].concluido_em = agora;
+    gravar(CHAVE_PROGRESSO, JSON.stringify(modulos));
+    return json({ ok: true });
+  }
 
   // Exercício da semana e diário, guardados no aparelho.
   if (caminho.startsWith("/api/familia/exercicio")) {
@@ -141,9 +152,10 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
     }
     if (metodo === "PATCH") {
       if (!atual) return json({ error: "sem_meta" }, 404);
-      const dia = diaDaSemana(hoje);
-      if (!atual.dias.includes(dia) || dataDoDia(atual.semana_inicio, dia) !== hoje) return json({ error: "dia_nao_marcado" }, 400);
-      if (!atual.dias_feitos.includes(hoje)) atual.dias_feitos.push(hoje);
+      if (!dataValida(hoje) || !dataValida(corpo.data)) return json({ error: "data_invalida" }, 400);
+      const diasFeitos = alternarDiaFeito(atual, corpo.data as string, hoje);
+      if (!diasFeitos) return json({ error: "dia_fora_da_semana" }, 400);
+      atual.dias_feitos = diasFeitos;
       gravar(CHAVE_META, JSON.stringify(atual));
       return json({ meta: atual });
     }

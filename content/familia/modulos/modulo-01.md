@@ -98,7 +98,7 @@ Algumas partes ficam guardadas até você conversar com um profissional, para tu
 :::
 
 :::exercicio id=observe acao=diario
-**Observar sem reagir**
+**Anotar os momentos difíceis**
 
 :::se problema=alcool
 Quando perceber que {{apelido}} bebeu, em vez de discutir na hora, anote o que aconteceu: quando, onde e o que veio antes.

@@ -83,7 +83,7 @@ export function EntrarCliente({ retorno = false }: { retorno?: boolean }) {
           Não foi possível salvar suas respostas agora. Tente novamente.
         </p>
         <Button tamanho="medium" larguraTotal carregando={salvando} onClick={() => seguir()}>
-          Tentar salvar de novo
+          Tentar salvar as respostas de novo
         </Button>
       </section>
     );

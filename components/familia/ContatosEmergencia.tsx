@@ -54,7 +54,7 @@ export const CONTATOS_EMERGENCIA: Contato[] = [
       telefone("188"),
       { kind: "chat", label: "Chat", value: "https://cvv.org.br/chat/" },
       { kind: "email", label: "E-mail", value: "https://cvv.org.br/e-mail/" },
-      { kind: "nearby", label: "Perto de mim", value: "https://www.google.com/maps/search/?api=1&query=CVV" },
+      { kind: "nearby", label: "Ver unidades perto de mim", value: "https://www.google.com/maps/search/?api=1&query=CVV" },
       { kind: "site", label: "Site", value: "https://www.cvv.org.br/" },
     ],
   },

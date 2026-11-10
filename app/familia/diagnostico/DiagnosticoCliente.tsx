@@ -127,7 +127,7 @@ export function DiagnosticoCliente() {
         <>
           <InputText
             id={`familia-${pergunta.chave}`}
-            rotulo="Apelido (opcional)"
+            rotulo="Apelido da pessoa (opcional)"
             descricao={pergunta.placeholder}
             value={(valorAtual as string | undefined) ?? ""}
             maxLength={pergunta.maxLength}
