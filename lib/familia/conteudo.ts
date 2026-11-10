@@ -1,0 +1,92 @@
+// Só servidor: lê arquivo do disco.
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { lerBlocos } from "./resultado";
+import { lerBlocosMarkdown, separarFrontmatter, type BlocoMarkdown } from "./markdown";
+
+// Conteúdo do programa para familiares, lido de content/familia. O fundador publica um módulo novo
+// criando o .md, sem mexer em código (briefing, seção 7).
+
+const PASTA = path.join(process.cwd(), "content", "familia");
+
+export type Modulo = {
+  numero: number;
+  titulo: string;
+  publicado: boolean;
+  cenarioSimulador: string | null;
+  bloqueadoEmModoSeguranca: boolean;
+  audio: string | null;
+  video: string | null;
+  minutos: number | null;
+  blocos: BlocoMarkdown[];
+};
+
+export type Cenario = {
+  id: string;
+  titulo: string;
+  contexto: string;
+  objetivoDoFamiliar: string;
+  bloqueadoEmModoSeguranca: boolean;
+  gratis: boolean;
+};
+
+export const TOTAL_MODULOS = 8;
+
+function texto(valor: unknown) {
+  return typeof valor === "string" && valor.length > 0 ? valor : null;
+}
+
+export async function lerModulo(numero: number): Promise<Modulo | null> {
+  if (!Number.isInteger(numero) || numero < 1 || numero > TOTAL_MODULOS) return null;
+  let markdown: string;
+  try {
+    markdown = await readFile(path.join(PASTA, "modulos", `modulo-${String(numero).padStart(2, "0")}.md`), "utf8");
+  } catch {
+    return null;
+  }
+  const { dados, corpo } = separarFrontmatter(markdown);
+  return {
+    numero,
+    titulo: texto(dados.titulo) ?? `Módulo ${numero}`,
+    publicado: dados.publicado === true,
+    cenarioSimulador: texto(dados.cenario_simulador),
+    bloqueadoEmModoSeguranca: dados.bloqueado_em_modo_seguranca === true,
+    audio: texto(dados.audio),
+    video: texto(dados.video),
+    minutos: typeof dados.minutos === "number" ? dados.minutos : null,
+    blocos: lerBlocosMarkdown(corpo),
+  };
+}
+
+export async function lerCenario(id: string): Promise<Cenario | null> {
+  if (!/^[a-z-]+$/.test(id)) return null;
+  let markdown: string;
+  try {
+    markdown = await readFile(path.join(PASTA, "cenarios", `${id}.md`), "utf8");
+  } catch {
+    return null;
+  }
+  const { dados } = separarFrontmatter(markdown);
+  const titulo = texto(dados.titulo);
+  const contexto = texto(dados.contexto);
+  if (!titulo || !contexto) return null;
+  return {
+    id,
+    titulo,
+    contexto,
+    objetivoDoFamiliar: texto(dados.objetivo_do_familiar) ?? "",
+    bloqueadoEmModoSeguranca: dados.bloqueado_em_modo_seguranca === true,
+    gratis: dados.gratis === true,
+  };
+}
+
+export async function lerBlocosDoResultado() {
+  return lerBlocos(await readFile(path.join(PASTA, "resultado-blocos.md"), "utf8"));
+}
+
+// O prompt fica em arquivo, nunca no route handler (CLAUDE.md, seção 4). O comentário de cima e a
+// linha "---" ficam de fora.
+export async function lerPrompt(nome: "personagem" | "feedback") {
+  const markdown = await readFile(path.join(PASTA, "prompts", `${nome}.md`), "utf8");
+  return markdown.replace(/^[\s\S]*?\n---\r?\n/, "").trim();
+}

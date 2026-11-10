@@ -24,6 +24,15 @@ import { GUIAS } from "@/lib/guias";
 import { montarIndiceBlog } from "@/lib/busca-blog";
 import { escalaDeEspaco, lerEstilosDeTexto, lerTokens, rampasDeCor } from "@/lib/tokens-css";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
+import { ProgressBar } from "@/components/ui/ProgressBar";
+import { AudioPlayer } from "@/components/ui/AudioPlayer";
+import { AvisoIA } from "@/components/familia/AvisoIA";
+import { SairRapido } from "@/components/familia/SairRapido";
+import { LoginSocial } from "@/components/familia/LoginSocial";
+import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
+import { BlocoComImagem } from "@/components/familia/BlocoComImagem";
+import { Accordion } from "@/components/ui/Accordion";
+import { Marquee } from "@/components/ui/Marquee";
 import "./galeria.css";
 
 // Mock só pra galeria: nomes e tags iguais ao placeholder do Figma (node 654:4134), repetidos com
@@ -512,6 +521,39 @@ export default async function GaleriaDeComponentes() {
             </ul>
           </article>
         ))}
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Programa para familiares</h2>
+        <p className="text-small-regular galeria-nota">
+          Criados sem Figma em 09/11/2026, a partir do briefing (docs/familia-briefing.md). progress-bar e audio-player são primitivos novos; o resto é composição de
+          button, checkbox e glifos que já existiam.
+        </p>
+        <div className="galeria-palco familia-galeria">
+          <ProgressBar atual={0} total={12} rotulo="Pergunta 0 de 12" />
+          <ProgressBar atual={5} total={12} rotulo="Pergunta 5 de 12" />
+          <ProgressBar atual={12} total={12} rotulo="Pergunta 12 de 12" />
+          <AudioPlayer src="/mochila/musica/arrasta.mp3" rotulo="Prefere ouvir? 6 min" chave="galeria-audio" />
+          <AvisoIA>Isto é um treino com IA. A IA pode cometer erros, não é a pessoa que você ama e não substitui um profissional.</AvisoIA>
+          <SairRapido atalho={false} />
+          <Accordion titulo="Accordion fechado">
+            <p className="text-medium-regular">Conteúdo da resposta.</p>
+          </Accordion>
+          <Accordion titulo="Accordion aberto" abertoAoCarregar>
+            <p className="text-medium-regular">Conteúdo da resposta.</p>
+          </Accordion>
+          <BlocoComImagem variante="bloco">
+            <h2 className="header-medium">Bloco com imagem, sem foto</h2>
+            <p className="text-medium-regular">O fundo fica cinza escuro até a imagem chegar.</p>
+          </BlocoComImagem>
+          <BlocoComImagem variante="bloco" imagem="/assets/og-margem.webp">
+            <h2 className="header-medium">Bloco com imagem, com foto</h2>
+            <p className="text-medium-regular">A parte de baixo escurece pra o texto ficar legível.</p>
+          </BlocoComImagem>
+          <Marquee frases={["Primeira frase.", "Segunda frase.", "Terceira frase."]} linhas={2} />
+          <LoginSocial titulo="Seu resultado está pronto" />
+          <ContatosEmergencia />
+        </div>
       </section>
 
       <section className="galeria-secao">

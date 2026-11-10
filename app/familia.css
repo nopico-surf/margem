@@ -1,0 +1,419 @@
+/* Programa para familiares (/familia). Telas criadas sem Figma, a partir do briefing
+   (docs/familia-briefing.md), com os tokens e componentes que já existem. Mobile primeiro. */
+
+.familia {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  /* Mesmo cinza das outras telas internas (/profissionais, /redes-de-apoio). */
+  background: var(--colors-neutral-50);
+  color: var(--colors-alpha-88);
+}
+
+/* O cabeçalho acompanha a rolagem pra o "Sair rápido" estar sempre a um toque. */
+.familia-cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-raised);
+}
+
+/* Na LP o header fica por cima da foto do topo, transparente e com logo, botão e menu brancos
+   (mesmo filtro da página do profissional). Ali ele não acompanha a rolagem. */
+.familia:has(.familia-lp) .familia-cabecalho {
+  position: absolute;
+  inset: 0 0 auto;
+}
+
+.familia:has(.familia-lp) .app-header {
+  background: transparent;
+}
+
+.familia:has(.familia-lp) .app-header img,
+.familia:has(.familia-lp) .app-header svg {
+  filter: brightness(0) invert(1);
+}
+
+.familia:has(.familia-lp) .app-header .btn {
+  color: var(--colors-neutral-0);
+}
+
+/* Mesma largura máxima dos containers do site (1080, como /conversa e /profissionais). */
+.familia-conteudo {
+  flex: 1;
+  width: 100%;
+  max-width: var(--layout-content-max-width-page);
+  margin: 0 auto;
+  padding: var(--spacing-24) var(--pagina-padding-lateral) var(--spacing-48);
+}
+
+/* A LP tem faixas de ponta a ponta: cada seção cuida da própria largura. */
+.familia-conteudo:has(> .familia-lp) {
+  max-width: none;
+  padding: 0;
+}
+
+.familia-secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  margin-bottom: var(--spacing-40);
+}
+
+.familia-secao h1,
+.familia-secao h2,
+.familia-secao h3 {
+  margin: 0;
+  color: var(--colors-alpha-88);
+}
+
+.familia-secao p {
+  margin: 0;
+}
+
+.familia-texto-suave {
+  color: var(--colors-alpha-64);
+}
+
+.familia-erro {
+  color: var(--colors-status-error-700);
+}
+
+.familia-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding-left: var(--spacing-20);
+}
+
+/* Espaço reservado pra imagem que ainda não existe (pedido do fundador em 09/11/2026). */
+.familia-imagem-vazia {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-xl);
+  background: var(--colors-alpha-4);
+}
+
+.familia-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-20);
+  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+/* Título interno fica perto do texto dele (8) e longe do bloco de cima (24), pra ficar claro a
+   que ele se refere. */
+.familia-cartao > h3:not(:first-child) {
+  margin-top: var(--spacing-16);
+}
+
+.familia-cartao > .btn {
+  margin-top: var(--spacing-8);
+}
+
+.familia-cartao-destaque {
+  border-color: transparent;
+  background: var(--colors-brand-primary-50);
+}
+
+.familia-cartao-alerta {
+  border-color: transparent;
+  background: var(--colors-status-warning-50);
+}
+
+.familia-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.familia-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-8);
+}
+
+/* ===== Diagnóstico ===== */
+
+.familia-pergunta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+}
+
+.familia-pergunta-topo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+.familia-pergunta-topo .progress-bar {
+  flex: 1;
+}
+
+/* Título e a dica "Você pode marcar mais de uma" ficam juntos. */
+.familia-pergunta-titulo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.familia-pergunta-titulo h1,
+.familia-pergunta-titulo p {
+  margin: 0;
+}
+
+.familia-voltar {
+  display: inline-flex;
+  padding: var(--spacing-4);
+  border: 0;
+  background: none;
+  color: var(--colors-alpha-88);
+  cursor: pointer;
+}
+
+.familia-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.familia-opcoes .btn {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.familia-campo-contador {
+  align-self: flex-end;
+}
+
+/* ===== Login ===== */
+
+.familia-login,
+.familia-login-botoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.familia-login p {
+  margin: 0;
+}
+
+.familia-login-botoes .btn-conteudo,
+.familia-opcoes .btn-conteudo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+/* Os três logos no mesmo quadro de 20. */
+.familia-login-icone {
+  flex: 0 0 var(--size-20);
+  width: var(--size-20);
+  height: var(--size-20);
+}
+
+/* ===== Segurança ===== */
+
+.familia-contatos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+/* ===== Resultado ===== */
+
+.familia-fala {
+  margin: 0;
+  padding: var(--spacing-12) var(--spacing-16);
+  border-left: var(--border-width-large) solid var(--colors-brand-primary-500);
+  background: var(--colors-alpha-4);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+/* ===== Módulo ===== */
+
+/* Mesma lógica do cartão: 32 acima do título e 8 até o texto dele (o gap da seção é 16). */
+.familia-modulo h2,
+.familia-secao > h2.header-small:not(:first-child) {
+  margin: var(--spacing-16) 0 calc(-1 * var(--spacing-8));
+}
+
+.familia-modulo p,
+.familia-modulo ul,
+.familia-modulo ol {
+  margin: 0;
+}
+
+.familia-variacao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-lg);
+  background: var(--colors-status-warning-50);
+}
+
+/* ===== Simulador ===== */
+
+.familia-aviso-ia {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding: var(--spacing-12) var(--spacing-16);
+  border-radius: var(--radius-lg);
+  background: var(--colors-status-info-50);
+  color: var(--colors-status-info-900);
+}
+
+.familia-aviso-ia-icone {
+  flex: 0 0 auto;
+  margin-top: var(--spacing-2);
+}
+
+.familia-conversa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.familia-conversa .figma-user-message {
+  align-self: flex-end;
+  max-width: 85%;
+  margin-left: 0;
+}
+
+.familia-fala-pessoa {
+  align-self: flex-start;
+  max-width: 85%;
+  padding: var(--spacing-12) var(--spacing-16);
+  border-radius: var(--radius-sm) var(--radius-xl) var(--radius-xl) var(--radius-xl);
+  background: var(--colors-alpha-4);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+  overflow-wrap: anywhere;
+}
+
+.familia-envio {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-8);
+}
+
+.familia-envio .input-text {
+  flex: 1;
+}
+
+/* ===== Primitivos novos (progress-bar e audio-player), sem Figma ===== */
+
+.progress-bar {
+  position: relative;
+  height: var(--size-12);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--colors-alpha-8);
+}
+
+.progress-bar-preenchimento {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--colors-status-success-500);
+  transition: width var(--duration-350) var(--easing-out-expo);
+}
+
+.audio-player {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+  padding: var(--spacing-12) var(--spacing-16);
+  border-radius: var(--radius-xl);
+  background: var(--colors-brand-primary-50);
+}
+
+.audio-player-botao {
+  display: grid;
+  flex: 0 0 var(--size-48);
+  place-items: center;
+  width: var(--size-48);
+  height: var(--size-48);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--colors-brand-primary-800);
+  color: var(--colors-neutral-0);
+  cursor: pointer;
+}
+
+.audio-player-botao:focus-visible {
+  outline: var(--border-width-large) solid var(--colors-brand-primary-800);
+  outline-offset: var(--border-width-large);
+}
+
+.audio-player-corpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  min-width: 0;
+}
+
+.audio-player-trilho {
+  width: 100%;
+  accent-color: var(--colors-brand-primary-800);
+}
+
+.audio-player-tempo {
+  color: var(--colors-alpha-64);
+}
+
+.familia-galeria {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  max-width: var(--layout-content-max-width-sm);
+}
+
+.familia-video {
+  width: 100%;
+  max-width: var(--layout-content-max-width-sm);
+  aspect-ratio: 9 / 16;
+  border-radius: var(--radius-xl);
+  background: var(--colors-alpha-88);
+}
+
+
+/* Título e subtítulo (CardHeader, o padrão do site). As regras ".familia-secao p" e ".familia-lp p"
+   zeravam a margem do subtítulo; aqui volta o espaço do padrão (o mesmo 8 de resultado.css). E o
+   padrão corta o título em uma linha com reticências, o que não serve pras perguntas longas do
+   diagnóstico: aqui ele quebra. */
+.familia .figma-section-heading p {
+  margin-top: var(--spacing-8);
+}
+
+.familia .figma-section-heading h1,
+.familia .figma-section-heading h2 {
+  overflow: visible;
+  white-space: normal;
+}
+
+/* Resultado: fundo branco (pedido do fundador em 09/11/2026). As outras telas seguem no cinza. */
+.familia:has(.familia-resultado-topo) {
+  background: var(--colors-neutral-0);
+}
+
+/* Topo do resultado: faixa de ponta a ponta. A faixa é uma sombra que se espalha pros lados e é
+   cortada em cima e embaixo (clip-path), então não cria rolagem horizontal. Encosta no header. */
+.familia-resultado-topo {
+  --familia-faixa-topo: 0 0 0 100vmax var(--colors-brand-primary-100);
+  gap: var(--spacing-12);
+  margin-top: calc(-1 * var(--spacing-24));
+  padding-block: var(--spacing-32);
+  background: var(--colors-brand-primary-100);
+  box-shadow: var(--familia-faixa-topo);
+  clip-path: inset(0 -100vmax);
+}

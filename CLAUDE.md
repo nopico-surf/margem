@@ -36,6 +36,8 @@ proxy.ts                        manda "/" pra /inicio no servidor, sem piscar
   /conversa/page.tsx          cards + campo aberto + resposta
   /privacidade/page.tsx       política completa, texto longo
   /ui/page.tsx                galeria de componentes (só dev)
+  /familia                    programa de 8 semanas para familiares (briefing em docs/familia-briefing.md), com login social
+/content/familia              blocos do resultado, módulos e cenários do simulador, em markdown
   /api/orientacao/route.ts    o endpoint que importa
 /components
   /icons                      um componente por ícone, nunca SVG inline duplicado
@@ -195,7 +197,7 @@ Se aparecer alguma dessas, o escopo vazou:
 - motor de regras, rapidfuzz, fuzzy matching, dicionário de gírias
 - Google Maps API (é link de redirect com parâmetros, e só)
 - Gemini como classificador (única exceção: o sinal `fala_de_substancia`, seção 4)
-- login, conta, histórico de longo prazo
+- login, conta, histórico de longo prazo (exceção, decidida em 09/11/2026: o programa para familiares em `/familia` tem login social, só Google, Apple e Facebook, sem senha; o resto da Margem continua anônimo)
 - embeddings ou busca semântica
 - dashboard de qualquer tipo
 - backend separado do Next.js

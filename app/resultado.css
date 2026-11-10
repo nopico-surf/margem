@@ -604,8 +604,9 @@
   gap:var(--spacing-16);
 }
 
+/* Espaço entre título e subtítulo do card_header: 8 desde 09/11/2026 (era 4, pedido do fundador). */
 .figma-section-heading p {
-  margin-top:var(--spacing-4);
+  margin-top:var(--spacing-8);
 }
 
 .figma-resource-heading p {

@@ -38,6 +38,16 @@
 //   GlifoCheckCircle      check_circle        (Action)
 //   GlifoMode             mode                (Editor)
 //   GlifoSearch           search              (Action)
+//   GlifoPlayArrow        play_arrow          (AV)
+//   GlifoPause            pause               (AV)
+//   GlifoSend             send                (Content)
+//   GlifoLocalBar             local_bar
+//   GlifoOfflineBolt     offline_bolt
+//   GlifoCasino               casino
+//   GlifoFactCheck            fact_check
+//   GlifoCalendarToday        calendar_today
+//   GlifoForum                forum
+//   GlifoPsychology           psychology
 //
 // Não há divergência entre os dois lados: todo componente aqui tem o nome do componente no Figma.
 //
@@ -526,6 +536,106 @@ export function GlifoSearch({ className, color = "currentColor", opacity = 1, si
   return (
     <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M15.5 14H14.71L14.43 13.73C15.63 12.33 16.25 10.42 15.91 8.39C15.44 5.61 13.12 3.39 10.32 3.05C6.09 2.53 2.53 6.09 3.05 10.32C3.39 13.12 5.61 15.44 8.39 15.91C10.42 16.25 12.33 15.63 13.73 14.43L14 14.71V15.5L18.25 19.75C18.66 20.16 19.33 20.16 19.74 19.75C20.15 19.34 20.15 18.67 19.74 18.26L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill={color} fillOpacity={opacity}/>
+    </svg>
+  );
+}
+
+export function GlifoPlayArrow({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M10 8.64L15.27 12L10 15.36V8.64ZM8 5V19L19 12L8 5Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoPause({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M6 19H10V5H6V19ZM14 5V19H18V5H14Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoSend({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M4.01 6.03L11.52 9.25L4 8.25L4.01 6.03ZM11.51 14.75L4 17.97V15.75L11.51 14.75ZM2.01 3L2 10L17 12L2 14L2.01 21L23 12L2.01 3Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoLocalBar({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M14.77 9L12 12.11L9.23 9H14.77ZM21 3H3V5L11 14V19H6V21H18V19H13V14L21 5V3ZM7.43 7L5.66 5H18.35L16.57 7H7.43Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoOfflineBolt({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção). O flash_on não tem versão outline no Material: o raio outline é este.
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 2.02002C6.48999 2.02002 2.01999 6.49002 2.01999 12C2.01999 17.51 6.48999 21.98 12 21.98C17.51 21.98 21.98 17.51 21.98 12C21.98 6.49002 17.51 2.02002 12 2.02002ZM12 19.98C7.59999 19.98 4.01999 16.4 4.01999 12C4.01999 7.60002 7.59999 4.02002 12 4.02002C16.4 4.02002 19.98 7.60002 19.98 12C19.98 16.4 16.4 19.98 12 19.98ZM12.75 5.00002L8.24999 13.5H11.39V19L15.75 10.5H12.75V5.00002Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoCasino({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill={color} fillOpacity={opacity} />
+      <path d="M7.5 18C8.32843 18 9 17.3284 9 16.5C9 15.6716 8.32843 15 7.5 15C6.67157 15 6 15.6716 6 16.5C6 17.3284 6.67157 18 7.5 18Z" fill={color} fillOpacity={opacity} />
+      <path d="M7.5 9C8.32843 9 9 8.32843 9 7.5C9 6.67157 8.32843 6 7.5 6C6.67157 6 6 6.67157 6 7.5C6 8.32843 6.67157 9 7.5 9Z" fill={color} fillOpacity={opacity} />
+      <path d="M12 13.5C12.8284 13.5 13.5 12.8284 13.5 12C13.5 11.1716 12.8284 10.5 12 10.5C11.1716 10.5 10.5 11.1716 10.5 12C10.5 12.8284 11.1716 13.5 12 13.5Z" fill={color} fillOpacity={opacity} />
+      <path d="M16.5 18C17.3284 18 18 17.3284 18 16.5C18 15.6716 17.3284 15 16.5 15C15.6716 15 15 15.6716 15 16.5C15 17.3284 15.6716 18 16.5 18Z" fill={color} fillOpacity={opacity} />
+      <path d="M16.5 9C17.3284 9 18 8.32843 18 7.5C18 6.67157 17.3284 6 16.5 6C15.6716 6 15 6.67157 15 7.5C15 8.32843 15.6716 9 16.5 9Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoFactCheck({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path fillRule="evenodd" clipRule="evenodd" d="M20 3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V5C22 3.9 21.1 3 20 3ZM20 19H4V5H20V19Z" fill={color} fillOpacity={opacity} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M19.41 10.42L17.99 9L14.82 12.17L13.41 10.75L12 12.16L14.82 15L19.41 10.42Z" fill={color} fillOpacity={opacity} />
+      <path d="M10 7H5V9H10V7Z" fill={color} fillOpacity={opacity} />
+      <path d="M10 11H5V13H10V11Z" fill={color} fillOpacity={opacity} />
+      <path d="M10 15H5V17H10V15Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoCalendarToday({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 3H19V1H17V3H7V1H5V3H4C2.9 3 2 3.9 2 5V21C2 22.1 2.9 23 4 23H20C21.1 23 22 22.1 22 21V5C22 3.9 21.1 3 20 3ZM20 21H4V10H20V21ZM20 8H4V5H20V8Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoForum({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M15 4V11H5.17L4 12.17V4H15ZM16 2H3C2.45 2 2 2.45 2 3V17L6 13H16C16.55 13 17 12.55 17 12V3C17 2.45 16.55 2 16 2ZM21 6H19V15H6V17C6 17.55 6.45 18 7 18H18L22 22V7C22 6.45 21.55 6 21 6Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoPsychology({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção: todos os ícones da Margem são outline).
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M15.8201 7.22L14.8201 7.62C14.6101 7.46 14.3901 7.33 14.1501 7.23L14.0001 6.17C13.9801 6.07 13.9001 6 13.8001 6H12.2001C12.1001 6 12.0201 6.07 12.0101 6.17L11.8601 7.23C11.6201 7.33 11.3901 7.46 11.1901 7.62L10.1901 7.22C10.1001 7.19 9.99005 7.22 9.95005 7.31L9.15005 8.69C9.10005 8.78 9.12005 8.89 9.20005 8.95L10.0501 9.61C10.0201 9.73 10.0001 9.87 10.0001 10C10.0001 10.13 10.0101 10.26 10.0301 10.39L9.19005 11.05C9.11005 11.11 9.09005 11.22 9.14005 11.3L9.94005 12.69C9.99005 12.78 10.0901 12.81 10.1901 12.78L11.1801 12.38C11.3901 12.54 11.6101 12.67 11.8601 12.77L12.0001 13.83C12.0201 13.93 12.1001 14 12.2001 14H13.8001C13.9001 14 13.9801 13.93 14.0001 13.83L14.1501 12.77C14.3901 12.67 14.6201 12.54 14.8201 12.38L15.8101 12.78C15.9001 12.82 16.0101 12.78 16.0501 12.69L16.8501 11.3C16.9001 11.21 16.8801 11.11 16.8001 11.05L15.9701 10.39C15.9901 10.26 16.0001 10.13 16.0001 10C16.0001 9.86 15.9901 9.73 15.9701 9.61L16.8201 8.95C16.9001 8.89 16.9201 8.78 16.8701 8.69L16.0701 7.31C16.0201 7.22 15.9101 7.19 15.8201 7.22ZM13.0001 11.43C12.2101 11.43 11.5701 10.79 11.5701 10C11.5701 9.21 12.2101 8.57 13.0001 8.57C13.7901 8.57 14.4301 9.21 14.4301 10C14.4301 10.79 13.7901 11.43 13.0001 11.43Z" fill={color} fillOpacity={opacity} />
+      <path d="M19.9398 9.06C19.5098 5.79 16.7098 3.2 13.4098 3.01C13.2698 3 13.1398 3 12.9998 3C9.46985 3 6.56985 5.61 6.07985 9L4.14985 12.48C3.73985 13.14 4.21985 14 4.99985 14H5.99985V16C5.99985 17.1 6.89985 18 7.99985 18H8.99985V21H15.9998V16.32C18.6198 15.07 20.3498 12.24 19.9398 9.06ZM14.8898 14.63L13.9998 15.05V19H10.9998V16H7.99985V12H6.69985L8.02985 9.67C8.20985 7.06 10.3498 5 12.9998 5C15.7598 5 17.9998 7.24 17.9998 10C17.9998 12.09 16.7098 13.88 14.8898 14.63Z" fill={color} fillOpacity={opacity} />
     </svg>
   );
 }

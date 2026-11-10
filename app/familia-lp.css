@@ -1,0 +1,432 @@
+/* LP do programa para familiares (/familia) e os três componentes criados pra ela em 09/11/2026:
+   bloco-imagem, accordion e marquee. Layout das referências do fundador. Mobile primeiro. */
+
+.familia-lp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-48);
+  /* Espaço pra barra fixa do CTA não cobrir o fim da página no celular. */
+  padding-bottom: calc(var(--size-96) + env(safe-area-inset-bottom));
+}
+
+.familia-lp h1,
+.familia-lp h2,
+.familia-lp h3,
+.familia-lp p {
+  margin: 0;
+}
+
+.familia-lp-secao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+  width: 100%;
+  max-width: var(--layout-content-max-width-page);
+  margin: 0 auto;
+  padding-inline: var(--pagina-padding-lateral);
+}
+
+.familia-lp-secao-titulo {
+  width: 100%;
+  max-width: var(--layout-content-max-width-page);
+  margin: 0 auto;
+  padding-inline: var(--pagina-padding-lateral);
+}
+
+.familia-lp-grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-16);
+}
+
+.familia-lp-titulo-topo {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-4xl);
+}
+
+.familia-lp-cta-topo {
+  display: none;
+}
+
+/* O desenho do psychology ocupa 16 de largura no quadro de 24 (os outros, 18 a 20): aumenta só ele
+   pra ficar do mesmo peso visual na fileira. */
+.familia-icone-compensado {
+  transform: scale(1.2);
+}
+
+/* O CTA dos cards de caminho fica sempre no pé do card: quando uma descrição quebra em duas linhas
+   e a outra não, os "Começar o diagnóstico" continuam na mesma altura (os cards da fileira já têm a
+   mesma altura). */
+.familia-lp .pathway-card-acao {
+  margin-top: auto;
+}
+
+/* "Como funciona": faixa verde com os cards de caminho, sem CTA. */
+.familia-lp-faixa-verde {
+  padding-block: var(--spacing-48);
+  background: var(--colors-brand-primary-800);
+}
+
+.familia-lp-faixa-verde h2 {
+  color: var(--colors-neutral-0);
+}
+
+.familia-lp-faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.familia-lp-aprender {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+}
+
+/* CTA: fixo embaixo no celular (mesmo desenho do "Agendar" da página do profissional). */
+.familia-lp-cta-barra {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: var(--z-index-panel);
+  padding: var(--spacing-16) var(--spacing-16) calc(var(--spacing-16) + env(safe-area-inset-bottom));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--colors-neutral-0);
+  box-shadow: var(--shadow-glow);
+}
+
+@media (min-width: 48em) {
+  .familia-lp {
+    gap: var(--spacing-64);
+    padding-bottom: var(--spacing-64);
+  }
+
+  .familia-lp-titulo-topo {
+    font-size: var(--font-size-5xl);
+    line-height: var(--line-height-6xl);
+  }
+
+  .familia-lp-cta-topo {
+    display: block;
+  }
+
+  .familia-lp-grade {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-24);
+  }
+
+  .familia-lp-grade-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .familia-lp-grade-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .familia-lp-faixa-verde {
+    padding-block: var(--spacing-80);
+  }
+
+  /* No celular os cards de caminho rolam de lado, como na home. No desktop eles ocupam a largura
+     toda, sem rolagem: 3 em "Para quem é" e 4 em "Como funciona". */
+  .familia-lp .pathway-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-auto-flow: column;
+    gap: var(--spacing-24);
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    cursor: auto;
+  }
+
+  .familia-lp .pathway-card {
+    min-width: 0;
+  }
+
+  /* No desktop o botão fica no fluxo da página, sem fixar. */
+  .familia-lp-cta-barra {
+    position: static;
+    width: 100%;
+    max-width: var(--layout-content-max-width-page);
+    margin: 0 auto;
+    padding: 0 var(--pagina-padding-lateral);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  /* No container de 1080 o botão fica do tamanho do texto, como o do topo. */
+  .familia-lp-cta-barra .btn {
+    width: auto;
+  }
+}
+
+/* ===== bloco-imagem (texto por cima de foto) ===== */
+
+.bloco-imagem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  /* Sem foto, cinza escuro: o texto branco já fica legível. */
+  background: var(--colors-neutral-800);
+  color: var(--colors-neutral-0);
+}
+
+.bloco-imagem-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Com foto, escurece a parte de baixo, onde fica o texto. */
+.bloco-imagem-foto + .bloco-imagem-texto::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--spacing-96)) calc(-1 * var(--spacing-96));
+  z-index: calc(var(--z-index-base) - 1);
+  background: linear-gradient(to top, var(--colors-alpha-72), transparent 70%);
+}
+
+.bloco-imagem-texto {
+  position: relative;
+  z-index: var(--z-index-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  isolation: isolate;
+}
+
+.bloco-imagem .text-medium-regular,
+.bloco-imagem h1,
+.bloco-imagem h2,
+.bloco-imagem .figma-section-heading p {
+  color: var(--colors-neutral-0);
+}
+
+.bloco-imagem[data-variante="topo"] {
+  min-height: 80svh;
+  padding: var(--spacing-96) var(--pagina-padding-lateral) var(--spacing-40);
+}
+
+.bloco-imagem[data-variante="topo"] .bloco-imagem-texto {
+  width: 100%;
+  max-width: var(--layout-content-max-width-page);
+  margin: 0 auto;
+}
+
+.bloco-imagem[data-variante="bloco"] {
+  aspect-ratio: 4 / 3;
+  padding: var(--spacing-24);
+  border-radius: var(--radius-xl);
+}
+
+@media (min-width: 48em) {
+  .bloco-imagem[data-variante="topo"] {
+    min-height: 100svh;
+    justify-content: center;
+    padding-bottom: var(--spacing-96);
+  }
+
+  .bloco-imagem[data-variante="topo"] .bloco-imagem-texto > * {
+    max-width: var(--layout-content-max-width-md);
+  }
+
+  .bloco-imagem[data-variante="bloco"] {
+    padding: var(--spacing-40);
+  }
+}
+
+/* ===== accordion =====
+   Referência do fundador (09/11/2026). Fechado: cartão cinza com borda branca grossa e a seta pra
+   baixo. Aberto: o cartão fica branco, a pergunta vira uma faixa cinza arredondada por dentro da
+   borda e a resposta fica embaixo, no branco, em cinza. */
+
+.accordion {
+  border: var(--border-width-strong) solid var(--colors-neutral-0);
+  border-radius: var(--radius-2xl);
+  background: var(--colors-neutral-100);
+}
+
+.accordion[open] {
+  background: var(--colors-neutral-0);
+}
+
+.accordion-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-16);
+  padding: var(--spacing-20) var(--spacing-24);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-100);
+  font-family: var(--font-inter), sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-88);
+  cursor: pointer;
+  list-style: none;
+}
+
+.accordion-titulo::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-titulo:focus-visible {
+  outline: var(--border-width-large) solid var(--colors-brand-primary-800);
+  outline-offset: var(--border-width-large);
+}
+
+.accordion-seta {
+  flex: 0 0 auto;
+  transform: rotate(180deg);
+  transition: transform var(--duration-350) var(--easing-out-expo);
+}
+
+.accordion[data-expandido="true"] .accordion-seta {
+  transform: rotate(0deg);
+}
+
+/* A caixa que anima (altura e opacidade, em Accordion.tsx). O padding fica no filho, pra a altura
+   poder chegar a zero. */
+.accordion-corpo {
+  overflow: hidden;
+}
+
+.accordion-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  padding: var(--spacing-20) var(--spacing-24) var(--spacing-24);
+  color: var(--colors-alpha-64);
+}
+
+.accordion-conteudo p {
+  margin: 0;
+}
+
+.accordion-conteudo a {
+  color: var(--colors-brand-primary-800);
+}
+
+/* ===== marquee ===== */
+
+.marquee-lista-acessivel {
+  position: absolute;
+  width: var(--size-1);
+  height: var(--size-1);
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.marquee-faixas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  overflow: hidden;
+}
+
+.marquee-linha {
+  overflow: hidden;
+}
+
+/* Leitura calma: 60 s por volta (10x o maior token de duração). */
+.marquee-trilho {
+  display: flex;
+  width: max-content;
+  animation: marquee-esquerda calc(var(--duration-6000) * 10) linear infinite;
+}
+
+.marquee-linha[data-sentido="direita"] .marquee-trilho {
+  animation-name: marquee-direita;
+}
+
+.marquee-item {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--spacing-24);
+  padding-right: var(--spacing-24);
+}
+
+.marquee-frase {
+  font-family: var(--font-urbanist), sans-serif;
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-5xl);
+  color: var(--colors-brand-primary-800);
+  white-space: nowrap;
+}
+
+.marquee-imagem {
+  flex: 0 0 auto;
+  width: var(--size-80);
+  height: var(--size-80);
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+}
+
+.marquee-imagem-vazia {
+  background: var(--colors-neutral-200);
+}
+
+@keyframes marquee-esquerda {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-direita {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 48em) {
+  .marquee-frase {
+    font-size: var(--font-size-7xl);
+    line-height: var(--line-height-8xl);
+  }
+
+  .marquee-imagem {
+    width: calc(var(--size-96) * 2);
+    height: calc(var(--size-96) * 2);
+  }
+}
+
+/* Sem animação: a faixa some e a lista aparece. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-faixas {
+    display: none;
+  }
+
+  .marquee-lista-acessivel {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+    width: 100%;
+    max-width: var(--layout-content-max-width-page);
+    height: auto;
+    margin: 0 auto;
+    padding: 0 var(--pagina-padding-lateral) 0 calc(var(--pagina-padding-lateral) + var(--spacing-20));
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    font-size: var(--font-size-lg);
+  }
+}
