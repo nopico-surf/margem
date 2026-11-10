@@ -24,7 +24,8 @@ export type Resultado = {
   } | null;
   seguranca: string | null;
   umPasso: string;
-  avisos: Array<{ problema: Problema; texto: string }>;
+  // psiquiatra: o aviso leva o botão "Ver psiquiatra parceiro" (álcool diário, conteúdo v2).
+  avisos: Array<{ problema: Problema; texto: string; psiquiatra?: boolean }>;
 };
 
 const SUFIXO_PROBLEMA: Record<Problema, string> = { alcool: "ALCOOL", outras_drogas: "OUTRAS_DROGAS", apostas: "APOSTAS" };
@@ -142,7 +143,7 @@ function avisos(respostas: Respostas, problemas: Problema[], blocos: Blocos): Re
   const lista: Resultado["avisos"] = [];
   for (const problema of problemas) {
     if (problema === "alcool") {
-      if (respostas.frequencia_alcool === "diario") lista.push({ problema, texto: texto(blocos, "AVISO_ALCOOL_DIARIO") });
+      if (respostas.frequencia_alcool === "diario") lista.push({ problema, texto: texto(blocos, "AVISO_ALCOOL_DIARIO"), psiquiatra: true });
       if (respostas.frequencia_alcool === "nao_sei") lista.push({ problema, texto: texto(blocos, "AVISO_ALCOOL_NAO_SEI") });
     }
     if (problema === "apostas") {

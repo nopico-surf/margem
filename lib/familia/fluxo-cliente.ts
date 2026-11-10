@@ -1,6 +1,7 @@
 "use client";
 
 import { chamarApi, clienteAuth } from "./auth-cliente";
+import { devAtivo } from "./dev";
 import { CHAVE_CONSENTIMENTO_PENDENTE, CHAVE_RESPOSTAS } from "./config";
 import { diagnosticoCompleto, type Respostas } from "./diagnostico";
 
@@ -37,6 +38,7 @@ function lerConsentimentoPendente(): { dados: boolean; comunicacoes: boolean } |
 }
 
 export async function temSessao() {
+  if (devAtivo()) return true;
   const auth = clienteAuth();
   if (!auth) return false;
   const { data } = await auth.auth.getSession();

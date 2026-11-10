@@ -1,6 +1,7 @@
 # Blocos do resultado Programa Família (Margem)
 
 > Conteúdo da seção 6 do briefing. Arquivo para o repositório (`content/familia/resultado-blocos.md`).
+> Conteúdo v2 (10/11/2026): avisos, Evite, FAVOR_SEM_VIOLENCIA, 3ª frase útil e Um passo revisados. Os cards CARD_* do v2 esperam as regras dos itens 14 a 25.
 > Processo: rascunho gerado pelo Gemini a partir do manual de escrita (seção 16 do briefing) → revisão do Claude → **revisão clínica da psicóloga** (pendente).
 > Variáveis: `{{apelido}}` (fallback: "quem você ama"; "Quem você ama" no começo de frase; vocativo "{{apelido}}, " some) e `{{exemplo}}` (completado por `EXEMPLO_*`).
 > Regras de escrita: sem gênero de quem responde nem da pessoa, sem a relação ("filho", "amor"), frases prontas que cabem numa respiração.
@@ -30,7 +31,7 @@ Seu cansaço é real, e cuidar de você agora também é parte do caminho.
 Vocês moram juntos: você vê também os momentos bons de {{apelido}}, e é neles que uma conversa tem mais chance de entrar.
 
 [FAVOR_SEM_VIOLENCIA]
-A casa é segura: dá para testar um jeito novo de conversar com tranquilidade.
+Você não relatou violência em casa: isso permite testar um jeito novo de conversar com mais tranquilidade.
 
 [FAVOR_DINHEIRO_POUCO_AFETADO]
 O dinheiro da casa foi pouco afetado: agir agora ajuda a manter assim.
@@ -97,7 +98,7 @@ Escolha um momento calmo, longe do celular e dos jogos. Uma boa janela é logo d
 [FRASES_NAO_RECONHECE]
 - "Quando você {{exemplo}}, eu fiquei com medo. Eu sei que pra você está tudo sob controle, mas eu me preocupo."
 - "Eu gostei muito do nosso almoço de domingo. Queria ter mais dias assim com você."
-- "Talvez eu tenha cobrado demais. Se um dia você topar conversar uma vez com alguém, só pra ver como é, eu vou junto."
+- "Talvez eu tenha cobrado demais ultimamente. Se tiver alguma coisa que eu possa fazer pra deixar seus dias mais leves, me fala."
 
 [ABERTURA_RECONHECE_AS_VEZES]
 "{{apelido}}, lembra daquele dia em que foi você quem tocou no assunto? Fiquei pensando nisso. Posso te falar uma coisa?"
@@ -105,7 +106,7 @@ Escolha um momento calmo, longe do celular e dos jogos. Uma boa janela é logo d
 [FRASES_RECONHECE_AS_VEZES]
 - "Quando você {{exemplo}}, eu me preocupei. E eu sei que às vezes isso também te incomoda."
 - "Adorei ver você rindo com a gente ontem. Faz falta ver você assim."
-- "Não precisa decidir nada agora. Se quiser, eu acho alguém pra você conversar uma vez, sem compromisso, e vou junto."
+- "Talvez eu tenha insistido na hora errada. Quando você quiser conversar sobre isso, eu tô aqui, sem cobrança."
 
 [ABERTURA_QUER_MUDAR]
 "{{apelido}}, eu vi que você quer mudar, e isso me deixa feliz. Posso te ajudar com o primeiro passo?"
@@ -151,13 +152,13 @@ passou a madrugada apostando no celular
 *(exatamente 2: EVITE_REACAO_* pela mesma reação do "Se reagir mal" e EVITE_PROBLEMA_* pelo problema principal)*
 
 [EVITE_REACAO_VIRA_BRIGA]
-Responder no mesmo tom quando o clima esquentar: a briga vira o assunto, e o problema some da conversa.
+Responder no mesmo tom quando o clima esquenta: a briga vira o assunto, e o que importava se perde.
 
 [EVITE_REACAO_NEGA]
-Juntar provas e listar tudo o que já aconteceu: quanto mais você prova, mais a pessoa se defende.
+Juntar provas e listar tudo o que já aconteceu: quanto mais você tenta provar, mais a pessoa se defende.
 
 [EVITE_REACAO_SE_AFASTA]
-Ir atrás e insistir quando a pessoa se fecha: conversar com você passa a parecer pressão.
+Ir atrás e insistir quando a pessoa se fecha: a conversa passa a parecer cobrança, e a distância aumenta.
 
 [EVITE_REACAO_MUDA_DE_ASSUNTO]
 Puxar o assunto de volta à força: a conversa vira cobrança.
@@ -169,13 +170,13 @@ Cobrar a promessa ou contar os dias: a promessa vira teste, e a próxima escorre
 Esperar o momento perfeito: ele não existe. Um momento calmo, com a pessoa fora do efeito, já basta.
 
 [EVITE_PROBLEMA_ALCOOL]
-- Resolver por {{apelido}} os problemas causados pela bebida, como avisar o trabalho ou arrumar a bagunça: assim fica mais difícil a pessoa perceber o impacto.
+- Resolver por {{apelido}} os problemas causados pela bebida, como dar desculpas no trabalho ou arrumar a bagunça: assim fica mais difícil perceber o impacto.
 
 [EVITE_PROBLEMA_OUTRAS_DROGAS]
 - Revistar as coisas, vigiar ou fazer interrogatório: cria desconfiança e afasta a pessoa de casa.
 
 [EVITE_PROBLEMA_APOSTAS]
-- Emprestar dinheiro, pagar dívidas ou "cobrir o rombo": parece ajuda, mas tira o peso da perda e alimenta novas apostas.
+- Emprestar dinheiro, pagar dívidas ou "cobrir o rombo": parece ajuda, mas tira o peso da perda e abre espaço para novas apostas.
 
 ---
 
@@ -211,21 +212,21 @@ Você contou que ainda não tentou conversar. Sentir receio é normal. Comece pe
 ## Um passo para você
 
 [PASSO_ESGOTADO]
-Você contou que o cansaço tem aparecido na maior parte dos dias. Por isso, escolha um dia desta semana e reserve 30 minutos só seus, fora de casa se puder: uma caminhada, um café, uma conversa com alguém de confiança. Combine com você de não falar de {{apelido}} nesse tempo.
+Você contou que o cansaço tem aparecido na maior parte dos dias. Escolha um momento desta semana só seu, fora de casa se puder: uma caminhada, um café, uma conversa com alguém de confiança. Pode ser curto. O importante é ser seu, sem falar de {{apelido}}.
 
 [PASSO_MODERADO]
-Retome nesta semana algo que você gostava de fazer e deixou de lado, nem que seja por 20 minutos. Cuidar de você também é parte do plano.
+Retome nesta semana algo que você gostava de fazer e deixou de lado. No módulo 1, você monta uma meta do seu tamanho.
 
 ---
 
 ## Avisos
-*(álcool: só com frequência diária ou "não sei" na Q3b; apostas: sempre que marcado, conforme a Q10; outras drogas: sem aviso, os sinais de emergência ficam na página de segurança)*
+*(álcool: só com frequência diária ou "não sei" na Q3b, e o diário leva o botão "Ver psiquiatra parceiro"; apostas: sempre que marcado, conforme a Q10; outras drogas: sem aviso, os sinais de emergência ficam na página de segurança)*
 
 [AVISO_ALCOOL_DIARIO]
-Você contou que {{apelido}} bebe todos ou quase todos os dias. Nesse caso, parar de uma vez pode ser perigoso, com tremores, confusão e até convulsão. Se surgir a ideia de parar, o primeiro passo é falar com um médico. Os psiquiatras da Margem podem ajudar.
+Você contou que {{apelido}} bebe todos ou quase todos os dias. Nesse caso, parar de uma vez pode ser perigoso, com tremores, confusão e até convulsão. Se surgir a ideia de parar, o primeiro passo é falar com um médico.
 
 [AVISO_ALCOOL_NAO_SEI]
-Se {{apelido}} bebe todos ou quase todos os dias, parar de uma vez pode ser perigoso, com tremores, confusão e até convulsão. Qualquer plano de parar precisa de acompanhamento médico.
+Você não sabe com que frequência {{apelido}} bebe. Se for todos os dias, parar de uma vez pode ser perigoso. Antes de qualquer plano de parar, vale conversar com um médico.
 
 [AVISO_APOSTAS_MUITO]
 Você contou que o dinheiro da casa já foi muito afetado. A vontade de "recuperar o que perdeu" faz parte do problema e costuma aumentar o prejuízo. Proteger as contas da casa agora é cuidado, não castigo.

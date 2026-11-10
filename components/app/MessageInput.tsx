@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 type MessageInputProps = {
   value: string;
@@ -9,6 +9,14 @@ type MessageInputProps = {
   // Com a tela cheia aberta o campo fica no estado focado mesmo sem foco (o teclado fechado, por
   // exemplo), como no Figma: nunca volta ao default branco enquanto a tela cheia estiver aberta.
   expandido?: boolean;
+  // Textos e extras pra reaproveitar o campo fora da home (treino de conversa do programa para
+  // familiares). Sem eles, fica exatamente o campo da home.
+  rotulo?: string;
+  dica?: string;
+  maxLength?: number;
+  // Botão a mais ao lado do "Enviar" (ex.: microfone). Use a classe message-component-acessorio e
+  // onMouseDown com preventDefault, pela regra abaixo.
+  acessorio?: ReactNode;
 };
 
 // REGRA: se um botão ou input está num container que muda de visibilidade/layout baseado em outro
@@ -30,7 +38,16 @@ let tecladoMedido: { largura: number; altura: number } | null = null;
 
 type VirtualKeyboardApi = EventTarget & { overlaysContent: boolean; boundingRect: DOMRect };
 
-export function MessageInput({ value, onChange, onSubmit, expandido = false }: MessageInputProps) {
+export function MessageInput({
+  value,
+  onChange,
+  onSubmit,
+  expandido = false,
+  rotulo = "Conte sobre seu momento",
+  dica = "Conte do seu jeito",
+  maxLength,
+  acessorio,
+}: MessageInputProps) {
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const initialFocusRef = useRef(true);
@@ -252,7 +269,7 @@ export function MessageInput({ value, onChange, onSubmit, expandido = false }: M
       {value.length === 0 && (
         <div className="message-component-placeholder label-medium-regular" aria-hidden="true">
           <span className="message-component-caret" />
-          <span>Conte sobre seu momento</span>
+          <span>{rotulo}</span>
         </div>
       )}
       <div className="message-component-field">
@@ -272,7 +289,8 @@ export function MessageInput({ value, onChange, onSubmit, expandido = false }: M
             if (espelhoRef.current) espelhoRef.current.scrollTop = event.currentTarget.scrollTop;
           }}
           placeholder=""
-          aria-label="Conte sobre seu momento"
+          aria-label={rotulo}
+          maxLength={maxLength}
           rows={1}
         />
         <div ref={espelhoRef} className="message-component-mirror label-medium-regular" aria-hidden="true">
@@ -292,9 +310,16 @@ export function MessageInput({ value, onChange, onSubmit, expandido = false }: M
       <div className="message-component-gaveta" inert={state === "default"}>
         <div className="message-component-gaveta-conteudo">
           <div className="message-component-meta">
-            <span className="label-x-small">Conte do seu jeito</span>
-            {/* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */}
-            <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
+            <span className="label-x-small">{dica}</span>
+            {acessorio ? (
+              <div className="message-component-meta-acoes">
+                {acessorio}
+                <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
+              </div>
+            ) : (
+              /* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */
+              <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
+            )}
           </div>
         </div>
       </div>

@@ -53,11 +53,11 @@ export const PERGUNTAS: Pergunta[] = [
     titulo: "Quem é essa pessoa pra você?",
     tipo: "unica",
     opcoes: [
-      { valor: "filho", rotulo: "Filho(a)" },
-      { valor: "companheiro", rotulo: "Companheiro(a) / marido / esposa" },
+      { valor: "filho", rotulo: "Filho ou filha" },
+      { valor: "companheiro", rotulo: "Companheiro, companheira, marido ou esposa" },
       { valor: "pai_mae", rotulo: "Pai / mãe" },
-      { valor: "irmao", rotulo: "Irmão(ã)" },
-      { valor: "amigo", rotulo: "Amigo(a)" },
+      { valor: "irmao", rotulo: "Irmão ou irmã" },
+      { valor: "amigo", rotulo: "Amigo ou amiga" },
       { valor: "outro", rotulo: "Outro" },
     ],
   },
@@ -138,7 +138,7 @@ export const PERGUNTAS: Pergunta[] = [
   },
   {
     chave: "medo",
-    titulo: "Em algum momento você teve medo de que {{apelido}} machucasse você, alguém da casa ou a si mesmo(a)?",
+    titulo: "Em algum momento você teve medo de que {{apelido}} machucasse você, alguém da casa ou a própria pessoa?",
     tipo: "unica",
     seguranca: true,
     opcoes: [
@@ -171,7 +171,7 @@ export const PERGUNTAS: Pergunta[] = [
   },
   {
     chave: "esgotamento",
-    titulo: "Nas últimas duas semanas, com que frequência você se sentiu esgotado(a), ansioso(a) ou sem dormir direito por causa disso?",
+    titulo: "Nas últimas duas semanas, com que frequência você se sentiu com esgotamento, ansiedade ou sem dormir direito por causa disso?",
     tipo: "unica",
     opcoes: [
       { valor: "0", rotulo: "Quase nunca" },

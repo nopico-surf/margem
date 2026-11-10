@@ -29,7 +29,57 @@ async function buscarSimulacao(supabase: NonNullable<Awaited<ReturnType<typeof u
   return data as { id: string; cenario: string; concluido_em: string | null; parou_por_seguranca: boolean } | null;
 }
 
+async function promptDoPersonagem(respostasBrutas: unknown, reacoesDoCorpo: unknown, contexto: string) {
+  const respostas = sanitizarRespostas(respostasBrutas);
+  const reacoesValidas = new Map(REACOES_SIMULADOR.map((reacao) => [reacao.valor as string, reacao.rotulo]));
+  const reacoes = Array.isArray(reacoesDoCorpo) ? reacoesDoCorpo.filter((item): item is string => typeof item === "string" && reacoesValidas.has(item)) : [];
+  return (await lerPrompt("personagem"))
+    .replaceAll("{{apelido}}", limparApelido(respostas.apelido) || "a pessoa")
+    .replaceAll("{{problemas}}", (respostas.problemas ?? []).map((problema) => ROTULO_PROBLEMA[problema].toLowerCase()).join(", ") || "álcool ou outras drogas")
+    .replaceAll("{{relacao}}", respostas.relacao ? rotuloDaOpcao("relacao", respostas.relacao) : "pessoa próxima")
+    .replaceAll("{{reacoes}}", reacoes.map((reacao) => reacoesValidas.get(reacao)?.toLowerCase()).join(", ") || "nega")
+    .replaceAll("{{contexto_do_cenario}}", contexto);
+}
+
+// SÓ DESENVOLVIMENTO: modo sem login (lib/familia/dev.ts). Sem conta, sem banco e sem limite de uso;
+// as respostas do diagnóstico vêm do aparelho (respostasDev). O cenário vai dentro do id da simulação.
+// A checagem de risco por palavra e o Gemini são os mesmos da rota real.
+async function simuladorSemLogin(corpo: Corpo & { respostasDev?: unknown }) {
+  if (corpo.acao === "iniciar") {
+    const cenario = typeof corpo.cenario === "string" ? await lerCenario(corpo.cenario) : null;
+    if (!cenario) return erro("cenario_invalido", 404);
+    return Response.json({ simulacaoId: `${cenario.id}~${crypto.randomUUID()}` });
+  }
+  const cenario = typeof corpo.simulacaoId === "string" ? await lerCenario(corpo.simulacaoId.split("~")[0]) : null;
+  if (!cenario) return erro("simulacao_invalida", 404);
+
+  if (corpo.acao === "mensagem") {
+    const historico = historicoValido(corpo.historico, true);
+    if (!historico) return erro("historico_invalido", 400);
+    const turnos = historico.filter((fala) => fala.autor === "familiar").length;
+    if (turnos > SIMULADOR_MAX_MENSAGENS) return erro("limite_de_mensagens", 400);
+    if (temTermoDeRisco(historico[historico.length - 1].texto)) return Response.json({ tipo: "seguranca", mensagem: null, origem: "palavra" });
+    const resposta = await responderComoPersonagem(await promptDoPersonagem(corpo.respostasDev, corpo.reacoes, cenario.contexto), historico);
+    if (!resposta.ok) return Response.json({ error: "ia_indisponivel", motivo: resposta.motivo }, { status: 503 });
+    if (resposta.tipo === "seguranca") return Response.json({ tipo: "seguranca", mensagem: resposta.mensagem, origem: "ia" });
+    return Response.json({ tipo: "fala", texto: resposta.texto, turnos, ultima: turnos >= SIMULADOR_MAX_MENSAGENS });
+  }
+
+  if (corpo.acao === "terminar") {
+    const historico = historicoValido(corpo.historico, false);
+    if (!historico) return erro("historico_invalido", 400);
+    const resultado = await gerarFeedback(await lerPrompt("feedback"), historico);
+    if (!resultado.ok) return Response.json({ error: "ia_indisponivel", motivo: resultado.motivo }, { status: 503 });
+    return Response.json({ feedback: resultado.feedback });
+  }
+
+  return erro("acao_invalida", 400);
+}
+
 export async function POST(request: Request) {
+  if (process.env.NODE_ENV !== "production" && request.headers.get("x-familia-dev") === "1") {
+    return simuladorSemLogin(((await request.json().catch(() => null)) ?? {}) as Corpo & { respostasDev?: unknown });
+  }
   const sessao = await usuarioDaRequisicao(request);
   if (!sessao) return naoAutorizado();
   const { user, supabase } = sessao;
@@ -85,16 +135,7 @@ export async function POST(request: Request) {
 
     const [cenario, diagnostico] = await Promise.all([lerCenario(simulacao.cenario), buscarUltimoDiagnostico(supabase, user.id)]);
     if (!cenario) return erro("cenario_invalido", 404);
-    const respostas = sanitizarRespostas(diagnostico?.respostas);
-    const reacoesValidas = new Map(REACOES_SIMULADOR.map((reacao) => [reacao.valor as string, reacao.rotulo]));
-    const reacoes = Array.isArray(corpo.reacoes) ? corpo.reacoes.filter((item): item is string => typeof item === "string" && reacoesValidas.has(item)) : [];
-
-    const sistema = (await lerPrompt("personagem"))
-      .replaceAll("{{apelido}}", limparApelido(respostas.apelido) || "a pessoa")
-      .replaceAll("{{problemas}}", (respostas.problemas ?? []).map((problema) => ROTULO_PROBLEMA[problema].toLowerCase()).join(", ") || "álcool ou outras drogas")
-      .replaceAll("{{relacao}}", respostas.relacao ? rotuloDaOpcao("relacao", respostas.relacao) : "pessoa próxima")
-      .replaceAll("{{reacoes}}", reacoes.map((reacao) => reacoesValidas.get(reacao)?.toLowerCase()).join(", ") || "nega")
-      .replaceAll("{{contexto_do_cenario}}", cenario.contexto);
+    const sistema = await promptDoPersonagem(diagnostico?.respostas, corpo.reacoes, cenario.contexto);
 
     const resposta = await responderComoPersonagem(sistema, historico);
     if (!resposta.ok) {

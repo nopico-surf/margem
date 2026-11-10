@@ -2,6 +2,7 @@
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Provedor } from "./config";
+import { devAtivo, respostaDev } from "./dev";
 
 // Cliente do Supabase Auth no navegador, só pro login do programa para familiares. Usa a chave
 // anônima (pública). Não consulta tabela nenhuma: os dados passam pelos route handlers, que conferem
@@ -51,7 +52,9 @@ export async function provedorAtual() {
 }
 
 // fetch com o token da pessoa. Sem sessão devolve null, e a tela manda pro login.
+// No modo sem login (só localhost, lib/familia/dev.ts) responde de lá, sem token e sem banco.
 export async function chamarApi(caminho: string, init?: RequestInit) {
+  if (devAtivo()) return respostaDev(caminho, init);
   const token = await tokenAtual();
   if (!token) return null;
   return fetch(caminho, {

@@ -1,5 +1,5 @@
 // Só servidor: lê arquivo do disco.
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { lerBlocos } from "./resultado";
 import { lerBlocosMarkdown, separarFrontmatter, type BlocoMarkdown } from "./markdown";
@@ -45,17 +45,34 @@ export async function lerModulo(numero: number): Promise<Modulo | null> {
     return null;
   }
   const { dados, corpo } = separarFrontmatter(markdown);
+  const cenarioSimulador = await cenarioExistente(texto(dados.cenario_simulador));
+  const blocos = lerBlocosMarkdown(corpo);
+  // O "Ensaiar no treino" de cada item abre o cenário do item ou, sem ele, o do módulo. Cenário que
+  // ainda não tem arquivo em content/familia/cenarios fica nulo, e o botão não aparece.
+  for (const bloco of blocos) {
+    if (bloco.tipo === "exercicio") bloco.cenario = bloco.cenario ? await cenarioExistente(bloco.cenario) : cenarioSimulador;
+  }
   return {
     numero,
     titulo: texto(dados.titulo) ?? `Módulo ${numero}`,
     publicado: dados.publicado === true,
-    cenarioSimulador: texto(dados.cenario_simulador),
+    cenarioSimulador,
     bloqueadoEmModoSeguranca: dados.bloqueado_em_modo_seguranca === true,
     audio: texto(dados.audio),
     video: texto(dados.video),
     minutos: typeof dados.minutos === "number" ? dados.minutos : null,
-    blocos: lerBlocosMarkdown(corpo),
+    blocos,
   };
+}
+
+async function cenarioExistente(id: string | null) {
+  if (!id || !/^[a-z-]+$/.test(id)) return null;
+  try {
+    await access(path.join(PASTA, "cenarios", `${id}.md`));
+    return id;
+  } catch {
+    return null;
+  }
 }
 
 export async function lerCenario(id: string): Promise<Cenario | null> {

@@ -22,6 +22,17 @@ export const TEXTO_CONSENTIMENTO_DADOS =
   "Concordo que a Margem armazene minhas respostas para personalizar o programa. Não informei dados que identifiquem a pessoa que eu amo.";
 export const TEXTO_CONSENTIMENTO_COMUNICACOES = "Quero receber conteúdos e novidades da Margem por e-mail.";
 
+// Conteúdo marcado [REVISÃO CLÍNICA] no conteúdo v2 (instrução 7): aparece no servidor local e não
+// vai pra produção antes da revisão da psicóloga parceira. Liberar aqui quando a revisão sair.
+export const MOSTRAR_REVISAO_CLINICA = process.env.NODE_ENV !== "production";
+
+// [PENDÊNCIA DO FUNDADOR] Prazo de acesso depois das 8 semanas (FAQ da LP), ex.: "12 meses". Nulo: a
+// pergunta "O que acontece depois das 8 semanas?" não aparece.
+export const PRAZO_ACESSO: string | null = null;
+// [PENDÊNCIA DO FUNDADOR + revisão jurídica] Revisão de parte das conversas do treino pela equipe.
+// Falso: a pergunta "Alguém lê o que eu escrevo no treino?" não aparece.
+export const REVISAO_DO_TREINO_DECIDIDA = false;
+
 // Simulador (briefing, seção 8).
 export const SIMULADOR_MAX_MENSAGENS = 8;
 export const SIMULADOR_LIMITE_POR_DIA = 5;

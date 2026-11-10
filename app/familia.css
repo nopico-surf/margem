@@ -225,6 +225,20 @@
   gap: var(--spacing-12);
 }
 
+/* Nos serviços da /conversa a descrição corta em 3 linhas e o "Saiba mais" mostra o resto. Aqui não
+   tem "Saiba mais" e o texto é de emergência (sinais do SAMU, primeiros socorros): vai inteiro. */
+.familia-contatos .figma-resource-heading p {
+  display: block;
+  -webkit-line-clamp: unset;
+}
+
+/* O mesmo vale pro CardHeader no programa: a descrição é texto do programa ("Um passo para você",
+   "Sua segurança vem primeiro") e não tem onde ler o resto, então não corta em 3 linhas. */
+.familia .figma-section-heading p {
+  display: block;
+  -webkit-line-clamp: unset;
+}
+
 /* ===== Resultado ===== */
 
 .familia-fala {
@@ -327,6 +341,156 @@
   transition: width var(--duration-350) var(--easing-out-expo);
 }
 
+.progress-bar[data-neutra="true"] .progress-bar-preenchimento {
+  background: var(--colors-neutral-500);
+}
+
+/* ===== Escala da vida e meta da semana (componentes-parte1, C1), sem Figma ===== */
+
+.escala-nota {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.escala-nota-linha {
+  display: grid;
+  grid-template-columns: repeat(var(--escala-colunas, 5), minmax(0, 1fr));
+  gap: var(--spacing-8);
+}
+
+.escala-nota-linha .btn {
+  min-width: var(--size-48);
+  min-height: var(--size-48);
+  padding-inline: 0;
+}
+
+.escala-nota-legenda {
+  color: var(--colors-alpha-64);
+}
+
+.escala-nota-legenda[data-lado="direita"] {
+  align-self: flex-end;
+}
+
+.escala-resultado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.escala-resultado-area {
+  display: flex;
+  width: 100%;
+  min-height: var(--size-48);
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-12) var(--spacing-16);
+  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.escala-resultado-area:hover {
+  border-color: var(--colors-alpha-24);
+}
+
+.escala-resultado-area:focus-visible {
+  outline: var(--border-width-medium) solid var(--colors-brand-primary-600);
+  outline-offset: var(--size-2);
+}
+
+.escala-resultado-nota {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+.escala-resultado-nota .progress-bar {
+  flex: 1;
+}
+
+.escala-meta-area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.escala-chip {
+  display: inline-flex;
+  padding: var(--spacing-6) var(--spacing-12);
+  border-radius: var(--radius-full);
+  background: var(--colors-brand-primary-50);
+}
+
+.escala-meta-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.escala-meta-grupo p {
+  margin: 0;
+}
+
+/* Chips da meta com área de toque de pelo menos 44 (exemplos, dias e momento). */
+.escala-chips .btn {
+  min-height: var(--size-48);
+  text-align: left;
+}
+
+.dias-da-meta {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--spacing-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dias-da-meta-dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+  color: var(--colors-neutral-600);
+}
+
+.dias-da-meta-bolinha {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-32);
+  height: var(--size-32);
+  border-radius: var(--radius-full);
+  background: var(--colors-alpha-4);
+}
+
+.dias-da-meta-dia[data-estado="marcado"] .dias-da-meta-bolinha {
+  border: var(--border-width-medium) solid var(--colors-neutral-700);
+  background: transparent;
+}
+
+.dias-da-meta-dia[data-estado="nao_feito"] .dias-da-meta-bolinha {
+  background: var(--colors-neutral-300);
+}
+
+.dias-da-meta-dia[data-estado="feito"] .dias-da-meta-bolinha {
+  background: transparent;
+}
+
+.dias-da-meta-dia[data-estado="livre"] {
+  color: var(--colors-neutral-400);
+}
+
 .audio-player {
   display: flex;
   align-items: center;
@@ -416,4 +580,33 @@
   background: var(--colors-brand-primary-100);
   box-shadow: var(--familia-faixa-topo);
   clip-path: inset(0 -100vmax);
+}
+
+/* ===== Exercício da semana (módulo e painel) ===== */
+
+.familia-exercicio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+.familia-exercicio-item p {
+  margin: 0;
+}
+
+.familia-exercicio-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-8);
+  margin-top: var(--spacing-8);
+}
+
+.familia-exercicio-feito {
+  color: var(--colors-status-success-700);
+}
+
+.familia-exercicio-item[data-feito="true"] {
+  background: var(--colors-status-success-50);
+  border-color: transparent;
 }

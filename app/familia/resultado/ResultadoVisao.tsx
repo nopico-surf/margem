@@ -52,7 +52,7 @@ export function ResultadoVisao({ resultado, apelido }: { resultado: Resultado; a
 
       {conversa ? (
         <section className="familia-secao">
-          <div className="familia-cartao familia-cartao-destaque">
+          <div id="primeira-conversa" className="familia-cartao familia-cartao-destaque">
             <CardHeader title="Sua primeira conversa" />
             <h3 className="label-medium-medium">Quando conversar</h3>
             <p className="text-medium-regular">{t(conversa.quando)}</p>
@@ -98,6 +98,13 @@ export function ResultadoVisao({ resultado, apelido }: { resultado: Resultado; a
           <div key={aviso.problema} className="familia-variacao">
             <span className="label-small-medium">{ROTULO_PROBLEMA[aviso.problema]}</span>
             <p className="text-small-regular">{t(aviso.texto)}</p>
+            {aviso.psiquiatra && (
+              <div className="familia-exercicio-acoes">
+                <Button variante="secondary" tamanho="small" href="/profissionais?especialidade=medicos-psiquiatras">
+                  Ver psiquiatra parceiro
+                </Button>
+              </div>
+            )}
           </div>
         ))}
       </section>

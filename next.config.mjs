@@ -57,7 +57,9 @@ const nextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          // Microfone só pra própria Margem: o treino de conversa do programa para familiares deixa
+          // falar a mensagem (reconhecimento de voz do navegador, nada é gravado).
+          { key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=()" },
           { key: "Content-Security-Policy-Report-Only", value: cspRelatorio },
         ],
       },

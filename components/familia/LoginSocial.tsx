@@ -5,6 +5,7 @@ import { CardHeader } from "@/components/conversa/CardHeader";
 import { CheckBoxGroup } from "@/components/conversa/CheckBoxGroup";
 import { Button } from "@/components/ui/Button";
 import { entrarCom } from "@/lib/familia/auth-cliente";
+import { ativarDev, MODO_DEV_DISPONIVEL } from "@/lib/familia/dev";
 import {
   CHAVE_CONSENTIMENTO_PENDENTE,
   LOGIN_GATE,
@@ -71,6 +72,21 @@ export function LoginSocial({ titulo }: { titulo: string }) {
           </Button>
         ))}
       </div>
+
+      {/* SÓ DESENVOLVIMENTO, pra teste enquanto o login social não está ligado. Some no build de produção. */}
+      {MODO_DEV_DISPONIVEL && (
+        <Button
+          variante="transparent"
+          tamanho="medium"
+          larguraTotal
+          onClick={() => {
+            ativarDev();
+            window.location.reload();
+          }}
+        >
+          Entrar sem login (só no localhost)
+        </Button>
+      )}
 
       {falhou && (
         <p className="text-small-regular familia-erro" role="alert">

@@ -31,6 +31,8 @@ import { SairRapido } from "@/components/familia/SairRapido";
 import { LoginSocial } from "@/components/familia/LoginSocial";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
 import { BlocoComImagem } from "@/components/familia/BlocoComImagem";
+import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
+import { EscalaNotaGaleria } from "./EscalaGaleria";
 import { Accordion } from "@/components/ui/Accordion";
 import { Marquee } from "@/components/ui/Marquee";
 import "./galeria.css";
@@ -553,6 +555,16 @@ export default async function GaleriaDeComponentes() {
           <Marquee frases={["Primeira frase.", "Segunda frase.", "Terceira frase."]} linhas={2} />
           <LoginSocial titulo="Seu resultado está pronto" />
           <ContatosEmergencia />
+        </div>
+        <p className="text-small-regular galeria-nota">
+          Escala da vida e meta da semana (componentes-parte1, C1), sem Figma, autorizados em 10/11/2026: escala de nota (1 a 10 com legendas; 0 a 10 da confiança), barra neutra
+          da nota e os dias da meta (seg feito, ter não feito, qua livre, qui e sáb marcados).
+        </p>
+        <div className="galeria-palco familia-galeria">
+          <EscalaNotaGaleria />
+          <ProgressBar atual={3} total={10} rotulo="Nota 3 de 10" neutra />
+          <ProgressBar atual={8} total={10} rotulo="Nota 8 de 10" neutra />
+          <DiasDaMeta dias={["seg", "ter", "qui", "sab"]} diasFeitos={["2026-11-09"]} semanaInicio="2026-11-09" hoje="2026-11-11" />
         </div>
       </section>
 

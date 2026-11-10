@@ -1,7 +1,7 @@
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
 import { CardHeader } from "@/components/conversa/CardHeader";
 
-// Página de segurança (briefing, seção 5) [REVISÃO CLÍNICA]. Desde 09/11/2026 não é mais uma parada do
+// Página de segurança (briefing, seção 5; texto do conteúdo v2) [REVISÃO CLÍNICA]. Desde 09/11/2026 não é mais uma parada do
 // diagnóstico nem link fixo no rodapé (pedido do fundador): abre só pelo FAQ da LP e pelo resultado.
 // Com risco de violência, o próprio resultado já mostra os contatos no lugar do roteiro.
 export default function SegurancaPage() {
@@ -10,7 +10,7 @@ export default function SegurancaPage() {
       <CardHeader
         as="h1"
         title="Sua segurança vem primeiro"
-        description="Se você ou alguém da casa está em perigo agora, procure ajuda imediata. Nenhuma técnica de conversa é mais importante do que estar seguro."
+        description="Se você ou alguém da casa está em perigo agora, peça ajuda já. Nenhuma conversa vale mais do que a sua segurança."
       />
       <ContatosEmergencia />
     </section>

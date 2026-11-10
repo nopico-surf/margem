@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { GlifoSend } from "@/components/icons/glifos";
+import { GlifoMicNone, GlifoVolumeOff, GlifoVolumeUp } from "@/components/icons/glifos";
+import { MessageInput } from "@/components/app/MessageInput";
 import { AvisoIA } from "@/components/familia/AvisoIA";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
+import { ResponseError } from "@/components/conversa/ResponseError";
+import { ResponseLoading } from "@/components/conversa/ResponseLoading";
 import { UserMessage } from "@/components/conversa/UserMessage";
 import { Button } from "@/components/ui/Button";
-import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { SIMULADOR_MAX_CARACTERES, SIMULADOR_MAX_MENSAGENS } from "@/lib/familia/config";
@@ -27,10 +29,35 @@ const MENSAGEM_BLOQUEIO: Record<string, string> = {
     "Como você contou que tem medo de agressão, este treino fica fechado por enquanto. Com risco de violência, o passo mais seguro é conversar primeiro com um profissional.",
 };
 
-const ERRO_IA = "Não foi possível continuar o treino agora. Tente enviar de novo.";
+// O mesmo erro da /conversa (app/conversa/page.tsx), com o mesmo "Tentar novamente" (ResponseError).
+const MENSAGEM_ERRO = "Desculpe, houve um erro ao carregar suas informações";
+
+// Reconhecimento de voz do navegador (Web Speech API). Só a interface: o áudio não é gravado nem
+// enviado pra Margem, vira texto no campo. Tipos mínimos, porque nem todo lib.dom traz a API.
+type ResultadoVoz = { 0: { transcript: string }; isFinal: boolean };
+type Reconhecimento = {
+  lang: string;
+  interimResults: boolean;
+  continuous: boolean;
+  onresult: ((evento: { resultIndex: number; results: ArrayLike<ResultadoVoz> }) => void) | null;
+  onend: (() => void) | null;
+  onerror: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+type ConstrutorReconhecimento = new () => Reconhecimento;
+
+function construtorDeVoz(): ConstrutorReconhecimento | null {
+  if (typeof window === "undefined") return null;
+  const janela = window as unknown as { SpeechRecognition?: ConstrutorReconhecimento; webkitSpeechRecognition?: ConstrutorReconhecimento };
+  return janela.SpeechRecognition ?? janela.webkitSpeechRecognition ?? null;
+}
 
 // Simulador de conversa (briefing, seção 8). A IA faz o papel da pessoa; no fim sai do personagem e
 // devolve um retorno. A conversa vive só nesta tela: o servidor guarda cenário, turnos e o retorno.
+// Desde 10/11/2026 usa o campo da home (MessageInput) e as mensagens, o carregando e o erro da
+// /conversa (UserMessage, figma-response-copy, ResponseLoading, ResponseError). O microfone e o
+// "Ouvir as respostas" usam a voz do próprio navegador; nenhuma voz é gravada.
 export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   const router = useRouter();
   const [etapa, setEtapa] = useState<Etapa>("carregando");
@@ -40,10 +67,15 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   const [historico, setHistorico] = useState<Fala[]>([]);
   const [mensagem, setMensagem] = useState("");
   const [esperando, setEsperando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
+  // O que tentar de novo quando a chamada falha: começar, responder a última mensagem ou terminar.
+  const [falha, setFalha] = useState<null | (() => void)>(null);
   const [bloqueio, setBloqueio] = useState<string | null>(null);
   const [mensagemSeguranca, setMensagemSeguranca] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [ouvindo, setOuvindo] = useState(false);
+  const [lerRespostas, setLerRespostas] = useState(false);
+  const [vozDisponivel, setVozDisponivel] = useState({ falar: false, ouvir: false });
+  const reconhecimento = useRef<Reconhecimento | null>(null);
   const fim = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -62,16 +94,66 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
     })();
   }, [cenario.bloqueadoEmModoSeguranca, router]);
 
+  // O que o navegador oferece só se sabe no cliente.
+  useEffect(() => {
+    setVozDisponivel({ falar: construtorDeVoz() !== null, ouvir: "speechSynthesis" in window });
+    return () => {
+      reconhecimento.current?.stop();
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    };
+  }, []);
+
   useEffect(() => {
     fim.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [historico, esperando]);
+  }, [historico, esperando, falha]);
 
   const t = (texto: string) => aplicarApelido(texto, apelido);
   const nomeDaPessoa = apelido || "A pessoa";
   const turnos = historico.filter((fala) => fala.autor === "familiar").length;
 
+  function lerEmVoz(texto: string) {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const fala = new SpeechSynthesisUtterance(texto);
+    fala.lang = "pt-BR";
+    window.speechSynthesis.speak(fala);
+  }
+
+  function alternarLeitura() {
+    setLerRespostas((atual) => {
+      if (atual) window.speechSynthesis.cancel();
+      return !atual;
+    });
+  }
+
+  function alternarMicrofone() {
+    if (ouvindo) {
+      reconhecimento.current?.stop();
+      return;
+    }
+    const Construtor = construtorDeVoz();
+    if (!Construtor) return;
+    const voz = new Construtor();
+    voz.lang = "pt-BR";
+    voz.interimResults = true;
+    voz.continuous = false;
+    // O que já estava escrito fica; a fala entra depois.
+    const antes = mensagem.trim();
+    voz.onresult = (evento) => {
+      let falado = "";
+      for (let indice = 0; indice < evento.results.length; indice += 1) falado += evento.results[indice][0].transcript;
+      setMensagem([antes, falado.trim()].filter(Boolean).join(" ").slice(0, SIMULADOR_MAX_CARACTERES));
+    };
+    voz.onend = () => setOuvindo(false);
+    voz.onerror = () => setOuvindo(false);
+    reconhecimento.current = voz;
+    setOuvindo(true);
+    track("simulador_microfone", { cenario: cenario.id });
+    voz.start();
+  }
+
   async function comecar() {
-    setErro(null);
+    setFalha(null);
     setEsperando(true);
     const resposta = await chamarApi("/api/familia/simulador", { method: "POST", body: JSON.stringify({ acao: "iniciar", cenario: cenario.id }) });
     setEsperando(false);
@@ -79,7 +161,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
     const dados = (await resposta.json().catch(() => ({}))) as { simulacaoId?: string; error?: string };
     if (!resposta.ok || !dados.simulacaoId) {
       if (dados.error && MENSAGEM_BLOQUEIO[dados.error]) setBloqueio(dados.error);
-      else setErro("Não foi possível começar o treino agora. Tente novamente.");
+      else setFalha(() => () => void comecar());
       return;
     }
     setSimulacaoId(dados.simulacaoId);
@@ -88,13 +170,13 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   }
 
   async function terminar(falas: Fala[]) {
-    setErro(null);
+    setFalha(null);
     setEsperando(true);
     const resposta = await chamarApi("/api/familia/simulador", { method: "POST", body: JSON.stringify({ acao: "terminar", simulacaoId, historico: falas }) });
     setEsperando(false);
     const dados = (await resposta?.json().catch(() => ({}))) as { feedback?: Feedback } | undefined;
     if (!resposta?.ok || !dados?.feedback) {
-      setErro("Não foi possível preparar o retorno agora. Tente novamente.");
+      setFalha(() => () => void terminar(falas));
       return;
     }
     setFeedback(dados.feedback);
@@ -102,13 +184,9 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
     track("simulador_concluido", { cenario: cenario.id, turnos: falas.filter((fala) => fala.autor === "familiar").length });
   }
 
-  async function enviar(texto: string, base: Fala[]) {
-    const limpo = texto.trim().slice(0, SIMULADOR_MAX_CARACTERES);
-    if (!limpo || esperando) return;
-    const falas: Fala[] = [...base, { autor: "familiar", texto: limpo }];
-    setHistorico(falas);
-    setMensagem("");
-    setErro(null);
+  // Pede a resposta do personagem pra conversa que já termina com a mensagem do familiar.
+  async function responder(falas: Fala[]) {
+    setFalha(null);
     setEsperando(true);
     const resposta = await chamarApi("/api/familia/simulador", { method: "POST", body: JSON.stringify({ acao: "mensagem", simulacaoId, historico: falas, reacoes }) });
     setEsperando(false);
@@ -121,15 +199,25 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
       return;
     }
     if (!resposta?.ok || dados?.tipo !== "fala" || !dados.texto) {
-      // A mensagem volta pro campo pra pessoa tentar de novo sem digitar tudo.
-      setHistorico(base);
-      setMensagem(limpo);
-      setErro(ERRO_IA);
+      // A mensagem fica na tela; "Tentar novamente" pede a resposta de novo, sem digitar tudo.
+      setFalha(() => () => void responder(falas));
       return;
     }
     const comResposta: Fala[] = [...falas, { autor: "pessoa", texto: dados.texto }];
     setHistorico(comResposta);
+    if (lerRespostas) lerEmVoz(dados.texto);
     if (dados.ultima) void terminar(comResposta);
+  }
+
+  function enviar(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    const limpo = mensagem.trim().slice(0, SIMULADOR_MAX_CARACTERES);
+    if (!limpo || esperando || falha || turnos >= SIMULADOR_MAX_MENSAGENS) return;
+    reconhecimento.current?.stop();
+    const falas: Fala[] = [...historico, { autor: "familiar", texto: limpo }];
+    setHistorico(falas);
+    setMensagem("");
+    void responder(falas);
   }
 
   function alternarReacao(valor: ReacaoSimulador) {
@@ -137,6 +225,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   }
 
   const aviso = <AvisoIA>{t("Isto é um treino com IA. A IA pode cometer erros, não é {{apelido}} e não substitui um profissional.")}</AvisoIA>;
+  const erro = falha && <ResponseError error={MENSAGEM_ERRO} onRetry={falha} />;
 
   if (etapa === "carregando") {
     return (
@@ -152,10 +241,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
         <CardHeader
           as="h1"
           title="Sua segurança vem primeiro"
-          description={
-            mensagemSeguranca ??
-            "Se você ou alguém da casa está em perigo agora, procure ajuda imediata. Nenhuma técnica de conversa é mais importante do que estar seguro."
-          }
+          description={mensagemSeguranca ?? "Se você ou alguém da casa está em perigo agora, peça ajuda já. Nenhuma conversa vale mais do que a sua segurança."}
         />
         <ContatosEmergencia />
       </section>
@@ -221,13 +307,9 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
               ))}
             </div>
             <p className="text-small-regular familia-texto-suave">
-              Você escreve até {SIMULADOR_MAX_MENSAGENS} mensagens. Quando quiser, termine e veja o retorno.
+              Você escreve ou fala até {SIMULADOR_MAX_MENSAGENS} mensagens. Quando quiser, termine e veja o retorno.
             </p>
-            {erro && (
-              <p className="text-small-regular familia-erro" role="alert">
-                {erro}
-              </p>
-            )}
+            {erro}
             <Button tamanho="medium" larguraTotal disabled={reacoes.length === 0} carregando={esperando} onClick={comecar}>
               Começar o treino
             </Button>
@@ -237,58 +319,59 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
     );
   }
 
+  const podeEscrever = turnos < SIMULADOR_MAX_MENSAGENS;
+
   return (
     <section className="familia-secao">
       <CardHeader as="h1" title={cenario.titulo} />
       {aviso}
+      {vozDisponivel.ouvir && (
+        <div className="familia-exercicio-acoes">
+          <Button variante="transparent" tamanho="small" onClick={alternarLeitura}>
+            {lerRespostas ? <GlifoVolumeUp size={20} /> : <GlifoVolumeOff size={20} />}
+            Ouvir as respostas
+          </Button>
+        </div>
+      )}
 
-      <div className="familia-conversa" aria-live="polite">
+      <div className="figma-result-messages" aria-live="polite">
         {historico.map((fala, indice) =>
           fala.autor === "familiar" ? (
             <UserMessage key={indice} message={fala.texto} />
           ) : (
-            <p key={indice} className="familia-fala-pessoa" aria-label={`${nomeDaPessoa}, no treino com IA`}>
-              {fala.texto}
-            </p>
+            <div key={indice} className="figma-response-copy" aria-label={`${nomeDaPessoa}, no treino com IA`}>
+              <p>{fala.texto}</p>
+            </div>
           ),
         )}
-        {esperando && (
-          <div className="familia-fala-pessoa" aria-label="Escrevendo a resposta">
-            <Loader />
-          </div>
-        )}
+        {esperando && <ResponseLoading />}
+        {erro}
         <div ref={fim} />
       </div>
 
-      {erro && (
-        <p className="text-small-regular familia-erro" role="alert">
-          {erro}
-        </p>
-      )}
-
-      {turnos < SIMULADOR_MAX_MENSAGENS && (
-        <>
-          <span className="label-x-small familia-texto-suave">
-            Mensagem {Math.min(turnos + 1, SIMULADOR_MAX_MENSAGENS)} de {SIMULADOR_MAX_MENSAGENS}
-          </span>
-          <div className="familia-envio">
-            <InputText
-              id="familia-mensagem"
-              rotulo="Sua mensagem"
-              value={mensagem}
-              maxLength={SIMULADOR_MAX_CARACTERES}
-              autoComplete="off"
-              enterKeyHint="send"
-              onChange={setMensagem}
-              onKeyDown={(evento) => {
-                if (evento.key === "Enter") void enviar(mensagem, historico);
-              }}
-            />
-            <Button tamanho="medium" aria-label="Enviar mensagem" disabled={!mensagem.trim()} carregando={esperando} onClick={() => void enviar(mensagem, historico)}>
-              <GlifoSend size={20} />
-            </Button>
-          </div>
-        </>
+      {podeEscrever && (
+        <MessageInput
+          value={mensagem}
+          onChange={(valor) => setMensagem(valor.slice(0, SIMULADOR_MAX_CARACTERES))}
+          onSubmit={enviar}
+          rotulo="Escreva ou fale o que você diria"
+          dica={`Mensagem ${turnos + 1} de ${SIMULADOR_MAX_MENSAGENS}`}
+          maxLength={SIMULADOR_MAX_CARACTERES}
+          acessorio={
+            vozDisponivel.falar && (
+              <button
+                type="button"
+                className="message-component-acessorio"
+                aria-label={ouvindo ? "Parar de ouvir" : "Falar a mensagem"}
+                aria-pressed={ouvindo}
+                onMouseDown={(evento) => evento.preventDefault()}
+                onClick={alternarMicrofone}
+              >
+                <GlifoMicNone size={20} />
+              </button>
+            )
+          }
+        />
       )}
 
       <Button

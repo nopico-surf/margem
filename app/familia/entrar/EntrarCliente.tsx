@@ -92,12 +92,6 @@ export function EntrarCliente({ retorno = false }: { retorno?: boolean }) {
   return (
     <section className="familia-secao">
       <LoginSocial titulo="Seu resultado está pronto" />
-      {/* SÓ DESENVOLVIMENTO: enquanto o login social não está ligado no Supabase. Some no build de produção. */}
-      {process.env.NODE_ENV !== "production" && (
-        <Button variante="transparent" tamanho="medium" larguraTotal href="/familia/resultado/exemplo">
-          Ver o resultado sem login (só no localhost)
-        </Button>
-      )}
     </section>
   );
 }

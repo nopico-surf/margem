@@ -79,6 +79,11 @@
   gap: var(--spacing-12);
 }
 
+/* Subtítulo de cada bloco da FAQ: 24 do bloco de cima (gap da seção) e 8 das perguntas dele. */
+.familia-lp .familia-lp-faq-subtitulo {
+  margin-bottom: calc(var(--spacing-8) - var(--spacing-12));
+}
+
 .familia-lp-aprender {
   display: flex;
   flex-direction: column;
