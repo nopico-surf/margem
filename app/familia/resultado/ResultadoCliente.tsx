@@ -12,10 +12,12 @@ import { ResultadoVisao } from "./ResultadoVisao";
 type Dados = { apelido: string; resultado: Resultado };
 
 // Página de resultado (briefing, seção 6): busca o diagnóstico da conta, montado no servidor com os
-// blocos fixos, sem IA. O desenho fica em ResultadoVisao.
-export function ResultadoCliente() {
+// blocos fixos, sem IA. O desenho fica em ResultadoVisao. O banner de oferta (briefing 01) só aparece
+// pra quem ainda não tem o acesso liberado.
+export function ResultadoCliente({ modulosPagos }: { modulosPagos: string[] }) {
   const router = useRouter();
   const [dados, setDados] = useState<Dados | null>(null);
+  const [acessoLiberado, setAcessoLiberado] = useState(true);
   const [erro, setErro] = useState(false);
 
   async function carregar() {
@@ -25,6 +27,9 @@ export function ResultadoCliente() {
     if (resposta.status === 404) return router.replace("/familia/diagnostico");
     if (!resposta.ok) return setErro(true);
     const lido = (await resposta.json()) as Dados;
+    const perfil = await chamarApi("/api/familia/perfil");
+    // Sem saber se comprou, o banner não aparece: melhor faltar a oferta do que mostrar a quem já pagou.
+    if (perfil?.ok) setAcessoLiberado(((await perfil.json()) as { acessoLiberado: boolean }).acessoLiberado);
     setDados(lido);
     track("resultado_visualizado", { safety_mode: lido.resultado.safetyMode });
   }
@@ -55,5 +60,5 @@ export function ResultadoCliente() {
     );
   }
 
-  return <ResultadoVisao resultado={dados.resultado} apelido={dados.apelido} />;
+  return <ResultadoVisao resultado={dados.resultado} apelido={dados.apelido} modulosDaOferta={acessoLiberado ? null : modulosPagos} />;
 }

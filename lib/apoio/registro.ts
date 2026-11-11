@@ -33,6 +33,9 @@ export async function criarApoio(pedido: PedidoApoio): Promise<string | null> {
       profissional_id: pedido.profissionalId ?? null,
       troca: pedido.troca ?? false,
       valor_imediato: pedido.valorImediato ?? null,
+      familia_user_id: pedido.familiaUserId ?? null,
+      familia_plano: pedido.familiaPlano ?? null,
+      valor_sessao: pedido.valorSessao ?? null,
     })
     .select("id")
     .single();
@@ -58,9 +61,11 @@ export type ApoioEncontrado = {
   profissional_id: string | null;
   asaas_autorizacao_id: string | null;
   troca: boolean;
+  // Compra do programa para familiares: a conta que recebe o acesso quando o Pix cai.
+  familia_user_id: string | null;
 };
 
-const COLUNAS_APOIO_ENCONTRADO = "id, frequencia, status, profissional_id, asaas_autorizacao_id, troca";
+const COLUNAS_APOIO_ENCONTRADO = "id, frequencia, status, profissional_id, asaas_autorizacao_id, troca, familia_user_id";
 
 type CampoBusca = "id" | "asaas_cobranca_id" | "asaas_autorizacao_id" | "asaas_assinatura_id";
 

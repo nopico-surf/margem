@@ -5,6 +5,7 @@ import { CardHomeHeader } from "@/components/app/CardHomeHeader";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { ActionRow } from "@/components/conversa/ActionRow";
 import { BlocoComImagem } from "@/components/familia/BlocoComImagem";
+import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import { Rastrear } from "@/components/familia/Rastrear";
 import {
   GlifoCalendarToday,
@@ -312,6 +313,11 @@ export default function FamiliaPage() {
             description="Você não precisa dizer o nome de ninguém, e ninguém precisa saber que você está aqui. Seus dados não são compartilhados sem a sua autorização."
           />
         </BlocoComImagem>
+      </section>
+
+      {/* Banner de oferta, antes da FAQ (briefing 01, variação a). */}
+      <section className="familia-lp-secao">
+        <OfertaPrograma variante="lp" />
       </section>
 
       <section className="familia-lp-secao">

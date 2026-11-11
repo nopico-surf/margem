@@ -12,6 +12,8 @@
 import { ITEM_DA_CONVERSA_M1, sanitizarConversa } from "./conversa";
 import { itensParaMarcar, sanitizarAnotacao, type Anotacao } from "./diario";
 import { alternarDiaFeito, dataValida, sanitizarMeta, sanitizarNotas, segundaDaSemana, type Meta } from "./escala";
+import { validarCompra } from "./oferta";
+import { pixDaPrevia } from "@/lib/apoio/pix-cliente";
 
 export const MODO_DEV_DISPONIVEL = process.env.NODE_ENV !== "production";
 
@@ -23,6 +25,15 @@ const CHAVE_CONVERSA = "margem-familia-dev-conversa";
 const CHAVE_ESCALAS = "margem-familia-dev-escalas";
 const CHAVE_META = "margem-familia-dev-meta";
 const CHAVE_PROGRESSO = "margem-familia-dev-progresso";
+// Compra simulada: { plano, pagoEm }. O Pix "cai" sozinho alguns segundos depois de gerado.
+const CHAVE_COMPRA = "margem-familia-dev-compra";
+const CHAVE_PIX = "margem-familia-dev-pix";
+const PIX_CAI_EM_MS = 8000;
+// Venda simulada: com "1", o localhost passa a travar os módulos 2 a 8 como em produção (compra e
+// liberação semanal), pra ver o banner e a página de módulo bloqueado. Sem ela, como antes, todos os
+// módulos abrem no localhost pra revisão do conteúdo. Liga com
+// localStorage.setItem("margem-familia-dev-venda", "1") no console.
+const CHAVE_VENDA = "margem-familia-dev-venda";
 
 // A primeira vez vale, como no banco.
 function marcarItem(modulo: number, item: string) {
@@ -55,6 +66,19 @@ export function ativarDev() {
   if (MODO_DEV_DISPONIVEL) gravar(CHAVE_MODO, "1");
 }
 
+export function vendaSimulada() {
+  return MODO_DEV_DISPONIVEL && typeof window !== "undefined" && ler(CHAVE_VENDA) === "1";
+}
+
+// Status do Pix simulado, consultado pela tela do QR no lugar de /api/apoio/[id]/status.
+export function statusDoPixDev(apoioId: string): { status: string; pago: boolean } {
+  const pix = JSON.parse(ler(CHAVE_PIX) ?? "null") as { id: string; plano: string; criadoEm: number } | null;
+  if (!pix || pix.id !== apoioId) return { status: "cancelado", pago: false };
+  if (Date.now() - pix.criadoEm < PIX_CAI_EM_MS) return { status: "aguardando", pago: false };
+  if (!ler(CHAVE_COMPRA)) gravar(CHAVE_COMPRA, JSON.stringify({ plano: pix.plano, pagoEm: new Date().toISOString() }));
+  return { status: "pago", pago: true };
+}
+
 function json(dados: unknown, status = 200) {
   return new Response(JSON.stringify(dados), { status, headers: { "Content-Type": "application/json" } });
 }
@@ -79,8 +103,22 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
 
   if (caminho === "/api/familia/perfil") {
     if (metodo === "POST") return json({ ok: true });
-    return json({ temPerfil: true, precisaEmail: false, safetyMode: false, acessoLiberado: false, temDiagnostico: Boolean(ler(CHAVE_DIAGNOSTICO)) });
+    const compra = JSON.parse(ler(CHAVE_COMPRA) ?? "null") as { plano: string; pagoEm: string } | null;
+    return json({ temPerfil: true, precisaEmail: false, safetyMode: false, acessoLiberado: Boolean(compra), temDiagnostico: Boolean(ler(CHAVE_DIAGNOSTICO)), compra });
   }
+
+  // Pix simulado: um QR de exemplo, sem Asaas. Confere o valor como a rota.
+  if (caminho === "/api/familia/pix") {
+    const compra = validarCompra(corpo);
+    if (!compra) return json({ error: "valor_invalido" }, 400);
+    if (ler(CHAVE_COMPRA)) return json({ error: "acesso_ja_liberado" }, 409);
+    const id = `dev-${crypto.randomUUID()}`;
+    gravar(CHAVE_PIX, JSON.stringify({ id, plano: compra.plano, criadoEm: Date.now() }));
+    const { payload, imagemBase64 } = pixDaPrevia(id);
+    return json({ apoioId: id, qrCode: { payload, imagemBase64, expiraEm: null } });
+  }
+
+  if (caminho === "/api/familia/gratuidade") return json({ ok: true });
 
   if (caminho === "/api/familia/diagnostico") {
     if (metodo === "POST") {

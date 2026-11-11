@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { GlifoContentCopy } from "@/components/icons/glifos";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
+import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import { Button } from "@/components/ui/Button";
 import { aplicarApelido, ROTULO_PROBLEMA } from "@/lib/familia/diagnostico";
 import type { Resultado } from "@/lib/familia/resultado";
@@ -11,8 +12,10 @@ import { track } from "@/lib/mixpanel";
 // O desenho da página de resultado (briefing, seção 6), separado de onde os dados vêm: a página real
 // busca o diagnóstico da conta; a de exemplo (só no localhost) monta com as respostas do aparelho.
 // Ordem: acolhimento, a seu favor e ponto de atenção, primeira conversa (ou segurança), um passo
-// pra você, avisos, módulo 1, contatos de emergência. O bloco de oferta entra na Fase 2.
-export function ResultadoVisao({ resultado, apelido }: { resultado: Resultado; apelido: string }) {
+// pra você, avisos, banner de oferta, módulo 1. O banner (briefing 01, variação b) vem depois dos avisos
+// e, em modo de segurança, depois do cartão de segurança, nunca antes. Sem `modulosDaOferta` (quem já
+// comprou, ou a página de exemplo), ele não aparece.
+export function ResultadoVisao({ resultado, apelido, modulosDaOferta = null }: { resultado: Resultado; apelido: string; modulosDaOferta?: string[] | null }) {
   const [copiado, setCopiado] = useState(false);
   const t = (texto: string) => aplicarApelido(texto, apelido);
   const conversa = resultado.conversa;
@@ -111,6 +114,12 @@ export function ResultadoVisao({ resultado, apelido }: { resultado: Resultado; a
           </div>
         ))}
       </section>
+
+      {modulosDaOferta && (
+        <section className="familia-secao">
+          <OfertaPrograma variante="resultado" apelido={apelido} modulos={modulosDaOferta} />
+        </section>
+      )}
 
       <section className="familia-secao">
         <Button tamanho="medium" larguraTotal href="/familia/programa/modulo/1">

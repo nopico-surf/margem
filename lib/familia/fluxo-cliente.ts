@@ -77,11 +77,36 @@ export async function concluirEntrada(email?: string): Promise<DepoisDoLogin> {
   }
 
   const respostas = lerRespostasLocais();
+  const destinoGuardado = lerDestinoDepoisDoLogin();
   if (diagnosticoCompleto(respostas)) {
     const gravado = await chamarApi("/api/familia/diagnostico", { method: "POST", body: JSON.stringify({ respostas }) });
     if (!gravado?.ok) return { tipo: "erro" };
     apagar(CHAVE_RESPOSTAS);
-    return { tipo: "ir", destino: "/familia/resultado" };
+    if (!destinoGuardado) return { tipo: "ir", destino: "/familia/resultado" };
+  }
+  if (destinoGuardado) {
+    apagar(CHAVE_DESTINO);
+    return { tipo: "ir", destino: destinoGuardado };
   }
   return { tipo: "ir", destino: perfil.temDiagnostico ? "/familia/resultado" : "/familia/diagnostico" };
+}
+
+// Quem chega sem sessão numa tela que exige login (o checkout, pelo "Já quero garantir meu acesso" da
+// LP) volta pra ela depois de entrar. Só caminhos do próprio programa.
+const CHAVE_DESTINO = "margem-familia-depois-do-login";
+
+export function guardarDestinoDepoisDoLogin(destino: string) {
+  if (!destino.startsWith("/familia/")) return;
+  try {
+    window.localStorage.setItem(CHAVE_DESTINO, destino);
+  } catch {}
+}
+
+function lerDestinoDepoisDoLogin() {
+  try {
+    const destino = window.localStorage.getItem(CHAVE_DESTINO);
+    return destino?.startsWith("/familia/") ? destino : null;
+  } catch {
+    return null;
+  }
 }

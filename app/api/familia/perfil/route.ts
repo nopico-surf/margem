@@ -1,6 +1,7 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
 import { buscarPerfil, buscarUltimoDiagnostico, emailValido } from "@/lib/familia/dados";
 import { TEXTO_CONSENTIMENTO_COMUNICACOES, TEXTO_CONSENTIMENTO_DADOS } from "@/lib/familia/config";
+import { buscarCompraDaFamilia } from "@/lib/familia/compra-servidor";
 
 // Perfil do familiar: criado no primeiro login, com os dois consentimentos (briefing, seções 4.1 e 11).
 // O de dados é obrigatório; o de comunicações é opcional e vem desmarcado.
@@ -9,13 +10,20 @@ export async function GET(request: Request) {
   const sessao = await usuarioDaRequisicao(request);
   if (!sessao) return naoAutorizado();
   const { user, supabase } = sessao;
-  const [perfil, diagnostico] = await Promise.all([buscarPerfil(supabase, user.id), buscarUltimoDiagnostico(supabase, user.id)]);
+  const [perfil, diagnostico, compra] = await Promise.all([
+    buscarPerfil(supabase, user.id),
+    buscarUltimoDiagnostico(supabase, user.id),
+    buscarCompraDaFamilia(user.id),
+  ]);
   return Response.json({
     temPerfil: Boolean(perfil),
     precisaEmail: !perfil?.email && !user.email,
     safetyMode: perfil?.safety_mode ?? false,
     acessoLiberado: Boolean(perfil?.acesso_liberado_em),
     temDiagnostico: Boolean(diagnostico),
+    // Só com acesso valendo: o plano comprado e quando o Pix caiu (os 7 dias pra desistir). Acesso
+    // sem compra é acesso gratuito.
+    compra: perfil?.acesso_liberado_em ? compra : null,
   });
 }
 

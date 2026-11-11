@@ -22,6 +22,9 @@ const EXPIRACAO_QR_SEGUNDOS = 10 * 60;
 // Texto que aparece no app do banco de quem paga (máximo 35 caracteres no Pix Automático).
 export const DESCRICAO_SERVICO = "Taxa de manutenção de software";
 export const DESCRICAO_DOACAO = "Doação à Margem";
+// Programa para familiares: o extrato pode ser visto por outras pessoas da casa, então só "Margem",
+// sem "família", "álcool", "apostas" ou o nome do programa (briefing 01, discrição no extrato).
+export const DESCRICAO_FAMILIA = "Margem";
 
 function urlBase(chave: string) {
   if (chave.startsWith("$aact_prod_")) return "https://api.asaas.com/v3";
@@ -107,6 +110,11 @@ export async function buscarOuCriarCliente(nome: string, cpfCnpj: string, email?
 function lerQrCode(dados: { payload?: unknown; encodedImage?: unknown }, expiraEm: unknown): QrCodePix | null {
   if (typeof dados.payload !== "string" || typeof dados.encodedImage !== "string") return null;
   return { payload: dados.payload, imagemBase64: dados.encodedImage, expiraEm: typeof expiraEm === "string" ? expiraEm : null };
+}
+
+// Cancela uma cobrança avulsa ainda não paga, pra só o Pix mais novo valer.
+export async function cancelarCobranca(cobrancaId: string): Promise<ResultadoAsaas<unknown>> {
+  return chamar("DELETE", `/payments/${encodeURIComponent(cobrancaId)}`);
 }
 
 // Doação única: cobrança Pix avulsa, vencendo hoje. referencia é o id do apoio no nosso banco.

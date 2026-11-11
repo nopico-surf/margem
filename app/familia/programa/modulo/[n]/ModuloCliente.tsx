@@ -7,7 +7,10 @@ import { AudioPlayer } from "@/components/ui/AudioPlayer";
 import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
-import { CHAVE_POSICAO_AUDIO } from "@/lib/familia/config";
+import { CHAVE_POSICAO_AUDIO, MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
+import { vendaSimulada } from "@/lib/familia/dev";
+import { dataDoModulo, moduloChegou } from "@/lib/familia/oferta";
+import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import type { Modulo } from "@/lib/familia/conteudo";
 import { aplicarApelido, ROTULO_PROBLEMA, type Problema } from "@/lib/familia/diagnostico";
 import { diaMes } from "@/lib/familia/escala";
@@ -115,7 +118,9 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }:
   );
 }
 
-export function ModuloCliente({ modulo }: { modulo: Modulo }) {
+// `emRevisao`: o módulo chegou sem o texto (produção, antes da revisão clínica). Quem comprou vê o
+// título e volta ao painel; quem não comprou, a página de módulo bloqueado.
+export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; emRevisao?: boolean }) {
   const router = useRouter();
   const [diagnostico, setDiagnostico] = useState<Diagnostico | null>(null);
   // Data em que o módulo foi concluído (a primeira vez vale), ou null.
@@ -126,6 +131,12 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
   // Respostas dos seletores do módulo (":::escolha"). Ficam só nesta tela: o check-in que pré-marcaria
   // o seletor ainda não existe.
   const [escolhas, setEscolhas] = useState<Record<string, string>>({});
+  // Compra e liberação semanal (briefing 01). `acesso` null enquanto não se sabe: o banner do módulo 1
+  // só aparece com a resposta. `acesso` "bloqueado": sem compra; "chega_em": comprou, mas a semana do
+  // módulo ainda não chegou.
+  const [acessoLiberado, setAcessoLiberado] = useState<boolean | null>(null);
+  const [modulo1ConcluidoEm, setModulo1ConcluidoEm] = useState<string | null>(null);
+  const [acesso, setAcesso] = useState<"aberto" | "bloqueado" | "chega_em" | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -133,24 +144,41 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
       if (!resposta || resposta.status === 401) return router.replace("/familia/entrar");
       if (resposta.status === 404) return router.replace("/familia/diagnostico");
       if (!resposta.ok) return;
-      setDiagnostico((await resposta.json()) as Diagnostico);
+      const lido = (await resposta.json()) as Diagnostico;
+      const [perfil, progresso] = await Promise.all([chamarApi("/api/familia/perfil"), chamarApi("/api/familia/progresso")]);
+      const liberado = perfil?.ok ? ((await perfil.json()) as { acessoLiberado: boolean }).acessoLiberado : false;
+      const modulos = progresso?.ok ? ((await progresso.json()) as { modulos: Record<string, { concluido_em: string | null }> }).modulos : {};
+      const concluidoM1 = modulos[1]?.concluido_em ?? null;
+      setAcessoLiberado(liberado);
+      setModulo1ConcluidoEm(concluidoM1);
+      setConcluidoEm(modulos[modulo.numero]?.concluido_em ?? null);
+
+      // Módulos 2 a 8: só com a compra e depois da semana deles. No localhost, como antes, todos abrem
+      // pra revisão, a menos que a venda simulada esteja ligada (lib/familia/dev.ts).
+      const travar = modulo.numero > 1 && (!MOSTRAR_REVISAO_CLINICA || vendaSimulada());
+      const situacao = !travar
+        ? "aberto"
+        : !liberado
+          ? "bloqueado"
+          : moduloChegou(modulo.numero, concluidoM1) && !emRevisao
+            ? "aberto"
+            : "chega_em";
+      setAcesso(situacao);
+      setDiagnostico(lido);
+      if (situacao !== "aberto") return;
+
       setEstado(await carregarEstado(modulo.numero));
       // Contador "n anotações nesta semana" dos itens do diário.
       if (modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes("diario"))) {
         const diario = await chamarApi("/api/familia/diario");
         if (diario?.ok) setAnotacoes(((await diario.json()) as { anotacoes: AnotacaoContada[] }).anotacoes);
       }
-      const progresso = await chamarApi("/api/familia/progresso");
-      if (progresso?.ok) {
-        const { modulos } = (await progresso.json()) as { modulos: Record<string, { concluido_em: string | null }> };
-        setConcluidoEm(modulos[modulo.numero]?.concluido_em ?? null);
-      }
       track(modulo.numero === 1 ? "modulo1_iniciado" : "modulo_iniciado", { modulo: modulo.numero });
       void chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "iniciar" }) });
     })();
-  }, [modulo.numero, router]);
+  }, [modulo.numero, router, emRevisao]);
 
-  if (!diagnostico) {
+  if (!diagnostico || !acesso) {
     return (
       <div className="familia-secao" aria-busy="true">
         <Loader />
@@ -159,6 +187,53 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
   }
 
   const { apelido, problemas } = diagnostico;
+
+  // Módulo bloqueado (briefing 01, variação d): o título, "O que você vai aprender" (os dois primeiros
+  // subtítulos do texto do módulo) e o banner. Nunca a página vazia ou um erro.
+  if (acesso === "bloqueado") {
+    const aprender = modulo.blocos.filter((bloco): bloco is Extract<BlocoMarkdown, { tipo: "titulo" }> => bloco.tipo === "titulo").slice(0, 2);
+    return (
+      <article className="familia-secao familia-modulo">
+        <header className="familia-titulo">
+          <span className="label-small-medium familia-texto-suave">Módulo {modulo.numero}</span>
+          <h1 className="header-large">{modulo.titulo}</h1>
+        </header>
+        {aprender.length > 0 && (
+          <section className="familia-titulo">
+            <h2 className="header-medium">O que você vai aprender</h2>
+            <ul className="oferta-aprender">
+              {aprender.map((bloco) => (
+                <li key={bloco.texto} className="text-large">
+                  {aplicarApelido(bloco.texto, apelido)}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        <OfertaPrograma variante="bloqueado" apelido={apelido} />
+      </article>
+    );
+  }
+
+  // Comprou, mas a semana do módulo ainda não chegou: a liberação semanal continua valendo.
+  if (acesso === "chega_em") {
+    // Em revisão, a data da semana pode já ter passado: sem data, pra não prometer o que não dá.
+    const chegaEm = emRevisao ? null : dataDoModulo(modulo.numero, modulo1ConcluidoEm);
+    return (
+      <article className="familia-secao familia-modulo">
+        <header className="familia-titulo">
+          <span className="label-small-medium familia-texto-suave">Módulo {modulo.numero}</span>
+          <h1 className="header-large">{modulo.titulo}</h1>
+        </header>
+        {chegaEm && <span className="familia-status label-small-medium">Chega em {diaMes(chegaEm.toISOString())}</span>}
+        <div className="familia-acoes">
+          <Button variante="transparent" tamanho="medium" larguraTotal href="/familia/programa">
+            Voltar ao painel
+          </Button>
+        </div>
+      </article>
+    );
+  }
   const contexto: Contexto = { ...contextoDo(diagnostico), escolhas };
   const escolher = (id: string, valor: string) => setEscolhas((atuais) => ({ ...atuais, [id]: valor }));
   const itens = itensDoExercicio(modulo.blocos, contexto);
@@ -209,6 +284,11 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
         onEscolher={escolher}
         exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} />}
       />
+
+      {/* Banner do módulo 1 (briefing 01, variação c): só depois de concluído e pra quem não comprou. */}
+      {modulo.numero === 1 && concluidoEm && acessoLiberado === false && (
+        <OfertaPrograma variante="modulo1" dataModulo2={diaMes((dataDoModulo(2, concluidoEm) ?? new Date()).toISOString())} />
+      )}
 
       <div className="familia-acoes">
         {concluidoEm ? (

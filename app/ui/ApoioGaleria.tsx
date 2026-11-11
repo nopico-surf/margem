@@ -5,6 +5,16 @@ import { InputText } from "@/components/ui/InputText";
 import { IconeBusca, IconeLimparBusca } from "@/components/icons";
 import { CardPlano } from "@/components/apoio/CardPlano";
 import { ContadorPix } from "@/components/apoio/ContadorPix";
+import { TelaPix } from "@/components/apoio/TelaPix";
+import { QR_DA_PREVIA, type Pix } from "@/lib/apoio/pix-cliente";
+
+// Pix de exemplo sem relógio (Date.now() no render quebra o prerender): a TelaPix não lê a validade.
+const PIX_DE_EXEMPLO: Pix = {
+  apoioId: "previa",
+  payload: "00020101021226810014br.gov.bcb.pix2559pix-h.asaas.com/qr/cobv/exemplo-da-previa6304ABCD",
+  imagemBase64: QR_DA_PREVIA,
+  expiraEm: 0,
+};
 
 // A galeria é componente de servidor e não passa função: o InputText e o CardPlano precisam de handler,
 // então moram neste cliente. Mesmo esquema do CardHomeGaleria.
@@ -125,6 +135,57 @@ export function ContadorPixGaleria() {
       </Estado>
       <Estado nome="00:00 (vencido)">
         <ContadorPix segundos={0} />
+      </Estado>
+    </div>
+  );
+}
+
+// Checkout do programa para familiares: o mesmo CardPlano, com selo, lista do que inclui e sem preço.
+export function CardPlanoFamiliaGaleria() {
+  const nada = () => {};
+  return (
+    <div className="galeria-estados">
+      <Estado nome="Programa (pré-selecionado)">
+        <CardPlano
+          arranjo="opcional"
+          nome="Programa"
+          itens={["8 módulos, um por semana, também em áudio", "Diário e escala da sua vida"]}
+          descricao="Você escolhe quanto pagar, de R$ 47 a R$ 147."
+          selecionado
+          onSelecionar={nada}
+        />
+      </Estado>
+      <Estado nome="Com acompanhamento (selo Recomendado)">
+        <CardPlano
+          arranjo="opcional"
+          nome="Programa com acompanhamento"
+          selo="Recomendado"
+          descricao="Nos estudos, os melhores resultados aparecem quando o familiar tem apoio de um profissional."
+          complemento="Programa por R$ 47 + a primeira sessão com um profissional parceiro."
+          onSelecionar={nada}
+        />
+      </Estado>
+    </div>
+  );
+}
+
+// Tela do QR compartilhada pelo /plano e pelo checkout da família: aguardando, código copiado e vencido.
+export function TelaPixGaleria() {
+  const nada = () => {};
+  const pix = PIX_DE_EXEMPLO;
+  return (
+    <div className="galeria-estados">
+      <Estado nome="aguardando o pagamento">
+        <TelaPix id="galeria-pix" pix={pix} titulo="Pague com Pix" descricao="Abra o app do seu banco, escolha pagar com Pix e escaneie o código ou cole o código copiado." segundosRestantes={600} codigoCopiado={false} onCopiar={nada} onGerarOutro={nada} />
+      </Estado>
+      <Estado nome="código copiado">
+        <TelaPix id="galeria-pix-copiado" pix={pix} titulo="Pague com Pix" segundosRestantes={420} codigoCopiado onCopiar={nada} onGerarOutro={nada} />
+      </Estado>
+      <Estado nome="vencido">
+        <TelaPix id="galeria-pix-vencido" pix={pix} titulo="Pague com Pix" segundosRestantes={0} vencido={{ titulo: "O código expirou", botao: "Gerar um novo" }} codigoCopiado={false} onCopiar={nada} onGerarOutro={nada} />
+      </Estado>
+      <Estado nome="gerando de novo">
+        <TelaPix id="galeria-pix-gerando" pix={pix} titulo="Pague com Pix" segundosRestantes={0} vencido={{ titulo: "O código expirou", botao: "Gerar um novo" }} codigoCopiado={false} onCopiar={nada} onGerarOutro={nada} gerando />
       </Estado>
     </div>
   );

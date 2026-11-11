@@ -13,7 +13,8 @@
 // anúncio: quando o opcional dele custa mais, a verba do anúncio dele sobe junto. Qualquer pessoa pode fazer doação
 // (sem nota), única ou mensal, com valor aberto a partir de R$ 5. Ver docs/apoio-telas.md.
 
-export type PublicoApoio = "psicologo" | "medico" | "geral";
+// "familia": compra do programa para familiares (lib/familia/oferta.ts), cobrança única, sem nota.
+export type PublicoApoio = "psicologo" | "medico" | "geral" | "familia";
 export type FrequenciaApoio = "unico" | "mensal";
 export type Profissao = "psicologo" | "medico";
 export type PlanoBase = "bronze" | "prata" | "ouro" | "diamante";
@@ -71,6 +72,10 @@ export type PedidoApoio = {
   // Troca de plano (upgrade): valor é o mensal novo; valorImediato, a diferença cobrada hoje.
   troca?: boolean;
   valorImediato?: number;
+  // Programa para familiares: a conta que comprou, o plano e a parte da sessão no plano com acompanhamento.
+  familiaUserId?: string;
+  familiaPlano?: "programa" | "acompanhamento";
+  valorSessao?: number | null;
 };
 
 export type ResultadoPedido = { ok: true; pedido: PedidoApoio } | { ok: false; motivo: string };
@@ -123,7 +128,7 @@ export function pedidoDoProfissional(
   return { publico: profissao, frequencia: "mensal", valor: valorDoPlano(profissao, base, opcional), planoBase: base, planoOpcional: opcional, profissionalId };
 }
 
-// Serviço tem nota fiscal; doação não.
+// Serviço tem nota fiscal; doação não. A compra da família vai pela rota dela, sem nota por enquanto.
 export function ehServico(publico: PublicoApoio) {
-  return publico !== "geral";
+  return publico === "psicologo" || publico === "medico";
 }

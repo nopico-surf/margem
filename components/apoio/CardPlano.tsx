@@ -21,29 +21,43 @@ import { formatarCentavos } from "@/lib/apoio/formatar";
 //
 // O card inteiro é clicável: o clique no botão sobe até ele, e o botão continua lá para quem navega
 // pelo teclado.
+//
+// No checkout do programa para familiares (briefing 01, etapa 1) o mesmo card, no arranjo `opcional`,
+// leva o `selo` (o `badge` "Recomendado") acima do nome, a lista do que inclui (`itens`) e nenhum preço
+// (`centavos` ausente): a pessoa escolhe o valor na etapa seguinte.
 type CardPlanoProps = {
   arranjo: "base" | "opcional";
   nome: string;
   descricao: string;
   // A segunda linha das descrições de Divulgação e Divulgação Plus, em negrito.
   complemento?: string;
-  centavos: number;
+  centavos?: number;
+  selo?: string;
+  itens?: string[];
   destaque?: boolean;
   selecionado?: boolean;
   atual?: boolean;
   onSelecionar?: () => void;
 };
 
-export function CardPlano({ arranjo, nome, descricao, complemento, centavos, destaque = false, selecionado = false, atual = false, onSelecionar }: CardPlanoProps) {
+export function CardPlano({ arranjo, nome, descricao, complemento, centavos, selo, itens, destaque = false, selecionado = false, atual = false, onSelecionar }: CardPlanoProps) {
   return (
     <article className="card-plano" data-arranjo={arranjo} onClick={onSelecionar}>
       <div className="card-plano-info">
         <div className="card-plano-cabecalho">
+          {selo && <Badge color="primary">{selo}</Badge>}
           <h2>{nome}</h2>
+          {itens && itens.length > 0 && (
+            <ul className="card-plano-itens">
+              {itens.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          )}
           <p>{descricao}</p>
           {complemento && <p className="card-plano-complemento">{complemento}</p>}
         </div>
-        {centavos === 0 ? (
+        {centavos === undefined ? null : centavos === 0 ? (
           <p className="card-plano-preco card-plano-gratuito">Gratuito</p>
         ) : (
           <p className="card-plano-preco">

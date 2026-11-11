@@ -1,0 +1,195 @@
+/* Programa para familiares: banner de oferta (OfertaPrograma) e checkout. Briefing 01; design no canvas
+   "Banner de oferta". O design usa 28 no título e 36 no preço, que não existem na escala de
+   tokens: aqui ficam no degrau mais perto (font-size-2xl e font-size-3xl). */
+
+/* ===== oferta-programa ===== */
+
+.oferta-programa {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: var(--border-width-thin) solid var(--colors-neutral-200);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+.oferta-programa-faixa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-24) var(--spacing-20);
+  background: var(--colors-brand-primary-800);
+}
+
+.oferta-programa-faixa h2,
+.oferta-programa-faixa p {
+  margin: 0;
+}
+
+/* Com a classe do cartão na frente: dentro de .familia-secao, a regra de título dela (cor alpha-88)
+   ganharia de uma classe sozinha. */
+.oferta-programa .oferta-programa-rotulo {
+  color: var(--colors-brand-primary-100);
+  font: var(--font-weight-semi-bold) var(--font-size-xl) / var(--line-height-2xl) var(--font-urbanist), sans-serif;
+}
+
+.oferta-programa-preco {
+  color: var(--colors-neutral-0);
+  font: var(--font-weight-bold) var(--font-size-3xl) / var(--line-height-5xl) var(--font-urbanist), sans-serif;
+}
+
+.oferta-programa .oferta-programa-titulo {
+  color: var(--colors-neutral-0);
+  font: var(--font-weight-bold) var(--font-size-2xl) / var(--line-height-4xl) var(--font-urbanist), sans-serif;
+}
+
+.oferta-programa-apoio {
+  color: var(--colors-brand-primary-100);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+.oferta-programa-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  padding: var(--spacing-20);
+  color: var(--colors-neutral-950);
+}
+
+.oferta-programa-corpo p {
+  margin: 0;
+}
+
+.oferta-programa-texto,
+.oferta-programa-subtitulo,
+.oferta-programa-lista,
+.oferta-programa-modulos {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-2xl);
+}
+
+.oferta-programa-inclui {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.oferta-programa-subtitulo {
+  font-weight: var(--font-weight-medium);
+}
+
+.oferta-programa-lista,
+.oferta-programa-modulos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oferta-programa-lista li,
+.oferta-programa-modulos li {
+  display: flex;
+  gap: var(--spacing-8);
+}
+
+.oferta-programa-lista svg,
+.oferta-programa-modulos svg {
+  flex: none;
+  margin-top: var(--spacing-2);
+}
+
+/* Cadeado discreto, cinza, sem vermelho (briefing 01). */
+.oferta-programa-modulos {
+  padding: var(--spacing-16);
+  border-radius: var(--radius-lg);
+  background: var(--colors-neutral-50);
+  color: var(--colors-neutral-700);
+}
+
+.oferta-programa-plano {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-lg);
+  background: var(--colors-neutral-50);
+}
+
+.oferta-programa-plano .badge {
+  align-self: flex-start;
+}
+
+.oferta-programa-plano-nome {
+  font: var(--font-weight-semi-bold) var(--font-size-lg) / var(--line-height-2xl) var(--font-urbanist), sans-serif;
+}
+
+.oferta-programa-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.oferta-programa-rodape {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  color: var(--colors-neutral-700);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+.oferta-programa-rodape a {
+  color: var(--colors-brand-primary-800);
+  text-decoration: underline;
+}
+
+.oferta-programa-rodape a:hover {
+  color: var(--colors-brand-primary-950);
+}
+
+/* Página de módulo bloqueado: "O que você vai aprender", em caixas cinza-claro como no design. */
+.oferta-aprender {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oferta-aprender li {
+  padding: var(--spacing-16);
+  border-radius: var(--radius-lg);
+  background: var(--colors-neutral-50);
+}
+
+/* ===== checkout ===== */
+
+.familia-checkout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+/* A barra fixa do Gerar Pix cobre o fim da página no celular, como no /plano. */
+.familia-checkout[data-etapa="dados"] {
+  padding-bottom: var(--spacing-128);
+}
+
+.familia-checkout .plano-nota .btn {
+  display: inline-flex;
+  vertical-align: baseline;
+}
+
+.familia-valores .btn small {
+  font-weight: var(--font-weight-regular);
+}
+
+@media (min-width: 48em) {
+  .familia-checkout[data-etapa="dados"] {
+    padding-bottom: 0;
+  }
+}

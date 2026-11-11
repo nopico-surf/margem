@@ -65,6 +65,13 @@ export async function lerModulo(numero: number): Promise<Modulo | null> {
   };
 }
 
+// Títulos dos módulos 2 a 8 publicados, na ordem: a lista trancada do banner de oferta no resultado.
+export async function titulosDosModulosPagos() {
+  const numeros = Array.from({ length: TOTAL_MODULOS - 1 }, (_, indice) => indice + 2);
+  const lidos = await Promise.all(numeros.map((numero) => lerModulo(numero)));
+  return lidos.filter((modulo): modulo is Modulo => modulo !== null && modulo.publicado).map((modulo) => modulo.titulo);
+}
+
 async function cenarioExistente(id: string | null) {
   if (!id || !/^[a-z-]+$/.test(id)) return null;
   try {

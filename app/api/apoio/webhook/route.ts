@@ -16,6 +16,7 @@ import {
   type StatusApoio,
   type StatusProfissional,
 } from "@/lib/apoio/registro";
+import { liberarAcessoDaFamilia, retirarAcessoDaFamilia } from "@/lib/familia/compra-servidor";
 
 // Recebe os avisos do Asaas e atualiza o status dos apoios e, quando o apoio é de um profissional, o
 // status dele (que decide se o perfil aparece no site). O painel do Asaas continua sendo onde se
@@ -181,6 +182,14 @@ async function sincronizarProfissional(profissionalId: string, tipo: string, nov
   return true;
 }
 
+// Programa para familiares: Pix pago libera as 8 semanas; estorno (o reembolso dos 7 dias, feito à mão
+// no painel do Asaas depois do pedido pelo WhatsApp) tira o acesso na hora.
+async function sincronizarFamilia(userId: string, novoStatus: StatusApoio | undefined) {
+  if (novoStatus === "pago") return liberarAcessoDaFamilia(userId);
+  if (novoStatus === "estornado") return retirarAcessoDaFamilia(userId);
+  return true;
+}
+
 export async function POST(request: Request) {
   const esperado = process.env.ASAAS_WEBHOOK_TOKEN;
   if (!esperado) {
@@ -242,6 +251,13 @@ export async function POST(request: Request) {
   if (apoio.profissional_id && !(await sincronizarProfissional(apoio.profissional_id, tipo, mudanca.campos.status, apoio))) {
     await removerEvento(eventoId);
     console.error(`[asaas-webhook] ${tipo}: profissional não atualizado, o Asaas vai reentregar`);
+    return NextResponse.json({ error: "indisponivel" }, { status: 503 });
+  }
+
+  // Compra do programa para familiares: mesma ordem do profissional, a conta muda antes do apoio.
+  if (apoio.familia_user_id && !(await sincronizarFamilia(apoio.familia_user_id, mudanca.campos.status))) {
+    await removerEvento(eventoId);
+    console.error(`[asaas-webhook] ${tipo}: acesso da família não atualizado, o Asaas vai reentregar`);
     return NextResponse.json({ error: "indisponivel" }, { status: 503 });
   }
 

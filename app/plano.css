@@ -127,6 +127,19 @@
 }
 
 /* Divulgação e Divulgação Plus: a segunda linha em semibold, na cor cheia. */
+/* Checkout do programa para familiares: o selo fica do tamanho do texto, e a lista do que inclui. */
+.card-plano-cabecalho .badge {
+  align-self: flex-start;
+}
+
+.card-plano-itens {
+  margin: 0;
+  padding-left: var(--spacing-20);
+  color: var(--colors-alpha-80);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
 .card-plano-cabecalho .card-plano-complemento {
   margin-top: calc(-1 * var(--spacing-8));
   color: var(--colors-neutral-950);

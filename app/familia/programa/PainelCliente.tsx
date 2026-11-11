@@ -10,19 +10,33 @@ import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { dataLocal, diaMes, nomeDaArea, segundaDaSemana, TEXTOS_META, type Escala, type Meta } from "@/lib/familia/escala";
 import { alternarDiaDaMeta } from "@/lib/familia/meta-cliente";
+import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
+import { vendaSimulada } from "@/lib/familia/dev";
+import { dataDoModulo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
+import { CONTATOS } from "@/lib/contatos";
+import { track } from "@/lib/mixpanel";
 
 // Painel do programa (componentes-parte2, "Painel do programa"). Ordem dos blocos, só os que têm
 // conteúdo: alertas fixos, "Esta semana" (módulo atual + sua meta), ferramentas, os 8 módulos e
 // profissionais. Ficam de fora até a ferramenta existir: card de check-in, "Anotar", "Minhas frases"
 // e os cards de valorizar, devolver, convite, problema e dinheiro. Também fora, até haver decisão:
-// "Semana X de 8", "Chega em DD/MM" e o card de oferta ao tocar num módulo com cadeado (dependem da
-// compra e da liberação semanal, O1), "Precisa de ajuda agora?" e configurações.
+// "Semana X de 8", "Precisa de ajuda agora?" e configurações.
+//
+// Compra e liberação semanal (briefing 01): sem compra, o módulo com cadeado leva à página de módulo
+// bloqueado (com o banner de oferta); com compra, o módulo cuja semana não chegou mostra "Chega em
+// DD/MM". Nos 7 dias depois da compra aparece "Desistir e pedir reembolso", que abre o WhatsApp (o
+// reembolso é feito à mão no Asaas). No localhost, como antes, todos os módulos abrem pra revisão, a
+// menos que a venda simulada esteja ligada (lib/familia/dev.ts).
 
+// liberado: o servidor pode mandar o conteúdo (módulo 1 sempre; 2 a 8 depois da revisão clínica).
 export type ModuloDoPainel = { numero: number; titulo: string; liberado: boolean; bloqueadoEmModoSeguranca: boolean };
 
 type Progresso = Record<string, { iniciado_em: string; concluido_em: string | null }>;
+type Perfil = { acessoLiberado: boolean; compra: { plano: string; pagoEm: string } | null };
 // ultimaEscala: criado_em da escala mais recente (o "Concluído em" da ferramenta), ou null.
-type Dados = { safetyMode: boolean; progresso: Progresso; meta: Meta | null; ultimaEscala: string | null };
+type Dados = { safetyMode: boolean; progresso: Progresso; meta: Meta | null; ultimaEscala: string | null; perfil: Perfil; travar: boolean };
+
+const LINK_WHATSAPP = CONTATOS.find((contato) => contato.tipo === "whatsapp")!.href;
 
 async function lerJson<T>(caminho: string, padrao: T): Promise<T> {
   const resposta = await chamarApi(caminho);
@@ -41,12 +55,20 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
       if (diagnostico.status === 404) return router.replace("/familia/diagnostico");
       if (!diagnostico.ok) return;
       const { resultado } = (await diagnostico.json()) as { resultado: { safetyMode: boolean } };
-      const [progresso, meta, escalas] = await Promise.all([
+      const [progresso, meta, escalas, perfil] = await Promise.all([
         lerJson<{ modulos: Progresso }>("/api/familia/progresso", { modulos: {} }),
         lerJson<{ meta: Meta | null }>("/api/familia/meta", { meta: null }),
         lerJson<{ escalas: Escala[] }>("/api/familia/escala", { escalas: [] }),
+        lerJson<Perfil>("/api/familia/perfil", { acessoLiberado: false, compra: null }),
       ]);
-      setDados({ safetyMode: resultado.safetyMode, progresso: progresso.modulos, meta: meta.meta, ultimaEscala: escalas.escalas[0]?.criado_em ?? null });
+      setDados({
+        safetyMode: resultado.safetyMode,
+        progresso: progresso.modulos,
+        meta: meta.meta,
+        ultimaEscala: escalas.escalas[0]?.criado_em ?? null,
+        perfil,
+        travar: !MOSTRAR_REVISAO_CLINICA || vendaSimulada(),
+      });
     })();
   }, [router]);
 
@@ -58,12 +80,23 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
     );
   }
 
-  const { safetyMode, progresso, meta, ultimaEscala } = dados;
+  const { safetyMode, progresso, meta, ultimaEscala, perfil, travar } = dados;
   const hoje = dataLocal();
+  const modulo1ConcluidoEm = progresso[1]?.concluido_em ?? null;
 
   // Em modo de segurança, os módulos marcados como bloqueados ficam guardados.
   const guardado = (modulo: ModuloDoPainel) => safetyMode && modulo.bloqueadoEmModoSeguranca;
-  const aberto = (modulo: ModuloDoPainel) => modulo.liberado && !guardado(modulo);
+  const chegou = (modulo: ModuloDoPainel) => modulo.numero === 1 || !travar || (perfil.acessoLiberado && moduloChegou(modulo.numero, modulo1ConcluidoEm));
+  const aberto = (modulo: ModuloDoPainel) => modulo.liberado && chegou(modulo) && !guardado(modulo);
+  // Sem compra, o cadeado leva à página de módulo bloqueado, com a oferta.
+  const levaAOferta = (modulo: ModuloDoPainel) => !aberto(modulo) && !guardado(modulo) && !perfil.acessoLiberado;
+  // Com compra, a data em que o módulo chega (só quando o conteúdo já pode sair).
+  const chegaEm = (modulo: ModuloDoPainel) => {
+    if (!perfil.acessoLiberado || aberto(modulo) || guardado(modulo) || !modulo.liberado) return null;
+    const data = dataDoModulo(modulo.numero, modulo1ConcluidoEm);
+    return data ? diaMes(data.toISOString()) : null;
+  };
+  const mostrarReembolso = perfil.compra !== null && podeDesistir(perfil.compra.pagoEm);
   const concluido = (modulo: ModuloDoPainel) => Boolean(progresso[modulo.numero]?.concluido_em);
   const atual = modulos.find((modulo) => aberto(modulo) && !concluido(modulo));
   const algumGuardado = modulos.some(guardado);
@@ -178,17 +211,24 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
                   </span>
                 )}
                 {!feitoEm && iniciado && aberto(modulo) && <span className="familia-status label-small-medium">Em andamento</span>}
-                {!aberto(modulo) && (
-                  <span className="familia-status label-small-medium" role="img" aria-label="Bloqueado">
-                    <GlifoLock size={20} />
-                  </span>
-                )}
+                {!aberto(modulo) &&
+                  (chegaEm(modulo) ? (
+                    <span className="familia-status label-small-medium">Chega em {chegaEm(modulo)}</span>
+                  ) : (
+                    <span className="familia-status label-small-medium" role="img" aria-label="Bloqueado">
+                      <GlifoLock size={20} />
+                    </span>
+                  ))}
               </>
             );
             return (
               <li key={modulo.numero}>
                 {aberto(modulo) ? (
                   <Link className="painel-modulo" data-atual={atual?.numero === modulo.numero} href={`/familia/programa/modulo/${modulo.numero}`}>
+                    {conteudo}
+                  </Link>
+                ) : levaAOferta(modulo) ? (
+                  <Link className="painel-modulo" data-bloqueado="true" href={`/familia/programa/modulo/${modulo.numero}`}>
                     {conteudo}
                   </Link>
                 ) : (
@@ -211,6 +251,14 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
           Ver psicólogo parceiro
         </Button>
       </section>
+
+      {mostrarReembolso && (
+        <section className="familia-secao">
+          <Button variante="transparent" tamanho="medium" larguraTotal href={LINK_WHATSAPP} alvoExterno onClick={() => track("reembolso_pedido", { plano: perfil.compra?.plano ?? null })}>
+            Desistir e pedir reembolso
+          </Button>
+        </section>
+      )}
     </>
   );
 }

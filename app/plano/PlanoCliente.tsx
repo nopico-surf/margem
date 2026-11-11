@@ -7,27 +7,38 @@ import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { ContainerConteudo } from "@/components/conversa/ContainerConteudo";
 import { Button } from "@/components/ui/Button";
-import { InputText } from "@/components/ui/InputText";
 import { LoaderTela } from "@/components/ui/LoaderTela";
 import { PainelInferior } from "@/components/ui/PainelInferior";
 import { CardPlano } from "@/components/apoio/CardPlano";
-import { ContadorPix } from "@/components/apoio/ContadorPix";
 import { DadosPixModal } from "@/components/apoio/DadosPixModal";
+import { FormularioDadosPix } from "@/components/apoio/FormularioDadosPix";
+import { TelaPix } from "@/components/apoio/TelaPix";
 import { IconeConfirmado, IconeEditar } from "@/components/icons";
 import { formatarCentavos } from "@/lib/apoio/formatar";
-import { normalizarCpfCnpj } from "@/lib/apoio/documento";
+import {
+  CAMPO_DO_ERRO,
+  ERRO_DADOS_RECUSADOS,
+  ERRO_DO_CAMPO,
+  ERRO_PAGAMENTO_INDISPONIVEL,
+  ERROS_DE_CAMPO,
+  campoValido,
+  usePix,
+  type Campo,
+  type QrCodeDaRota,
+} from "@/lib/apoio/pix-cliente";
 import type { PlanoBase, PlanoOpcional, Profissao } from "@/lib/apoio/planos";
 import { CONTATOS } from "@/lib/contatos";
 
 // Figma: Experiência do produto, seção "Fluxo - Serviços publicos e redes de apoio" (1534:28280).
 // Quem chega pelo link pessoal passa por: plano base (1534:28281), turbinar (1537:29885), dados para o
 // Pix (1537:36437), Pix (1537:36169) e código vencido (1542:40036). Os textos são os das telas mobile.
+// A tela de dados, a do QR e o comportamento do Pix (contador, status, copiar) são compartilhados com
+// o checkout do programa para familiares: FormularioDadosPix, TelaPix e lib/apoio/pix-cliente.ts.
 //
 // Nada desta página vai para Mixpanel ou dataLayer, e nome, CPF ou CNPJ e e-mail ficam só na memória
 // da aba, para o "Gerar outro Pix" reaproveitar.
 
 const ROTA = "/plano";
-const INTERVALO_STATUS = 4000;
 const LINK_WHATSAPP = CONTATOS.find((contato) => contato.tipo === "whatsapp")!.href;
 
 const NOMES_BASE: Record<PlanoBase, string> = { bronze: "Bronze", prata: "Prata", ouro: "Ouro", diamante: "Diamante" };
@@ -54,35 +65,6 @@ const OPCIONAIS: Record<PlanoOpcional, { nome: string; descricao: string; comple
 };
 const ORDEM_OPCIONAL: PlanoOpcional[] = ["destaque", "divulgacao", "divulgacao_plus"];
 
-// Mensagens por código de erro de POST /api/apoio/pix (docs/apoio-telas.md, tela 4).
-const ERROS_DE_CAMPO = {
-  nome_invalido: "Escreva seu nome completo, com até 100 caracteres.",
-  cpf_cnpj_invalido: "Não conseguimos conferir esse CPF ou CNPJ. Confira os números e tente de novo.",
-  email_invalido: "Não conseguimos reconhecer esse e-mail. Confira se ele está completo, com @.",
-} as const;
-type Campo = "nome" | "cpfCnpj" | "email";
-const CAMPO_DO_ERRO: Record<keyof typeof ERROS_DE_CAMPO, Campo> = {
-  nome_invalido: "nome",
-  cpf_cnpj_invalido: "cpfCnpj",
-  email_invalido: "email",
-};
-// As mesmas conferências da rota do Pix, para o erro aparecer ao sair do campo, sem esperar o envio.
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-function campoValido(campo: Campo, valor: string) {
-  if (campo === "nome") return valor.trim() !== "" && valor.trim().length <= 100;
-  if (campo === "cpfCnpj") return normalizarCpfCnpj(valor) !== null;
-  return valor.trim().length <= 254 && EMAIL.test(valor.trim());
-}
-const ERRO_DO_CAMPO: Record<Campo, string> = {
-  nome: ERROS_DE_CAMPO.nome_invalido,
-  cpfCnpj: ERROS_DE_CAMPO.cpf_cnpj_invalido,
-  email: ERROS_DE_CAMPO.email_invalido,
-};
-
-const ERRO_DADOS_RECUSADOS =
-  "O sistema de pagamento não aceitou esses dados. Confira o nome e o CPF ou CNPJ e tente de novo.";
-const ERRO_PAGAMENTO_INDISPONIVEL =
-  "Não foi possível gerar o Pix agora, porque o sistema de pagamento está fora do ar. Tente de novo daqui a alguns minutos.";
 const ERRO_ATIVACAO = "Não foi possível ativar seu perfil agora. Tente de novo daqui a alguns minutos.";
 
 type DadosDoLink = {
@@ -99,8 +81,6 @@ type DadosDoLink = {
   planoAtual?: { planoBase: PlanoBase; opcional: PlanoOpcional | null } | null;
   proximoVencimento?: string | null;
 };
-
-type Pix = { apoioId: string; payload: string; imagemBase64: string; expiraEm: number };
 
 type Etapa =
   | "carregando"
@@ -158,8 +138,6 @@ const LINK_DA_PREVIA: DadosDoLink = {
   bronzeDisponivel: true,
   email: "profissional@exemplo.com.br",
 };
-const QR_DA_PREVIA =
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
 function etapaDaPrevia(endereco: string): Etapa | null {
   if (process.env.NODE_ENV === "production" || !endereco.startsWith("previa-")) return null;
@@ -198,19 +176,6 @@ function diaEMes(iso: string | null | undefined) {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" }).format(data);
 }
 
-// O Asaas devolve a validade como data sem fuso ("2026-10-22 16:30:00", horário de Brasília). Sem data
-// legível, ou com uma fora do razoável, vale a regra dos 10 minutos a partir de agora.
-const VALIDADE_PADRAO = 10 * 60 * 1000;
-
-function momentoDeExpirar(expiraEm: unknown) {
-  const padrao = Date.now() + VALIDADE_PADRAO;
-  if (typeof expiraEm !== "string") return padrao;
-  const iso = /[zZ]|[+-]\d\d:?\d\d$/.test(expiraEm) ? expiraEm : `${expiraEm.replace(" ", "T")}-03:00`;
-  const momento = Date.parse(iso);
-  if (!Number.isFinite(momento) || momento <= Date.now() || momento > Date.now() + 4 * VALIDADE_PADRAO) return padrao;
-  return momento;
-}
-
 export function PlanoCliente() {
   const [token, setToken] = useState("");
   const [etapa, setEtapa] = useState<Etapa>("carregando");
@@ -224,10 +189,6 @@ export function PlanoCliente() {
   const [erroGeral, setErroGeral] = useState("");
   const [gerando, setGerando] = useState(false);
   const [ativando, setAtivando] = useState(false);
-  const [pix, setPix] = useState<Pix | null>(null);
-  // Começa em 0 e só ganha o relógio quando o Pix é gerado: Date.now() no render quebra o prerender.
-  const [agora, setAgora] = useState(0);
-  const [codigoCopiado, setCodigoCopiado] = useState(false);
   const [menuAberto, setMenuAberto] = useState(false);
   const [dadosAbertos, setDadosAbertos] = useState(false);
   const [painelVisivel, setPainelVisivel] = useState(false);
@@ -236,6 +197,20 @@ export function PlanoCliente() {
   // Quem já pagou tocou em "Trocar de plano": as telas de escolha levam ao resumo da troca.
   const [trocando, setTrocando] = useState(false);
   const gerandoRef = useRef(false);
+
+  // Contador e consulta do status enquanto a tela do Pix está aberta. A consulta continua depois do
+  // pagamento sem autorização: se a pessoa autorizar o Pix Automático no banco, a tela vira "tudo feito".
+  const { pix, segundosRestantes, codigoCopiado, mostrarPix, mostrarPrevia, copiarCodigo } = usePix({
+    naTela: etapa === "pix",
+    consultando: etapa === "pix" || etapa === "pago_sem_autorizacao",
+    onExpirou: () => setEtapa("expirado"),
+    onStatus: ({ status, pago }) => {
+      if (status === "ativo") setEtapa(trocando ? "troca_confirmada" : "tudo_feito");
+      else if (pago) setEtapa("pago_sem_autorizacao");
+      else if (status === "expirado") setEtapa("expirado");
+      else if (status === "recusado") setEtapa("recusado");
+    },
+  });
 
   // Trocar só o que vem depois do "#" não recarrega a página: recarrega aqui, para o código novo valer.
   useEffect(() => {
@@ -261,13 +236,7 @@ export function PlanoCliente() {
       setPlanoBase(daTroca ? (previa === "meu_plano" ? "prata" : "ouro") : LINK_DA_PREVIA.planoBaseEscolhido);
       setOpcional(daTroca ? null : LINK_DA_PREVIA.opcionalEscolhido);
       setEmail(LINK_DA_PREVIA.email ?? "");
-      setPix({
-        apoioId: "previa",
-        payload: "00020101021226810014br.gov.bcb.pix2559pix-h.asaas.com/qr/cobv/exemplo-da-previa6304ABCD",
-        imagemBase64: QR_DA_PREVIA,
-        expiraEm: Date.now() + VALIDADE_PADRAO,
-      });
-      setAgora(Date.now());
+      mostrarPrevia();
       setEtapa(previa);
       return;
     }
@@ -314,46 +283,6 @@ export function PlanoCliente() {
     return () => cancelAnimationFrame(quadro);
   }, [etapa]);
 
-  // Relógio do contador, só enquanto o Pix está na tela.
-  useEffect(() => {
-    if (etapa !== "pix") return;
-    const intervalo = setInterval(() => setAgora(Date.now()), 1000);
-    return () => clearInterval(intervalo);
-  }, [etapa]);
-
-  const segundosRestantes = pix ? Math.ceil((pix.expiraEm - agora) / 1000) : 0;
-
-  useEffect(() => {
-    if (etapa === "pix" && pix && segundosRestantes <= 0) setEtapa("expirado");
-  }, [etapa, pix, segundosRestantes]);
-
-  // Consulta o status a cada poucos segundos enquanto a tela do Pix está aberta, e continua depois do
-  // pagamento sem autorização: se a pessoa autorizar o Pix Automático no banco, a tela vira "tudo feito".
-  const consultandoStatus = (etapa === "pix" || etapa === "pago_sem_autorizacao") && pix && pix.apoioId !== "previa";
-  useEffect(() => {
-    if (!consultandoStatus || !pix) return;
-    let ativo = true;
-    const consultar = async () => {
-      try {
-        const resposta = await fetch(`/api/apoio/${pix.apoioId}/status`, { cache: "no-store" });
-        if (!resposta.ok || !ativo) return;
-        const { status, pago } = (await resposta.json()) as { status?: string; pago?: boolean };
-        if (!ativo) return;
-        if (status === "ativo") setEtapa(trocando ? "troca_confirmada" : "tudo_feito");
-        else if (pago) setEtapa("pago_sem_autorizacao");
-        else if (status === "expirado") setEtapa("expirado");
-        else if (status === "recusado") setEtapa("recusado");
-      } catch {
-        // Falha de rede: tenta de novo na próxima volta.
-      }
-    };
-    const intervalo = setInterval(consultar, INTERVALO_STATUS);
-    return () => {
-      ativo = false;
-      clearInterval(intervalo);
-    };
-  }, [consultandoStatus, pix, trocando]);
-
   // `downgrade` só vale quando chamado como gerarPix(true): no onClick o primeiro argumento é o evento.
   const gerarPix = useCallback(async (downgrade?: unknown) => {
     if (gerandoRef.current || !planoBase) return;
@@ -389,7 +318,7 @@ export function PlanoCliente() {
         ),
       });
       const corpo = (await resposta.json().catch(() => null)) as
-        | { apoioId: string | null; qrCode: { payload: string; imagemBase64: string; expiraEm: unknown } | null }
+        | { apoioId: string | null; qrCode: QrCodeDaRota | null }
         | { error?: string }
         | null;
 
@@ -400,14 +329,7 @@ export function PlanoCliente() {
       }
 
       if (resposta.ok && corpo && "apoioId" in corpo && corpo.apoioId && corpo.qrCode) {
-        setPix({
-          apoioId: corpo.apoioId,
-          payload: corpo.qrCode.payload,
-          imagemBase64: corpo.qrCode.imagemBase64,
-          expiraEm: momentoDeExpirar(corpo.qrCode.expiraEm),
-        });
-        setAgora(Date.now());
-        setCodigoCopiado(false);
+        mostrarPix(corpo.apoioId, corpo.qrCode);
         setEtapa("pix");
         return;
       }
@@ -438,28 +360,8 @@ export function PlanoCliente() {
       gerandoRef.current = false;
       setGerando(false);
     }
+    // mostrarPix é recriada a cada render, mas só troca estado: fica de fora das dependências.
   }, [token, planoBase, opcional, nome, cpfCnpj, email, trocando]);
-
-  async function copiarCodigo() {
-    if (!pix) return;
-    try {
-      await navigator.clipboard.writeText(pix.payload);
-      setCodigoCopiado(true);
-      return;
-    } catch {
-      // Navegador sem a API de área de transferência (ou sem permissão): cai no jeito antigo.
-    }
-    const campo = document.createElement("textarea");
-    campo.value = pix.payload;
-    campo.setAttribute("readonly", "");
-    campo.style.position = "fixed";
-    campo.style.opacity = "0";
-    document.body.appendChild(campo);
-    campo.select();
-    const copiou = document.execCommand("copy");
-    campo.remove();
-    if (copiou) setCodigoCopiado(true);
-  }
 
   function selecionarBase(plano: PlanoBase) {
     setPlanoBase(plano);
@@ -813,129 +715,58 @@ export function PlanoCliente() {
       )}
 
       {etapa === "dados" && (
-        <ContainerConteudo id="plano-dados">
-          <CardHeader as="h1" title="Seus dados para o Pix" />
-          <InputText
-            id="plano-nome"
-            rotulo="Nome completo"
-            value={nome}
-            onChange={(valor) => mudarCampo("nome", valor)}
-            onBlur={() => conferirCampo("nome")}
-            erro={errosDeCampo.nome}
-            autoComplete="name"
-            maxLength={100}
-          />
-          <InputText
-            id="plano-cpf-cnpj"
-            rotulo="CPF ou CNPJ"
-            value={cpfCnpj}
-            onChange={(valor) => mudarCampo("cpfCnpj", valor)}
-            onBlur={() => conferirCampo("cpfCnpj")}
-            erro={errosDeCampo.cpfCnpj}
-            descricao="Digite apenas números"
-            inputMode="numeric"
-            autoComplete="off"
-            maxLength={14}
-          />
-          <InputText
-            id="plano-email"
-            rotulo="E-mail"
-            value={email}
-            onChange={(valor) => mudarCampo("email", valor)}
-            onBlur={() => conferirCampo("email")}
-            erro={errosDeCampo.email}
-            tipo="email"
-            inputMode="email"
-            autoComplete="email"
-            maxLength={254}
-          />
-          {erroGeral && (
-            <p className="plano-erro" role="alert">
-              {erroGeral}
-            </p>
-          )}
-          {/* No mobile só o link aparece aqui (valor e botão ficam na barra fixa); no desktop a linha
-              leva o link à esquerda e o valor com o Gerar Pix à direita (1545:40734). */}
-          <div className="plano-dados-acoes">
-            <Button variante="transparent" tamanho="medium" onClick={() => setDadosAbertos(true)}>
-              Por que pedimos esses dados?
-            </Button>
-            <div className="plano-dados-gerar">
-              <p>{textoDoValor}</p>
-              <Button tamanho="medium" larguraTotal onClick={gerarPix}>
-                Gerar Pix
-              </Button>
-            </div>
-          </div>
-        </ContainerConteudo>
+        <FormularioDadosPix
+          id="plano-dados"
+          campos={["nome", "cpfCnpj", "email"]}
+          valores={{ nome, cpfCnpj, email }}
+          erros={errosDeCampo}
+          erroGeral={erroGeral}
+          textoDoValor={textoDoValor}
+          onMudar={mudarCampo}
+          onConferir={conferirCampo}
+          onGerar={gerarPix}
+          onPorQue={() => setDadosAbertos(true)}
+        />
       )}
 
+      {/* Recusado reaproveita o card do código vencido (decidido com o Vitor), com o título e o texto
+          da tela 7 do docs/apoio-telas.md. Sem o contador: o código não venceu, o banco recusou. */}
       {telaDoPix && pix && (
-        <ContainerConteudo id="plano-pix">
-          {etapa !== "recusado" && <ContadorPix segundos={etapa === "expirado" ? 0 : segundosRestantes} />}
-          <CardHeader as="h1" title={tituloDoPix} />
-
-          {/* Recusado reaproveita o card do código vencido (decidido com o Vitor), com o título e o texto
-              da tela 7 do docs/apoio-telas.md. Sem o contador: o código não venceu, o banco recusou. */}
-          {etapa === "expirado" || etapa === "recusado" ? (
-            <section className="cartao-pix">
-              <h2>{etapa === "expirado" ? "O código Pix venceu" : "O banco não confirmou o Pix Automático"}</h2>
-              <p className="cartao-pix-texto">
-                {etapa === "expirado"
-                  ? "O tempo do Pix acabou. Toque no botão “Gerar outro Pix” para gerar uma nova chave de pagamento"
-                  : "Isso pode acontecer quando a autorização não é concluída no app do banco. Se o primeiro mês já saiu da sua conta, fale com a gente antes de gerar outro Pix, para não pagar duas vezes."}
-              </p>
-              <Button tamanho="small" larguraTotal onClick={gerarPix} carregando={gerando}>
-                Gerar outro Pix
-              </Button>
-            </section>
-          ) : (
-            <>
-              <section className="cartao-pix cartao-pix-copiar">
-                <h2>Copie este código para pagar</h2>
-                <div className="cartao-pix-codigo">
-                  <p>{pix.payload}</p>
-                  <Button tamanho="small" larguraTotal onClick={copiarCodigo}>
-                    {codigoCopiado ? "Código copiado" : "Copiar código pix"}
-                  </Button>
-                </div>
-                <p className="cartao-pix-texto">
-                  Escolha pagar via Pix pelo seu aplicativo bancário ou de pagamentos. Depois, cole o código copiado
-                </p>
-              </section>
-
-              <section className="cartao-pix cartao-pix-qr">
-                <div className="cartao-pix-qr-texto">
-                  <h2>Escaneie o QR code para pagar</h2>
-                  <ol>
-                    <li>Acesse seu app de pagamentos.</li>
-                    <li>Escolha pagar via Pix.</li>
-                    <li>Escaneie o seguinte código:</li>
-                  </ol>
-                </div>
-                <div className="cartao-pix-qr-imagem">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- imagem em base64 que vem do Asaas */}
-                  <img src={`data:image/png;base64,${pix.imagemBase64}`} alt="QR code do Pix" />
-                </div>
-              </section>
-
-              {/* Figma: 1543:40400. */}
-              <section className="cartao-pix">
-                <CardHeader
-                  title="Autorize o Pix Automático no seu banco"
-                  description="Para que os pagamentos dos próximos meses aconteçam de forma simples e sem você precisar gerar um novo código a cada mês, lembre-se de confirmar a autorização do Pix Automático no aplicativo do seu banco"
-                />
-              </section>
-
-              <section className="cartao-pix">
-                <CardHeader
-                  title="Nome no banco"
-                  description="No app do banco, o Pix aparece no nome de VITOR GAUDIO DESENVOLVIMENTO DE SOFTWARE LTDA, a empresa responsável pela Margem."
-                />
-              </section>
-            </>
-          )}
-        </ContainerConteudo>
+        <TelaPix
+          id="plano-pix"
+          pix={pix}
+          titulo={tituloDoPix}
+          segundosRestantes={segundosRestantes}
+          mostrarContador={etapa !== "recusado"}
+          vencido={
+            etapa === "expirado"
+              ? {
+                  titulo: "O código Pix venceu",
+                  texto: "O tempo do Pix acabou. Toque no botão “Gerar outro Pix” para gerar uma nova chave de pagamento",
+                  botao: "Gerar outro Pix",
+                }
+              : etapa === "recusado"
+                ? {
+                    titulo: "O banco não confirmou o Pix Automático",
+                    texto:
+                      "Isso pode acontecer quando a autorização não é concluída no app do banco. Se o primeiro mês já saiu da sua conta, fale com a gente antes de gerar outro Pix, para não pagar duas vezes.",
+                    botao: "Gerar outro Pix",
+                  }
+                : null
+          }
+          codigoCopiado={codigoCopiado}
+          onCopiar={() => void copiarCodigo()}
+          onGerarOutro={gerarPix}
+          gerando={gerando}
+        >
+          {/* Figma: 1543:40400. */}
+          <section className="cartao-pix">
+            <CardHeader
+              title="Autorize o Pix Automático no seu banco"
+              description="Para que os pagamentos dos próximos meses aconteçam de forma simples e sem você precisar gerar um novo código a cada mês, lembre-se de confirmar a autorização do Pix Automático no aplicativo do seu banco"
+            />
+          </section>
+        </TelaPix>
       )}
 
       {/* Figma: "Pix pago - sem autorizar automatico" (1543:40495) e "Tudo feito" (1543:40505). */}

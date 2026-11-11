@@ -10,8 +10,8 @@ type Props = { params: Promise<{ n: string }> };
 // Módulos do programa para familiares, escritos em content/familia/modulos (briefing, seção 7).
 // O texto é lido no build; quem pode ver, o apelido e as variações por problema são resolvidos no
 // cliente, com o diagnóstico da pessoa. O módulo 1 é aberto pra quem tem conta, mesmo sem ter
-// comprado. Os módulos 2 a 8 (conteúdo v2, [REVISÃO CLÍNICA]) abrem só no servidor local até a
-// revisão da psicóloga parceira; a liberação semanal deles é da Fase 2.
+// comprado. Os módulos 2 a 8 abrem com a compra e a liberação semanal (briefing 01); o conteúdo deles
+// (v2, [REVISÃO CLÍNICA]) só sai no servidor local até a revisão da psicóloga parceira.
 export async function generateStaticParams() {
   const numeros = Array.from({ length: TOTAL_MODULOS }, (_, indice) => indice + 1);
   const existentes = await Promise.all(numeros.map(async (numero) => ((await lerModulo(numero)) ? numero : null)));
@@ -30,6 +30,10 @@ export default function ModuloPage({ params }: Props) {
 async function Conteudo({ params }: Props) {
   const { n } = await params;
   const modulo = await lerModulo(Number(n));
-  if (!modulo || !modulo.publicado || (modulo.numero !== 1 && !MOSTRAR_REVISAO_CLINICA)) notFound();
-  return <ModuloCliente modulo={modulo} />;
+  if (!modulo || !modulo.publicado) notFound();
+  // Em revisão (produção, antes da revisão clínica): o texto não sai daqui, só os subtítulos, pra a
+  // página de módulo bloqueado mostrar "O que você vai aprender" em vez de um erro (briefing 01).
+  const emRevisao = modulo.numero !== 1 && !MOSTRAR_REVISAO_CLINICA;
+  const enviado = emRevisao ? { ...modulo, blocos: modulo.blocos.filter((bloco) => bloco.tipo === "titulo"), audio: null, video: null } : modulo;
+  return <ModuloCliente modulo={enviado} emRevisao={emRevisao} />;
 }

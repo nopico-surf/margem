@@ -18,7 +18,9 @@ import { FaixaComoFunciona } from "@/components/app/FaixaComoFunciona";
 import { BlocoCannabis, SeloGiratorio } from "@/components/app/BlocoCannabis";
 import { BlocoMochila } from "@/components/app/BlocoMochila";
 import { CardHomeGroupGaleria } from "./CardHomeGaleria";
-import { CardPlanoGaleria, ContadorPixGaleria, InputTextGaleria } from "./ApoioGaleria";
+import { CardPlanoFamiliaGaleria, CardPlanoGaleria, ContadorPixGaleria, InputTextGaleria, TelaPixGaleria } from "./ApoioGaleria";
+import { OfertaProgramaGaleria } from "./OfertaGaleria";
+import { titulosDosModulosPagos } from "@/lib/familia/conteudo";
 import { BuscaBlog } from "@/app/blog/BuscaBlog";
 import { GUIAS } from "@/lib/guias";
 import { montarIndiceBlog } from "@/lib/busca-blog";
@@ -474,6 +476,33 @@ export default async function GaleriaDeComponentes() {
         <h2 className="header-medium">Contador do Pix</h2>
         <p className="text-small-regular galeria-nota">Figma: faixa do topo da tela do Pix (1538:39329).</p>
         <ContadorPixGaleria />
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Card plano, checkout da família</h2>
+        <p className="text-small-regular galeria-nota">
+          O mesmo CardPlano, no arranjo opcional, com o badge &quot;Recomendado&quot; (selo), a lista do que inclui e sem preço
+          (o valor é escolhido na etapa seguinte). Briefing 01, etapa 1.
+        </p>
+        <CardPlanoFamiliaGaleria />
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Tela do Pix</h2>
+        <p className="text-small-regular galeria-nota">
+          Figma: Pix (1537:36169) e código vencido (1542:40036). Compartilhada pelo /plano e pelo checkout da família, que troca
+          só os textos. O /plano acrescenta o cartão do Pix Automático e usa o vencido também para o Pix recusado.
+        </p>
+        <TelaPixGaleria />
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">Banner de oferta (programa para familiares)</h2>
+        <p className="text-small-regular galeria-nota">
+          Canvas &quot;Banner de oferta&quot;, briefing 01. Quatro variações do mesmo cartão; nunca em modal ou barra fixa, e
+          some depois da compra.
+        </p>
+        <OfertaProgramaGaleria modulos={await titulosDosModulosPagos()} />
       </section>
 
       <section className="galeria-secao">

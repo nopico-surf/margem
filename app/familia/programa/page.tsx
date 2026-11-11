@@ -8,8 +8,8 @@ import { PainelCliente, type ModuloDoPainel } from "./PainelCliente";
 // Painel do programa (componentes-parte2, "Painel do programa"). Os títulos dos módulos vêm do
 // content/familia, lidos no build; o resto (progresso, meta, diagnóstico) é da pessoa logada e vem
 // pelas rotas /api/familia, no cliente. Como na página do módulo, o módulo 1 é aberto pra quem tem
-// conta e os módulos 2 a 8 ([REVISÃO CLÍNICA]) abrem só no servidor local até a revisão; a liberação
-// semanal e a compra são da Fase 2.
+// conta e o conteúdo dos módulos 2 a 8 ([REVISÃO CLÍNICA]) só sai no servidor local até a revisão; a
+// compra e a liberação semanal são conferidas no cliente (PainelCliente, briefing 01).
 export const metadata: Metadata = { title: "Seu painel", robots: { index: false, follow: false } };
 
 export default function ProgramaPage() {
