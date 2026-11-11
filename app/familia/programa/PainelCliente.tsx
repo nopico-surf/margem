@@ -14,6 +14,7 @@ import { alternarDiaDaMeta } from "@/lib/familia/meta-cliente";
 import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
 import { TEXTOS_FRASES, type FraseSalva } from "@/lib/familia/frases";
 import { TEXTOS_VALORIZAR, type PlanoValorizar } from "@/lib/familia/valorizar";
+import { nomeDoSalvo, PLANOS_B, TEXTOS_CONVITE, type Convite, type ProfissionalDoConvite } from "@/lib/familia/convite";
 import { vendaSimulada } from "@/lib/familia/dev";
 import { dataDoModulo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
 import { CONTATOS } from "@/lib/contatos";
@@ -22,8 +23,9 @@ import { track } from "@/lib/mixpanel";
 // Painel do programa (componentes-parte2, "Painel do programa"). Ordem dos blocos, só os que têm
 // conteúdo: alertas fixos, "Esta semana" (módulo atual + sua meta), ferramentas, os 8 módulos e
 // profissionais. Briefings M3 e M4: "Minhas frases" entra nas ferramentas e "Valorizar o que é bom" em
-// "Esta semana". Ficam de fora até a ferramenta existir: card de check-in, "Anotar" e os cards de
-// devolver, convite, problema e dinheiro. Também fora, até haver decisão:
+// "Esta semana". Briefing M5: "Meu convite" (profissional salvo, frase, plano B) também em "Esta semana".
+// Ficam de fora até a ferramenta existir: card de check-in, "Anotar" e os cards de devolver, problema e
+// dinheiro. Também fora, até haver decisão:
 // "Semana X de 8", "Precisa de ajuda agora?" e configurações.
 //
 // Compra e liberação semanal (briefing 01): sem compra, o módulo com cadeado leva à página de módulo
@@ -49,6 +51,8 @@ type Dados = {
   // Plano de valorizar (módulo 4) e quantas frases a pessoa reescreveu (módulo 3).
   plano: PlanoValorizar | null;
   frases: number;
+  // Convite do módulo 5 (briefing M5).
+  convite: Convite | null;
 };
 
 const LINK_WHATSAPP = CONTATOS.find((contato) => contato.tipo === "whatsapp")!.href;
@@ -58,7 +62,7 @@ async function lerJson<T>(caminho: string, padrao: T): Promise<T> {
   return resposta?.ok ? ((await resposta.json()) as T) : padrao;
 }
 
-export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
+export function PainelCliente({ modulos, profissionais }: { modulos: ModuloDoPainel[]; profissionais: ProfissionalDoConvite[] }) {
   const router = useRouter();
   const [dados, setDados] = useState<Dados | null>(null);
   const [retornoMeta, setRetornoMeta] = useState(false);
@@ -70,13 +74,14 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
       if (diagnostico.status === 404) return router.replace("/familia/diagnostico");
       if (!diagnostico.ok) return;
       const { resultado, apelido } = (await diagnostico.json()) as { resultado: { safetyMode: boolean }; apelido: string };
-      const [progresso, meta, escalas, perfil, valorizar, frases] = await Promise.all([
+      const [progresso, meta, escalas, perfil, valorizar, frases, convite] = await Promise.all([
         lerJson<{ modulos: Progresso }>("/api/familia/progresso", { modulos: {} }),
         lerJson<{ meta: Meta | null }>("/api/familia/meta", { meta: null }),
         lerJson<{ escalas: Escala[] }>("/api/familia/escala", { escalas: [] }),
         lerJson<Perfil>("/api/familia/perfil", { acessoLiberado: false, compra: null }),
         lerJson<{ plano: PlanoValorizar | null }>("/api/familia/valorizar", { plano: null }),
         lerJson<{ frases: FraseSalva[] }>("/api/familia/frases", { frases: [] }),
+        lerJson<{ convite: Convite | null }>("/api/familia/convite", { convite: null }),
       ]);
       setDados({
         apelido,
@@ -88,6 +93,7 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
         travar: !MOSTRAR_REVISAO_CLINICA || vendaSimulada(),
         plano: valorizar.plano,
         frases: frases.frases.length,
+        convite: convite.convite,
       });
     })();
   }, [router]);
@@ -100,7 +106,8 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
     );
   }
 
-  const { apelido, safetyMode, progresso, meta, ultimaEscala, perfil, travar, plano, frases } = dados;
+  const { apelido, safetyMode, progresso, meta, ultimaEscala, perfil, travar, plano, frases, convite } = dados;
+  const temConvite = Boolean(convite && convite.passo > 0);
   const hoje = dataLocal();
   const modulo1ConcluidoEm = progresso[1]?.concluido_em ?? null;
 
@@ -155,7 +162,7 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
         </section>
       )}
 
-      {(atual || meta || plano) && (
+      {(atual || meta || plano || temConvite) && (
         <section className="familia-secao">
           <h2 className="header-medium">Esta semana</h2>
           {atual && (
@@ -202,6 +209,24 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
               )}
               <Button variante="secondary" tamanho="small" href="/familia/programa/valorizar">
                 {TEXTOS_VALORIZAR.verEditar}
+              </Button>
+            </div>
+          )}
+          {convite && temConvite && (
+            <div className="familia-cartao">
+              <h3 className="header-small">{TEXTOS_CONVITE.painelTitulo}</h3>
+              {convite.profissionais_salvos.length > 0 && (
+                <ul className="familia-lista text-large">
+                  {convite.profissionais_salvos.map((id) => {
+                    const nome = nomeDoSalvo(id, profissionais);
+                    return nome ? <li key={id}>{nome}</li> : null;
+                  })}
+                </ul>
+              )}
+              {convite.frase && <p className="text-large">{`"${convite.frase}"`}</p>}
+              {convite.plano_b && <p className="text-medium-regular familia-texto-suave">{PLANOS_B.find((plano) => plano.id === convite.plano_b)?.titulo}</p>}
+              <Button variante="secondary" tamanho="small" href="/familia/programa/convite/contar?origem=painel">
+                {TEXTOS_CONVITE.painelContar}
               </Button>
             </div>
           )}

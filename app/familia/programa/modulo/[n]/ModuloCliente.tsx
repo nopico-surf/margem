@@ -12,6 +12,7 @@ import { vendaSimulada } from "@/lib/familia/dev";
 import { dataDoModulo, moduloChegou } from "@/lib/familia/oferta";
 import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import type { Modulo } from "@/lib/familia/conteudo";
+import { VERSAO_DO_MODULO8, type Convite } from "@/lib/familia/convite";
 import { aplicarApelido, ROTULO_PROBLEMA, type Problema } from "@/lib/familia/diagnostico";
 import { diaMes } from "@/lib/familia/escala";
 import { carregarEstado, contextoDo, itensDoExercicio, marcarFeito, type EstadoExercicio } from "@/lib/familia/exercicio-cliente";
@@ -131,6 +132,7 @@ export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; e
   // Frases reescritas (módulo 3) e itens deixados para depois (módulo 4).
   const [frasesSalvas, setFrasesSalvas] = useState(0);
   const [deixados, setDeixados] = useState<string[]>([]);
+  const [passoDoConvite, setPassoDoConvite] = useState(0);
   // Respostas dos seletores do módulo (":::escolha"). Ficam só nesta tela: o check-in que pré-marcaria
   // o seletor ainda não existe.
   const [escolhas, setEscolhas] = useState<Record<string, string>>({});
@@ -185,6 +187,16 @@ export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; e
         const valorizar = await chamarApi("/api/familia/valorizar");
         const clima = valorizar?.ok ? ((await valorizar.json()) as { adiar: { clima: string } | null }).adiar?.clima : null;
         if (clima === "sim" || clima === "nao_sei") setDeixados(["situacao"]);
+      }
+      // Convite (briefing M5): o passo do "Preparar o convite" no módulo 5 e, no módulo 8, a versão que
+      // o "Contar como foi" escolhe ("Vou pensar" deixa o seletor como está).
+      const temEscolhaVersao = modulo.blocos.some((bloco) => bloco.tipo === "escolha" && bloco.id === "versao");
+      if (temAcao("convite") || temEscolhaVersao) {
+        const resposta = await chamarApi("/api/familia/convite");
+        const convite = resposta?.ok ? ((await resposta.json()) as { convite: Convite | null }).convite : null;
+        setPassoDoConvite(convite?.passo ?? 0);
+        const versao = convite?.resultado ? VERSAO_DO_MODULO8[convite.resultado] : undefined;
+        if (temEscolhaVersao && versao) setEscolhas((atuais) => ({ ...atuais, versao }));
       }
       track(modulo.numero === 1 ? "modulo1_iniciado" : "modulo_iniciado", { modulo: modulo.numero });
       void chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "iniciar" }) });
@@ -295,7 +307,7 @@ export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; e
         problemas={problemas}
         contexto={contexto}
         onEscolher={escolher}
-        exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} frasesSalvas={frasesSalvas} deixados={deixados} />}
+        exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} frasesSalvas={frasesSalvas} deixados={deixados} passoDoConvite={passoDoConvite} />}
       />
 
       {/* Banner do módulo 1 (briefing 01, variação c): só depois de concluído e pra quem não comprou. */}

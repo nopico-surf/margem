@@ -11,10 +11,20 @@ minutos: 6
 
 <!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
+Os dois cards do exercício abrem uma ferramenta (briefing M5, 10/11/2026):
+- preparar: "Preparar meu convite", 5 passos (conclui ao salvar o passo 5);
+- contar: "Contar como foi o convite" (conclui ao contar a resposta).
 O cenário "convite-para-ajuda" ainda não tem arquivo em content/familia/cenarios: até ter, o
-"Ensaiar no treino" não aparece.
-Botões que ainda não têm ferramenta ficam como "Marcar como feito":
-- convite: "Escrever meu convite"; plano_b: "Escolher meu plano B". -->
+"Treinar o convite" não aparece (nem aqui nem no passo 4).
+No topo, o [CARD_CAUTELA] do conteúdo v2, em caution_mode. -->
+
+:::se cautela=sim
+Você contou que às vezes tem medo. Antes deste passo, pense: isso pode deixar o clima mais tenso em casa? Se a resposta for sim, ou se tiver dúvida, converse antes com um profissional.
+
+@botao [Ver psicólogo parceiro](/profissionais)
+
+[Ver meu plano de segurança](/familia/seguranca)
+:::
 
 ## Primeiro, deixe a ajuda pronta
 
@@ -87,16 +97,12 @@ Se você tem receio da reação, faça o convite com outra pessoa por perto ou c
 
 ## Exercício da semana
 
-:::exercicio id=ajuda acao=profissionais_semana
-**Deixar a ajuda pronta:** escolha um profissional e veja os horários dos próximos dias. Você pode deixar salvo para usar quando chegar a hora.
+:::exercicio id=preparar acao=convite,simulador
+**Preparar o convite:** Em 5 passos, deixe pronto o convite para {{apelido}} conversar com um psicólogo: o profissional, a hora certa, a frase, o treino e o plano se a resposta for não.
 :::
 
-:::exercicio id=convite acao=marcar,simulador
-**Preparar o convite:** escreva o seu convite com as suas palavras e ensaie no treino.
-:::
-
-:::exercicio id=plano_b acao=marcar
-**Decidir o plano B:** se a resposta for não, você vai convidar de novo depois ou focar nas suas metas por um tempo?
+:::exercicio id=contar acao=contar_convite
+**Contar como foi o convite:** Quando você fizer o convite, conte aqui qual foi a resposta de {{apelido}}. Isso define os próximos passos do programa.
 :::
 
 :::se problema=alcool

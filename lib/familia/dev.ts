@@ -10,6 +10,7 @@
 // x-familia-dev, que a rota só aceita fora de produção.
 
 import { ITENS_DA_CONVERSA, sanitizarConversa } from "./conversa";
+import { aplicarPasso, CONVITE_VAZIO, ITEM_CONTAR_M5, ITEM_PREPARAR_M5, PASSOS_DO_CONVITE, sanitizarResultado, type Convite } from "./convite";
 import { itensParaMarcar, sanitizarAnotacao, type Anotacao } from "./diario";
 import { alternarDiaFeito, dataValida, sanitizarMeta, sanitizarNotas, segundaDaSemana, type Meta } from "./escala";
 import { FRASES_PARA_CONCLUIR, ITEM_FRASES_M3, LIMITE_DE_FRASES, sanitizarFrase } from "./frases";
@@ -28,7 +29,8 @@ const CHAVE_ESCALAS = "margem-familia-dev-escalas";
 const CHAVE_META = "margem-familia-dev-meta";
 const CHAVE_FRASES = "margem-familia-dev-frases";
 const CHAVE_VALORIZAR = "margem-familia-dev-valorizar";
-const CHAVE_RETORNO_TREINO = "margem-familia-dev-retorno-treino";
+const CHAVE_CONVITE = "margem-familia-dev-convite";
+const CHAVE_RETORNO_TREINO ="margem-familia-dev-retorno-treino";
 const CHAVE_PROGRESSO = "margem-familia-dev-progresso";
 // Compra simulada: { plano, pagoEm }. O Pix "cai" sozinho alguns segundos depois de gerado.
 const CHAVE_COMPRA = "margem-familia-dev-compra";
@@ -287,6 +289,27 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
       return json({ plano: guardado.plano });
     }
     return json({ gosta: guardado.gosta ?? null, plano: guardado.plano ?? null, adiar: guardado.adiar ?? null });
+  }
+
+  // Módulo 5 (briefing M5): o convite, com as mesmas regras da rota.
+  if (caminho === "/api/familia/convite") {
+    const atual = (JSON.parse(ler(CHAVE_CONVITE) ?? "null") as Convite | null) ?? CONVITE_VAZIO;
+    if (metodo === "POST") {
+      let novo: Convite | null = null;
+      if (corpo.tipo === "passo") {
+        novo = aplicarPasso(atual, corpo.dados);
+        if (!novo) return json({ error: "passo_invalido" }, 400);
+        if (novo.passo >= PASSOS_DO_CONVITE) marcarItem(ITEM_PREPARAR_M5.modulo, ITEM_PREPARAR_M5.item);
+      } else if (corpo.tipo === "resultado") {
+        const resultado = sanitizarResultado(corpo.resultado);
+        if (corpo.resultado !== null && !resultado) return json({ error: "resultado_invalido" }, 400);
+        novo = { ...atual, resultado, data_resultado: resultado ? new Date().toISOString() : null };
+        if (resultado) marcarItem(ITEM_CONTAR_M5.modulo, ITEM_CONTAR_M5.item);
+      } else return json({ error: "tipo_invalido" }, 400);
+      gravar(CHAVE_CONVITE, JSON.stringify(novo));
+      return json({ convite: novo });
+    }
+    return json({ convite: ler(CHAVE_CONVITE) ? atual : null });
   }
 
   // "Ver o retorno do treino" (briefing M3): o último retorno do cenário, guardado no aparelho.

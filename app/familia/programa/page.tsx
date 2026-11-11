@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Loader } from "@/components/ui/Loader";
 import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
 import { lerModulo, TOTAL_MODULOS } from "@/lib/familia/conteudo";
+import { psicologosDoConvite } from "@/lib/familia/convite-servidor";
 import { PainelCliente, type ModuloDoPainel } from "./PainelCliente";
 
 // Painel do programa (componentes-parte2, "Painel do programa"). Os títulos dos módulos vêm do
@@ -31,5 +32,6 @@ async function Conteudo() {
       liberado: modulo.numero === 1 || MOSTRAR_REVISAO_CLINICA,
       bloqueadoEmModoSeguranca: modulo.bloqueadoEmModoSeguranca,
     }));
-  return <PainelCliente modulos={modulos} />;
+  // Psicólogos parceiros só pra mostrar o nome do profissional salvo no card "Meu convite" (briefing M5).
+  return <PainelCliente modulos={modulos} profissionais={await psicologosDoConvite()} />;
 }

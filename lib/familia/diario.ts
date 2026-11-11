@@ -288,6 +288,15 @@ export function resumirSemana(anotacoes: Anotacao[], agora = new Date()): Resumo
 
 export { minuscula };
 
+// Dia e período mais comuns dos momentos bons (briefing M5, passo 2: "nas sextas, à noite"), ou null
+// sem anotação de momento bom. Usa todas as anotações, não só a última semana. Roda no cliente.
+export function momentoBomMaisComum(anotacoes: Array<Pick<Anotacao, "tipo" | "quando">>) {
+  const horarios = anotacoes.filter((anotacao) => anotacao.tipo === "bom").map((anotacao) => new Date(anotacao.quando));
+  const dia = maisComum(horarios.map((data) => DIA_NO_RESUMO[data.getDay()]));
+  const periodo = maisComum(horarios.map((data) => periodoDoDia(data.getHours())));
+  return dia && periodo ? `${dia}, ${periodo}` : null;
+}
+
 function lista(valor: unknown) {
   if (!Array.isArray(valor)) return [];
   return valor

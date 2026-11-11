@@ -37,6 +37,17 @@
   color: var(--colors-neutral-0);
 }
 
+/* Telas com a barra que já tem a própria setinha: o header volta a ser o normal, sem a seta
+   (CabecalhoFamilia). Sem a seta, o space-between leva o logo pra esquerda, e o logo é o completo. */
+.familia:has(.familia-voltar) .app-header-com-voltar .voltar-button,
+.familia:has(.familia-voltar) .app-header-com-voltar .app-logo-icone {
+  display: none;
+}
+
+.familia:has(.familia-voltar) .app-header-com-voltar .app-logo-completo {
+  display: block;
+}
+
 /* Mesma largura máxima dos containers do site (1080, como /conversa e /profissionais). */
 .familia-conteudo {
   flex: 1;
@@ -765,4 +776,31 @@ a.painel-modulo:focus-visible {
   margin: 0;
   text-decoration: line-through;
   text-decoration-thickness: var(--border-width-thin);
+}
+
+/* Convite (módulo 5): psicólogo parceiro no passo 1, com foto ao lado do nome. */
+.convite-profissional-topo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+.convite-profissional-topo h2,
+.convite-profissional-topo p {
+  margin: 0;
+}
+
+.convite-profissional-foto {
+  flex-shrink: 0;
+  width: var(--size-64);
+  height: var(--size-64);
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+/* Plano B do convite: os dois caminhos, um embaixo do outro. */
+.convite-planos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
 }

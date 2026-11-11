@@ -11,8 +11,9 @@ minutos: 5
 
 <!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
-O check-in ainda não existe: o seletor começa sem nada marcado e a versão aparece quando a pessoa
-escolhe. O encerramento aparece sempre.
+O check-in ainda não existe. O seletor começa marcado pelo "Contar como foi o convite" do módulo 5
+(Sim: aceitou; Não: recusou); com "Vou pensar" ou sem resposta, começa sem nada marcado e a versão
+aparece quando a pessoa escolhe. O encerramento aparece sempre.
 O treino do "Novo convite" é o do módulo 5 ("convite-para-ajuda"), que ainda não tem arquivo.
 Botões que ainda não têm ferramenta ficam como "Marcar como feito":
 - valorizar: "Planejar"; meta: "Escolher minha meta"; pausa: "Escolher a data";

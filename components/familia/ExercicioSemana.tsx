@@ -11,6 +11,7 @@ import { condicoesBatem, type BlocoMarkdown, type Contexto, type Trecho } from "
 import { TEXTOS_FRASES } from "@/lib/familia/frases";
 import { ITENS_QUE_CONCLUEM_NO_TREINO, ROTULO_TREINO, ROTULO_TREINO_PADRAO } from "@/lib/familia/simulador";
 import { TEXTOS_ADIAR } from "@/lib/familia/valorizar";
+import { TEXTOS_CONVITE } from "@/lib/familia/convite";
 import { track } from "@/lib/mixpanel";
 
 // Itens do exercício da semana (ajuste do fundador de 10/11/2026): cada item é um cartão com o nome
@@ -24,6 +25,9 @@ import { track } from "@/lib/mixpanel";
 // "o combinado fica para outro dia" são ferramentas de verdade. "Ver o retorno do treino" abre o último
 // retorno do simulador. O item "o combinado fica para outro dia" mostra "Deixado para depois" quando a
 // pessoa respondeu que o clima pode ficar tenso.
+//
+// Briefing M5 (10/11/2026): "Preparar o convite" (5 passos, mostra "Passo X de 5" e só libera o treino
+// depois do passo 3) e "Contar como foi o convite" são ferramentas de verdade.
 //
 // Padrões do briefing 00 (10/11/2026): status "Concluído em DD/MM" com check verde, ou "Ainda não"
 // em cinza (item 4); concluído, o item mostra ações secundárias pra ver, editar ou refazer (item 5);
@@ -50,6 +54,8 @@ const ROTULO_ACAO: Record<string, string> = {
   gosta: "Fazer a lista do que {{apelido}} gosta",
   valorizar: "Planejar como valorizar",
   adiar: "Escolher o que dizer",
+  convite: "Preparar meu convite",
+  contar_convite: TEXTOS_CONVITE.contarBotao,
 };
 
 // Escala e meta (componentes-parte1, C1): a própria ferramenta marca o item quando a pessoa salva.
@@ -70,13 +76,15 @@ const HREF_ACAO: Record<string, string> = {
   gosta: "/familia/programa/gosta",
   valorizar: "/familia/programa/valorizar",
   adiar: "/familia/programa/adiar",
+  convite: "/familia/programa/convite",
+  contar_convite: "/familia/programa/convite/contar",
 };
 
 // Ferramentas que são o botão principal do cartão, mesmo com um treino ao lado.
-const ACAO_PRINCIPAL = new Set(["marcar", "contar_conversa", "frases", "gosta", "valorizar", "adiar"]);
+const ACAO_PRINCIPAL = new Set(["marcar", "contar_conversa", "frases", "gosta", "valorizar", "adiar", "convite", "contar_convite"]);
 
 // Itens que, concluídos, só oferecem o que o briefing lista (sem "Treinar de novo" do treino ao lado).
-const SEM_TREINO_DEPOIS = new Set(["4:planejar"]);
+const SEM_TREINO_DEPOIS = new Set(["4:planejar", "5:preparar"]);
 
 // Depois de concluído (briefing 00, item 5): o que dá pra fazer com a ferramenta que já existe.
 // Ações fora desta lista continuam como botão secundário, com o mesmo rótulo.
@@ -106,6 +114,11 @@ const DEPOIS_DE_CONCLUIDO: Record<string, Array<{ rotulo: string; href: string }
   gosta: [{ rotulo: "Ver e editar a lista", href: "/familia/programa/gosta" }],
   valorizar: [{ rotulo: "Ver e editar o plano", href: "/familia/programa/valorizar" }],
   adiar: [{ rotulo: "Ver e editar", href: "/familia/programa/adiar" }],
+  convite: [{ rotulo: TEXTOS_CONVITE.verEditar, href: "/familia/programa/convite" }],
+  contar_convite: [
+    { rotulo: "Ver o que você contou", href: "/familia/programa/convite/contar?ver=1" },
+    { rotulo: "Contar de novo", href: "/familia/programa/convite/contar" },
+  ],
 };
 
 // Ações que contam o item como feito ao clicar ("Ver psicólogo parceiro" conta no modo segurança).
@@ -164,6 +177,8 @@ type ExercicioSemanaProps = {
   frasesSalvas?: number;
   // Itens "deixados para depois" (hoje só o "combinado fica para outro dia" do módulo 4).
   deixados?: string[];
+  // Último passo concluído do convite (módulo 5), de 0 a 5.
+  passoDoConvite?: number;
 };
 
 // "3 anotações nesta semana" (0 não aparece) e, no item do módulo 2 ainda aberto, "2 de 3 anotações".
@@ -174,7 +189,7 @@ function contadorDoDiario(itemId: string, concluido: boolean, anotacoes: Anotaca
   return `${dificeis} ${dificeis === 1 ? "anotação" : "anotações"} nesta semana`;
 }
 
-export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMarcar, anotacoes = [], frasesSalvas = 0, deixados = [] }: ExercicioSemanaProps) {
+export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMarcar, anotacoes = [], frasesSalvas = 0, deixados = [], passoDoConvite = 0 }: ExercicioSemanaProps) {
   return (
     <div className="familia-exercicio">
       {itens.map((item) => {
@@ -193,7 +208,11 @@ export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMa
           ? contadorDoDiario(item.id, Boolean(feitoEm), anotacoes)
           : item.acoes.includes("frases")
             ? TEXTOS_FRASES.contador(frasesSalvas)
-            : null;
+            : item.acoes.includes("convite") && !feitoEm && passoDoConvite > 0
+              ? TEXTOS_CONVITE.passo(passoDoConvite + 1)
+              : null;
+        // O treino do convite fica ativo depois do passo 3 (briefing M5, card 1).
+        const treinoTravado = item.acoes.includes("convite") && passoDoConvite < 3;
         const rastrear = (acao: string) => () => {
           track("exercicio_acao", { modulo, item: item.id, acao });
           if (!feitoEm && ACAO_MARCA.has(acao)) onMarcar(item.id);
@@ -245,7 +264,8 @@ export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMa
                       key={acao}
                       variante={ACAO_PRINCIPAL.has(acao) || acaoUnica ? "primary" : "secondary"}
                       tamanho="small"
-                      href={hrefDaAcao(acao)}
+                      disabled={acao === "simulador" && treinoTravado}
+                      href={acao === "simulador" && treinoTravado ? undefined : hrefDaAcao(acao)}
                       onClick={rastrear(acao)}
                     >
                       {acao === "simulador" ? aplicarApelido(ROTULO_TREINO[item.cenario as string] ?? ROTULO_TREINO_PADRAO, apelido) : aplicarApelido(ROTULO_ACAO[acao] ?? acao, apelido)}
