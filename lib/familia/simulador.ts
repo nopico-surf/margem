@@ -1,4 +1,4 @@
-import { SIMULADOR_MAX_CARACTERES, SIMULADOR_MAX_MENSAGENS, SIMULADOR_MODELO } from "./config";
+import { SIMULADOR_MAX_CARACTERES, SIMULADOR_MAX_MENSAGENS, SIMULADOR_MODELO, SIMULADOR_MODELO_RESERVA } from "./config";
 
 // Chamadas ao Gemini do simulador de conversa (briefing, seção 8). Única parte do programa para
 // familiares que usa IA. A conversa não é gravada: o navegador manda o histórico a cada turno e o
@@ -52,6 +52,8 @@ export function tituloDoTreino(titulo: string) {
 export type MotivoFalhaSimulador = "sem_chave" | "tempo_esgotado" | "erro_google" | "resposta_vazia" | "formato_invalido" | "erro_inesperado";
 
 const TIMEOUT_MS = 30000;
+const TIMEOUT_PRINCIPAL_MS = 20000;
+const STATUS_DE_SOBRECARGA = new Set([429, 500, 503]);
 
 // Valida o histórico que veio do navegador: alterna familiar e pessoa, começa e termina no familiar
 // (quando é pra responder), respeita o limite de mensagens e de tamanho.
@@ -75,18 +77,41 @@ function semTravessao(texto: string) {
   return texto.replace(/\s*\u2014\s*/g, ", ").trim();
 }
 
-async function chamarGemini(sistema: string, contents: unknown[], json: boolean) {
-  const resposta = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${SIMULADOR_MODELO}:generateContent`, {
+function tempoEsgotado(erro: unknown) {
+  return erro instanceof Error && (erro.name === "TimeoutError" || erro.name === "AbortError");
+}
+
+function pedir(modelo: string, corpo: string, timeoutMs: number) {
+  return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
     method: "POST",
     // Chave no header, nunca na URL.
     headers: { "Content-Type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY ?? "" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: sistema }] },
-      contents,
-      generationConfig: { maxOutputTokens: 1024, ...(json ? { responseMimeType: "application/json" } : {}) },
-    }),
-    signal: AbortSignal.timeout(TIMEOUT_MS),
+    body: corpo,
+    signal: AbortSignal.timeout(timeoutMs),
   });
+}
+
+async function chamarGemini(sistema: string, contents: unknown[], json: boolean) {
+  const corpo = JSON.stringify({
+    systemInstruction: { parts: [{ text: sistema }] },
+    contents,
+    generationConfig: { maxOutputTokens: 1024, ...(json ? { responseMimeType: "application/json" } : {}) },
+  });
+  let resposta: Response | null = null;
+  if (SIMULADOR_MODELO !== SIMULADOR_MODELO_RESERVA) {
+    // Principal com prazo curto: sobrecarregado, ele demora ou devolve 429/500/503, e aí vai o reserva.
+    try {
+      resposta = await pedir(SIMULADOR_MODELO, corpo, TIMEOUT_PRINCIPAL_MS);
+      if (STATUS_DE_SOBRECARGA.has(resposta.status)) {
+        console.warn("[familia] simulador usou o modelo reserva:", `http ${resposta.status}`);
+        resposta = null;
+      }
+    } catch (erro) {
+      if (!tempoEsgotado(erro)) throw erro;
+      console.warn("[familia] simulador usou o modelo reserva:", "tempo_esgotado");
+    }
+  }
+  resposta ??= await pedir(SIMULADOR_MODELO_RESERVA, corpo, TIMEOUT_MS);
   if (!resposta.ok) return { ok: false as const, motivo: "erro_google" as const, detalhe: `http ${resposta.status}` };
   const dados = await resposta.json();
   const texto = dados?.candidates?.[0]?.content?.parts?.map((parte: { text?: string }) => parte.text ?? "").join("").trim();
@@ -95,7 +120,7 @@ async function chamarGemini(sistema: string, contents: unknown[], json: boolean)
 }
 
 function falha(erro: unknown) {
-  if (erro instanceof Error && (erro.name === "TimeoutError" || erro.name === "AbortError")) return { ok: false as const, motivo: "tempo_esgotado" as const };
+  if (tempoEsgotado(erro)) return { ok: false as const, motivo: "tempo_esgotado" as const };
   return { ok: false as const, motivo: "erro_inesperado" as const, detalhe: erro instanceof Error ? erro.message : undefined };
 }
 

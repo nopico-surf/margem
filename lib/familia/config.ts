@@ -41,6 +41,9 @@ export const SIMULADOR_MAX_CARACTERES = 500;
 // Modelo do simulador. O resto da Margem usa o flash-lite; o treino de conversa precisa de mais
 // nuance pra reagir à forma como o familiar fala.
 export const SIMULADOR_MODELO = process.env.FAMILIA_GEMINI_MODELO ?? "gemini-flash-latest";
+// Reserva: quando o principal está sobrecarregado no Google (demora ou devolve 429/500/503), o treino
+// segue com o mesmo modelo do resto da Margem em vez de dar erro.
+export const SIMULADOR_MODELO_RESERVA = "gemini-flash-lite-latest";
 
 // "Sair rápido": troca a página por um site comum e não deixa o "voltar" trazer o programa de volta.
 export const URL_SAIR_RAPIDO = "https://www.climatempo.com.br";
