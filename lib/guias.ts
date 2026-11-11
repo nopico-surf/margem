@@ -3282,6 +3282,210 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Mesa de cabeceira de madeira clara ao lado de uma cama com roupa verde e branca, com um copo de água, uma caixinha branca fechada e a mão de uma pessoa apoiada no tampo, com plantas na janela ao fundo.",
     imagemCard: true,
   },
+  // Guia de LSD (11/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/lsd.md). Formato dos títulos: perguntas (o anterior, clonazepam, usou afirmativos).
+  // Efeitos, tolerância, flashback e cuidado na bad trip conferidos com o Manual MSD. Lei igual à dos guias de
+  // ketamina e lei de drogas. Sem dose de propósito. Mesma exceção de copy dos outros guias.
+  {
+    slug: "lsd",
+    publicadoEm: "2026-11-11",
+    atualizadoEm: "2026-11-11",
+    title: "LSD: o que é, efeitos, riscos e o que fazer numa bad trip | Margem",
+    descricao:
+      "Entenda o que é o LSD, o ácido ou doce, quanto tempo dura, os efeitos, se vicia, os riscos do papel falso e das misturas, como ajudar numa bad trip e onde buscar apoio.",
+    h1: "LSD: o que é, efeitos, riscos e o que fazer numa bad trip",
+    abertura:
+      "Talvez você vá usar LSD e queira entender o que esperar. Talvez já tenha usado e alguma coisa tenha ficado estranha depois. Talvez esteja usando mais vezes do que gostaria. Ou talvez seja alguém próximo de você. Aqui a gente explica o que é o LSD, o que ele faz, quando ele fica perigoso e como diminuir os riscos, sem julgamento e sem exagero, e mostra onde encontrar apoio.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que é LSD?",
+        blocos: [
+          p("LSD é a sigla de dietilamida do ácido lisérgico. É uma substância psicodélica, também chamada de alucinógena, que muda a forma como a pessoa percebe o mundo, o tempo e a si mesma. Foi criada em 1938 pelo químico suíço Albert Hofmann, a partir de uma substância de um fungo que dá no centeio, e os efeitos dela foram descobertos por ele em 1943."),
+          p("Na rua, o LSD é conhecido como ácido, doce, papel ou selo. Ele é muito potente: uma quantidade pequena demais pra ser vista já faz efeito. Por isso costuma vir pingado em quadradinhos de papel, que a pessoa coloca na língua, mas também aparece em gotas, em gelatina ou em micropontos. Ele é usado pela boca, não é injetado."),
+        ],
+      },
+      {
+        titulo: "Quais são os efeitos do LSD?",
+        blocos: [
+          p("O LSD age nos receptores de serotonina do cérebro, principalmente nas áreas ligadas à percepção e ao humor. Os efeitos mudam muito de pessoa pra pessoa e de uma vez pra outra. Os mais comuns são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Cores mais fortes, formas que parecem se mexer e padrões quando a pessoa fecha os olhos",
+              "Sons e imagens que se misturam, como sentir que a música tem cor",
+              "Noção diferente do tempo, que pode parecer parado ou muito longo",
+              "Emoções mais intensas, que podem ir da alegria e da conexão com os outros ao medo",
+              "Pensamentos que parecem muito profundos, ou que se embaralham",
+              "Sensação de que os limites entre a pessoa e o ambiente se desfazem",
+            ],
+          },
+          p("No corpo, é comum pupila dilatada, coração mais acelerado, pressão mais alta, suor, arrepio, tremor, falta de apetite e dificuldade pra dormir."),
+          p("O que acontece depende muito de três coisas: a quantidade, o estado emocional da pessoa antes de usar e o lugar e as pessoas em volta. Usar triste, com medo ou num lugar agitado aumenta a chance de a experiência ficar difícil."),
+        ],
+      },
+      {
+        titulo: "Quanto tempo dura o efeito do LSD?",
+        blocos: [
+          p("O efeito costuma começar entre 20 e 60 minutos depois de usar e dura em geral de 8 a 12 horas, às vezes mais. O pico fica nas primeiras horas, e depois os efeitos vão diminuindo aos poucos. Nas horas seguintes, muita gente fica cansada, sensível ou com dificuldade pra dormir."),
+          p("Como demora pra começar, uma das situações mais comuns é a pessoa achar que não fez efeito e usar de novo. Quando os dois efeitos chegam juntos, a experiência pode ficar bem mais intensa do que ela esperava."),
+        ],
+      },
+      {
+        titulo: "O que é bad trip e como ajudar alguém?",
+        blocos: [
+          p("Bad trip é quando a experiência fica assustadora. A pessoa pode sentir medo muito forte, pânico, desconfiança de todo mundo, sensação de estar enlouquecendo ou morrendo, ou não conseguir sair de um pensamento ruim. Mesmo sendo muito difícil, na maioria das vezes ela passa quando o efeito diminui."),
+          p("Se for com alguém perto de você:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Leve a pessoa pra um lugar calmo, com pouca luz e pouco barulho",
+              "Fique junto e fale com calma, lembrando que é efeito da substância e que vai passar",
+              "Não discuta com o que ela está vendo ou pensando, e não ria dela",
+              "Ofereça água aos poucos e algo confortável, como uma coberta",
+              "Não dê outra substância pra tentar cortar o efeito, nem álcool",
+              "Não deixe a pessoa sozinha, perto de janela, de rua ou de água",
+            ],
+          },
+          p("Ligue para o SAMU no 192 se a pessoa tiver convulsão, dor no peito, temperatura muito alta, desmaiar, tentar se machucar ou machucar alguém, ou se a agitação não melhorar. Se puder, diga à equipe o que foi usado e se teve mistura. Contar não é se denunciar: a equipe precisa saber pra cuidar."),
+        ],
+      },
+      {
+        titulo: "O LSD vicia?",
+        blocos: [
+          p("O LSD não costuma causar dependência física, e parar de usar não causa abstinência no corpo. Um dos motivos é a tolerância rápida: usando dias seguidos, o mesmo efeito quase desaparece, e o corpo leva alguns dias pra voltar ao normal. Por isso o uso todo dia é raro."),
+          p("Isso não quer dizer que o uso nunca pesa. Algumas pessoas passam a usar com frequência pra fugir do que estão sentindo, ou continuam usando mesmo com o sofrimento que vem depois. Alguns sinais de que vale conversar com alguém:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Usar mais vezes ou em mais quantidade do que planejava",
+              "Usar pra aguentar tristeza, ansiedade ou solidão",
+              "Sentir medo, confusão ou percepção alterada que demoram a passar",
+              "Deixar de lado trabalho, estudo ou pessoas por causa do uso",
+              "Misturar cada vez mais com outras substâncias",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "O LSD pode matar?",
+        blocos: [
+          p("Overdose fatal só de LSD é muito rara. Doses muito altas podem causar temperatura muito alta e problemas no coração, mas os riscos mais comuns são outros:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Acidentes: com a percepção e o julgamento alterados, a pessoa pode cair, se perder, atravessar a rua sem ver ou entrar na água",
+              "Papel falso: o selo vendido como LSD pode ter outra substância, como o NBOMe, que é bem mais perigoso e já causou mortes",
+              "Misturas, principalmente com lítio, tramadol, estimulantes como cocaína e anfetamina, e muito álcool",
+              "Crises de saúde mental em quem tem mais risco",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Quem tem mais risco com o LSD?",
+        blocos: [
+          p("Algumas pessoas podem ter uma crise de psicose, com delírios e alucinações que não passam quando o efeito acaba. O risco é maior pra quem já teve psicose, esquizofrenia ou transtorno bipolar, ou tem esses diagnósticos na família. Ainda não se sabe se o LSD causa esses quadros ou se faz aparecer algo que já existia."),
+          p("Também pedem mais cuidado quem está passando por um momento muito difícil, quem tem problema no coração ou pressão alta e quem toma remédio psiquiátrico. Lítio junto com LSD pode causar convulsão. Alguns antidepressivos diminuem o efeito, e isso pode levar a pessoa a usar mais. Se você toma algum remédio, vale contar ao médico que pensa em usar ou que usa: o que você conta fica em sigilo."),
+        ],
+      },
+      {
+        titulo: "O que é flashback do LSD?",
+        blocos: [
+          p("Algumas pessoas voltam a sentir partes do efeito dias, semanas ou meses depois de usar, sem ter usado de novo. O mais comum são alterações visuais, como rastros atrás das coisas em movimento, halos em volta das luzes ou formas que parecem se mexer. Estresse, cansaço, maconha e álcool podem fazer esses episódios aparecer."),
+          p("Na maioria das vezes eles diminuem com o tempo. Quando duram muito ou trazem ansiedade, o nome é transtorno de percepção persistente, e existe tratamento. Se isso está acontecendo com você, vale procurar um psiquiatra e contar que usou LSD."),
+        ],
+      },
+      {
+        titulo: "Como usar LSD com menos risco?",
+        blocos: [
+          p("Nem toda pessoa que usa quer ou consegue parar agora, e dá pra buscar cuidado do jeito que você está. Usar com menos risco também é um caminho, e se chama [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero, mas alguns cuidados fazem diferença:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Escolher um dia em que você está bem, num lugar seguro e conhecido",
+              "Estar com alguém de confiança, de preferência alguém que não vai usar",
+              "Começar com pouco e esperar pelo menos duas horas antes de pensar em usar mais",
+              "Desconfiar do papel: gosto amargo ou língua dormente são sinais de que pode ser outra substância. Não ter gosto não garante que é LSD",
+              "Não misturar com álcool, estimulantes como cocaína e anfetamina, lítio ou tramadol",
+              "Deixar a agenda livre no dia seguinte",
+              "Não dirigir, nem ficar perto de água, de altura ou de rua movimentada durante o efeito",
+              "Combinar antes o que fazer se ficar difícil",
+            ],
+          },
+          p("Se você vai a uma festa, vale ler também sobre [MDMA e bala](/blog/mdma), que costumam circular no mesmo lugar e às vezes são misturados com o LSD."),
+        ],
+      },
+      {
+        titulo: "Qual a diferença entre LSD e MD?",
+        blocos: [
+          p("São substâncias diferentes. O LSD é um psicodélico: muda principalmente a percepção, os pensamentos e a noção do tempo, e o efeito dura muitas horas. O MD é o MDMA em cristal ou pó, um estimulante que dá energia, vontade de se aproximar das pessoas e calor no corpo, com efeito mais curto. O MDMA esquenta mais o corpo e pesa mais no coração, e a mistura dos dois deixa a experiência mais intensa e mais imprevisível. [Ler sobre MDMA](/blog/mdma)"),
+        ],
+      },
+      {
+        titulo: "LSD serve pra tratar alguma coisa?",
+        blocos: [
+          p("O LSD foi usado em pesquisas de saúde mental nos anos 1950 e 1960, que pararam quando ele foi proibido. Hoje, pesquisas voltaram a estudar o LSD, em doses controladas e com acompanhamento, pra ansiedade e depressão. Os resultados ainda estão sendo avaliados e, no Brasil, ele não é um remédio aprovado."),
+          p("A microdose, que é usar quantidades pequenas pra melhorar o humor ou a concentração, ainda não tem resultado claro nas pesquisas. Se você está pensando em usar LSD pra se tratar, um psiquiatra pode conversar sobre os caminhos que já existem pra ansiedade e depressão. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+        ],
+      },
+      {
+        titulo: "Por que o LSD é proibido?",
+        blocos: [
+          p("O LSD foi proibido em vários países no fim dos anos 1960, por causa do uso fora dos laboratórios e de casos de acidentes e crises. No Brasil, ele está na lista de substâncias proibidas do Ministério da Saúde, a mesma que define o que conta como droga pra Lei de Drogas."),
+          p("Pra uso pessoal, a lei não prevê prisão: as medidas são advertência, serviços à comunidade ou curso educativo. Vender ou passar pra outra pessoa pode ser tratado como tráfico. A decisão do STF sobre uso pessoal vale só pra maconha. Se você passou por uma abordagem, vale buscar a Defensoria Pública ou um advogado. [Entender o que diz a Lei de Drogas](/blog/lei-de-drogas)"),
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que usa LSD?",
+        blocos: [
+          p("Você não controla a decisão da outra pessoa, mas pode fazer diferença. Ajuda falar do que você está vendo, sem acusação, escutar mais do que aconselhar e mostrar os caminhos de apoio quando ela estiver aberta. Brigas, ameaças e humilhação costumam afastar, não aproximar."),
+          p("Se vocês saem juntos, vale conhecer o que fazer numa bad trip e combinar de não deixar ninguém sozinho. Cuidar de você também conta. O Nar-Anon reúne familiares e amigos de pessoas que usam drogas, sem custo, e uma terapia pra você também é cuidado, mesmo que a outra pessoa não queira buscar ajuda agora."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio?",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. Conversar sobre o seu uso não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Fora da Margem, o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento, a Unidade Básica de Saúde pode fazer o primeiro acolhimento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "LSD é a mesma coisa que ácido e doce?",
+        resposta:
+          "Sim. Ácido, doce, papel e selo são nomes de rua do LSD. Mas nem todo papel vendido como LSD é LSD: pode ter outra substância, como o NBOMe, que é mais perigoso.",
+      },
+      {
+        pergunta: "Quanto tempo dura o efeito do LSD?",
+        resposta:
+          "O efeito começa entre 20 e 60 minutos depois de usar e dura em geral de 8 a 12 horas, às vezes mais. Cansaço e dificuldade pra dormir podem continuar depois.",
+      },
+      {
+        pergunta: "Por que o LSD não vicia?",
+        resposta:
+          "Ele não causa dependência física nem abstinência no corpo, e a tolerância vem rápido: usando dias seguidos, o efeito quase some. Mesmo assim, o uso pode pesar na vida e na saúde mental de algumas pessoas.",
+      },
+      {
+        pergunta: "O LSD pode matar?",
+        resposta:
+          "Overdose fatal só de LSD é muito rara. Os riscos maiores vêm de acidentes, de papel falso com outra substância, de misturas e de crises de saúde mental. Numa emergência, ligue para o SAMU no 192.",
+      },
+      {
+        pergunta: "LSD é injetável?",
+        resposta:
+          "Não é usado assim. O LSD costuma ser colocado na língua, em papel, gotas, gelatina ou micropontos.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Folha pequena de papel branco picotado em quadradinhos sobre uma mesa de madeira clara, ao lado de um copo de água, com luz da tarde e plantas perto da janela ao fundo.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
