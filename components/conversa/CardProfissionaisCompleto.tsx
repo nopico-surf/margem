@@ -29,11 +29,20 @@ export const registroLabel: Record<ProfissionalCadastrado["especialidade"], stri
   assistente_social: "CRESS",
 };
 
-export function hrefWhatsappProfissional(profissional: ProfissionalCadastrado) {
+// Origens do programa para familiares (briefing M56): `programa-painel`, `programa-modulo-5`...
+export function veioDoPrograma(origem?: string | null): origem is string {
+  return Boolean(origem?.startsWith("programa-"));
+}
+
+// Quem vem do programa é familiar e a sessão é pra essa pessoa (briefing M56, item 3). Sem substância
+// nem detalhe da situação: a mensagem sai do número da própria pessoa.
+export function hrefWhatsappProfissional(profissional: ProfissionalCadastrado, origem?: string | null) {
   const digitos = profissional.whatsapp_link?.replace(/\D/g, "");
   if (!digitos) return undefined;
-  const texto = encodeURIComponent(`Olá! Achei o(a) ${profissional.nome} na Margem e gostaria de agendar uma sessão`);
-  return `https://wa.me/${digitos}?text=${texto}`;
+  const mensagem = veioDoPrograma(origem)
+    ? `Olá! Achei o(a) ${profissional.nome} na Margem. Estou fazendo o programa para familiares e gostaria de agendar uma sessão para mim.`
+    : `Olá! Achei o(a) ${profissional.nome} na Margem e gostaria de agendar uma sessão`;
+  return `https://wa.me/${digitos}?text=${encodeURIComponent(mensagem)}`;
 }
 
 type CardProfissionaisCompletoProps = {
@@ -64,7 +73,9 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
 
   if (!profissional) return null;
 
-  const whatsappHref = hrefWhatsappProfissional(profissional);
+  const whatsappHref = hrefWhatsappProfissional(profissional, origem);
+  // A página do perfil precisa saber que a pessoa veio do programa, pra mensagem do WhatsApp de lá.
+  const hrefPerfil = `/profissionais/${slugDoNome(profissional.nome)}${veioDoPrograma(origem) ? `?origem=${origem}` : ""}`;
 
   return (
     <article className="figma-professional-card">
@@ -76,7 +87,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
               {/* O ::after do link cobre o card inteiro: tocar em qualquer parte abre a página, menos no botão. */}
               <Link
                 className="figma-professional-link"
-                href={`/profissionais/${slugDoNome(profissional.nome)}`}
+                href={hrefPerfil}
                 onClick={() =>
                   track("card_profissional_clicado", {
                     rota: pathname,
@@ -116,6 +127,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
             recurso_nome: profissional.nome,
             especialidade: profissional.especialidade,
             posicao: posicao ?? null,
+            ...(origem ? { origem } : {}),
           });
           // Conversão da Meta, configurada no GTM. Vai sem nenhum dado do profissional.
           window.dataLayer = window.dataLayer || [];

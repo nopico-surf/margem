@@ -24,6 +24,9 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // `variante="guia"` é o carrossel dos textos do blog (/blog/[slug]): título, faixa de preço e fileira de
 // cards, nas especialidades que o guia pede (seletor só quando são as duas). `origem` (o slug do guia) vai
 // no evento de abertura do perfil, e `id` separa os dois carrosséis da mesma página.
+//
+// Briefing M56 (11/11/2026): o programa para familiares usa a variante `home` com `titulo` próprio
+// ("Profissionais que podem atender você") e `origem` (`programa-painel`, `programa-modulo-5`...).
 export function CardProfissionais({
   profissionais,
   isLoading = false,
@@ -31,6 +34,7 @@ export function CardProfissionais({
   especialidades,
   origem,
   id = "figma-section-professionals",
+  titulo = "Profissionais que podem ajudar",
 }: {
   profissionais: ProfissionalCadastrado[];
   isLoading?: boolean;
@@ -38,6 +42,7 @@ export function CardProfissionais({
   especialidades?: Especialidade[];
   origem?: string;
   id?: string;
+  titulo?: string;
 }) {
   const naHome = variante === "home";
   const noGuia = variante === "guia";
@@ -88,7 +93,7 @@ export function CardProfissionais({
   if ((isLoading || !fotosProntas || !sessaoId) && noGuia) {
     return (
       <ContainerConteudo id={id}>
-        <CardHeader title="Profissionais que podem ajudar" />
+        <CardHeader title={titulo} />
         {comSeletor && (
           <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
         )}
@@ -152,7 +157,7 @@ export function CardProfissionais({
   if (noGuia) {
     return (
       <ContainerConteudo id={id}>
-        <CardHeader title="Profissionais que podem ajudar" />
+        <CardHeader title={titulo} />
         {comSeletor && (
           <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
         )}
@@ -175,7 +180,7 @@ export function CardProfissionais({
   return (
     <ContainerConteudo id={id} className={naHome ? "home-profissionais" : undefined}>
       <CardHeader
-        title="Profissionais que podem ajudar"
+        title={titulo}
         description={naHome ? undefined : "É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"}
       />
       <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
@@ -183,11 +188,11 @@ export function CardProfissionais({
       {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />
       ) : profissionaisFiltrados.length === 1 ? (
-        <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} />
+        <CardProfissionaisCompleto profissional={profissionaisFiltrados[0]} posicao={1} origem={origem} />
       ) : (
         <ActionRow className={naHome ? "figma-professionals-row figma-professionals-row--esquerda" : "figma-professionals-row"} origem="profissionais">
           {profissionaisFiltrados.map((profissional, index) => (
-            <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
+            <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} origem={origem} key={profissional.id} />
           ))}
         </ActionRow>
       )}

@@ -18,6 +18,8 @@ import { diaMes } from "@/lib/familia/escala";
 import { carregarEstado, contextoDo, itensDoExercicio, marcarFeito, type EstadoExercicio } from "@/lib/familia/exercicio-cliente";
 import { condicoesBatem, opcoesDaEscolha, type BlocoMarkdown, type Contexto, type Trecho } from "@/lib/familia/markdown";
 import { ExercicioSemana } from "@/components/familia/ExercicioSemana";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { track } from "@/lib/mixpanel";
 
 type AnotacaoContada = { tipo: "dificil" | "bom"; quando: string };
@@ -121,7 +123,16 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }:
 
 // `emRevisao`: o módulo chegou sem o texto (produção, antes da revisão clínica). Quem comprou vê o
 // título e volta ao painel; quem não comprou, a página de módulo bloqueado.
-export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; emRevisao?: boolean }) {
+// `profissionais`: lista do carrossel do fim do módulo (só nos módulos 5 e 6, briefing M56).
+export function ModuloCliente({
+  modulo,
+  emRevisao = false,
+  profissionais,
+}: {
+  modulo: Modulo;
+  emRevisao?: boolean;
+  profissionais?: ProfissionalCadastrado[];
+}) {
   const router = useRouter();
   const [diagnostico, setDiagnostico] = useState<Diagnostico | null>(null);
   // Data em que o módulo foi concluído (a primeira vez vale), ou null.
@@ -309,6 +320,17 @@ export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; e
         onEscolher={escolher}
         exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} frasesSalvas={frasesSalvas} deixados={deixados} passoDoConvite={passoDoConvite} />}
       />
+
+      {/* Briefing M56: no fim dos módulos 5 e 6, o carrossel no lugar do botão. Não conclui nenhum item. */}
+      {profissionais && (
+        <CardProfissionais
+          profissionais={profissionais}
+          variante="home"
+          id="familia-profissionais"
+          origem={`programa-modulo-${modulo.numero}`}
+          titulo="Profissionais que podem atender você"
+        />
+      )}
 
       {/* Banner do módulo 1 (briefing 01, variação c): só depois de concluído e pra quem não comprou. */}
       {modulo.numero === 1 && concluidoEm && acessoLiberado === false && (

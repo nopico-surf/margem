@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GlifoCheckCircle, GlifoLock } from "@/components/icons/glifos";
 import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
@@ -19,6 +20,7 @@ import { vendaSimulada } from "@/lib/familia/dev";
 import { dataDoModulo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
 import { CONTATOS } from "@/lib/contatos";
 import { track } from "@/lib/mixpanel";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Painel do programa (componentes-parte2, "Painel do programa"). Ordem dos blocos, só os que têm
 // conteúdo: alertas fixos, "Esta semana" (módulo atual + sua meta), ferramentas, os 8 módulos e
@@ -62,7 +64,15 @@ async function lerJson<T>(caminho: string, padrao: T): Promise<T> {
   return resposta?.ok ? ((await resposta.json()) as T) : padrao;
 }
 
-export function PainelCliente({ modulos, profissionais }: { modulos: ModuloDoPainel[]; profissionais: ProfissionalDoConvite[] }) {
+export function PainelCliente({
+  modulos,
+  profissionais,
+  todosProfissionais,
+}: {
+  modulos: ModuloDoPainel[];
+  profissionais: ProfissionalDoConvite[];
+  todosProfissionais: ProfissionalCadastrado[];
+}) {
   const router = useRouter();
   const [dados, setDados] = useState<Dados | null>(null);
   const [retornoMeta, setRetornoMeta] = useState(false);
@@ -322,12 +332,14 @@ export function PainelCliente({ modulos, profissionais }: { modulos: ModuloDoPai
         )}
       </section>
 
-      <section className="familia-secao">
-        <h2 className="header-medium">Profissionais</h2>
-        <Button variante="secondary" tamanho="medium" larguraTotal href="/profissionais">
-          Ver psicólogo parceiro
-        </Button>
-      </section>
+      {/* Briefing M56: o carrossel no lugar do botão, com título que diz que a sessão é pro familiar. */}
+      <CardProfissionais
+        profissionais={todosProfissionais}
+        variante="home"
+        id="familia-profissionais"
+        origem="programa-painel"
+        titulo="Profissionais que podem atender você"
+      />
 
       {mostrarReembolso && (
         <section className="familia-secao">

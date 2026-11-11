@@ -7,7 +7,7 @@ import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { CardFormacoes } from "@/components/conversa/CardFormacoes";
-import { hrefWhatsappProfissional, registroLabel, rotuloEspecialidade } from "@/components/conversa/CardProfissionaisCompleto";
+import { hrefWhatsappProfissional, registroLabel, rotuloEspecialidade, veioDoPrograma } from "@/components/conversa/CardProfissionaisCompleto";
 import { Avatar } from "@/components/ui/Avatar";
 import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
@@ -113,7 +113,15 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
     else router.push("/inicio");
   }
 
-  const whatsappHref = hrefWhatsappProfissional(profissional);
+  // Aberto pelo carrossel do programa para familiares (briefing M56): `?origem=programa-...` muda a
+  // mensagem do WhatsApp e vai nos eventos. Lido no cliente pra a página continuar estática.
+  const [origem, setOrigem] = useState<string | null>(null);
+  useEffect(() => {
+    const valor = new URLSearchParams(window.location.search).get("origem");
+    if (veioDoPrograma(valor)) setOrigem(valor);
+  }, []);
+
+  const whatsappHref = hrefWhatsappProfissional(profissional, origem);
   const formacoes = profissional.formacoes ?? [];
 
   function agendar() {
@@ -124,6 +132,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
       recurso_nome: profissional.nome,
       especialidade: profissional.especialidade,
       posicao: null,
+      ...(origem ? { origem } : {}),
     });
     // Conversão da Meta, configurada no GTM. Vai sem nenhum dado do profissional.
     window.dataLayer = window.dataLayer || [];

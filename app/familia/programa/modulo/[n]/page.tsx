@@ -3,9 +3,13 @@ import { notFound } from "next/navigation";
 import { Loader } from "@/components/ui/Loader";
 import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
 import { lerModulo, TOTAL_MODULOS } from "@/lib/familia/conteudo";
+import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { ModuloCliente } from "./ModuloCliente";
 
 type Props = { params: Promise<{ n: string }> };
+
+// Módulos que terminam com o carrossel de profissionais (briefing M56).
+const MODULOS_COM_CARROSSEL = new Set([5, 6]);
 
 // Módulos do programa para familiares, escritos em content/familia/modulos (briefing, seção 7).
 // O texto é lido no build; quem pode ver, o apelido e as variações por problema são resolvidos no
@@ -35,5 +39,7 @@ async function Conteudo({ params }: Props) {
   // página de módulo bloqueado mostrar "O que você vai aprender" em vez de um erro (briefing 01).
   const emRevisao = modulo.numero !== 1 && !MOSTRAR_REVISAO_CLINICA;
   const enviado = emRevisao ? { ...modulo, blocos: modulo.blocos.filter((bloco) => bloco.tipo === "titulo"), audio: null, video: null } : modulo;
-  return <ModuloCliente modulo={enviado} emRevisao={emRevisao} />;
+  // Carrossel de profissionais no fim dos módulos 5 e 6 (briefing M56). A busca é cacheada.
+  const profissionais = !emRevisao && MODULOS_COM_CARROSSEL.has(modulo.numero) ? await buscarTodosProfissionaisAtivos() : undefined;
+  return <ModuloCliente modulo={enviado} emRevisao={emRevisao} profissionais={profissionais} />;
 }

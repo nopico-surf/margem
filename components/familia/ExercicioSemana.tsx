@@ -43,8 +43,9 @@ const ROTULO_ACAO: Record<string, string> = {
   treinar_roteiro: "Treinar o meu roteiro",
   plano_seguranca: "Fazer meu plano de segurança",
   roteiro: "Ver o meu roteiro da conversa",
-  profissional: "Ver psicólogo parceiro",
-  profissionais_semana: "Ver psicólogos parceiros com horário nesta semana",
+  // Plural porque a lista tem mais de um. Não existe agenda no produto: nada de "horário" (briefing M56).
+  profissional: "Ver psicólogos parceiros",
+  profissionais_semana: "Ver psicólogos parceiros",
   servicos: "Ver serviços perto de mim",
   seguranca: "Ver o que fazer em caso de risco",
   escala: "Dar notas e criar minha meta",
