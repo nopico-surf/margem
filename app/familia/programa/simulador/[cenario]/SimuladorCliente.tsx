@@ -6,6 +6,7 @@ import { GlifoMicNone, GlifoVolumeOff, GlifoVolumeUp } from "@/components/icons/
 import { MessageInput } from "@/components/app/MessageInput";
 import { AvisoIA } from "@/components/familia/AvisoIA";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
+import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import { ResponseError } from "@/components/conversa/ResponseError";
 import { ResponseLoading } from "@/components/conversa/ResponseLoading";
 import { UserMessage } from "@/components/conversa/UserMessage";
@@ -59,7 +60,9 @@ function construtorDeVoz(): ConstrutorReconhecimento | null {
 // Desde 10/11/2026 usa o campo da home (MessageInput) e as mensagens, o carregando e o erro da
 // /conversa (UserMessage, figma-response-copy, ResponseLoading, ResponseError). O microfone e o
 // "Ouvir as respostas" usam a voz do próprio navegador; nenhuma voz é gravada.
-export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
+// Quem não comprou faz um treino grátis (a rota decide); no segundo, a mensagem de limite e, logo
+// abaixo, o banner de oferta do resultado (briefing 01b, item 2).
+export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenario; modulosDaOferta: string[] }) {
   // Módulo de onde a pessoa veio (?modulo=N, posto pelo botão do exercício); sem ele, volta ao painel.
   const moduloParam = Number(useSearchParams().get("modulo"));
   const moduloDeOrigem = Number.isInteger(moduloParam) && moduloParam >= 1 && moduloParam <= 8 ? moduloParam : null;
@@ -321,6 +324,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
               {MENSAGEM_BLOQUEIO[bloqueio]}
             </p>
             {bloqueio === "bloqueado_seguranca" && <ContatosEmergencia />}
+            {bloqueio === "limite_gratis" && <OfertaPrograma variante="resultado" apelido={apelido} modulos={modulosDaOferta} />}
           </>
         ) : (
           <>

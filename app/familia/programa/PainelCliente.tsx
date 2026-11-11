@@ -18,9 +18,7 @@ import { TEXTOS_VALORIZAR, type PlanoValorizar } from "@/lib/familia/valorizar";
 import { nomeDoSalvo, PLANOS_B, TEXTOS_CONVITE, type Convite, type ProfissionalDoConvite } from "@/lib/familia/convite";
 import { vendaSimulada } from "@/lib/familia/dev";
 import { primeiroPasso, TEXTOS_REDE, type Rede } from "@/lib/familia/rede";
-import { dataDoModulo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
-import { CONTATOS } from "@/lib/contatos";
-import { track } from "@/lib/mixpanel";
+import { dataDoModulo, fimDoPrazo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Painel do programa (componentes-parte2, "Painel do programa"). Ordem dos blocos, só os que têm
@@ -32,11 +30,12 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // dinheiro. Também fora, até haver decisão:
 // "Semana X de 8", "Precisa de ajuda agora?" e configurações.
 //
-// Compra e liberação semanal (briefing 01): sem compra, o módulo com cadeado leva à página de módulo
-// bloqueado (com o banner de oferta); com compra, o módulo cuja semana não chegou mostra "Chega em
-// DD/MM". Nos 7 dias depois da compra aparece "Desistir e pedir reembolso", que abre o WhatsApp (o
-// reembolso é feito à mão no Asaas). No localhost, como antes, todos os módulos abrem pra revisão, a
-// menos que a venda simulada esteja ligada (lib/familia/dev.ts).
+// Compra e liberação semanal (briefing 01): sem compra, o módulo com cadeado (o 1 também, briefing
+// 01b) leva à página de módulo bloqueado (com o banner de oferta); com compra, o módulo cuja semana não
+// chegou mostra "Chega em DD/MM". Nos 14 dias depois da compra, o rodapé diz até quando dá pra pedir o
+// dinheiro de volta e leva à tela do pedido (a devolução é feita à mão no Asaas). No localhost, como
+// antes, todos os módulos abrem pra revisão, a menos que a venda simulada esteja ligada
+// (lib/familia/dev.ts).
 
 // liberado: o servidor pode mandar o conteúdo (módulo 1 sempre; 2 a 8 depois da revisão clínica).
 export type ModuloDoPainel = { numero: number; titulo: string; liberado: boolean; bloqueadoEmModoSeguranca: boolean };
@@ -61,7 +60,6 @@ type Dados = {
   rede: Rede | null;
 };
 
-const LINK_WHATSAPP = CONTATOS.find((contato) => contato.tipo === "whatsapp")!.href;
 
 async function lerJson<T>(caminho: string, padrao: T): Promise<T> {
   const resposta = await chamarApi(caminho);
@@ -130,7 +128,8 @@ export function PainelCliente({
 
   // Em modo de segurança, os módulos marcados como bloqueados ficam guardados.
   const guardado = (modulo: ModuloDoPainel) => safetyMode && modulo.bloqueadoEmModoSeguranca;
-  const chegou = (modulo: ModuloDoPainel) => modulo.numero === 1 || !travar || (perfil.acessoLiberado && moduloChegou(modulo.numero, modulo1ConcluidoEm));
+  // Desde o briefing 01b o módulo 1 também pede compra (moduloChegou(1) é sempre verdadeiro).
+  const chegou = (modulo: ModuloDoPainel) => !travar || (perfil.acessoLiberado && moduloChegou(modulo.numero, modulo1ConcluidoEm));
   const aberto = (modulo: ModuloDoPainel) => modulo.liberado && chegou(modulo) && !guardado(modulo);
   // Sem compra, o cadeado leva à página de módulo bloqueado, com a oferta.
   const levaAOferta = (modulo: ModuloDoPainel) => !aberto(modulo) && !guardado(modulo) && !perfil.acessoLiberado;
@@ -374,10 +373,12 @@ export function PainelCliente({
         titulo="Profissionais que podem atender você"
       />
 
-      {mostrarReembolso && (
+      {/* Briefing 01b: enquanto o prazo corre, a linha de apoio e a tela de pedir o dinheiro de volta. */}
+      {mostrarReembolso && perfil.compra && (
         <section className="familia-secao">
-          <Button variante="transparent" tamanho="medium" larguraTotal href={LINK_WHATSAPP} alvoExterno onClick={() => track("reembolso_pedido", { plano: perfil.compra?.plano ?? null })}>
-            Desistir e pedir reembolso
+          <p className="text-medium-regular familia-texto-suave">Você tem até {fimDoPrazo(perfil.compra.pagoEm)} para pedir o dinheiro de volta.</p>
+          <Button variante="transparent" tamanho="medium" larguraTotal href="/familia/programa/devolucao">
+            Pedir o dinheiro de volta
           </Button>
         </section>
       )}

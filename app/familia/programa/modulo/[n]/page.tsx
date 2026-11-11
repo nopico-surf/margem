@@ -14,8 +14,8 @@ const MODULOS_COM_CARROSSEL = new Set([5, 6]);
 
 // Módulos do programa para familiares, escritos em content/familia/modulos (briefing, seção 7).
 // O texto é lido no build; quem pode ver, o apelido e as variações por problema são resolvidos no
-// cliente, com o diagnóstico da pessoa. O módulo 1 é aberto pra quem tem conta, mesmo sem ter
-// comprado. Os módulos 2 a 8 abrem com a compra e a liberação semanal (briefing 01); o conteúdo deles
+// cliente, com o diagnóstico da pessoa. Todos os módulos abrem com a compra (briefing 01b: o módulo 1
+// deixou de ser grátis), e do 2 ao 8 com a liberação semanal (briefing 01); o conteúdo deles
 // (v2, [REVISÃO CLÍNICA]) só sai no servidor local até a revisão da psicóloga parceira.
 export async function generateStaticParams() {
   const numeros = Array.from({ length: TOTAL_MODULOS }, (_, indice) => indice + 1);

@@ -69,9 +69,10 @@ export async function lerModulo(numero: number): Promise<Modulo | null> {
   };
 }
 
-// Títulos dos módulos 2 a 8 publicados, na ordem: a lista trancada do banner de oferta no resultado.
+// Títulos dos módulos 1 a 8 publicados, na ordem: a lista trancada do banner de oferta. Desde o briefing
+// 01b o módulo 1 também é pago.
 export async function titulosDosModulosPagos() {
-  const numeros = Array.from({ length: TOTAL_MODULOS - 1 }, (_, indice) => indice + 2);
+  const numeros = Array.from({ length: TOTAL_MODULOS }, (_, indice) => indice + 1);
   const lidos = await Promise.all(numeros.map((numero) => lerModulo(numero)));
   return lidos.filter((modulo): modulo is Modulo => modulo !== null && modulo.publicado).map((modulo) => modulo.titulo);
 }

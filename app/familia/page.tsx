@@ -212,14 +212,14 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
     perguntas: [
       {
         pergunta: "Quanto custa?",
-        resposta: "Você escolhe quanto pagar, entre R$ 47 e R$ 147. O valor sugerido é R$ 97, em pagamento único por Pix. O diagnóstico e o módulo 1 são grátis.",
+        resposta: "Você escolhe quanto pagar, entre R$ 47 e R$ 147. O valor sugerido é R$ 97, em pagamento único por Pix. O diagnóstico é grátis.",
       },
       { pergunta: "E se eu não puder pagar agora?", resposta: "Você pode pedir acesso gratuito. Ninguém precisa ficar de fora por causa de dinheiro." },
       {
         pergunta: "O que é o plano com acompanhamento?",
         resposta: "É o programa completo com a primeira sessão com um profissional parceiro já incluída. É o jeito que mais ajuda, segundo os estudos.",
       },
-      { pergunta: "E se eu me arrepender?", resposta: "Você pode desistir em até 7 dias depois da compra e recebe o dinheiro de volta." },
+      { pergunta: "E se eu me arrepender?", resposta: "Você pode pedir o dinheiro de volta em até 14 dias depois da compra. Num toque, sem precisar explicar por quê." },
     ],
   },
   {

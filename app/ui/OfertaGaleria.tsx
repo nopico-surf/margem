@@ -12,14 +12,14 @@ function Estado({ nome, children }: { nome: string; children: React.ReactNode })
   );
 }
 
-// modulos: os títulos reais dos módulos 2 a 8, lidos do content/familia pela página da galeria.
+// modulos: os títulos reais dos módulos 1 a 8, lidos do content/familia pela página da galeria.
 export function OfertaProgramaGaleria({ modulos }: { modulos: string[] }) {
   return (
     <div className="galeria-estados">
       <Estado nome="lp (antes da FAQ)">
         <OfertaPrograma variante="lp" />
       </Estado>
-      <Estado nome="resultado (módulos 2 a 8 trancados)">
+      <Estado nome="resultado (módulos 1 a 8 trancados)">
         <OfertaPrograma variante="resultado" apelido="Lu" modulos={modulos} />
       </Estado>
       <Estado nome="modulo1 (só depois de concluído)">

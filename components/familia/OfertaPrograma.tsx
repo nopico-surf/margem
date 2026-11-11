@@ -10,7 +10,8 @@ import { track } from "@/lib/mixpanel";
 // Banner de oferta do programa para familiares (briefing 01). Design: canvas "Banner de oferta", quatro
 // variações do mesmo cartão: faixa verde-escura em cima (título e preço) e corpo branco embaixo.
 // - lp: antes da FAQ da LP. Preço em destaque, o que inclui, o plano com acompanhamento, os dois botões.
-// - resultado: no resultado do diagnóstico, depois dos avisos, com a lista dos módulos 2 a 8 trancados.
+// - resultado: no resultado do diagnóstico, depois dos avisos, com a lista dos módulos 1 a 8 trancados
+//   (briefing 01b: o módulo 1 deixou de ser grátis). Também quando o treino grátis acaba.
 // - modulo1: no fim do módulo 1, só depois de concluído.
 // - bloqueado: na página de um módulo que a pessoa ainda não comprou (mesmo texto do resultado).
 //
@@ -23,7 +24,7 @@ type OfertaProgramaProps = {
   variante: VarianteOferta;
   // "{{apelido}}" do texto do resultado e do bloqueado.
   apelido?: string;
-  // Títulos dos módulos 2 a 8, na ordem (só no resultado).
+  // Títulos dos módulos 1 a 8, na ordem (só no resultado).
   modulos?: string[];
   // "O módulo 2 chega em DD/MM" (só no módulo 1).
   dataModulo2?: string;
@@ -60,10 +61,10 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
 
   const texto =
     variante === "lp"
-      ? "O diagnóstico e o módulo 1 são grátis. Você só paga se quiser seguir com as 8 semanas."
+      ? "O diagnóstico é grátis. Você só paga se quiser seguir com as 8 semanas."
       : variante === "modulo1"
         ? "Na próxima semana, você vai entender o padrão: quando o uso acontece, o que vem antes e o que vem depois. Para seguir, escolha quanto pagar."
-        : `As próximas 7 semanas foram pensadas para a sua situação com ${apelido}. Você pode começar o módulo 1 agora, de graça, e decidir depois.`;
+        : `As 8 semanas foram pensadas para a sua situação com ${apelido}.`;
 
   return (
     <section className="oferta-programa" data-variante={variante} aria-labelledby={idTitulo}>
@@ -77,6 +78,9 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
               R$ {MINIMO} a R$ {MAXIMO}
             </p>
             <p className="oferta-programa-apoio">Você escolhe o valor. Uma vez só, no Pix.</p>
+            <p className="oferta-programa-apoio">
+              Você tem {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta. Num toque, sem precisar explicar por quê.
+            </p>
           </>
         ) : (
           <>
@@ -121,7 +125,7 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
               <li key={tituloDoModulo}>
                 <GlifoLock size={20} color="var(--colors-neutral-700)" />
                 <span>
-                  Módulo {indice + 2} · {tituloDoModulo}
+                  Módulo {indice + 1} · {tituloDoModulo}
                 </span>
               </li>
             ))}
@@ -150,7 +154,7 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
           )}
         </div>
 
-        {variante === "lp" && (
+        {variante === "lp" ? (
           <div className="oferta-programa-rodape">
             <p>
               Nem o valor mínimo cabe agora?{" "}
@@ -158,7 +162,10 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
                 Pedir acesso gratuito
               </a>
             </p>
-            <p>Você tem {DIAS_PARA_DESISTIR} dias para desistir e receber o valor de volta.</p>
+          </div>
+        ) : (
+          <div className="oferta-programa-rodape">
+            <p>{DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
           </div>
         )}
       </div>

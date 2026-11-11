@@ -33,7 +33,7 @@ export async function cancelarPixPendentesDaFamilia(userId: string) {
 }
 
 // Pix pago: libera as 8 semanas. A primeira liberação vale (um segundo pagamento não muda a data, que
-// conta os 7 dias pra desistir).
+// conta o prazo pra pedir o dinheiro de volta).
 export async function liberarAcessoDaFamilia(userId: string) {
   const supabase = getServerClient();
   if (!supabase) return false;
@@ -46,7 +46,7 @@ export async function liberarAcessoDaFamilia(userId: string) {
   return !error;
 }
 
-// Estorno (o reembolso dos 7 dias, feito à mão no painel do Asaas): o acesso sai na hora.
+// Estorno (a devolução pedida no prazo, feita à mão no painel do Asaas): o acesso sai na hora.
 export async function retirarAcessoDaFamilia(userId: string) {
   const supabase = getServerClient();
   if (!supabase) return false;

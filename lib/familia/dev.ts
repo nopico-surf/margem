@@ -38,7 +38,7 @@ const CHAVE_PROGRESSO = "margem-familia-dev-progresso";
 const CHAVE_COMPRA = "margem-familia-dev-compra";
 const CHAVE_PIX = "margem-familia-dev-pix";
 const PIX_CAI_EM_MS = 8000;
-// Venda simulada: com "1", o localhost passa a travar os módulos 2 a 8 como em produção (compra e
+// Venda simulada: com "1", o localhost passa a travar os módulos 1 a 8 como em produção (compra e
 // liberação semanal), pra ver o banner e a página de módulo bloqueado. Sem ela, como antes, todos os
 // módulos abrem no localhost pra revisão do conteúdo. Liga com
 // localStorage.setItem("margem-familia-dev-venda", "1") no console.
@@ -128,6 +128,8 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
   }
 
   if (caminho === "/api/familia/gratuidade") return json({ ok: true });
+  // Pedido de devolução (briefing 01b): como a gratuidade, nada é gravado.
+  if (caminho === "/api/familia/devolucao") return json({ ok: true });
 
   if (caminho === "/api/familia/diagnostico") {
     if (metodo === "POST") {

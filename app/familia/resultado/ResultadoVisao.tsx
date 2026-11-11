@@ -12,9 +12,9 @@ import { track } from "@/lib/mixpanel";
 // O desenho da página de resultado (briefing, seção 6), separado de onde os dados vêm: a página real
 // busca o diagnóstico da conta; a de exemplo (só no localhost) monta com as respostas do aparelho.
 // Ordem: acolhimento, a seu favor e ponto de atenção, primeira conversa (ou segurança), um passo
-// pra você, avisos, banner de oferta, módulo 1. O banner (briefing 01, variação b) vem depois dos avisos
-// e, em modo de segurança, depois do cartão de segurança, nunca antes. Sem `modulosDaOferta` (quem já
-// comprou, ou a página de exemplo), ele não aparece.
+// pra você, avisos e, no fim, o banner de oferta ou o módulo 1. O banner (briefing 01, variação b) vem
+// depois dos avisos e, em modo de segurança, depois do cartão de segurança, nunca antes. Sem
+// `modulosDaOferta` (quem já comprou, ou a página de exemplo), entra "Começar o módulo 1" no lugar.
 export function ResultadoVisao({ resultado, apelido, modulosDaOferta = null }: { resultado: Resultado; apelido: string; modulosDaOferta?: string[] | null }) {
   const [copiado, setCopiado] = useState(false);
   const t = (texto: string) => aplicarApelido(texto, apelido);
@@ -79,6 +79,12 @@ export function ResultadoVisao({ resultado, apelido, modulosDaOferta = null }: {
             <h3 className="header-small">{t("Se {{apelido}} reagir mal")}</h3>
             <p className="text-large">{t(conversa.seReagirMal.orientacao)}</p>
             {conversa.seReagirMal.frase && <p className="familia-fala text-large">{t(conversa.seReagirMal.frase)}</p>}
+            {/* A porta do treino grátis (briefing 01b, item 2): quem não comprou faz um treino inteiro, com
+                retorno. Quem decide se pode é a rota do simulador. */}
+            <p className="text-medium-regular familia-texto-suave">Dá para treinar esta conversa antes, de graça, sem compromisso.</p>
+            <Button variante="secondary" tamanho="small" href="/familia/programa/simulador/primeira-conversa">
+              Treinar o meu roteiro
+            </Button>
           </div>
         </section>
       ) : (
@@ -115,17 +121,18 @@ export function ResultadoVisao({ resultado, apelido, modulosDaOferta = null }: {
         ))}
       </section>
 
-      {modulosDaOferta && (
+      {/* Quem não comprou: o banner é o botão principal (briefing 01b). Quem comprou: o módulo 1. */}
+      {modulosDaOferta ? (
         <section className="familia-secao">
           <OfertaPrograma variante="resultado" apelido={apelido} modulos={modulosDaOferta} />
         </section>
+      ) : (
+        <section className="familia-secao">
+          <Button tamanho="medium" larguraTotal href="/familia/programa/modulo/1">
+            Começar o módulo 1
+          </Button>
+        </section>
       )}
-
-      <section className="familia-secao">
-        <Button tamanho="medium" larguraTotal href="/familia/programa/modulo/1">
-          Começar o módulo 1 (grátis)
-        </Button>
-      </section>
     </>
   );
 }

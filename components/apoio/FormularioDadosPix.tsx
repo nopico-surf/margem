@@ -23,9 +23,11 @@ type FormularioDadosPixProps = {
   onConferir: (campo: Campo) => void;
   onGerar: () => void;
   onPorQue: () => void;
+  // Linha junto do Gerar Pix (o checkout do programa põe ali o prazo pra pedir o dinheiro de volta).
+  nota?: string;
 };
 
-export function FormularioDadosPix({ id, campos, valores, erros, erroGeral, textoDoValor, onMudar, onConferir, onGerar, onPorQue }: FormularioDadosPixProps) {
+export function FormularioDadosPix({ id, campos, valores, erros, erroGeral, textoDoValor, onMudar, onConferir, onGerar, onPorQue, nota }: FormularioDadosPixProps) {
   return (
     <ContainerConteudo id={id}>
       <CardHeader as="h1" title="Seus dados para o Pix" />
@@ -74,6 +76,7 @@ export function FormularioDadosPix({ id, campos, valores, erros, erroGeral, text
           {erroGeral}
         </p>
       )}
+      {nota && <p className="plano-nota">{nota}</p>}
       <div className="plano-dados-acoes">
         <Button variante="transparent" tamanho="medium" onClick={onPorQue}>
           Por que pedimos esses dados?

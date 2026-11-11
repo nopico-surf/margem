@@ -15,8 +15,13 @@ export const SESSAO_MINIMA = 60;
 export const SESSAO_MAXIMA = 200;
 export const VALORES_SESSAO = [60, 95, 130, 165, 200] as const;
 
-// Prazo pra desistir e receber o valor de volta, contado da liberação do acesso.
-export const DIAS_PARA_DESISTIR = 7;
+// Prazo pra pedir o dinheiro de volta, contado da liberação do acesso (briefing 01b: 14 dias, o dobro
+// do artigo 49 do CDC). Na tela, nunca com contador regressivo e nunca com "cancelar".
+export const DIAS_PARA_DESISTIR = 14;
+
+// [PENDÊNCIA DO FUNDADOR] Em quanto tempo a devolução cai, ex.: "2 dias úteis". Nulo: a frase
+// "O valor volta pelo mesmo Pix em até..." aparece sem o prazo.
+export const PRAZO_DEVOLUCAO: string | null = null;
 
 // [PENDÊNCIA DO FUNDADOR] Em quanto tempo o pedido de acesso gratuito é respondido, ex.: "2 dias
 // úteis". Nulo: a frase "A gente responde em até..." não aparece.
@@ -66,9 +71,17 @@ export function moduloChegou(numero: number, modulo1ConcluidoEm: string | null, 
   return data !== null && data.getTime() <= agora;
 }
 
-// Ainda dentro dos 7 dias pra desistir com reembolso.
+const DIA_MS = 24 * 60 * 60 * 1000;
+
+// Ainda dentro do prazo pra pedir o dinheiro de volta.
 export function podeDesistir(acessoLiberadoEm: string | null, agora = Date.now()) {
   if (!acessoLiberadoEm) return false;
   const liberado = new Date(acessoLiberadoEm).getTime();
-  return Number.isFinite(liberado) && agora - liberado <= DIAS_PARA_DESISTIR * 24 * 60 * 60 * 1000;
+  return Number.isFinite(liberado) && agora - liberado <= DIAS_PARA_DESISTIR * DIA_MS;
+}
+
+// Último dia do prazo, por extenso curto, no horário de Brasília: "25 de novembro".
+export function fimDoPrazo(acessoLiberadoEm: string) {
+  const fim = new Date(new Date(acessoLiberadoEm).getTime() + DIAS_PARA_DESISTIR * DIA_MS);
+  return fim.toLocaleDateString("pt-BR", { day: "numeric", month: "long", timeZone: "America/Sao_Paulo" });
 }

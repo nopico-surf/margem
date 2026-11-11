@@ -36,7 +36,9 @@ import {
   VALOR_SUGERIDO,
   VALORES_PROGRAMA,
   VALORES_SESSAO,
+  DIAS_PARA_DESISTIR,
   dataDoModulo,
+  fimDoPrazo,
   montarCompra,
   valorDaSessaoValido,
   type PlanoFamilia,
@@ -85,6 +87,7 @@ export function CheckoutCliente() {
   const [painelVisivel, setPainelVisivel] = useState(false);
   const [temDiagnostico, setTemDiagnostico] = useState(true);
   const [modulo2Em, setModulo2Em] = useState<Date | null>(null);
+  const [devolucaoAte, setDevolucaoAte] = useState<string | null>(null);
   const gerandoRef = useRef(false);
   const pixGerados = useRef(0);
 
@@ -146,11 +149,18 @@ export function CheckoutCliente() {
     return () => cancelAnimationFrame(quadro);
   }, [etapa]);
 
-  // Na confirmação, a data do módulo 2 (7 dias depois da conclusão do módulo 1).
+  // Na confirmação, a data do módulo 2 (7 dias depois da conclusão do módulo 1) e o último dia pra pedir
+  // o dinheiro de volta (briefing 01b), contado de quando o Pix caiu. Se o perfil ainda não trouxer a
+  // compra, conta de agora: o acesso acabou de ser liberado.
   useEffect(() => {
     if (etapa !== "confirmado") return;
+    setDevolucaoAte(fimDoPrazo(new Date().toISOString()));
     (async () => {
-      const resposta = await chamarApi("/api/familia/progresso");
+      const [resposta, perfil] = await Promise.all([chamarApi("/api/familia/progresso"), chamarApi("/api/familia/perfil")]);
+      if (perfil?.ok) {
+        const { compra: comprada } = (await perfil.json()) as { compra: { pagoEm: string } | null };
+        if (comprada?.pagoEm) setDevolucaoAte(fimDoPrazo(comprada.pagoEm));
+      }
       if (!resposta?.ok) return;
       const { modulos } = (await resposta.json()) as { modulos: Record<string, { concluido_em: string | null }> };
       setModulo2Em(dataDoModulo(2, modulos[1]?.concluido_em ?? null));
@@ -369,7 +379,7 @@ export function CheckoutCliente() {
               </Button>
             ))}
           </div>
-          <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · 7 dias para desistir com reembolso.</p>
+          <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
           <Button tamanho="medium" larguraTotal onClick={() => setEtapa("dados")}>
             Continuar para o pagamento
           </Button>
@@ -434,6 +444,7 @@ export function CheckoutCliente() {
           onConferir={conferirCampo}
           onGerar={() => void gerarPix()}
           onPorQue={abrirPorQue}
+          nota={`Se não for para você, peça o dinheiro de volta em até ${DIAS_PARA_DESISTIR} dias. Num toque, sem precisar explicar por quê.`}
         />
       )}
 
@@ -456,8 +467,13 @@ export function CheckoutCliente() {
         <section className="familia-secao">
           <div className="plano-confirmacao">
             <IconeConfirmado />
-            <h1>Pagamento confirmado. As 8 semanas estão liberadas para você.</h1>
+            <h1>Pagamento confirmado.</h1>
           </div>
+          {devolucaoAte && (
+            <p className="text-large">
+              Seu acesso está liberado. Até {devolucaoAte} você pode pedir o dinheiro de volta, num toque, sem precisar explicar por quê.
+            </p>
+          )}
           <p className="text-large">
             {modulo2Em ? `O módulo 2 chega em ${diaMes(modulo2Em.toISOString())}. ` : ""}A cada semana, um novo módulo.
           </p>

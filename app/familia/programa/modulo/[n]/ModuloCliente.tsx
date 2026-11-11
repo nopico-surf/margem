@@ -210,9 +210,10 @@ export function ModuloCliente({
       setModulo1ConcluidoEm(concluidoM1);
       setConcluidoEm(modulos[modulo.numero]?.concluido_em ?? null);
 
-      // Módulos 2 a 8: só com a compra e depois da semana deles. No localhost, como antes, todos abrem
-      // pra revisão, a menos que a venda simulada esteja ligada (lib/familia/dev.ts).
-      const travar = modulo.numero > 1 && (!MOSTRAR_REVISAO_CLINICA || vendaSimulada());
+      // Todos os módulos só com a compra (briefing 01b), e do 2 ao 8 depois da semana deles. No
+      // localhost, como antes, todos abrem pra revisão, a menos que a venda simulada esteja ligada
+      // (lib/familia/dev.ts).
+      const travar = !MOSTRAR_REVISAO_CLINICA || vendaSimulada();
       const situacao = !travar
         ? "aberto"
         : !liberado

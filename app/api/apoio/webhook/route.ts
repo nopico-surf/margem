@@ -182,7 +182,7 @@ async function sincronizarProfissional(profissionalId: string, tipo: string, nov
   return true;
 }
 
-// Programa para familiares: Pix pago libera as 8 semanas; estorno (o reembolso dos 7 dias, feito à mão
+// Programa para familiares: Pix pago libera as 8 semanas; estorno (a devolução do prazo, feita à mão
 // no painel do Asaas depois do pedido pelo WhatsApp) tira o acesso na hora.
 async function sincronizarFamilia(userId: string, novoStatus: StatusApoio | undefined) {
   if (novoStatus === "pago") return liberarAcessoDaFamilia(userId);

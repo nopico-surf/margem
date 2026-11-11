@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     safetyMode: perfil?.safety_mode ?? false,
     acessoLiberado: Boolean(perfil?.acesso_liberado_em),
     temDiagnostico: Boolean(diagnostico),
-    // Só com acesso valendo: o plano comprado e quando o Pix caiu (os 7 dias pra desistir). Acesso
+    // Só com acesso valendo: o plano comprado e quando o Pix caiu (o prazo da devolução). Acesso
     // sem compra é acesso gratuito.
     compra: perfil?.acesso_liberado_em ? compra : null,
   });

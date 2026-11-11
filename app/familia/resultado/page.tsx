@@ -3,7 +3,7 @@ import { Loader } from "@/components/ui/Loader";
 import { titulosDosModulosPagos } from "@/lib/familia/conteudo";
 import { ResultadoCliente } from "./ResultadoCliente";
 
-// Os títulos dos módulos 2 a 8 (lista do banner de oferta) vêm do content/familia, lidos no build,
+// Os títulos dos módulos 1 a 8 (lista do banner de oferta) vêm do content/familia, lidos no build,
 // como no painel.
 export default function ResultadoPage() {
   return (
