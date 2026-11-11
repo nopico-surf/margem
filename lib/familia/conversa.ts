@@ -7,13 +7,24 @@ export type ReacaoNaConversa = "ouviu" | "abertura" | "negou" | "mudou_assunto" 
 export type RegistroDaConversa = {
   id: string;
   modulo: number;
+  // Frase salva usada, ou FRASE_OUTRA quando a pessoa escreveu a dela (o texto fica em frase_outra).
+  // Registro antigo traz o texto escrito direto em frase.
   frase: string | null;
+  frase_outra?: string | null;
   como_foi: ComoFoi;
   reacao: ReacaoNaConversa | null;
   criado_em: string;
 };
 
 export const MODULOS_DA_CONVERSA = [1, 3, 5];
+
+// Categoria "Outra" de "Qual frase você usou?" (briefing 00d): a categoria e o texto ficam separados.
+export const FRASE_OUTRA = "outra";
+
+// A frase pra mostrar na tela: o texto escrito, se foi "Outra", ou a frase salva.
+export function fraseDoRegistro(registro: Pick<RegistroDaConversa, "frase" | "frase_outra">) {
+  return registro.frase === FRASE_OUTRA ? (registro.frase_outra ?? null) : registro.frase;
+}
 
 // O item "A primeira conversa" do módulo 1 fica concluído quando a pessoa salva o registro.
 export const ITEM_DA_CONVERSA_M1 = { modulo: 1, item: "conversa" };
@@ -75,6 +86,10 @@ export function sanitizarConversa(entrada: unknown) {
   if (!MODULOS_DA_CONVERSA.includes(modulo)) return null;
   if (!COMO_FOI.includes(bruto.como_foi as ComoFoi)) return null;
   const frase = typeof bruto.frase === "string" && bruto.frase.trim() ? bruto.frase.trim().slice(0, MAXIMO_FRASE) : null;
+  // O texto do "Outra" só vale com a categoria "Outra"; sem texto, não há frase.
+  const escrita = typeof bruto.frase_outra === "string" && bruto.frase_outra.trim() ? bruto.frase_outra.trim().slice(0, MAXIMO_FRASE) : null;
+  const fraseFinal = frase === FRASE_OUTRA && !escrita ? null : frase;
+  const fraseOutra = fraseFinal === FRASE_OUTRA ? escrita : null;
   const reacao = REACOES.includes(bruto.reacao as ReacaoNaConversa) ? (bruto.reacao as ReacaoNaConversa) : null;
-  return { modulo, frase, como_foi: bruto.como_foi as ComoFoi, reacao };
+  return { modulo, frase: fraseFinal, frase_outra: fraseOutra, como_foi: bruto.como_foi as ComoFoi, reacao };
 }

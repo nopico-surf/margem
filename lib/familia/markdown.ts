@@ -10,6 +10,8 @@
 // - ":::alcool" (formato antigo) aparece pra quem marcou aquele problema.
 // Link: uma linha "[rótulo](/caminho)" vira link; "@botao [rótulo](/caminho)" vira botão.
 // Uma linha "@resumo" marca onde entra o resumo das 8 semanas (encerramento do módulo 8).
+// Uma linha "@profissionais psicologo" (ou "psiquiatra", ou "ambos") vira o carrossel de profissionais,
+// só com aquela especialidade ou com o seletor das duas.
 // Sem dependência nova.
 
 export type Frontmatter = Record<string, string | number | boolean>;
@@ -22,6 +24,7 @@ export type BlocoMarkdown =
   | { tipo: "lista"; ordenada: boolean; itens: Trecho[][] }
   | { tipo: "link"; rotulo: string; href: string; botao: boolean }
   | { tipo: "resumo" }
+  | { tipo: "profissionais"; especialidades: Array<"psicologo" | "psiquiatra"> }
   | { tipo: "variacao"; problema: string; blocos: BlocoMarkdown[] }
   | { tipo: "condicional"; condicoes: Record<string, string>; blocos: BlocoMarkdown[] }
   | { tipo: "escolha"; id: string; blocos: BlocoMarkdown[] }
@@ -171,6 +174,15 @@ export function lerBlocosMarkdown(corpo: string): BlocoMarkdown[] {
       fecharParagrafo();
       fecharLista();
       destino().push({ tipo: "resumo" });
+      continue;
+    }
+    const carrossel = linha.match(/^@profissionais\s+(psicologo|psiquiatra|ambos)$/);
+    if (carrossel) {
+      fecharParagrafo();
+      fecharLista();
+      const especialidades: Array<"psicologo" | "psiquiatra"> =
+        carrossel[1] === "ambos" ? ["psicologo", "psiquiatra"] : [carrossel[1] as "psicologo" | "psiquiatra"];
+      destino().push({ tipo: "profissionais", especialidades });
       continue;
     }
     const titulo = linha.match(/^##\s+(.*)$/);

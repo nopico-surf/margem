@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   if (!sessao) return naoAutorizado();
   const { data, error } = await sessao.supabase
     .from("familia_conversa")
-    .select("id, modulo, frase, como_foi, reacao, criado_em")
+    .select("id, modulo, frase, frase_outra, como_foi, reacao, criado_em")
     .eq("user_id", sessao.user.id)
     .order("criado_em", { ascending: false })
     .limit(20);

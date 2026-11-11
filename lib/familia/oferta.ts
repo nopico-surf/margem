@@ -7,10 +7,20 @@ export type PlanoFamilia = "programa" | "acompanhamento";
 export const VALORES_PROGRAMA = [47, 67, 97, 127, 147] as const;
 export const VALOR_SUGERIDO = 97;
 
-// Com acompanhamento: o programa pelo valor mínimo mais a primeira sessão com um profissional parceiro,
-// paga no mesmo Pix. A sessão segue a faixa do valor social dos psicólogos (ValorSessaoPsicologos):
-// cinco atalhos de R$ 60 a R$ 200 e "Outro valor" dentro da faixa.
+// Com acompanhamento: o programa mais a primeira sessão com um profissional parceiro, pagos no mesmo
+// Pix. A sessão segue a faixa do valor social dos psicólogos (ValorSessaoPsicologos): cinco atalhos de
+// R$ 60 a R$ 200 e "Outro valor" dentro da faixa.
+// Com acompanhamento, a régua começa 20% mais barata (R$ 37 no lugar de R$ 47) e vai até o
+// valor cheio. O recomendado continua R$ 97 nos dois planos (briefing 01c).
+export const VALORES_PROGRAMA_COM_ACOMPANHAMENTO = [37, 67, 97, 127, 147] as const;
+
+// TEMPORÁRIO: só o texto do plano com acompanhamento no banner da LP ainda usa. Sai quando esse
+// texto for reescrito para a régua nova (pendente de copy do fundador).
 export const VALOR_PROGRAMA_COM_ACOMPANHAMENTO = 47;
+
+export function valoresDoPrograma(plano: PlanoFamilia): readonly number[] {
+  return plano === "acompanhamento" ? VALORES_PROGRAMA_COM_ACOMPANHAMENTO : VALORES_PROGRAMA;
+}
 export const SESSAO_MINIMA = 60;
 export const SESSAO_MAXIMA = 200;
 export const VALORES_SESSAO = [60, 95, 130, 165, 200] as const;
@@ -42,15 +52,13 @@ export function montarCompra(plano: PlanoFamilia, valorPrograma: number, valorSe
 export function validarCompra(entrada: unknown): Compra | null {
   if (!entrada || typeof entrada !== "object") return null;
   const { plano, valor, valorSessao } = entrada as Record<string, unknown>;
-  if (plano === "programa") {
-    if (!(VALORES_PROGRAMA as readonly unknown[]).includes(valor)) return null;
-    return montarCompra("programa", valor as number, null);
-  }
-  if (plano === "acompanhamento") {
-    if (!valorDaSessaoValido(valorSessao)) return null;
-    return montarCompra("acompanhamento", VALOR_PROGRAMA_COM_ACOMPANHAMENTO, valorSessao);
-  }
-  return null;
+  if (plano !== "programa" && plano !== "acompanhamento") return null;
+  // O valor do programa precisa estar na régua do plano enviado, senão a tela escolhe e o servidor
+  // cobra outra coisa.
+  if (!(valoresDoPrograma(plano) as readonly unknown[]).includes(valor)) return null;
+  if (plano === "programa") return montarCompra("programa", valor as number, null);
+  if (!valorDaSessaoValido(valorSessao)) return null;
+  return montarCompra("acompanhamento", valor as number, valorSessao);
 }
 
 // Liberação semanal (briefing 01: a compra não pula a semana). O módulo 2 chega 7 dias depois da

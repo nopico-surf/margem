@@ -14,8 +14,9 @@ type MessageInputProps = {
   rotulo?: string;
   dica?: string;
   maxLength?: number;
-  // Botão a mais ao lado do "Enviar" (ex.: microfone). Use a classe message-component-acessorio e
-  // onMouseDown com preventDefault, pela regra abaixo.
+  // Botão a mais na linha do texto, à direita, visível em todos os estados (ex.: microfone do treino
+  // de conversa, pedido de 11/11/2026). Use a classe message-component-acessorio e onMouseDown com
+  // preventDefault, pela regra abaixo.
   acessorio?: ReactNode;
 };
 
@@ -256,14 +257,14 @@ export function MessageInput({
     const textarea = textareaRef.current;
     const espelho = espelhoRef.current;
     if (!textarea || !espelho) return;
-    espelho.style.paddingRight = `calc(var(--spacing-8) + ${textarea.offsetWidth - textarea.clientWidth}px)`;
+    espelho.style.paddingRight = `calc(var(--spacing-8) + var(--message-acessorio-espaco, var(--spacing-0)) + ${textarea.offsetWidth - textarea.clientWidth}px)`;
     espelho.scrollTop = textarea.scrollTop;
   }, [value, cursorEm]);
 
   const posicaoCursor = cursorEm === null ? null : Math.min(cursorEm, value.length);
 
   return (
-    <form className={`message-component message-component-${state}`} onSubmit={onSubmit} onClick={() => { setFocused(true); textareaRef.current?.focus(); }}>
+    <form className={`message-component message-component-${state}${acessorio ? " message-component-com-acessorio" : ""}`} onSubmit={onSubmit} onClick={() => { setFocused(true); textareaRef.current?.focus(); }}>
       {/* Placeholder e "Conte do seu jeito" ficam montados e só esmaecem ou recolhem (message-input.css):
           assim o campo vai virando o outro estado, em vez de um bloco sumir e outro aparecer. */}
       {value.length === 0 && (
@@ -306,20 +307,14 @@ export function MessageInput({
             </>
           )}
         </div>
+        {acessorio}
       </div>
       <div className="message-component-gaveta" inert={state === "default"}>
         <div className="message-component-gaveta-conteudo">
           <div className="message-component-meta">
             <span className="label-x-small">{dica}</span>
-            {acessorio ? (
-              <div className="message-component-meta-acoes">
-                {acessorio}
-                <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
-              </div>
-            ) : (
-              /* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */
-              <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
-            )}
+            {/* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */}
+            <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
           </div>
         </div>
       </div>

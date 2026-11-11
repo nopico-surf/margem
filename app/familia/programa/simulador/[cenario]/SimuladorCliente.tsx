@@ -15,11 +15,14 @@ import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { SIMULADOR_MAX_CARACTERES, SIMULADOR_MAX_MENSAGENS } from "@/lib/familia/config";
 import type { Cenario } from "@/lib/familia/conteudo";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { marcarFeito } from "@/lib/familia/exercicio-cliente";
 import { CHAVE_FRASE_DO_TREINO } from "@/lib/familia/frases";
 import { REACAO_DO_DIAGNOSTICO, REACOES_SIMULADOR, tituloDoTreino, type Fala, type Feedback, type ReacaoSimulador } from "@/lib/familia/simulador";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import { track } from "@/lib/mixpanel";
+import { useLinhaDoTeclado } from "@/lib/use-linha-do-teclado";
 
 type Etapa = "carregando" | "inicio" | "conversa" | "seguranca" | "feedback";
 
@@ -62,7 +65,15 @@ function construtorDeVoz(): ConstrutorReconhecimento | null {
 // "Ouvir as respostas" usam a voz do próprio navegador; nenhuma voz é gravada.
 // Quem não comprou faz um treino grátis (a rota decide); no segundo, a mensagem de limite e, logo
 // abaixo, o banner de oferta do resultado (briefing 01b, item 2).
-export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenario; modulosDaOferta: string[] }) {
+export function SimuladorCliente({
+  cenario,
+  modulosDaOferta,
+  profissionais,
+}: {
+  cenario: Cenario;
+  modulosDaOferta: string[];
+  profissionais: ProfissionalCadastrado[];
+}) {
   // Módulo de onde a pessoa veio (?modulo=N, posto pelo botão do exercício); sem ele, volta ao painel.
   const moduloParam = Number(useSearchParams().get("modulo"));
   const moduloDeOrigem = Number.isInteger(moduloParam) && moduloParam >= 1 && moduloParam <= 8 ? moduloParam : null;
@@ -72,7 +83,11 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
   const itemQueConclui = buscaDaUrl.get("item");
   const soVerRetorno = buscaDaUrl.get("ver") === "1";
   const router = useRouter();
-  const [etapa, setEtapa] = useState<Etapa>("carregando");
+  // Cada tela tem endereço próprio (?tela=conversa, ?tela=retorno...). Terminar desfaz a conversa no
+  // histórico: voltar do retorno não reabre um treino que já acabou.
+  const { etapa, irPara, trocar, concluir } = useEtapaNaUrl<Etapa>("carregando", (e) =>
+    e === "carregando" || e === "inicio" ? null : e === "feedback" ? "retorno" : e,
+  );
   const [apelido, setApelido] = useState("");
   const [reacoes, setReacoes] = useState<ReacaoSimulador[]>([]);
   const [simulacaoId, setSimulacaoId] = useState<string | null>(null);
@@ -89,6 +104,20 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
   const [vozDisponivel, setVozDisponivel] = useState({ falar: false, ouvir: false });
   const reconhecimento = useRef<Reconhecimento | null>(null);
   const fim = useRef<HTMLDivElement>(null);
+  const secao = useRef<HTMLElement>(null);
+  const rodape = useRef<HTMLDivElement>(null);
+
+  // O rodapé fixo sobe com o teclado (mesma detecção da busca do blog).
+  useLinhaDoTeclado({ seletor: ".familia-simulador-rodape", prefixo: "treino" });
+
+  // A conversa reserva embaixo a altura do rodapé, que muda com o campo crescendo de linha e a gaveta abrindo.
+  useEffect(() => {
+    const elemento = rodape.current;
+    if (etapa !== "conversa" || !elemento) return;
+    const observer = new ResizeObserver(() => secao.current?.style.setProperty("--treino-rodape", `${elemento.offsetHeight}px`));
+    observer.observe(elemento);
+    return () => observer.disconnect();
+  }, [etapa]);
 
   useEffect(() => {
     (async () => {
@@ -107,10 +136,10 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
         const guardado = anterior?.ok ? ((await anterior.json()) as { feedback: Feedback | null }).feedback : null;
         if (guardado) {
           setFeedback(guardado);
-          return setEtapa("feedback");
+          return trocar("feedback");
         }
       }
-      setEtapa("inicio");
+      trocar("inicio");
     })();
   }, [cenario.bloqueadoEmModoSeguranca, cenario.id, router, soVerRetorno]);
 
@@ -195,7 +224,7 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
       return;
     }
     setSimulacaoId(dados.simulacaoId);
-    setEtapa("conversa");
+    irPara("conversa");
     track("simulador_iniciado", { cenario: cenario.id });
   }
 
@@ -210,7 +239,7 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
       return;
     }
     setFeedback(dados.feedback);
-    setEtapa("feedback");
+    concluir("feedback");
     if (moduloDeOrigem && itemQueConclui) void marcarFeito(moduloDeOrigem, itemQueConclui);
     track("simulador_concluido", { cenario: cenario.id, turnos: falas.filter((fala) => fala.autor === "familiar").length });
   }
@@ -225,7 +254,7 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
 
     if (dados?.tipo === "seguranca") {
       setMensagemSeguranca(dados.mensagem ?? null);
-      setEtapa("seguranca");
+      concluir("seguranca");
       track("seguranca_acionada", { origem: "simulador" });
       return;
     }
@@ -275,7 +304,7 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
             {mensagemSeguranca ?? "Se você ou alguém da casa está em perigo agora, peça ajuda já. Nenhuma conversa vale mais do que a sua segurança."}
           </p>
         </header>
-        <ContatosEmergencia />
+        <ContatosEmergencia profissionais={profissionais} />
       </section>
     );
   }
@@ -323,7 +352,7 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
             <p className="text-large" role="status">
               {MENSAGEM_BLOQUEIO[bloqueio]}
             </p>
-            {bloqueio === "bloqueado_seguranca" && <ContatosEmergencia />}
+            {bloqueio === "bloqueado_seguranca" && <ContatosEmergencia profissionais={profissionais} />}
             {bloqueio === "limite_gratis" && <OfertaPrograma variante="resultado" apelido={apelido} modulos={modulosDaOferta} />}
           </>
         ) : (
@@ -333,7 +362,7 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
               {REACOES_SIMULADOR.map((reacao) => (
                 <Button
                   key={reacao.valor}
-                  tamanho="x-small"
+                  tamanho="small"
                   redondo
                   variante={reacoes.includes(reacao.valor) ? "primary" : "secondary"}
                   onClick={() => alternarReacao(reacao.valor)}
@@ -358,7 +387,7 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
   const podeEscrever = turnos < SIMULADOR_MAX_MENSAGENS;
 
   return (
-    <section className="familia-secao">
+    <section className="familia-secao familia-simulador-conversa" ref={secao}>
       <h1 className="header-large">{tituloDoTreino(cenario.titulo)}</h1>
       {aviso}
       {vozDisponivel.ouvir && (
@@ -382,43 +411,52 @@ export function SimuladorCliente({ cenario, modulosDaOferta }: { cenario: Cenari
         )}
         {esperando && <ResponseLoading />}
         {erro}
-        <div ref={fim} />
+        <div ref={fim} className="familia-simulador-fim" />
       </div>
 
-      {podeEscrever && (
-        <MessageInput
-          value={mensagem}
-          onChange={(valor) => setMensagem(valor.slice(0, SIMULADOR_MAX_CARACTERES))}
-          onSubmit={enviar}
-          rotulo="Escreva ou fale o que você diria"
-          dica={`Mensagem ${turnos + 1} de ${SIMULADOR_MAX_MENSAGENS}`}
-          maxLength={SIMULADOR_MAX_CARACTERES}
-          acessorio={
-            vozDisponivel.falar && (
-              <button
-                type="button"
-                className="message-component-acessorio"
-                aria-label={ouvindo ? "Parar de ouvir" : "Falar a mensagem"}
-                aria-pressed={ouvindo}
-                onMouseDown={(evento) => evento.preventDefault()}
-                onClick={alternarMicrofone}
-              >
-                <GlifoMicNone size={20} />
-              </button>
-            )
-          }
-        />
-      )}
+      {/* Campo e "Terminar" presos no pé da tela, subindo com o teclado (familia.css); a conversa rola por trás. */}
+      <div className="familia-simulador-rodape" ref={rodape}>
+        <div className="familia-simulador-rodape-conteudo">
+          {podeEscrever && (
+            <MessageInput
+              value={mensagem}
+              onChange={(valor) => setMensagem(valor.slice(0, SIMULADOR_MAX_CARACTERES))}
+              onSubmit={enviar}
+              rotulo="Escreva ou fale o que você diria"
+              dica={`Mensagem ${turnos + 1} de ${SIMULADOR_MAX_MENSAGENS}`}
+              maxLength={SIMULADOR_MAX_CARACTERES}
+              acessorio={
+                vozDisponivel.falar && (
+                  <button
+                    type="button"
+                    className="message-component-acessorio"
+                    aria-label={ouvindo ? "Parar de ouvir" : "Falar a mensagem"}
+                    aria-pressed={ouvindo}
+                    onMouseDown={(evento) => evento.preventDefault()}
+                    onClick={(evento) => {
+                      // Sem isso o clique sobe pro campo, que se foca e abre o teclado no celular.
+                      evento.stopPropagation();
+                      alternarMicrofone();
+                    }}
+                  >
+                    <GlifoMicNone size={20} />
+                  </button>
+                )
+              }
+            />
+          )}
 
-      <Button
-        variante="secondary"
-        tamanho="medium"
-        larguraTotal
-        disabled={!historico.some((fala) => fala.autor === "pessoa") || esperando}
-        onClick={() => void terminar(historico[historico.length - 1]?.autor === "familiar" ? historico.slice(0, -1) : historico)}
-      >
-        Terminar e ver o retorno
-      </Button>
+          <Button
+            variante="secondary"
+            tamanho="medium"
+            larguraTotal
+            disabled={!historico.some((fala) => fala.autor === "pessoa") || esperando}
+            onClick={() => void terminar(historico[historico.length - 1]?.autor === "familiar" ? historico.slice(0, -1) : historico)}
+          >
+            Terminar e ver o retorno
+          </Button>
+        </div>
+      </div>
     </section>
   );
 }

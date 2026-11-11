@@ -7,6 +7,8 @@ import { DadosPixModal } from "@/components/apoio/DadosPixModal";
 import { FormularioDadosPix } from "@/components/apoio/FormularioDadosPix";
 import { TelaPix } from "@/components/apoio/TelaPix";
 import { CardHeader } from "@/components/conversa/CardHeader";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { GlifoArrowBack } from "@/components/icons/glifos";
 import { IconeConfirmado } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
@@ -29,18 +31,19 @@ import { chamarApi } from "@/lib/familia/auth-cliente";
 import { devAtivo, statusDoPixDev } from "@/lib/familia/dev";
 import { diaMes } from "@/lib/familia/escala";
 import { guardarDestinoDepoisDoLogin } from "@/lib/familia/fluxo-cliente";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import {
   SESSAO_MAXIMA,
   SESSAO_MINIMA,
   VALOR_PROGRAMA_COM_ACOMPANHAMENTO,
   VALOR_SUGERIDO,
-  VALORES_PROGRAMA,
   VALORES_SESSAO,
   DIAS_PARA_DESISTIR,
   dataDoModulo,
   fimDoPrazo,
   montarCompra,
   valorDaSessaoValido,
+  valoresDoPrograma,
   type PlanoFamilia,
 } from "@/lib/familia/oferta";
 import { track } from "@/lib/mixpanel";
@@ -63,15 +66,14 @@ const ITENS_DO_PROGRAMA = [
   "Resumo para levar a um profissional",
 ];
 
-const VOLTA: Partial<Record<Etapa, (plano: PlanoFamilia) => Etapa>> = {
-  valor: () => "plano",
-  sessao: () => "plano",
-  dados: (plano) => (plano === "programa" ? "valor" : "sessao"),
-};
-
-export function CheckoutCliente() {
+// `profissionais`: carrossel de psicólogos da confirmação do plano com acompanhamento.
+export function CheckoutCliente({ profissionais }: { profissionais: ProfissionalCadastrado[] }) {
   const router = useRouter();
-  const [etapa, setEtapa] = useState<Etapa>("carregando");
+  // Cada etapa tem endereço próprio (?tela=valor, ?tela=dados...). O Pix desfaz as etapas do
+  // formulário no histórico: voltar não reabre um Pix já gerado.
+  const { etapa, irPara, trocar, concluir, voltar: voltarEtapa, podeVoltar: temEtapaAnterior } = useEtapaNaUrl<Etapa>("carregando", (e) =>
+    e === "carregando" || e === "plano" ? null : e,
+  );
   const [plano, setPlano] = useState<PlanoFamilia>("programa");
   const [valor, setValor] = useState<number>(VALOR_SUGERIDO);
   const [sessao, setSessao] = useState<number | null>(null);
@@ -91,21 +93,21 @@ export function CheckoutCliente() {
   const gerandoRef = useRef(false);
   const pixGerados = useRef(0);
 
-  const compra = montarCompra(plano, plano === "programa" ? valor : VALOR_PROGRAMA_COM_ACOMPANHAMENTO, sessao);
+  const compra = montarCompra(plano, valor, sessao);
 
   const { pix, segundosRestantes, codigoCopiado, mostrarPix, copiarCodigo } = usePix({
     naTela: etapa === "pix",
     consultando: etapa === "pix",
     consultar: devAtivo() ? async (id) => statusDoPixDev(id) : undefined,
     onExpirou: () => {
-      setEtapa("expirado");
+      trocar("expirado");
       track("pix_expirado", { plano });
     },
     onStatus: ({ status, pago }) => {
       if (pago || status === "pago") {
-        setEtapa("confirmado");
+        trocar("confirmado");
         track("compra_concluida", { plano, valor_total: compra.total, valor_programa: compra.valorPrograma, valor_sessao: compra.valorSessao });
-      } else if (status === "expirado") setEtapa("expirado");
+      } else if (status === "expirado") trocar("expirado");
     },
   });
 
@@ -117,7 +119,7 @@ export function CheckoutCliente() {
         guardarDestinoDepoisDoLogin("/familia/checkout");
         return router.replace("/familia/entrar");
       }
-      if (!resposta.ok) return setEtapa("plano");
+      if (!resposta.ok) return trocar("plano");
       const perfil = (await resposta.json()) as { temPerfil: boolean; safetyMode: boolean; acessoLiberado: boolean; temDiagnostico: boolean };
       if (!perfil.temPerfil) {
         guardarDestinoDepoisDoLogin("/familia/checkout");
@@ -127,7 +129,7 @@ export function CheckoutCliente() {
       setTemDiagnostico(perfil.temDiagnostico);
       // Em modo de segurança, o plano com acompanhamento vem pré-selecionado (briefing 01, etapa 1).
       if (perfil.safetyMode) setPlano("acompanhamento");
-      setEtapa("plano");
+      trocar("plano");
       track("checkout_iniciado", { safety_mode: perfil.safetyMode, tem_diagnostico: perfil.temDiagnostico });
     })();
   }, [router]);
@@ -169,13 +171,17 @@ export function CheckoutCliente() {
 
   function escolherPlano(escolhido: PlanoFamilia) {
     setPlano(escolhido);
+    // R$ 47 só existe na régua do programa e R$ 37 só na do acompanhamento: trocando de plano, o valor
+    // que não existe na régua nova cai no recomendado, nunca fica sem seleção (briefing 01c).
+    if (!valoresDoPrograma(escolhido).includes(valor)) setValor(VALOR_SUGERIDO);
     track("plano_escolhido", { plano: escolhido });
-    setEtapa(escolhido === "programa" ? "valor" : "sessao");
+    // Os dois planos escolhem o valor do programa; o com acompanhamento segue depois pra sessão.
+    irPara("valor");
   }
 
   function escolherValor(escolhido: number) {
     setValor(escolhido);
-    track("valor_escolhido", { plano: "programa", valor: escolhido, sugerido: escolhido === VALOR_SUGERIDO });
+    track("valor_escolhido", { plano, valor: escolhido, sugerido: escolhido === VALOR_SUGERIDO });
   }
 
   function escolherSessao(escolhido: number) {
@@ -209,9 +215,8 @@ export function CheckoutCliente() {
   }
 
   function voltar() {
-    const destino = VOLTA[etapa]?.(plano);
     track("checkout_voltou", { de: etapa });
-    if (destino) setEtapa(destino);
+    if (temEtapaAnterior) voltarEtapa();
     else router.back();
   }
 
@@ -235,7 +240,7 @@ export function CheckoutCliente() {
     const invalidos = (["nome", "cpfCnpj"] as const).filter((campo) => !campoValido(campo, campo === "nome" ? nome : cpfCnpj));
     if (invalidos.length > 0) {
       setErrosDeCampo(Object.fromEntries(invalidos.map((campo) => [campo, ERRO_DO_CAMPO[campo]])));
-      setEtapa("dados");
+      trocar("dados");
       return;
     }
 
@@ -259,7 +264,7 @@ export function CheckoutCliente() {
         mostrarPix(corpo.apoioId, corpo.qrCode);
         pixGerados.current += 1;
         track(deNovo ? "pix_gerado_de_novo" : "pix_gerado", { plano, valor_total: compra.total, vez: pixGerados.current });
-        setEtapa("pix");
+        concluir("pix");
         return;
       }
       const codigo = corpo?.error;
@@ -267,18 +272,18 @@ export function CheckoutCliente() {
       if (codigo && codigo in ERROS_DE_CAMPO) {
         const chave = codigo as keyof typeof ERROS_DE_CAMPO;
         setErrosDeCampo({ [CAMPO_DO_ERRO[chave]]: ERROS_DE_CAMPO[chave] });
-        setEtapa("dados");
+        trocar("dados");
       } else if (codigo === "acesso_ja_liberado") {
         router.replace("/familia/programa");
       } else if (codigo === "valor_invalido") {
-        setEtapa("plano");
+        trocar("plano");
       } else {
         setErroGeral(codigo === "dados_recusados" ? ERRO_DADOS_RECUSADOS : ERRO_PAGAMENTO_INDISPONIVEL);
-        setEtapa("dados");
+        trocar("dados");
       }
     } catch {
       setErroGeral(ERRO_PAGAMENTO_INDISPONIVEL);
-      setEtapa("dados");
+      trocar("dados");
     } finally {
       gerandoRef.current = false;
       setGerando(false);
@@ -365,7 +370,7 @@ export function CheckoutCliente() {
             description="Quem pode pagar mais ajuda a manter o programa acessível para quem pode pagar menos. O conteúdo é o mesmo em qualquer valor."
           />
           <div className="familia-chips familia-valores" role="group" aria-label="Valor do programa">
-            {VALORES_PROGRAMA.map((opcao) => (
+            {valoresDoPrograma(plano).map((opcao) => (
               <Button
                 key={opcao}
                 tamanho="medium"
@@ -379,8 +384,9 @@ export function CheckoutCliente() {
               </Button>
             ))}
           </div>
+          {plano === "acompanhamento" && <p className="plano-nota">Levando a primeira sessão junto, o programa começa 20% mais barato.</p>}
           <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
-          <Button tamanho="medium" larguraTotal onClick={() => setEtapa("dados")}>
+          <Button tamanho="medium" larguraTotal onClick={() => irPara(plano === "programa" ? "dados" : "sessao")}>
             Continuar para o pagamento
           </Button>
           {linkGratuito}
@@ -421,11 +427,15 @@ export function CheckoutCliente() {
             />
           )}
           {sessao !== null && (
-            <p className="text-large">
-              Programa R$ {compra.valorPrograma} + sessão R$ {sessao} = R$ {compra.total}
-            </p>
+            <div className="text-large">
+              <p>Programa: R$ {compra.valorPrograma}</p>
+              <p>Primeira sessão: R$ {sessao}</p>
+              <p>
+                <strong>Total: R$ {compra.total}, num Pix só</strong>
+              </p>
+            </div>
           )}
-          <Button tamanho="medium" larguraTotal disabled={sessao === null} onClick={() => setEtapa("dados")}>
+          <Button tamanho="medium" larguraTotal disabled={sessao === null} onClick={() => irPara("dados")}>
             Continuar para o pagamento
           </Button>
           {linkGratuito}
@@ -487,12 +497,18 @@ export function CheckoutCliente() {
                 Fazer o diagnóstico
               </Button>
             )}
-            {plano === "acompanhamento" && (
-              <Button variante="secondary" tamanho="medium" larguraTotal href="/profissionais">
-                Ver psicólogo parceiro
-              </Button>
-            )}
           </div>
+          {/* Plano com acompanhamento: a primeira sessão já está paga e segue o valor dos psicólogos. */}
+          {plano === "acompanhamento" && (
+            <CardProfissionais
+              profissionais={profissionais}
+              variante="home"
+              especialidades={["psicologo"]}
+              id="familia-profissionais"
+              origem="programa-checkout"
+              titulo="Profissionais que podem atender você"
+            />
+          )}
         </section>
       )}
 

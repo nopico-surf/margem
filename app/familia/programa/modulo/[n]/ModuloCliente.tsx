@@ -1,14 +1,14 @@
 "use client";
 
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useId, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoCheckCircle } from "@/components/icons/glifos";
 import { AudioPlayer } from "@/components/ui/AudioPlayer";
 import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
-import { CHAVE_POSICAO_AUDIO, MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
-import { vendaSimulada } from "@/lib/familia/dev";
+import { CHAVE_POSICAO_AUDIO } from "@/lib/familia/config";
+import { MODO_DEV_DISPONIVEL, vendaSimulada } from "@/lib/familia/dev";
 import { dataDoModulo, moduloChegou } from "@/lib/familia/oferta";
 import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import type { Modulo } from "@/lib/familia/conteudo";
@@ -20,6 +20,7 @@ import { carregarEstado, contextoDo, itensDoExercicio, marcarFeito, type EstadoE
 import { condicoesBatem, opcoesDaEscolha, type BlocoMarkdown, type Contexto, type Trecho } from "@/lib/familia/markdown";
 import { ExercicioSemana } from "@/components/familia/ExercicioSemana";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
+import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { track } from "@/lib/mixpanel";
 
@@ -46,6 +47,8 @@ type BlocosProps = {
   exercicio?: ReactNode;
   // Resumo das 8 semanas, no lugar da linha "@resumo" (encerramento do módulo 8).
   resumo?: ReactNode;
+  // Carrossel de profissionais, no lugar de cada linha "@profissionais ..." (também dentro de ":::se").
+  carrossel?: (especialidades: Especialidade[], chave: string) => ReactNode;
 };
 
 // Resumo visual do encerramento (briefing M8, C12): as notas da escala do módulo 1 ao 7 (se houver),
@@ -79,13 +82,16 @@ function ResumoDoPrograma({ dados }: { dados: DadosDoResumo }) {
   );
 }
 
-function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio, resumo }: BlocosProps) {
+function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio, resumo, carrossel }: BlocosProps) {
   const posicaoDoExercicio = exercicio ? blocos.findIndex((bloco) => bloco.tipo === "exercicio") : -1;
+  // Separa o id de cada carrossel da página, também os de dentro de um ":::se".
+  const prefixo = useId();
   return (
     <>
       {blocos.map((bloco, indice) => {
         if (bloco.tipo === "titulo") return <h2 key={indice} className="header-medium">{aplicarApelido(bloco.texto, apelido)}</h2>;
         if (bloco.tipo === "resumo") return <Fragment key={indice}>{resumo}</Fragment>;
+        if (bloco.tipo === "profissionais") return <Fragment key={indice}>{carrossel?.(bloco.especialidades, `${prefixo}${indice}`)}</Fragment>;
         if (bloco.tipo === "link")
           return (
             <div key={indice} className="familia-exercicio-acoes">
@@ -106,7 +112,7 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio, r
                 {opcoes.map((opcao) => (
                   <Button
                     key={opcao.valor}
-                    tamanho="x-small"
+                    tamanho="small"
                     redondo
                     variante={escolhida === opcao.valor ? "primary" : "secondary"}
                     onClick={() => onEscolher(bloco.id, opcao.valor)}
@@ -141,14 +147,14 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio, r
         // Bloco condicional (ex.: só pro problema principal): o texto entra solto, sem moldura.
         if (bloco.tipo === "condicional") {
           if (!condicoesBatem(bloco.condicoes, contexto)) return null;
-          return <Blocos key={indice} blocos={bloco.blocos} apelido={apelido} problemas={problemas} contexto={contexto} onEscolher={onEscolher} />;
+          return <Blocos key={indice} blocos={bloco.blocos} apelido={apelido} problemas={problemas} contexto={contexto} onEscolher={onEscolher} carrossel={carrossel} />;
         }
         // Variação (formato antigo): só pra quem marcou aquele problema na Q3.
         if (!problemas.includes(bloco.problema as Problema)) return null;
         return (
           <div key={indice} className="familia-variacao">
             <span className="label-small-medium">{ROTULO_PROBLEMA[bloco.problema as Problema] ?? bloco.problema}</span>
-            <Blocos blocos={bloco.blocos} apelido={apelido} problemas={problemas} contexto={contexto} onEscolher={onEscolher} />
+            <Blocos blocos={bloco.blocos} apelido={apelido} problemas={problemas} contexto={contexto} onEscolher={onEscolher} carrossel={carrossel} />
           </div>
         );
       })}
@@ -159,17 +165,20 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio, r
 // `emRevisao`: o módulo chegou sem o texto (produção, antes da revisão clínica). Quem comprou vê o
 // título e volta ao painel; quem não comprou, a página de módulo bloqueado.
 // `enderecos`: página de cada profissional ativo, por id (só no módulo 8, pro "Retomar o apoio").
-// `profissionais`: lista do carrossel do fim do módulo (só nos módulos 5 e 6, briefing M56).
+// `profissionais`: lista dos carrosséis do módulo ("@profissionais" no texto e ação "profissional" do
+// exercício). `carrosselNoFim`: o carrossel do fim do módulo (só nos módulos 5 e 6, briefing M56).
 export function ModuloCliente({
   modulo,
   emRevisao = false,
   enderecos,
   profissionais,
+  carrosselNoFim = false,
 }: {
   modulo: Modulo;
   emRevisao?: boolean;
   enderecos?: Record<string, string>;
   profissionais?: ProfissionalCadastrado[];
+  carrosselNoFim?: boolean;
 }) {
   const router = useRouter();
   const [diagnostico, setDiagnostico] = useState<Diagnostico | null>(null);
@@ -203,7 +212,8 @@ export function ModuloCliente({
       if (!resposta.ok) return;
       const lido = (await resposta.json()) as Diagnostico;
       const [perfil, progresso] = await Promise.all([chamarApi("/api/familia/perfil"), chamarApi("/api/familia/progresso")]);
-      const liberado = perfil?.ok ? ((await perfil.json()) as { acessoLiberado: boolean }).acessoLiberado : false;
+      const lidoPerfil = perfil?.ok ? ((await perfil.json()) as { acessoLiberado: boolean; testador?: boolean }) : null;
+      const liberado = lidoPerfil?.acessoLiberado ?? false;
       const modulos = progresso?.ok ? ((await progresso.json()) as { modulos: Record<string, { concluido_em: string | null }> }).modulos : {};
       const concluidoM1 = modulos[1]?.concluido_em ?? null;
       setAcessoLiberado(liberado);
@@ -212,8 +222,8 @@ export function ModuloCliente({
 
       // Todos os módulos só com a compra (briefing 01b), e do 2 ao 8 depois da semana deles. No
       // localhost, como antes, todos abrem pra revisão, a menos que a venda simulada esteja ligada
-      // (lib/familia/dev.ts).
-      const travar = !MOSTRAR_REVISAO_CLINICA || vendaSimulada();
+      // (lib/familia/dev.ts). Em produção, as contas de teste (FAMILIA_TESTADORES) também abrem todos.
+      const travar = MODO_DEV_DISPONIVEL ? vendaSimulada() : !lidoPerfil?.testador;
       const situacao = !travar
         ? "aberto"
         : !liberado
@@ -400,14 +410,28 @@ export function ModuloCliente({
               dataRetorno={convite?.data_retorno ?? null}
               onPausa={escolherPausa}
               retomarHref={retomarHref}
+              profissionais={profissionais}
             />
           )
         }
         resumo={resumo && <ResumoDoPrograma dados={resumo} />}
+        carrossel={(especialidades, chave) =>
+          profissionais && (
+            <CardProfissionais
+              profissionais={profissionais}
+              variante="home"
+              especialidades={especialidades}
+              id={`familia-profissionais-${chave}`}
+              origem={`programa-modulo-${modulo.numero}`}
+              titulo="Profissionais que podem atender você"
+            />
+          )
+        }
       />
 
-      {/* Briefing M56: no fim dos módulos 5 e 6, o carrossel no lugar do botão. Não conclui nenhum item. */}
-      {profissionais && (
+      {/* Briefing M56: no fim dos módulos 5 e 6, o carrossel no lugar do botão. Não conclui nenhum item.
+          Em caution_mode o carrossel já aparece no texto e no exercício desses módulos: aqui sai, pra não repetir. */}
+      {profissionais && carrosselNoFim && !contexto.cautela && (
         <CardProfissionais
           profissionais={profissionais}
           variante="home"

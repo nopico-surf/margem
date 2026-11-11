@@ -252,7 +252,7 @@ export function RedeCliente() {
                   {grupo.servicos ? TEXTOS_REDE.verServicos : TEXTOS_REDE.verReunioes}
                 </Button>
                 {!foi && (
-                  <Button variante="secondary" redondo carregando={salvando === grupo.id} onClick={() => void contar({ tipo: "grupo", grupo: grupo.id })}>
+                  <Button variante="secondary" carregando={salvando === grupo.id} onClick={() => void contar({ tipo: "grupo", grupo: grupo.id })}>
                     {TEXTOS_REDE.contarFui}
                   </Button>
                 )}

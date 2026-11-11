@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
+import { focarCampo } from "@/lib/familia/campo";
 import {
   CENARIO_DO_TREINO,
   CHAVE_FRASE_DO_TREINO,
@@ -24,6 +25,7 @@ import {
 } from "@/lib/familia/frases";
 import { marcarFeito } from "@/lib/familia/exercicio-cliente";
 import { ITEM_FRASE_M8 } from "@/lib/familia/modulo8";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import { track } from "@/lib/mixpanel";
 
 // "Reescrever minhas frases" (briefing M3, ferramenta C3). Telas: abertura, escolher a frase de antes,
@@ -44,7 +46,11 @@ const PROPRIA = "propria";
 
 export function FrasesCliente() {
   const router = useRouter();
-  const [tela, setTela] = useState<Tela>("carregando");
+  // Cada tela tem endereço próprio (?tela=escolha, ?tela=exemplo...). Salvar desfaz as etapas no
+  // histórico: voltar da frase salva não reabre a conferência.
+  const { etapa: tela, irPara, trocar, concluir, voltar, podeVoltar } = useEtapaNaUrl<Tela>("carregando", (t) =>
+    t === "carregando" || t === "intro" ? null : t,
+  );
   const [modulo, setModulo] = useState(3);
   const [salvas, setSalvas] = useState<FraseSalva[]>([]);
 
@@ -67,7 +73,7 @@ export function FrasesCliente() {
       const pedido = Number(busca.get("modulo"));
       setModulo(Number.isInteger(pedido) && pedido >= 1 && pedido <= 8 ? pedido : 3);
       setSalvas(lidas);
-      setTela(busca.get("ver") === "1" && lidas.length > 0 ? "lista" : "intro");
+      trocar(busca.get("ver") === "1" && lidas.length > 0 ? "lista" : "intro");
     })();
   }, [router]);
 
@@ -82,6 +88,9 @@ export function FrasesCliente() {
   const hrefModulo = `/familia/programa/modulo/${modulo}`;
   const fraseAntes = modelo ? modelo.antes : propria.trim();
 
+  // Etapas empilhadas voltam pelo histórico; a primeira volta ao módulo.
+  const voltarUmaEtapa = () => (podeVoltar ? voltar() : router.push(hrefModulo));
+
   function recomecar() {
     setModelo(null);
     setEscolhida(null);
@@ -90,8 +99,7 @@ export function FrasesCliente() {
     setNova("");
     setMarcados([]);
     setAjuste(false);
-    setTela("escolha");
-    window.scrollTo({ top: 0 });
+    irPara("escolha");
   }
 
   function escolherModelo(frase: FraseModelo) {
@@ -99,14 +107,14 @@ export function FrasesCliente() {
     setEscolhida(frase.id);
     setNova("");
     setHabilidadeAberta(null);
-    setTela("exemplo");
+    irPara("exemplo");
   }
 
   function irParaOExemplo() {
     setModelo(null);
     setNova("");
     setHabilidadeAberta(null);
-    setTela("exemplo");
+    irPara("exemplo");
   }
 
   function alternarItem(numero: number) {
@@ -127,8 +135,7 @@ export function FrasesCliente() {
     const lidas = await chamarApi("/api/familia/frases");
     if (lidas?.ok) setSalvas(((await lidas.json()) as { frases: FraseSalva[] }).frases);
     if (modulo === 8) await marcarFeito(8, ITEM_FRASE_M8);
-    setTela("salva");
-    window.scrollTo({ top: 0 });
+    concluir("salva");
   }
 
   // Menos de 3 itens marcados: pergunta se quer ajustar antes de salvar (nada é obrigatório).
@@ -215,7 +222,7 @@ export function FrasesCliente() {
   if (tela === "escolha") {
     return (
       <section className="familia-pergunta">
-        {topo(() => setTela("intro"), "Voltar")}
+        {topo(voltarUmaEtapa, "Voltar")}
         <p className="header-small">{TEXTOS_FRASES.escolha}</p>
         <div className="familia-chips escala-chips" role="radiogroup" aria-label={TEXTOS_FRASES.escolha}>
           {FRASES_MODELO.map((frase) => (
@@ -244,7 +251,7 @@ export function FrasesCliente() {
   if (tela === "exemplo") {
     return (
       <section className="familia-pergunta">
-        {topo(() => setTela("escolha"), "Voltar")}
+        {topo(voltarUmaEtapa, "Voltar")}
         <p className="text-large familia-texto-suave frase-antes">{fraseAntes}</p>
         {modelo ? (
           <div className="familia-cartao">
@@ -265,12 +272,16 @@ export function FrasesCliente() {
         <div className="escala-meta-grupo">
           <InputText id="frase-nova" rotulo={TEXTOS_FRASES.campoRotulo} descricao={TEXTOS_FRASES.campoDica} value={nova} maxLength={MAXIMO_FRASE_NOVA} autoComplete="off" onChange={setNova} />
           {modelo && (
-            <Button variante="transparent" tamanho="small" onClick={() => setNova(modelo.novo)}>
+            <Button variante="transparent" tamanho="small" onClick={() => {
+                setNova(modelo.novo);
+                focarCampo("frase-nova");
+              }}
+            >
               {TEXTOS_FRASES.usarExemplo}
             </Button>
           )}
         </div>
-        <Button tamanho="medium" larguraTotal disabled={!nova.trim()} onClick={() => setTela("conferir")}>
+        <Button tamanho="medium" larguraTotal disabled={!nova.trim()} onClick={() => irPara("conferir")}>
           {TEXTOS_FRASES.continuar}
         </Button>
       </section>
@@ -281,7 +292,7 @@ export function FrasesCliente() {
   if (tela === "conferir") {
     return (
       <section className="familia-pergunta">
-        {topo(() => setTela("exemplo"), "Voltar")}
+        {topo(voltarUmaEtapa, "Voltar")}
         <h1 className="header-large">{TEXTOS_FRASES.conferirTitulo}</h1>
         <p className="text-large">{nova}</p>
         <div className="familia-chips escala-chips">
@@ -295,7 +306,7 @@ export function FrasesCliente() {
         {ajuste ? (
           <div className="familia-acoes">
             <p className="header-small">{TEXTOS_FRASES.ajustarPergunta}</p>
-            <Button tamanho="medium" larguraTotal onClick={() => setTela("exemplo")}>
+            <Button tamanho="medium" larguraTotal onClick={voltarUmaEtapa}>
               {TEXTOS_FRASES.ajustar}
             </Button>
             <Button variante="transparent" tamanho="small" carregando={salvando} onClick={() => void salvar()}>

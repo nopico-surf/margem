@@ -27,6 +27,7 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 //
 // Briefing M56 (11/11/2026): o programa para familiares usa a variante `home` com `titulo` próprio
 // ("Profissionais que podem atender você") e `origem` (`programa-painel`, `programa-modulo-5`...).
+// Com `especialidades` de um item só, o seletor some e ficam os cards e a faixa de preço dela.
 export function CardProfissionais({
   profissionais,
   isLoading = false,
@@ -51,7 +52,10 @@ export function CardProfissionais({
 
   // Guia com as duas especialidades (álcool e outras drogas): o seletor da home volta, e a faixa de
   // preço e os cards seguem a aba escolhida. Com uma só, fica a faixa dela, sem seletor.
-  const comSeletor = noGuia && (especialidades?.length ?? 0) > 1;
+  // Fora do guia o seletor é o padrão; some só quando vem uma especialidade (programa para familiares:
+  // só psicólogos ou só psiquiatras, conforme o contexto).
+  const comSeletor = noGuia ? (especialidades?.length ?? 0) > 1 : especialidades?.length !== 1;
+  const especialidadeDaFaixa = comSeletor || !especialidades ? especialidadeSelecionada : especialidades[0];
 
   // Sem seletor, só uma especialidade vai aparecer na tela: adiantar a foto das outras segura o
   // carrossel no esqueleto sem servir pra nada. Com seletor a pessoa troca de aba a qualquer momento,
@@ -87,7 +91,7 @@ export function CardProfissionais({
 
   // No guia a faixa de preço não depende da lista, então já aparece no esqueleto e a tela não pula.
   const valorDoGuia = (
-    <ValorSessaoPsicologos especialidade={comSeletor || !especialidades ? especialidadeSelecionada : especialidades[0]} />
+    <ValorSessaoPsicologos especialidade={especialidadeDaFaixa} />
   );
 
   if ((isLoading || !fotosProntas || !sessaoId) && noGuia) {
@@ -113,7 +117,9 @@ export function CardProfissionais({
         ) : (
           <div className="figma-skeleton-description" aria-hidden="true"><span className="figma-skeleton figma-skeleton-heading" /><span className="figma-skeleton" /><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
         )}
-        <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
+        {comSeletor && (
+          <div className="figma-skeleton-filter" aria-hidden="true"><span className="figma-skeleton" /><span className="figma-skeleton" /></div>
+        )}
         {naHome && <span className="figma-skeleton home-osso-valor" aria-hidden="true" />}
         {naHome ? (
           <ActionRow className="figma-professionals-row" origem="profissionais">
@@ -183,8 +189,10 @@ export function CardProfissionais({
         title={titulo}
         description={naHome ? undefined : "É recomendado falar com psiquiatra e psicólogo. Você pode fazer isso pelo SUS, sem custo. Para atendimento online, você pode falar com um de nossos parceiros"}
       />
-      <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
-      <ValorSessaoPsicologos especialidade={especialidadeSelecionada} />
+      {comSeletor && (
+        <FiltroEspecialidade opcoes={OPCOES_ESPECIALIDADE} selecionada={especialidadeSelecionada} onChange={selecionarEspecialidade} />
+      )}
+      <ValorSessaoPsicologos especialidade={especialidadeDaFaixa} />
       {profissionaisFiltrados.length === 0 ? (
         <CardProfissionaisCompleto estado="in-construction" />
       ) : profissionaisFiltrados.length === 1 ? (

@@ -1,18 +1,19 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
-import { itensParaMarcar, sanitizarAnotacao, usouOutroEscrito } from "@/lib/familia/diario";
+import { itensParaMarcar, lerOutro, sanitizarAnotacao, usouOutroEscrito } from "@/lib/familia/diario";
 
 // Diário (briefing M2). GET devolve as anotações mais recentes; POST grava uma e conclui os itens do
 // programa que ela completa (1 difícil: módulo 1; 3 difíceis em 7 dias e 1 bom: módulo 2); PATCH edita
 // e DELETE ?id= apaga. Editar ou apagar não desfaz um item já concluído.
 
-const CAMPOS = "id, tipo, quando, antes, percebeu, buscou, reagiu, depois, bom_o_que, bom_sentiu, texto_livre";
+const CAMPOS = "id, tipo, quando, antes, percebeu, buscou, reagiu, depois, bom_o_que, bom_sentiu, antes_outro, percebeu_outro, buscou_outro, reagiu_outro, depois_outro, bom_o_que_outro, bom_sentiu_outro, texto_livre";
 
 type Sessao = NonNullable<Awaited<ReturnType<typeof usuarioDaRequisicao>>>;
 
 // Listas vazias no lugar de null, pro cliente não tratar dois casos.
 function normalizar(linha: Record<string, unknown>) {
   const lista = (valor: unknown) => (Array.isArray(valor) ? valor : []);
-  return {
+  // Linha antiga (texto do "Outro" dentro da lista) sai no formato novo: "Outro" mais o texto ao lado.
+  return lerOutro({
     ...linha,
     antes: lista(linha.antes),
     percebeu: lista(linha.percebeu),
@@ -21,7 +22,7 @@ function normalizar(linha: Record<string, unknown>) {
     depois: lista(linha.depois),
     bom_o_que: lista(linha.bom_o_que),
     bom_sentiu: lista(linha.bom_sentiu),
-  };
+  });
 }
 
 async function concluirItens(sessao: Sessao) {

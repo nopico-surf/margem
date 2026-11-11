@@ -16,5 +16,4 @@ export const TEXTOS_M8 = {
   escolherData: "Escolher a data",
   escolherFrase: "Escolher minha frase",
   retomarAntes: "Ver o profissional ou serviço de antes",
-  retomarSemAntes: "Ver psicólogo parceiro",
 };

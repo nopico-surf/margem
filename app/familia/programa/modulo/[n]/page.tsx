@@ -43,7 +43,9 @@ async function Conteudo({ params }: Props) {
   // "Retomar o apoio" (módulo 8, briefing M8): a página do profissional salvo no convite.
   const temRetomar = !emRevisao && modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes("retomar"));
   const enderecos = temRetomar ? await enderecosDosProfissionais() : undefined;
-  // Carrossel de profissionais no fim dos módulos 5 e 6 (briefing M56). A busca é cacheada.
-  const profissionais = !emRevisao && MODULOS_COM_CARROSSEL.has(modulo.numero) ? await buscarTodosProfissionaisAtivos() : undefined;
-  return <ModuloCliente modulo={enviado} emRevisao={emRevisao} enderecos={enderecos} profissionais={profissionais} />;
+  // Carrosséis de profissionais: no fim dos módulos 5 e 6 (briefing M56), nas linhas "@profissionais"
+  // do texto e na ação "profissional" do exercício. A busca é cacheada.
+  const carrosselNoFim = MODULOS_COM_CARROSSEL.has(modulo.numero);
+  const profissionais = emRevisao ? undefined : await buscarTodosProfissionaisAtivos();
+  return <ModuloCliente modulo={enviado} emRevisao={emRevisao} enderecos={enderecos} profissionais={profissionais} carrosselNoFim={carrosselNoFim} />;
 }

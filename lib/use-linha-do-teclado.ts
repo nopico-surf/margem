@@ -2,7 +2,9 @@
 
 import { useEffect } from "react";
 
-// Onde está o teclado virtual, pra o campo de busca do blog (.blog-busca) ficar logo acima dele.
+// Onde está o teclado virtual, pra um campo preso no pé da tela ficar logo acima dele: a busca do blog
+// (.blog-busca, o padrão) e o rodapé do treino de conversa do programa para familiares
+// (.familia-simulador-rodape, desde 11/11/2026).
 //
 // CÓPIA da detecção do campo aberto da home (components/app/MessageInput.tsx), de propósito: a home
 // não é tocada por causa do blog (pedido de 07/11/2026). As mesmas variações valem aqui: o Chrome e o
@@ -10,9 +12,9 @@ import { useEffect } from "react";
 // interno do Instagram) não informam nada, e no Chrome do Android dá pra baixar o teclado sem tirar o
 // foco do campo. Se mudar uma, olhar a outra.
 //
-// Diferenças em relação à home: vale só pro input dentro de .blog-busca, as variáveis têm nome próprio
-// (--busca-teclado-topo e --busca-teclado-linha, pra nunca cruzar com as da home) e não existe a
-// medida de "tela apertada", que lá serve pra esconder badge e título.
+// Diferenças em relação à home: vale só pro campo dentro do `seletor`, as variáveis têm nome próprio
+// (--<prefixo>-teclado-topo e --<prefixo>-teclado-linha, pra nunca cruzar com as da home) e não existe
+// a medida de "tela apertada", que lá serve pra esconder badge e título.
 
 // Usados só quando o navegador não informa o teclado de jeito nenhum.
 const TEMPO_SEM_SINAL = 500;
@@ -25,15 +27,14 @@ let tecladoMedido: { largura: number; altura: number } | null = null;
 
 type VirtualKeyboardApi = EventTarget & { overlaysContent: boolean; boundingRect: DOMRect };
 
-function campoDaBusca(el: Element | null) {
-  return el instanceof HTMLInputElement && el.closest(".blog-busca") !== null;
-}
-
-export function useLinhaDoTeclado() {
+export function useLinhaDoTeclado({ seletor = ".blog-busca", prefixo = "busca" }: { seletor?: string; prefixo?: string } = {}) {
   useEffect(() => {
     const root = document.documentElement;
     const viewport = window.visualViewport;
     const touch = window.matchMedia("(pointer: coarse)").matches;
+    const varTopo = `--${prefixo}-teclado-topo`;
+    const varLinha = `--${prefixo}-teclado-linha`;
+    const chaveDataset = `${prefixo}Teclado`;
     let alturaSemTeclado = window.innerHeight;
     let larguraAtual = window.innerWidth;
     let focoEm = 0;
@@ -51,13 +52,15 @@ export function useLinhaDoTeclado() {
     };
 
     const alturaVisivel = () => (viewport ? viewport.height : window.innerHeight);
+    const campoObservado = (el: Element | null) =>
+      (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.closest(seletor) !== null;
 
     function update() {
       if (window.innerWidth !== larguraAtual) {
         larguraAtual = window.innerWidth;
         alturaSemTeclado = window.innerHeight;
       }
-      const focado = campoDaBusca(document.activeElement);
+      const focado = campoObservado(document.activeElement);
       // O teclado fechando ainda dispara resize depois do blur, por isso guarda o maior valor.
       if (!focado) alturaSemTeclado = Math.max(alturaSemTeclado, window.innerHeight);
 
@@ -90,21 +93,21 @@ export function useLinhaDoTeclado() {
       }
 
       const aberto = modo !== "fechado";
-      root.dataset.buscaTeclado = modo;
+      root.dataset[chaveDataset] = modo;
       // No iOS a página rola ao abrir o teclado: o topo visível é o offsetTop do visualViewport.
       if (aberto) {
         const topo = modo === "real" && viewport && tecladoReal > 120 ? viewport.offsetTop : 0;
         if (modo === "real") tecladoMedido = { largura: larguraAtual, altura: window.innerHeight - (linhaDoTeclado - topo) };
-        root.style.setProperty("--busca-teclado-topo", `${topo}px`);
-        root.style.setProperty("--busca-teclado-linha", `${linhaDoTeclado}px`);
+        root.style.setProperty(varTopo, `${topo}px`);
+        root.style.setProperty(varLinha, `${linhaDoTeclado}px`);
       } else {
-        root.style.removeProperty("--busca-teclado-topo");
-        root.style.removeProperty("--busca-teclado-linha");
+        root.style.removeProperty(varTopo);
+        root.style.removeProperty(varLinha);
       }
     }
 
     function aoFocar(event: FocusEvent) {
-      if (!campoDaBusca(event.target as Element | null)) return;
+      if (!campoObservado(event.target as Element | null)) return;
       focoEm = performance.now();
       timers.forEach(window.clearTimeout);
       // Se até aqui o navegador não informou teclado nenhum, entra a estimativa.
@@ -128,9 +131,9 @@ export function useLinhaDoTeclado() {
       document.removeEventListener("focusin", aoFocar);
       document.removeEventListener("focusout", update);
       virtualKeyboard?.removeEventListener("geometrychange", aoMudarVirtualKeyboard);
-      root.style.removeProperty("--busca-teclado-topo");
-      root.style.removeProperty("--busca-teclado-linha");
-      delete root.dataset.buscaTeclado;
+      root.style.removeProperty(varTopo);
+      root.style.removeProperty(varLinha);
+      delete root.dataset[chaveDataset];
     };
-  }, []);
+  }, [seletor, prefixo]);
 }

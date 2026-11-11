@@ -21,7 +21,7 @@ Cards do exercício (briefing M8, 11/11/2026), todos abrindo uma ferramenta:
   convite" é o do módulo 5 ("convite-para-ajuda"), que ainda não tem arquivo, então não aparece. O aviso
   por e-mail na data ainda não existe: a data só fica salva;
 - recaida: "Escolher minha frase" ("Minhas frases", C3; conclui ao copiar uma frase ou salvar uma nova) e
-  "Ver o profissional ou serviço de antes" (o salvo no convite; sem nada salvo, "Ver psicólogo parceiro").
+  "Ver o profissional ou serviço de antes" (o salvo no convite; sem nada salvo, o carrossel de profissionais).
 Encerramento (C12): "Oito semanas depois", o resumo (@resumo) e os botões. O "Voltar ao painel" é o do
 rodapé do módulo. Fica de fora até existir o resumo da jornada: "Baixar o resumo para o profissional". -->
 
@@ -124,4 +124,4 @@ Você chegou ao fim das 8 semanas. Talvez muita coisa tenha mudado, talvez pouca
 
 @resumo
 
-@botao [Ver psicólogo parceiro](/profissionais)
+@profissionais ambos

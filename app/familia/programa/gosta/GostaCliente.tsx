@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
+import { focarCampo, TEXTO_CAMPOS_CHEIOS, TEXTO_SUGESTOES } from "@/lib/familia/campo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { minuscula, resumirSemana, valorUnico, type Anotacao } from "@/lib/familia/diario";
 import { BUSCA_DO_DIARIO, GRUPOS_DE_IDEIAS, MAXIMO_ITEM_GOSTA, TEXTOS_GOSTA, type BuscaId } from "@/lib/familia/valorizar";
@@ -30,6 +31,7 @@ export function GostaCliente() {
   const [resumo, setResumo] = useState<ReturnType<typeof resumirSemana> | null>(null);
   const [maisIdeias, setMaisIdeias] = useState(false);
   const [salvando, setSalvando] = useState(false);
+  const [tocouComTudoCheio, setTocouComTudoCheio] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -67,13 +69,15 @@ export function GostaCliente() {
   const gruposRecolhidos = buscaDoDiario ? GRUPOS_DE_IDEIAS.filter((grupo) => grupo.id !== buscaDoDiario) : [];
   const preenchidos = itens.filter((item) => item.trim()).length;
 
-  // Tocar numa ideia entra no primeiro campo vazio; com os dois cheios, troca o segundo.
+  // Tocar numa ideia entra no primeiro campo vazio. Com os dois cheios, não apaga nada.
   function usarIdeia(ideia: string) {
-    setItens((atuais) => {
-      const vazio = atuais.findIndex((item) => !item.trim());
-      const alvo = vazio === -1 ? 1 : vazio;
-      return atuais.map((item, indice) => (indice === alvo ? ideia.slice(0, MAXIMO_ITEM_GOSTA) : item));
-    });
+    const vazio = itens.findIndex((item) => !item.trim());
+    if (vazio === -1) {
+      setTocouComTudoCheio(true);
+      return;
+    }
+    setItens(itens.map((item, indice) => (indice === vazio ? ideia.slice(0, MAXIMO_ITEM_GOSTA) : item)));
+    focarCampo(`gosta-${vazio + 1}`);
   }
 
   async function salvar() {
@@ -126,6 +130,7 @@ export function GostaCliente() {
         <p className="text-large">{comDiario ? textoDoDiario : t(TEXTOS_GOSTA.semDiario)}</p>
       </div>
 
+      <p className="text-medium-regular familia-texto-suave">{TEXTO_SUGESTOES}</p>
       {gruposAbertos.map(grupo)}
       {gruposRecolhidos.length > 0 &&
         (maisIdeias ? (
@@ -139,6 +144,7 @@ export function GostaCliente() {
       <div className="escala-meta-grupo">
         <InputText id="gosta-1" rotulo={t(TEXTOS_GOSTA.campoRotulo)} descricao={t(TEXTOS_GOSTA.campoDica)} value={itens[0]} maxLength={MAXIMO_ITEM_GOSTA} autoComplete="off" onChange={(valor) => setItens([valor, itens[1]])} />
         <InputText id="gosta-2" rotulo={t(TEXTOS_GOSTA.campoRotulo)} value={itens[1]} maxLength={MAXIMO_ITEM_GOSTA} autoComplete="off" onChange={(valor) => setItens([itens[0], valor])} />
+        {tocouComTudoCheio && preenchidos === 2 && <p className="text-medium-regular familia-texto-suave">{TEXTO_CAMPOS_CHEIOS}</p>}
         {preenchidos === 1 && <p className="text-medium-regular familia-texto-suave">{TEXTOS_GOSTA.maisUma}</p>}
       </div>
 

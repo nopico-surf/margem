@@ -208,6 +208,20 @@ Junto veio o irmão do mesmo problema: no touch o `:hover` gruda no elemento dep
 
 Onde ainda não existe estado, como o `BotaoMenu` e os cards da home, o realce continua, porque ali ele é a única resposta ao toque. Mas deixou de ser o azul do navegador: passou a usar `--colors-alpha-56`, aplicado em `button`, `a`, `label`, `summary` e `[role="button"]` no `globals.css`. O `.btn` sobrepõe com transparente, porque tem os estados dele.
 
+**Quando o canto é redondo (decidido em 11/11/2026).** O canto diz o que o botão faz, não o gosto da tela:
+
+| tipo | canto | exemplos |
+|---|---|---|
+| Seleção: o toque marca ou desmarca e a pessoa continua na tela | `redondo` (999), é o `button-select` do Figma | chips de escolha, dias da semana, notas de 0 a 10, sugestões que preenchem um campo, "Salvar profissional" |
+| Ação de recurso: abre um contato ou um link | `redondo` (999), é o `ActionButton` | ligar, WhatsApp, "Ver reuniões" |
+| Avançar, salvar, navegar | 12 | "Continuar", "Salvar", "Ver e editar minha meta", "Contar que fui" |
+
+Exceção: no diagnóstico, a escolha única avança no toque, então fica com canto 12. A múltipla escolha, que não avança, é redonda.
+
+Chips de seleção no programa para familiares usam `tamanho="small"`. O checkout e o diagnóstico usam `medium`, porque ali a opção é a tela inteira.
+
+**Cabeçalho de card no painel da `/familia`.** Todo card abre com um título fixo que diz o que ele é ("Sua meta", "Valorizar o que é bom"). O que a pessoa escreveu nunca é o título: vai como texto do card. O rótulo pequeno em cima do título só aparece nos cards de módulo ("Módulo 2"), iguais à lista dos 8 módulos.
+
 **Fora do Button:** `BotaoMenu` e `BotaoFecharMenu`, que são só ícone e no Figma são o componente `icon-button`, outro componente.
 
 ### Existe no Figma e não no código

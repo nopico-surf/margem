@@ -155,23 +155,34 @@
   color:var(--colors-neutral-0);
 }
 
-/* Botão a mais ao lado do "Enviar" (microfone do treino de conversa): só o ícone, sem fundo. */
-.message-component-meta-acoes {
-  display:flex;
-  align-items:center;
-  gap:var(--spacing-8);
+/* Botão a mais na linha do texto (microfone do treino de conversa): à direita, em todos os estados,
+   no verde de ação (o mesmo do Enviar). O texto, o placeholder e a cópia do cursor reservam o espaço
+   dele pra não passar por baixo. */
+.message-component-com-acessorio {
+  --message-acessorio-espaco:calc(var(--size-20) + 2 * var(--spacing-8));
 }
 
-.message-component-meta .message-component-acessorio {
+.message-component-com-acessorio textarea,
+.message-component-com-acessorio .message-component-placeholder {
+  padding-right:calc(var(--spacing-8) + var(--message-acessorio-espaco));
+}
+
+.message-component-field .message-component-acessorio {
+  position:absolute;
+  right:0;
+  bottom:0;
+  z-index:var(--z-index-raised);
   display:flex;
   padding:var(--spacing-8);
+  border:0;
+  border-radius:var(--radius-lg);
   background:transparent;
-  color:var(--colors-neutral-600);
+  color:var(--colors-brand-primary-800);
+  cursor:pointer;
 }
 
-.message-component-meta .message-component-acessorio[aria-pressed="true"] {
+.message-component-field .message-component-acessorio[aria-pressed="true"] {
   background:var(--colors-brand-primary-100);
-  color:var(--colors-brand-primary-800);
 }
 
 .message-component-meta button:disabled {

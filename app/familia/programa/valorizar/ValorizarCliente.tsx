@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
+import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
+import { focarCampo, TEXTO_CAMPOS_CHEIOS, TEXTO_SUGESTOES } from "@/lib/familia/campo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { marcarFeito } from "@/lib/familia/exercicio-cliente";
 import { ITEM_VALORIZAR_M8 } from "@/lib/familia/modulo8";
@@ -17,6 +19,7 @@ import {
   FORMA_ELOGIO,
   FORMAS_DE_VALORIZAR,
   FORMAS_PARA_ESCOLHER,
+  MAXIMO_FORMA,
   TEXTOS_VALORIZAR,
   type PlanoValorizar,
 } from "@/lib/familia/valorizar";
@@ -40,11 +43,12 @@ type Lido = { apelido: string };
 export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boolean }) {
   const router = useRouter();
   const [dados, setDados] = useState<Lido | null>(null);
-  const [formas, setFormas] = useState<string[]>([]);
+  const [formas, setFormas] = useState<[string, string]>(["", ""]);
   const [dias, setDias] = useState<Dia[]>([]);
   const [periodos, setPeriodos] = useState<Momento[]>([]);
   const [salvando, setSalvando] = useState(false);
   const [salvo, setSalvo] = useState(false);
+  const [tocouComTudoCheio, setTocouComTudoCheio] = useState(false);
   const [modulo, setModulo] = useState(4);
 
   useEffect(() => {
@@ -56,7 +60,7 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
       const lido = (await resposta.json()) as Lido;
       const guardado = await chamarApi("/api/familia/valorizar").then(async (r) => (r?.ok ? ((await r.json()) as { plano: PlanoValorizar | null }).plano : null));
       if (guardado) {
-        setFormas(guardado.formas);
+        setFormas([aplicarApelido(guardado.formas[0] ?? "", lido.apelido), aplicarApelido(guardado.formas[1] ?? "", lido.apelido)]);
         setDias(guardado.dias);
         setPeriodos(guardado.periodos);
       }
@@ -77,20 +81,31 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
   const hrefModulo = `/familia/programa/modulo/${modulo}`;
   const voltarAoModulo = () => router.push(hrefModulo);
 
-  function alternarForma(forma: string) {
-    setFormas((atuais) => (atuais.includes(forma) ? atuais.filter((item) => item !== forma) : atuais.length < FORMAS_PARA_ESCOLHER ? [...atuais, forma] : atuais));
+  const preenchidas = formas.map((forma) => forma.trim()).filter(Boolean);
+  const completo = preenchidas.length === FORMAS_PARA_ESCOLHER && new Set(preenchidas).size === FORMAS_PARA_ESCOLHER;
+
+  // Tocar numa ideia entra no primeiro campo vazio. Com os dois cheios, não apaga nada.
+  function usarForma(forma: string) {
+    const vazio = formas.findIndex((item) => !item.trim());
+    if (vazio === -1) {
+      setTocouComTudoCheio(true);
+      return;
+    }
+    setFormas(formas.map((item, indice) => (indice === vazio ? forma.slice(0, MAXIMO_FORMA) : item)) as [string, string]);
+    focarCampo(`valorizar-${vazio + 1}`);
   }
 
   async function salvar() {
     setSalvando(true);
     const resposta = await chamarApi("/api/familia/valorizar", {
       method: "POST",
-      body: JSON.stringify({ tipo: "plano", dados: { formas, dias, periodos }, hoje: dataLocal() }),
+      body: JSON.stringify({ tipo: "plano", dados: { formas: preenchidas, dias, periodos }, hoje: dataLocal() }),
     });
     setSalvando(false);
     if (!resposta?.ok) return;
-    // Só o que a pessoa escolheu entre as opções, nunca texto livre (aqui não há).
-    track("plano_valorizar_salvo", { formas, dias: dias.length, periodos: periodos.length });
+    // Só as sugestões da lista que ficaram no plano, nunca o texto escrito pela pessoa.
+    const daLista = FORMAS_DE_VALORIZAR.filter((forma) => preenchidas.includes(t(forma)));
+    track("plano_valorizar_salvo", { formas: daLista, escritas: preenchidas.length - daLista.length, dias: dias.length, periodos: periodos.length });
     if (modulo === 8) await marcarFeito(8, ITEM_VALORIZAR_M8);
     setSalvo(true);
     window.scrollTo({ top: 0 });
@@ -126,12 +141,19 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
         <p className="text-large">{t(TEXTOS_VALORIZAR.intro)}</p>
       </header>
 
-      <div className="familia-chips escala-chips" aria-label={TEXTOS_VALORIZAR.titulo}>
+      <p className="text-medium-regular familia-texto-suave">{TEXTO_SUGESTOES}</p>
+      <div className="familia-chips escala-chips" role="group" aria-label={TEXTOS_VALORIZAR.titulo}>
         {FORMAS_DE_VALORIZAR.map((forma) => (
-          <Button key={forma} tamanho="small" redondo variante={formas.includes(forma) ? "primary" : "secondary"} onClick={() => alternarForma(forma)}>
+          <Button key={forma} tamanho="small" redondo variante="secondary" onClick={() => usarForma(t(forma))}>
             {t(forma)}
           </Button>
         ))}
+      </div>
+
+      <div className="escala-meta-grupo">
+        <InputText id="valorizar-1" rotulo={TEXTOS_VALORIZAR.campoRotulo} descricao={TEXTOS_VALORIZAR.campoDica} value={formas[0]} maxLength={MAXIMO_FORMA} autoComplete="off" onChange={(valor) => setFormas([valor, formas[1]])} />
+        <InputText id="valorizar-2" rotulo={TEXTOS_VALORIZAR.campoRotulo} value={formas[1]} maxLength={MAXIMO_FORMA} autoComplete="off" onChange={(valor) => setFormas([formas[0], valor])} />
+        {tocouComTudoCheio && formas.every((forma) => forma.trim()) && <p className="text-medium-regular familia-texto-suave">{TEXTO_CAMPOS_CHEIOS}</p>}
       </div>
 
       {formas.includes(FORMA_ELOGIO) && (
@@ -189,7 +211,7 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
         </div>
       </div>
 
-      <Button tamanho="medium" larguraTotal disabled={formas.length !== FORMAS_PARA_ESCOLHER} carregando={salvando} onClick={salvar}>
+      <Button tamanho="medium" larguraTotal disabled={!completo} carregando={salvando} onClick={salvar}>
         {TEXTOS_VALORIZAR.salvar}
       </Button>
     </section>

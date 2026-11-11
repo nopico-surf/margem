@@ -21,7 +21,7 @@ No topo, o [CARD_CAUTELA] do conteúdo v2, em caution_mode. -->
 :::se cautela=sim
 Você contou que às vezes tem medo. Antes deste passo, pense: isso pode deixar o clima mais tenso em casa? Se a resposta for sim, ou se tiver dúvida, converse antes com um profissional.
 
-@botao [Ver psicólogo parceiro](/profissionais)
+@profissionais psicologo
 
 [Ver meu plano de segurança](/familia/seguranca)
 :::

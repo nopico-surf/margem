@@ -77,10 +77,6 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
             <p className="oferta-programa-preco">
               R$ {MINIMO} a R$ {MAXIMO}
             </p>
-            <p className="oferta-programa-apoio">Você escolhe o valor. Uma vez só, no Pix.</p>
-            <p className="oferta-programa-apoio">
-              Você tem {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta. Num toque, sem precisar explicar por quê.
-            </p>
           </>
         ) : (
           <>
@@ -93,6 +89,20 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
       </div>
 
       <div className="oferta-programa-corpo">
+        {/* Briefing 01c: por que tem faixa, que não precisa justificar e que não é mensalidade. Os
+            14 dias em negrito, porque é essa frase que tira o risco da decisão. */}
+        {variante === "lp" && (
+          <>
+            <p className="oferta-programa-texto">
+              Você escolhe quanto pagar, e o programa é o mesmo em qualquer valor: os 8 módulos, as ferramentas e os treinos de conversa.
+            </p>
+            <p className="oferta-programa-texto">É uma vez só, no Pix. Não tem mensalidade e não fica cobrando depois.</p>
+            <p className="oferta-programa-texto">Quem pode pagar mais ajuda a manter o programa aberto para quem está sem nada agora.</p>
+            <p className="oferta-programa-texto">
+              <strong>Você tem {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta. Num toque, sem precisar explicar por quê.</strong>
+            </p>
+          </>
+        )}
         <p className="oferta-programa-texto">{texto}</p>
 
         {variante === "lp" && (
@@ -157,10 +167,11 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], dataModul
         {variante === "lp" ? (
           <div className="oferta-programa-rodape">
             <p>
-              Nem o valor mínimo cabe agora?{" "}
+              Se nem o menor valor couber agora, dá para{" "}
               <a href={`${HREF_GRATUITO}?origem=lp`} onClick={clicar("gratuito")}>
-                Pedir acesso gratuito
+                pedir acesso gratuito
               </a>
+              .
             </p>
           </div>
         ) : (

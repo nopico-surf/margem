@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { CheckBoxGroup } from "@/components/conversa/CheckBoxGroup";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { EscalaNota } from "@/components/familia/EscalaNota";
 import { Button } from "@/components/ui/Button";
@@ -13,6 +15,7 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { alternarDiaDaMeta } from "@/lib/familia/meta-cliente";
+import { focarCampo, TEXTO_SUGESTOES } from "@/lib/familia/campo";
 import {
   AREA_OPCIONAL,
   AREAS,
@@ -38,6 +41,7 @@ import {
   type Notas,
   type OrigemEscala,
 } from "@/lib/familia/escala";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 
 // Escala "Como está a sua vida" + meta da semana (componentes-parte1, C1), no padrão "uma pergunta
 // por tela" do diagnóstico. Telas: 1 abertura, 2 a 9 uma área por tela, 10 resultado, 11 criar a
@@ -45,7 +49,7 @@ import {
 //
 // ?origem=modulo1 (padrão) | modulo7 (refazer e comparar) | painel
 // ?etapa=meta: abre direto no resultado, com as notas da última escala ("Escolher minha meta da semana").
-// ?etapa=editar: abre a criação da meta preenchida com a meta ativa ("Editar minha meta da semana").
+// ?etapa=editar: abre a criação da meta preenchida com a meta ativa ("Ver e editar minha meta").
 // ?etapa=criar: abre direto a criação da meta na área de nota mais baixa da última escala ("Criar minha
 //   meta", briefings M7 e M8); voltar leva ao resultado, onde dá pra escolher outra área.
 // ?modulo=8: a meta é do módulo 8 (versão "aceitou"): salvar marca o item de lá e o voltar leva a ele.
@@ -55,18 +59,26 @@ type Etapa = { tela: "intro" } | { tela: "area"; indice: number } | { tela: "res
 
 const ID_CAMPO_ACAO = "familia-meta-acao";
 
+function codificarEtapa(etapa: Etapa) {
+  if (etapa.tela === "intro") return null;
+  return etapa.tela === "area" ? `area-${etapa.indice + 1}` : etapa.tela;
+}
+
 function lerParametros() {
   const busca = new URLSearchParams(window.location.search);
   const origem = (["modulo1", "modulo7", "painel"] as OrigemEscala[]).find((item) => item === busca.get("origem")) ?? "modulo1";
   return { origem, etapa: busca.get("etapa"), modulo: busca.get("modulo") === "8" ? 8 : null };
 }
 
-export function EscalaCliente() {
+// `profissionais`: carrossel de psicólogos quando alguma área tem nota muito baixa.
+export function EscalaCliente({ profissionais }: { profissionais: ProfissionalCadastrado[] }) {
   const router = useRouter();
   const [diagnostico, setDiagnostico] = useState<Diagnostico | null>(null);
   const [origem, setOrigem] = useState<OrigemEscala>("modulo1");
   const [moduloPedido, setModuloPedido] = useState<number | null>(null);
-  const [etapa, setEtapa] = useState<Etapa>({ tela: "intro" });
+  // Cada tela tem endereço próprio (?tela=area-3, ?tela=resultado...). Salvar a escala ou a meta desfaz
+  // as etapas no histórico: voltar não reabre o que já foi salvo.
+  const { etapa, irPara, trocar, concluir, voltar, podeVoltar } = useEtapaNaUrl<Etapa>({ tela: "intro" }, codificarEtapa);
   const [notas, setNotas] = useState<Notas>({});
   // Escala anterior, pro "módulo 1 → agora" do módulo 7.
   const [anterior, setAnterior] = useState<Notas | null>(null);
@@ -111,17 +123,17 @@ export function EscalaCliente() {
         // Meta ativa na mesma área: abre preenchida, é edição.
         if (meta && meta.area === sugerida) preencherMeta(meta);
         else setArea(sugerida);
-        setEtapa({ tela: "meta" });
+        trocar({ tela: "meta" });
       } else if (etapaDaUrl === "criar" && ultima) {
         setNotas(ultima);
-        setEtapa({ tela: "resultado" });
+        trocar({ tela: "resultado" });
       } else if (etapaDaUrl === "editar" && meta) {
         if (ultima) setNotas(ultima);
         preencherMeta(meta);
-        setEtapa({ tela: "meta" });
+        trocar({ tela: "meta" });
       } else if (etapaDaUrl === "meta" && ultima) {
         setNotas(ultima);
-        setEtapa({ tela: "resultado" });
+        trocar({ tela: "resultado" });
       }
       setDiagnostico((await resposta.json()) as Diagnostico);
     })();
@@ -148,18 +160,13 @@ export function EscalaCliente() {
   const comApelido = (valor: string) => aplicarApelido(valor, apelido);
   const moduloDeVolta = moduloPedido ?? (origem === "modulo7" ? 7 : 1);
 
-  function irPara(nova: Etapa) {
-    setEtapa(nova);
-    window.scrollTo({ top: 0 });
-  }
-
   async function terminarEscala(finais: Notas) {
     setSalvandoEscala(true);
     const resposta = await chamarApi("/api/familia/escala", { method: "POST", body: JSON.stringify({ origem, notas: finais }) });
     setSalvandoEscala(false);
     // [PENDÊNCIA DO FUNDADOR] Texto de erro ao salvar: não está na especificação. Por ora o botão só volta a ficar disponível.
     if (!resposta?.ok) return;
-    irPara({ tela: "resultado" });
+    concluir({ tela: "resultado" });
   }
 
   function avancarArea(indice: number, finais: Notas) {
@@ -194,7 +201,7 @@ export function EscalaCliente() {
     // [PENDÊNCIA DO FUNDADOR] Texto de erro ao salvar: não está na especificação. Por ora o botão só volta a ficar disponível.
     if (!resposta?.ok) return;
     setMetaSalva(((await resposta.json()) as { meta: Meta | null }).meta);
-    irPara({ tela: "salva" });
+    concluir({ tela: "salva" });
   }
 
   // ===== Tela 1: abertura =====
@@ -229,7 +236,7 @@ export function EscalaCliente() {
             className="familia-voltar"
             type="button"
             aria-label="Voltar para a área anterior"
-            onClick={() => irPara(indice > 0 ? { tela: "area", indice: indice - 1 } : { tela: "intro" })}
+            onClick={() => (podeVoltar ? voltar() : trocar({ tela: "intro" }))}
           >
             <GlifoArrowBack size={24} />
           </button>
@@ -298,12 +305,19 @@ export function EscalaCliente() {
         )}
 
         {muitoBaixa && (
-          <div className="familia-cartao">
-            <p className="text-large">{TEXTOS_ESCALA.muitoBaixo.replace("{{area_nome}}", nomeDaArea(muitoBaixa))}</p>
-            <Button variante="secondary" tamanho="medium" larguraTotal href="/profissionais">
-              Ver psicólogo parceiro
-            </Button>
-          </div>
+          <>
+            <div className="familia-cartao">
+              <p className="text-large">{TEXTOS_ESCALA.muitoBaixo.replace("{{area_nome}}", nomeDaArea(muitoBaixa))}</p>
+            </div>
+            <CardProfissionais
+              profissionais={profissionais}
+              variante="home"
+              especialidades={["psicologo"]}
+              id="familia-profissionais"
+              origem="programa-escala"
+              titulo="Profissionais que podem atender você"
+            />
+          </>
         )}
 
         <p className="text-medium-regular familia-texto-suave">{TEXTOS_ESCALA.outraArea}</p>
@@ -344,7 +358,7 @@ export function EscalaCliente() {
     return (
       <section className="familia-pergunta">
         <div className="familia-pergunta-topo">
-          <button className="familia-voltar" type="button" aria-label="Voltar para o resultado" onClick={() => irPara({ tela: "resultado" })}>
+          <button className="familia-voltar" type="button" aria-label="Voltar para o resultado" onClick={() => (podeVoltar ? voltar() : irPara({ tela: "resultado" }))}>
             <GlifoArrowBack size={24} />
           </button>
         </div>
@@ -352,7 +366,7 @@ export function EscalaCliente() {
 
         <div className="escala-meta-area">
           <span className="escala-chip label-small-medium">{nomeDaArea(area)}</span>
-          <Button variante="transparent" tamanho="small" onClick={() => irPara({ tela: "resultado" })}>
+          <Button variante="transparent" tamanho="small" onClick={() => (podeVoltar ? voltar() : irPara({ tela: "resultado" }))}>
             Escolher outra área
           </Button>
         </div>
@@ -380,9 +394,19 @@ export function EscalaCliente() {
           <p className="text-large">Uma meta pequena cumprida vale mais do que uma grande abandonada.</p>
         </div>
 
+        <p className="text-medium-regular familia-texto-suave">{TEXTO_SUGESTOES}</p>
         <div className="familia-chips escala-chips" role="group" aria-label={`Exemplos de meta para ${nomeDaArea(area)}`}>
           {exemplos.map((exemplo) => (
-            <Button key={exemplo} variante={texto === exemplo ? "primary" : "secondary"} tamanho="small" redondo onClick={() => setTexto(exemplo)}>
+            <Button
+              key={exemplo}
+              variante="secondary"
+              tamanho="small"
+              redondo
+              onClick={() => {
+                setTexto(exemplo);
+                focarCampo(ID_CAMPO_ACAO);
+              }}
+            >
               {exemplo}
             </Button>
           ))}

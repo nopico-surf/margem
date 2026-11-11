@@ -15,6 +15,9 @@ import { ITENS_QUE_CONCLUEM_NO_TREINO, ROTULO_TREINO, ROTULO_TREINO_PADRAO } fro
 import { TEXTOS_ADIAR } from "@/lib/familia/valorizar";
 import { SEMANAS_PADRAO_RETORNO, TEXTOS_CONVITE } from "@/lib/familia/convite";
 import { track } from "@/lib/mixpanel";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
+import type { Especialidade } from "@/components/conversa/FiltroEspecialidade";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Itens do exercício da semana (ajuste do fundador de 10/11/2026): cada item é um cartão com o nome
 // do item como título, o texto e os botões logo abaixo. O mesmo componente aparece no módulo e no
@@ -38,7 +41,7 @@ import { track } from "@/lib/mixpanel";
 // convite, minhas frases), que concluem o item do módulo 8 quando abertas com ?modulo=8. "Dar um tempo
 // no assunto" escolhe a data no próprio card (padrão: 4 semanas; o aviso por e-mail ainda não existe).
 // Na versão "disse não", fazer um dos dois cards mostra o outro como "Não se aplica". "Retomar o apoio"
-// leva ao profissional ou serviço salvo no convite; sem nada salvo, vira "Ver psicólogo parceiro".
+// leva ao profissional ou serviço salvo no convite; sem nada salvo, vira o carrossel de profissionais.
 //
 // Padrões do briefing 00 (10/11/2026): status "Concluído em DD/MM" com check verde, ou "Ainda não"
 // em cinza (item 4); concluído, o item mostra ações secundárias pra ver, editar ou refazer (item 5);
@@ -54,9 +57,6 @@ const ROTULO_ACAO: Record<string, string> = {
   treinar_roteiro: "Treinar o meu roteiro",
   plano_seguranca: "Fazer meu plano de segurança",
   roteiro: "Ver o meu roteiro da conversa",
-  // Plural porque a lista tem mais de um. Não existe agenda no produto: nada de "horário" (briefing M56).
-  profissional: "Ver psicólogos parceiros",
-  profissionais_semana: "Ver psicólogos parceiros",
   servicos: "Ver serviços perto de mim",
   seguranca: "Ver o que fazer em caso de risco",
   escala: "Dar notas e criar minha meta",
@@ -86,8 +86,6 @@ const HREF_ACAO: Record<string, string> = {
   resumo: "/familia/programa/diario/resumo",
   plano_seguranca: "/familia/seguranca",
   roteiro: "/familia/resultado#primeira-conversa",
-  profissional: "/profissionais",
-  profissionais_semana: "/profissionais",
   servicos: "/redes-de-apoio?tipo=publicas",
   seguranca: "/familia/seguranca",
   frases: "/familia/programa/frases?modulo=3",
@@ -155,7 +153,7 @@ const DEPOIS_DE_CONCLUIDO: Record<string, Array<{ rotulo: string; href: string }
   ],
 };
 
-// Ações que contam o item como feito ao clicar ("Ver psicólogo parceiro" conta no modo segurança).
+// Ações que contam o item como feito ao clicar (abrir um perfil no carrossel de psicólogos conta no modo segurança).
 // "Fazer meu plano de segurança" também conta: a ferramenta do plano ainda não existe, e o botão leva à página de segurança.
 const ACAO_MARCA = new Set(["marcar", "profissional", "profissionais_semana", "plano_seguranca", "retomar"]);
 
@@ -224,7 +222,13 @@ type ExercicioSemanaProps = {
   onPausa?: (data: string) => Promise<boolean>;
   // Módulo 8: o profissional ou serviço salvo no convite (sem nada salvo, null).
   retomarHref?: string | null;
+  // Lista do carrossel que entra no lugar do botão "Ver psicólogos parceiros" (e do "Retomar o apoio"
+  // sem nada salvo). Sem a lista, o item fica sem esse botão.
+  profissionais?: ProfissionalCadastrado[];
 };
+
+// Ações que viram carrossel de profissionais logo abaixo do cartão, em vez de botão.
+const ACOES_DO_CARROSSEL = new Set(["profissional", "profissionais_semana"]);
 
 // "3 anotações nesta semana" (0 não aparece) e, no item do módulo 2 ainda aberto, "2 de 3 anotações".
 function contadorDoDiario(itemId: string, concluido: boolean, anotacoes: AnotacaoContada[]) {
@@ -248,14 +252,17 @@ export function ExercicioSemana({
   dataRetorno = null,
   onPausa,
   retomarHref = null,
+  profissionais,
 }: ExercicioSemanaProps) {
   // "Dar um tempo no assunto" (módulo 8): a data começa na já escolhida ou em 4 semanas.
   const [dataEscolhida, setDataEscolhida] = useState<string | null>(null);
   const [editandoPausa, setEditandoPausa] = useState(false);
   const [salvandoPausa, setSalvandoPausa] = useState(false);
   const dataPausa = dataEscolhida ?? dataRetorno ?? emSemanas(SEMANAS_PADRAO_RETORNO);
-  const rotuloRetomar = retomarHref ? TEXTOS_M8.retomarAntes : TEXTOS_M8.retomarSemAntes;
-  const hrefRetomar = retomarHref ?? "/profissionais";
+  // Sem nada salvo no convite, o "Retomar o apoio" vira o carrossel (psicólogos e psiquiatras).
+  const rotuloRetomar = TEXTOS_M8.retomarAntes;
+  const hrefRetomar = retomarHref ?? "";
+  const vaiProCarrossel = (acao: string) => ACOES_DO_CARROSSEL.has(acao) || (acao === "retomar" && !retomarHref);
 
   async function escolherData() {
     if (!onPausa) return;
@@ -290,8 +297,13 @@ export function ExercicioSemana({
         const feitoEm = deixado ? undefined : estado[item.id];
         const { titulo, blocos } = separarTitulo(item.blocos);
         // Treino sem cenário com arquivo não ganha botão.
-        const acoes = item.acoes.filter((acao) => (acao !== "simulador" && acao !== "treinar_roteiro") || item.cenario);
-        // Item de ação única (só marcar, só diário, só profissional): é o botão principal.
+        const acoesDoItem = item.acoes.filter((acao) => (acao !== "simulador" && acao !== "treinar_roteiro") || item.cenario);
+        // "Ver psicólogos parceiros" (e o "Retomar o apoio" sem nada salvo) é o carrossel abaixo do
+        // cartão, nunca botão. Psicólogos pro familiar; no "Retomar", as duas especialidades.
+        const acaoDoCarrossel = acoesDoItem.find(vaiProCarrossel);
+        const especialidadesDoCarrossel: Especialidade[] = acaoDoCarrossel === "retomar" ? ["psicologo", "psiquiatra"] : ["psicologo"];
+        const acoes = acoesDoItem.filter((acao) => !vaiProCarrossel(acao));
+        // Item de ação única (só marcar, só diário): é o botão principal.
         const acaoUnica = acoes.length === 1;
         // Treino que conclui o item quando termina (briefing M3, card 2): o simulador marca ao mostrar o retorno.
         const concluiNoTreino = ITENS_QUE_CONCLUEM_NO_TREINO.has(`${modulo}:${item.id}`);
@@ -322,7 +334,8 @@ export function ExercicioSemana({
         };
 
         return (
-          <div key={item.id} className="familia-cartao familia-exercicio-item" data-feito={Boolean(feitoEm)}>
+          <Fragment key={item.id}>
+          <div className="familia-cartao familia-exercicio-item" data-feito={Boolean(feitoEm)}>
             {titulo && <h3 className="header-small">{aplicarApelido(titulo, apelido)}</h3>}
             <Texto blocos={blocos} apelido={apelido} contexto={contexto} />
             {feitoEm ? (
@@ -338,6 +351,7 @@ export function ExercicioSemana({
             ) : (
               <span className="familia-status label-small-medium">Ainda não</span>
             )}
+            {acoes.length > 0 && (
             <div className="familia-exercicio-acoes">
               {feitoEm
                 ? acoes
@@ -400,8 +414,27 @@ export function ExercicioSemana({
                     ),
                   )}
             </div>
+            )}
             {contador && <p className="text-medium-regular familia-texto-suave">{contador}</p>}
           </div>
+          {acaoDoCarrossel && profissionais && (
+            // Abrir um perfil ou o WhatsApp conta o item como feito, como o botão contava.
+            <div
+              onClickCapture={(evento) => {
+                if ((evento.target as Element).closest("a")) rastrear(acaoDoCarrossel)();
+              }}
+            >
+              <CardProfissionais
+                profissionais={profissionais}
+                variante="home"
+                especialidades={especialidadesDoCarrossel}
+                id={`familia-profissionais-${modulo}-${item.id}`}
+                origem={acaoDoCarrossel === "retomar" ? `familia-modulo-${modulo}-retomar` : `programa-modulo-${modulo}`}
+                titulo={acaoDoCarrossel === "retomar" ? undefined : "Profissionais que podem atender você"}
+              />
+            </div>
+          )}
+          </Fragment>
         );
       })}
     </div>

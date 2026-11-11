@@ -77,6 +77,62 @@
   margin-bottom: var(--spacing-40);
 }
 
+/* Treino de conversa (SimuladorCliente): o campo e o "Terminar e ver o retorno" ficam presos no pé da
+   tela, logo acima do teclado (lib/use-linha-do-teclado.ts, variáveis --treino-teclado-*). A conversa
+   rola por trás e reserva embaixo a altura do rodapé (--treino-rodape, medida no cliente) mais a do
+   teclado, pra a última mensagem conseguir subir até acima do campo com o teclado aberto. */
+.familia-simulador-conversa {
+  margin-bottom: 0;
+  padding-bottom: calc(var(--treino-rodape, var(--spacing-0)) + var(--treino-teclado-topo, var(--spacing-0)) + 100dvh - var(--treino-teclado-linha, 100dvh));
+}
+
+/* A rolagem automática para a última mensagem logo acima do rodapé (e do teclado, quando aberto). */
+.familia-simulador-fim {
+  scroll-margin-bottom: calc(
+    var(--treino-rodape, var(--spacing-0)) + var(--spacing-16) + var(--treino-teclado-topo, var(--spacing-0)) + 100dvh - var(--treino-teclado-linha, 100dvh)
+  );
+}
+
+/* Ancorado pela base na linha do teclado (sem teclado, o pé da tela). O cinza da página continua por
+   baixo até o fim da tela, como na busca do blog: o teclado cobre o resto, e uma estimativa menor que
+   o teclado real nunca mostra a conversa por baixo do campo. */
+.familia-simulador-rodape {
+  position: fixed;
+  top: var(--treino-teclado-linha, calc(var(--treino-teclado-topo, var(--spacing-0)) + 100dvh));
+  right: 0;
+  left: 0;
+  z-index: calc(var(--z-index-panel) - 1);
+  padding: var(--spacing-8) var(--pagina-padding-lateral) max(var(--spacing-16), env(safe-area-inset-bottom));
+  background: var(--colors-neutral-50);
+  transform: translateY(-100%);
+  transition: top var(--duration-420) var(--easing-out-expo);
+}
+
+.familia-simulador-rodape::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: calc(var(--treino-teclado-topo, var(--spacing-0)) + 100dvh - var(--treino-teclado-linha, 100dvh));
+  background: inherit;
+}
+
+/* Mesma largura do conteúdo da página (.familia-conteudo). */
+.familia-simulador-rodape-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  max-width: calc(var(--layout-content-max-width-page) - 2 * var(--pagina-padding-lateral));
+  margin: 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .familia-simulador-rodape {
+    transition: none;
+  }
+}
+
 .familia-secao h1,
 .familia-secao h2,
 .familia-secao h3 {
@@ -607,22 +663,23 @@ button.dias-da-meta-dia:focus-visible {
 }
 
 
-/* Carrossel de profissionais (painel e módulos 5 e 6). A .familia-conteudo já dá a margem lateral:
-   sem isto a faixa e o container somavam a deles por cima (bloco recuado em relação ao resto), e a
-   regra da home prendia a fileira no container de 1080, cortando os cards no meio da página. Aqui a
-   fileira vai de ponta a ponta da tela, igual à da /conversa (resultado.css). */
-#familia-profissionais.figma-result-band {
+/* Carrossel de profissionais (painel, módulos, exercícios, resultado, segurança, escala, diário...).
+   Pela classe, não pelo id: uma página pode ter mais de um, cada um com seu id. A .familia-conteudo
+   já dá a margem lateral: sem isto a faixa e o container somavam a deles por cima (bloco recuado em
+   relação ao resto), e a regra da home prendia a fileira no container de 1080, cortando os cards no
+   meio da página. Aqui a fileira vai de ponta a ponta da tela, igual à da /conversa (resultado.css). */
+.familia .figma-result-band.home-profissionais {
   padding: 0;
   background: transparent;
 }
 
-#familia-profissionais .figma-section-inner {
+.familia .home-profissionais .figma-section-inner {
   max-width: none;
   padding: 0;
 }
 
 @media (min-width: 1088px) {
-  #familia-profissionais .figma-professionals-row {
+  .familia .home-profissionais .figma-professionals-row {
     width: 100vw;
     margin-left: calc(50% - 50vw);
   }

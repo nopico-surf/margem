@@ -15,6 +15,14 @@ export type Anotacao = {
   depois: string[];
   bom_o_que: string[];
   bom_sentiu: string[];
+  // O que a pessoa escreveu no "Outro" de cada pergunta (briefing 00d). A lista guarda só "Outro".
+  antes_outro: string | null;
+  percebeu_outro: string | null;
+  buscou_outro: string | null;
+  reagiu_outro: string | null;
+  depois_outro: string | null;
+  bom_o_que_outro: string | null;
+  bom_sentiu_outro: string | null;
   texto_livre: string | null;
 };
 
@@ -26,6 +34,9 @@ export const CAMPOS_DO_TIPO: Record<TipoAnotacao, CampoLista[]> = {
 };
 
 export const CAMPOS_LISTA: CampoLista[] = ["antes", "percebeu", "buscou", "reagiu", "depois", "bom_o_que", "bom_sentiu"];
+
+export type CampoOutro = `${CampoLista}_outro`;
+export const campoOutro = (campo: CampoLista): CampoOutro => `${campo}_outro`;
 
 export const TAMANHO_MAXIMO_CAMPO = 280;
 export const TAMANHO_MAXIMO_OUTRO = 60;
@@ -56,7 +67,6 @@ export const TEXTOS_DIARIO = {
   salvoBom: "Guardado. No módulo 4, você vai aprender a valorizar momentos assim.",
   segurancaTexto: "Você contou que precisou sair de perto para se proteger. A sua segurança vem primeiro.",
   segurancaBotao: "Ver meu plano de segurança",
-  profissionalBotao: "Ver psicólogo parceiro",
 };
 
 export type PerguntaDoDiario = {
@@ -259,9 +269,24 @@ export function escritoPelaPessoa(campo: CampoLista, valor: string) {
   return !pergunta.opcoes.includes(valor) && !Object.values(pergunta.extras ?? {}).some((extras) => extras.includes(valor));
 }
 
-// Pra coluna usou_outro_escrito (briefing M2b, item 5): pelo menos um valor da anotação foi escrito.
-export function usouOutroEscrito(anotacao: Record<CampoLista, string[]>) {
-  return CAMPOS_LISTA.some((campo) => anotacao[campo].some((valor) => escritoPelaPessoa(campo, valor)));
+// Pra coluna usou_outro_escrito (briefing M2b, item 5): algum campo "Outro" tem texto.
+export function usouOutroEscrito(anotacao: Partial<Record<CampoOutro, string | null>>) {
+  return CAMPOS_LISTA.some((campo) => Boolean(anotacao[campoOutro(campo)]));
+}
+
+// Leitura de linha antiga (briefing 00d): valor fora da lista da pergunta vira "Outro" e o texto vai
+// pro campo ao lado. Linha nova passa sem mudança. Sem script de migração.
+export function lerOutro<T extends Record<CampoLista, string[]> & Partial<Record<CampoOutro, string | null>>>(linha: T): T {
+  const resultado = { ...linha } as Record<string, unknown>;
+  for (const campo of CAMPOS_LISTA) {
+    const valores = linha[campo];
+    const escrito = valores.find((valor) => escritoPelaPessoa(campo, valor));
+    if (!escrito) continue;
+    resultado[campo] = [...new Set(valores.map((valor) => (escritoPelaPessoa(campo, valor) ? OUTRO : valor)))];
+    const destino = campoOutro(campo);
+    if (!linha[destino]) resultado[destino] = escrito;
+  }
+  return resultado as T;
 }
 
 // "a e b", pra frase com dois valores empatados.
@@ -305,7 +330,8 @@ const CAMPOS_ESCRITOS: CampoLista[] = ["antes", "buscou", "reagiu"];
 
 // Agregação semanal simples (contagem), sem IA, sobre os últimos 7 dias. Dia e período usam a hora do
 // aparelho, por isso isto roda no cliente.
-export function resumirSemana(anotacoes: Anotacao[], agora = new Date()): ResumoDaSemana {
+export function resumirSemana(entrada: Anotacao[], agora = new Date()): ResumoDaSemana {
+  const anotacoes = entrada.map(lerOutro);
   const recentes = anotacoes.filter((anotacao) => dentroDosUltimosDias(anotacao.quando, agora));
   const dificeis = recentes.filter((anotacao) => anotacao.tipo === "dificil");
   const horarios = dificeis.map((anotacao) => new Date(anotacao.quando));
@@ -316,7 +342,7 @@ export function resumirSemana(anotacoes: Anotacao[], agora = new Date()): Resumo
   const comSeguranca = mapas.find((mapa) => mapa?.seguranca);
   const escritos = [...dificeis]
     .sort((a, b) => Date.parse(b.quando) - Date.parse(a.quando))
-    .flatMap((anotacao) => CAMPOS_ESCRITOS.flatMap((campo) => anotacao[campo].filter((valor) => escritoPelaPessoa(campo, valor))))
+    .flatMap((anotacao) => CAMPOS_ESCRITOS.map((campo) => anotacao[campoOutro(campo)]?.trim()).filter((texto): texto is string => Boolean(texto)))
     .slice(0, MAXIMO_ESCRITOS);
   return {
     total: recentes.length,
@@ -369,5 +395,13 @@ export function sanitizarAnotacao(entrada: unknown) {
   const livre = typeof bruto.texto_livre === "string" && bruto.texto_livre.trim() ? bruto.texto_livre.trim().slice(0, TAMANHO_MAXIMO_CAMPO) : null;
   // Cada tipo guarda só os campos dele.
   const campos = Object.fromEntries(CAMPOS_LISTA.map((campo) => [campo, CAMPOS_DO_TIPO[tipo].includes(campo) ? lista(bruto[campo]) : []])) as Record<CampoLista, string[]>;
-  return { tipo, quando, ...campos, texto_livre: livre };
+  // O texto do "Outro" só vale se a lista tem "Outro".
+  const outros = Object.fromEntries(
+    CAMPOS_LISTA.map((campo) => {
+      const texto = bruto[campoOutro(campo)];
+      const valido = campos[campo].includes(OUTRO) && typeof texto === "string" && texto.trim();
+      return [campoOutro(campo), valido ? (texto as string).trim().slice(0, TAMANHO_MAXIMO_OUTRO) : null];
+    }),
+  ) as Record<CampoOutro, string | null>;
+  return { tipo, quando, ...campos, ...outros, texto_livre: livre };
 }

@@ -36,6 +36,7 @@ export function EscalaNota({ minimo, maximo, valor, onEscolher, rotulo, legendaM
               key={numero}
               variante={valor === numero ? "primary" : "secondary"}
               tamanho="medium"
+              redondo
               larguraTotal
               aria-label={valor === numero ? `${numero}, marcado` : String(numero)}
               onClick={() => onEscolher(numero)}

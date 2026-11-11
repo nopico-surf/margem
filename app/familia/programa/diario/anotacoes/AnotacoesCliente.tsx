@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
-import { CAMPOS_DO_TIPO, PERGUNTAS_BOM, PERGUNTAS_DIFICIL, TEXTOS_DIARIO, type Anotacao } from "@/lib/familia/diario";
+import { campoOutro, CAMPOS_DO_TIPO, OUTRO, PERGUNTAS_BOM, PERGUNTAS_DIFICIL, TEXTOS_DIARIO, type Anotacao } from "@/lib/familia/diario";
 
 // Todas as anotações do diário, da mais recente pra mais antiga. Cada uma tem "Editar" (abre o diário
 // preenchido) e "Apagar" (em dois toques, pra não apagar sem querer).
@@ -83,7 +83,7 @@ export function AnotacoesCliente() {
             return (
               <div key={campo} className="diario-resposta">
                 <p className="label-small-medium">{t(pergunta?.pergunta ?? "")}</p>
-                <p className="text-large">{valores.map(t).join(", ")}</p>
+                <p className="text-large">{valores.map((valor) => (valor === OUTRO && anotacao[campoOutro(campo)] ? anotacao[campoOutro(campo)] : t(valor))).join(", ")}</p>
               </div>
             );
           })}

@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { Button } from "@/components/ui/Button";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -11,6 +13,7 @@ import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import {
   ATALHOS_QUANDO,
+  campoOutro,
   CAMPOS_DO_TIPO,
   dataDoAtalho,
   opcoesDaPergunta,
@@ -28,6 +31,7 @@ import {
   type PerguntaDoDiario,
   type TipoAnotacao,
 } from "@/lib/familia/diario";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import { track } from "@/lib/mixpanel";
 
 // Diário do programa (briefing M2). Uma pergunta por tela, no padrão do diagnóstico e da escala, com
@@ -48,10 +52,18 @@ function perguntasDo(tipo: TipoAnotacao) {
   return tipo === "bom" ? PERGUNTAS_BOM : PERGUNTAS_DIFICIL;
 }
 
-export function DiarioCliente() {
+function codificarEtapa(etapa: Etapa) {
+  if (etapa.tela === "intro") return "abertura";
+  return etapa.tela === "pergunta" ? `pergunta-${etapa.indice + 1}` : etapa.tela;
+}
+
+// `profissionais`: carrossel de psicólogos depois de uma anotação com reação de risco.
+export function DiarioCliente({ profissionais }: { profissionais: ProfissionalCadastrado[] }) {
   const router = useRouter();
   const [diagnostico, setDiagnostico] = useState<Diagnostico | null>(null);
-  const [etapa, setEtapa] = useState<Etapa>({ tela: "tipo" });
+  // Cada tela tem endereço próprio (?tela=quando, ?tela=pergunta-2...). Salvar desfaz as etapas no
+  // histórico: voltar da confirmação não reabre a anotação já salva.
+  const { etapa, irPara, trocar, concluir, voltar, podeVoltar } = useEtapaNaUrl<Etapa>({ tela: "tipo" }, codificarEtapa);
   const [tipo, setTipo] = useState<TipoAnotacao>("dificil");
   const [idEditado, setIdEditado] = useState<string | null>(null);
   // Preenchido no efeito: o horário "agora" não pode ser lido na renderização do servidor.
@@ -82,7 +94,7 @@ export function DiarioCliente() {
         setAtalho("Escolher dia e hora");
         setLivre(editar.texto_livre ?? "");
         preencher(editar);
-        setEtapa({ tela: "quando" });
+        trocar({ tela: "quando" });
       } else {
         setQuando(new Date());
         if (pedido) {
@@ -90,23 +102,19 @@ export function DiarioCliente() {
           setTipoDaUrl(pedido);
         }
         // A abertura aparece só na primeira vez; depois, vai direto pra escolha.
-        setEtapa(lista.length === 0 ? { tela: "intro" } : pedido ? { tela: "quando" } : { tela: "tipo" });
+        trocar(lista.length === 0 ? { tela: "intro" } : pedido ? { tela: "quando" } : { tela: "tipo" });
       }
       setDiagnostico((await resposta.json()) as Diagnostico);
     })();
   }, [router]);
 
-  // Opções fora das listas voltam como "Outro" com o texto escrito.
+  // A API já devolve "Outro" na lista e o texto no campo ao lado (linha antiga é convertida lá).
   function preencher(anotacao: Anotacao) {
     const novas: Escolhas = { ...VAZIAS };
     const textos = { ...VAZIOS_OUTRO };
     for (const pergunta of perguntasDo(anotacao.tipo)) {
-      const conhecidas = new Set([...pergunta.opcoes, ...Object.values(pergunta.extras ?? {}).flat()]);
-      const valores = anotacao[pergunta.campo];
-      novas[pergunta.campo] = valores.map((valor) => (conhecidas.has(valor) ? valor : OUTRO));
-      const outro = valores.find((valor) => !conhecidas.has(valor) && valor !== OUTRO);
-      if (outro) textos[pergunta.campo] = outro;
-      novas[pergunta.campo] = [...new Set(novas[pergunta.campo])];
+      novas[pergunta.campo] = anotacao[pergunta.campo];
+      textos[pergunta.campo] = anotacao[campoOutro(pergunta.campo)] ?? "";
     }
     setEscolhas(novas);
     setOutros(textos);
@@ -127,11 +135,6 @@ export function DiarioCliente() {
   // Quando + perguntas (+ campo livre no momento difícil).
   const totalDeTelas = 1 + perguntas.length + (tipo === "dificil" ? 1 : 0);
 
-  function irPara(nova: Etapa) {
-    setEtapa(nova);
-    window.scrollTo({ top: 0 });
-  }
-
   function escolherTipo(novo: TipoAnotacao) {
     setTipo(novo);
     irPara({ tela: "quando" });
@@ -147,16 +150,9 @@ export function DiarioCliente() {
     return atual;
   }
 
-  function anterior(atual: Etapa): Etapa | null {
-    if (atual.tela === "quando") return idEditado || tipoDaUrl ? null : { tela: "tipo" };
-    if (atual.tela === "pergunta") return atual.indice === 0 ? { tela: "quando" } : { tela: "pergunta", indice: atual.indice - 1 };
-    if (atual.tela === "livre") return { tela: "pergunta", indice: perguntas.length - 1 };
-    return null;
-  }
-
-  // O "Outro" vira o texto escrito (ou fica "Outro", se a pessoa não escreveu nada).
-  function listaFinal(campo: CampoLista) {
-    return escolhas[campo].map((valor) => (valor === OUTRO ? outros[campo].trim().slice(0, TAMANHO_MAXIMO_OUTRO) || OUTRO : valor));
+  // A lista guarda "Outro" e o texto escrito vai separado, no campo <campo>_outro.
+  function textoOutro(campo: CampoLista) {
+    return escolhas[campo].includes(OUTRO) ? outros[campo].trim().slice(0, TAMANHO_MAXIMO_OUTRO) || null : null;
   }
 
   async function salvar() {
@@ -164,7 +160,7 @@ export function DiarioCliente() {
     const anotacao = {
       tipo,
       quando: momento.toISOString(),
-      ...Object.fromEntries(CAMPOS_DO_TIPO[tipo].map((campo) => [campo, listaFinal(campo)])),
+      ...Object.fromEntries(CAMPOS_DO_TIPO[tipo].flatMap((campo) => [[campo, escolhas[campo]], [campoOutro(campo), textoOutro(campo)]])),
       texto_livre: tipo === "dificil" ? livre : "",
     };
     const resposta = await chamarApi("/api/familia/diario", {
@@ -176,10 +172,9 @@ export function DiarioCliente() {
     if (!resposta?.ok) return;
     track("diario_anotacao_salva", { tipo, editada: Boolean(idEditado) });
     setReagiuComSeguranca(tipo === "dificil" && escolhas.reagiu.includes(SAI_PARA_SE_PROTEGER));
-    irPara({ tela: "salvo" });
+    concluir({ tela: "salvo" });
   }
 
-  const voltar = anterior(etapa);
   const numeroDaTela = etapa.tela === "quando" ? 1 : etapa.tela === "pergunta" ? etapa.indice + 2 : etapa.tela === "livre" ? totalDeTelas : 0;
   const topo = (
     <div className="familia-pergunta-topo">
@@ -187,7 +182,7 @@ export function DiarioCliente() {
         className="familia-voltar"
         type="button"
         aria-label="Voltar"
-        onClick={() => (voltar ? irPara(voltar) : router.push("/familia/programa"))}
+        onClick={() => (podeVoltar ? voltar() : router.push("/familia/programa"))}
       >
         <GlifoArrowBack size={24} />
       </button>
@@ -366,15 +361,22 @@ export function DiarioCliente() {
         {t(tipo === "bom" ? TEXTOS_DIARIO.salvoBom : TEXTOS_DIARIO.salvoDificil)}
       </p>
       {reagiuComSeguranca && (
-        <div className="familia-cartao familia-cartao-alerta">
-          <p className="text-large">{TEXTOS_DIARIO.segurancaTexto}</p>
-          <Button tamanho="small" href="/familia/seguranca">
-            {TEXTOS_DIARIO.segurancaBotao}
-          </Button>
-          <Button variante="secondary" tamanho="small" href="/profissionais">
-            {TEXTOS_DIARIO.profissionalBotao}
-          </Button>
-        </div>
+        <>
+          <div className="familia-cartao familia-cartao-alerta">
+            <p className="text-large">{TEXTOS_DIARIO.segurancaTexto}</p>
+            <Button tamanho="small" href="/familia/seguranca">
+              {TEXTOS_DIARIO.segurancaBotao}
+            </Button>
+          </div>
+          <CardProfissionais
+            profissionais={profissionais}
+            variante="home"
+            especialidades={["psicologo"]}
+            id="familia-profissionais"
+            origem="programa-diario"
+            titulo="Profissionais que podem atender você"
+          />
+        </>
       )}
       <div className="familia-acoes">
         <Button variante="secondary" tamanho="medium" larguraTotal href="/familia/programa/diario/anotacoes">

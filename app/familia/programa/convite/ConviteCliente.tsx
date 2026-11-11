@@ -37,6 +37,7 @@ import { dataLocal } from "@/lib/familia/escala";
 import { marcarFeito } from "@/lib/familia/exercicio-cliente";
 import { ITEM_NOVO_CONVITE_M8 } from "@/lib/familia/modulo8";
 import { fotoPequena } from "@/lib/foto-pequena";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import { track } from "@/lib/mixpanel";
 
 // "Preparar o convite" (briefing M5, C6): 5 passos, um por tela, com "Passo X de 5". Cada passo grava
@@ -66,7 +67,8 @@ function emSemanas(semanas: number) {
 export function ConviteCliente({ profissionais, temTreino }: { profissionais: ProfissionalDoConvite[]; temTreino: boolean }) {
   const router = useRouter();
   const [dados, setDados] = useState<Lido | null>(null);
-  const [tela, setTela] = useState<Tela>("intro");
+  // Cada passo tem endereço próprio (?tela=passo-2, ?tela=passo-3...).
+  const { etapa: tela, irPara, trocar, voltar, podeVoltar } = useEtapaNaUrl<Tela>("intro", (t) => (t === "intro" ? null : `passo-${t}`));
   const [momentoBom, setMomentoBom] = useState<string | null>(null);
   const [salvos, setSalvos] = useState<string[]>([]);
   const [abrir, setAbrir] = useState<string | null>(null);
@@ -97,7 +99,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
         setFrase(guardado.frase ?? "");
         setPlanoB(guardado.plano_b);
         if (guardado.data_retorno) setDataRetorno(guardado.data_retorno);
-        setTela(guardado.passo >= PASSOS_DO_CONVITE ? 1 : guardado.passo === 0 ? "intro" : ((guardado.passo + 1) as Tela));
+        trocar(guardado.passo >= PASSOS_DO_CONVITE ? 1 : guardado.passo === 0 ? "intro" : ((guardado.passo + 1) as Tela));
       }
       if (new URLSearchParams(window.location.search).get("modulo") === "8") setModulo(8);
       setDados(lido);
@@ -131,8 +133,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
       if (modulo === 8) await marcarFeito(8, ITEM_NOVO_CONVITE_M8);
       return router.push(`/familia/programa/modulo/${modulo}`);
     }
-    setTela((passo + 1) as Tela);
-    window.scrollTo({ top: 0 });
+    irPara((passo + 1) as Tela);
   }
 
   function alternarSalvo(id: string) {
@@ -148,15 +149,17 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
     setFrase([novas.abrir, novas.sentir, novas.oferecer].filter(Boolean).map((texto) => t(texto as string)).join(" "));
   }
 
-  const voltar = () => {
+  // Passos empilhados voltam pelo histórico. Abrindo no meio (passo salvo), volta pro passo de antes.
+  const voltarUmPasso = () => {
+    if (podeVoltar) return voltar();
     if (tela === "intro" || tela === 1) return router.push(`/familia/programa/modulo/${modulo}`);
-    setTela((tela - 1) as Tela);
+    trocar((tela - 1) as Tela);
     window.scrollTo({ top: 0 });
   };
 
   const topo = (
     <div className="familia-pergunta-topo">
-      <button className="familia-voltar" type="button" aria-label="Voltar" onClick={voltar}>
+      <button className="familia-voltar" type="button" aria-label="Voltar" onClick={voltarUmPasso}>
         <GlifoArrowBack size={24} />
       </button>
     </div>
@@ -179,7 +182,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
           <h1 className="header-large">{TEXTOS_CONVITE.titulo}</h1>
           <p className="text-large">{TEXTOS_CONVITE.intro}</p>
         </header>
-        <Button tamanho="medium" larguraTotal onClick={() => setTela(1)}>
+        <Button tamanho="medium" larguraTotal onClick={() => irPara(1)}>
           {TEXTOS_CONVITE.continuar}
         </Button>
       </section>
@@ -191,7 +194,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
     const botaoSalvar = (id: string) => {
       const salvo = salvos.includes(id);
       return (
-        <Button variante={salvo ? "primary" : "secondary"} tamanho="small" disabled={!salvo && salvos.length >= MAXIMO_SALVOS} aria-pressed={salvo} onClick={() => alternarSalvo(id)}>
+        <Button variante={salvo ? "primary" : "secondary"} tamanho="small" redondo disabled={!salvo && salvos.length >= MAXIMO_SALVOS} aria-pressed={salvo} onClick={() => alternarSalvo(id)}>
           {salvo ? TEXTOS_CONVITE.salvoProfissional : TEXTOS_CONVITE.salvarProfissional}
         </Button>
       );

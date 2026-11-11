@@ -116,6 +116,8 @@ export const TEXTOS_VALORIZAR = {
   treinarElogio: "Treinar um elogio",
   quandoRotulo: "Quando",
   quandoDica: "Se der, escolha os dias e horários em que os momentos difíceis costumam aparecer (o diário mostra). É ali que um momento bom faz mais diferença.",
+  campoRotulo: "Como você vai valorizar",
+  campoDica: "Toque numa ideia ou escreva a sua.",
   salvar: "Salvar meu plano",
   salvo: "Plano salvo. Quando você valorizar um momento bom, toque no dia, no card do painel.",
   painelTitulo: "Valorizar o que é bom",
@@ -123,6 +125,7 @@ export const TEXTOS_VALORIZAR = {
 };
 
 export const FORMAS_PARA_ESCOLHER = 2;
+export const MAXIMO_FORMA = 120;
 
 export type PlanoValorizar = {
   formas: string[];
@@ -167,11 +170,11 @@ export const TEXTOS_ADIAR = {
   nao: "Não",
   naoSei: "Não sei",
   climaSim: "Então deixe esta parte para depois. Nesta semana, foque em valorizar os momentos bons, e converse com um profissional antes de dar este passo.",
-  profissional: "Ver psicólogo parceiro",
   voltarAoModulo: "Voltar ao módulo",
   intro: "Se vocês combinaram algo bom e {{apelido}} chegar depois de usar, o programa fica para outro dia. Com calma, sem bronca e sem discussão.",
   doPlano: "Uma das coisas que você planejou para valorizar pode ser a escolhida aqui.",
-  outro: "Outro",
+  // [PENDÊNCIA DO FUNDADOR] Rótulo do campo da situação: o briefing 00d tira o "Outro" e não traz o texto.
+  situacaoRotulo: "Situação",
   naHora: "Na hora",
   naHoraDica: "Diga uma vez, com voz calma, e vá fazer outra coisa. Sem sermão e sem cara feia.",
   depois: "No dia seguinte, num momento sem efeito",
@@ -206,8 +209,9 @@ export function sanitizarGosta(entrada: unknown) {
 export function sanitizarPlano(entrada: unknown) {
   if (!entrada || typeof entrada !== "object") return null;
   const bruto = entrada as Record<string, unknown>;
-  const formas = (Array.isArray(bruto.formas) ? bruto.formas : []).filter((forma): forma is string => typeof forma === "string" && FORMAS_DE_VALORIZAR.includes(forma));
-  if (new Set(formas).size !== FORMAS_PARA_ESCOLHER) return null;
+  // Cada forma vem de um campo de texto: pode ser uma sugestão da lista ou o que a pessoa escreveu.
+  const formas = (Array.isArray(bruto.formas) ? bruto.formas : []).map((forma) => textoCurto(forma, MAXIMO_FORMA)).filter((forma): forma is string => Boolean(forma));
+  if (new Set(formas).size !== FORMAS_PARA_ESCOLHER || formas.length !== FORMAS_PARA_ESCOLHER) return null;
   const dias = Array.isArray(bruto.dias) ? IDS_DIAS.filter((dia) => (bruto.dias as unknown[]).includes(dia)) : [];
   const periodos = (["manha", "tarde", "noite"] as Momento[]).filter((periodo) => Array.isArray(bruto.periodos) && (bruto.periodos as unknown[]).includes(periodo));
   return { formas: [...new Set(formas)], dias, periodos };

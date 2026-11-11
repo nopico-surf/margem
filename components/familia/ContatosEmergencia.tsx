@@ -1,10 +1,11 @@
 "use client";
 
+import { useId } from "react";
 import { ActionRow } from "@/components/conversa/ActionRow";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { ActionButton } from "@/components/ui/ActionButton";
-import { Button } from "@/components/ui/Button";
 import { paraCardResource } from "@/lib/recursos";
-import type { AcaoContato } from "@/lib/supabase";
+import type { AcaoContato, ProfissionalCadastrado } from "@/lib/supabase";
 import { track } from "@/lib/mixpanel";
 
 // Contatos de emergência do programa para familiares [REVISÃO CLÍNICA]. Textos do conteúdo v2
@@ -60,7 +61,9 @@ export const CONTATOS_EMERGENCIA: Contato[] = [
   },
 ];
 
-export function ContatosEmergencia() {
+// `profissionais`: lista do carrossel do fim (psicólogos e psiquiatras). Sem a lista, não aparece.
+export function ContatosEmergencia({ profissionais }: { profissionais?: ProfissionalCadastrado[] }) {
+  const id = useId();
   return (
     <div className="familia-contatos">
       <div className="figma-resource-list">
@@ -98,9 +101,9 @@ export function ContatosEmergencia() {
           );
         })}
       </div>
-      <Button variante="transparent" tamanho="medium" larguraTotal href="/profissionais">
-        Ver psicólogo parceiro
-      </Button>
+      {profissionais && (
+        <CardProfissionais profissionais={profissionais} variante="home" id={`familia-profissionais-emergencia${id}`} origem="familia-emergencia" />
+      )}
     </div>
   );
 }

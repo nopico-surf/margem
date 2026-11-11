@@ -6,6 +6,14 @@ import { buscarCompraDaFamilia } from "@/lib/familia/compra-servidor";
 // Perfil do familiar: criado no primeiro login, com os dois consentimentos (briefing, seções 4.1 e 11).
 // O de dados é obrigatório; o de comunicações é opcional e vem desmarcado.
 
+// Contas de teste: abrem os 8 módulos sempre, sem compra e sem esperar a semana, pra testar em produção.
+// E-mails separados por vírgula na variável FAMILIA_TESTADORES (só no servidor).
+function ehTestador(email: string | null | undefined) {
+  if (!email) return false;
+  const lista = (process.env.FAMILIA_TESTADORES ?? "").split(",").map((item) => item.trim().toLowerCase()).filter(Boolean);
+  return lista.includes(email.trim().toLowerCase());
+}
+
 export async function GET(request: Request) {
   const sessao = await usuarioDaRequisicao(request);
   if (!sessao) return naoAutorizado();
@@ -24,6 +32,7 @@ export async function GET(request: Request) {
     // Só com acesso valendo: o plano comprado e quando o Pix caiu (o prazo da devolução). Acesso
     // sem compra é acesso gratuito.
     compra: perfil?.acesso_liberado_em ? compra : null,
+    testador: ehTestador(user.email ?? perfil?.email),
   });
 }
 

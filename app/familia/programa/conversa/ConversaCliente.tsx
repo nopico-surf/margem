@@ -8,6 +8,8 @@ import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import {
+  FRASE_OUTRA,
+  fraseDoRegistro,
   MAXIMO_FRASE,
   MODULOS_DA_CONVERSA,
   OPCOES_COMO_FOI,
@@ -96,8 +98,12 @@ export function ConversaCliente() {
   async function salvar() {
     if (!comoFoi) return;
     setSalvando(true);
-    const escrita = frase === OUTRA ? fraseOutra : frase && frase !== NAO_LEMBRO ? frase : "";
-    const resposta = await chamarApi("/api/familia/conversa", { method: "POST", body: JSON.stringify({ registro: { modulo, frase: escrita, como_foi: comoFoi, reacao } }) });
+    // A categoria ("outra" ou uma frase salva) e o texto escrito vão separados.
+    const escolhida = frase === OUTRA ? FRASE_OUTRA : frase && frase !== NAO_LEMBRO ? frase : "";
+    const resposta = await chamarApi("/api/familia/conversa", {
+      method: "POST",
+      body: JSON.stringify({ registro: { modulo, frase: escolhida, frase_outra: frase === OUTRA ? fraseOutra : "", como_foi: comoFoi, reacao } }),
+    });
     setSalvando(false);
     // [PENDÊNCIA DO FUNDADOR] Texto de erro ao salvar: não está na especificação. Por ora o botão só volta a ficar disponível.
     if (!resposta?.ok) return;
@@ -152,10 +158,10 @@ export function ConversaCliente() {
         {topo}
         <h1 className="header-large">{TEXTOS_CONVERSA.contouTitulo}</h1>
         <div className="familia-cartao">
-          {ultimo.frase && (
+          {fraseDoRegistro(ultimo) && (
             <div className="diario-resposta">
               <p className="label-small-medium">{TEXTOS_CONVERSA.fraseRotulo}</p>
-              <p className="text-large">{t(ultimo.frase)}</p>
+              <p className="text-large">{t(fraseDoRegistro(ultimo) ?? "")}</p>
             </div>
           )}
           <div className="diario-resposta">

@@ -17,7 +17,7 @@ Os três cards do exercício abrem uma ferramenta (briefing M4, 10/11/2026):
 - lista: "Fazer a lista do que {{apelido}} gosta" (conclui com 1 item ou mais);
 - planejar: "Planejar como valorizar" (conclui ao salvar o plano);
 - situacao: "Escolher o que dizer" (conclui ao salvar; com "Sim" ou "Não sei" na pergunta de segurança
-  o item fica "Deixado para depois"). Em caution_mode, o card troca pelo texto e o botão do psicólogo parceiro. -->
+  o item fica "Deixado para depois"). Em caution_mode, o card troca pelo texto e o carrossel de psicólogos. -->
 
 ## Por que olhar para o que vai bem
 

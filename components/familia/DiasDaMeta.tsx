@@ -11,7 +11,8 @@ import { dataDoDia, DIAS, diaMes, resumoDosDias, type Dia } from "@/lib/familia/
 //
 // Com onAlternar (briefing 00, item 6 e M1, item 3.4), cada dia é um botão: marca hoje e os dias que
 // já passaram; tocar de novo desmarca. Dia futuro responde "Esse dia ainda não chegou." e não marca.
-// Ao marcar um dia, a data dele aparece abaixo ("Concluído em 10/11").
+// Ao marcar um dia, a data dele aparece abaixo ("Concluído em 10/11"). Dia futuro salvo é ignorado
+// na tela e no resumo.
 
 type DiasDaMetaProps = {
   dias: Dia[];
@@ -28,7 +29,9 @@ const DESCRICAO: Record<Estado, string> = { feito: "concluído", marcado: "plane
 
 export const TEXTO_DIA_FUTURO = "Esse dia ainda não chegou.";
 
-export function DiasDaMeta({ dias, diasFeitos, semanaInicio, hoje, onAlternar }: DiasDaMetaProps) {
+export function DiasDaMeta({ dias, diasFeitos: salvos, semanaInicio, hoje, onAlternar }: DiasDaMetaProps) {
+  // Dia futuro nunca conta como feito, mesmo que esteja salvo (marcado quando a regra deixava).
+  const diasFeitos = salvos.filter((data) => data <= hoje);
   // Retorno do último toque: dia futuro ou a data do dia marcado.
   const [retorno, setRetorno] = useState<string | null>(null);
 

@@ -12,11 +12,10 @@ import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { dataLocal, diaMes, nomeDaArea, segundaDaSemana, TEXTOS_META, type Escala, type Meta } from "@/lib/familia/escala";
 import { alternarDiaDaMeta } from "@/lib/familia/meta-cliente";
-import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
 import { TEXTOS_FRASES, type FraseSalva } from "@/lib/familia/frases";
 import { TEXTOS_VALORIZAR, type PlanoValorizar } from "@/lib/familia/valorizar";
 import { nomeDoSalvo, PLANOS_B, TEXTOS_CONVITE, type Convite, type ProfissionalDoConvite } from "@/lib/familia/convite";
-import { vendaSimulada } from "@/lib/familia/dev";
+import { MODO_DEV_DISPONIVEL, vendaSimulada } from "@/lib/familia/dev";
 import { primeiroPasso, TEXTOS_REDE, type Rede } from "@/lib/familia/rede";
 import { dataDoModulo, fimDoPrazo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -35,13 +34,13 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // chegou mostra "Chega em DD/MM". Nos 14 dias depois da compra, o rodapé diz até quando dá pra pedir o
 // dinheiro de volta e leva à tela do pedido (a devolução é feita à mão no Asaas). No localhost, como
 // antes, todos os módulos abrem pra revisão, a menos que a venda simulada esteja ligada
-// (lib/familia/dev.ts).
+// (lib/familia/dev.ts). Em produção, as contas de teste (FAMILIA_TESTADORES) também abrem todos.
 
 // liberado: o servidor pode mandar o conteúdo (módulo 1 sempre; 2 a 8 depois da revisão clínica).
 export type ModuloDoPainel = { numero: number; titulo: string; liberado: boolean; bloqueadoEmModoSeguranca: boolean };
 
 type Progresso = Record<string, { iniciado_em: string; concluido_em: string | null }>;
-type Perfil = { acessoLiberado: boolean; compra: { plano: string; pagoEm: string } | null };
+type Perfil = { acessoLiberado: boolean; compra: { plano: string; pagoEm: string } | null; testador?: boolean };
 // ultimaEscala: criado_em da escala mais recente (o "Concluído em" da ferramenta), ou null.
 type Dados = {
   apelido: string;
@@ -103,7 +102,7 @@ export function PainelCliente({
         meta: meta.meta,
         ultimaEscala: escalas.escalas[0]?.criado_em ?? null,
         perfil,
-        travar: !MOSTRAR_REVISAO_CLINICA || vendaSimulada(),
+        travar: MODO_DEV_DISPONIVEL ? vendaSimulada() : !perfil.testador,
         plano: valorizar.plano,
         frases: frases.frases.length,
         convite: convite.convite,
@@ -192,8 +191,9 @@ export function PainelCliente({
           )}
           {meta && (
             <div className="familia-cartao">
-              <span className="label-small-medium familia-texto-suave">Sua meta · {nomeDaArea(meta.area)}</span>
-              <h3 className="header-small">{meta.texto}</h3>
+              <h3 className="header-small">Sua meta</h3>
+              <span className="label-small-medium familia-texto-suave">{nomeDaArea(meta.area)}</span>
+              <p className="text-large">{meta.texto}</p>
               <DiasDaMeta
                 dias={meta.dias}
                 diasFeitos={meta.dias_feitos}
@@ -207,8 +207,8 @@ export function PainelCliente({
                   {TEXTOS_META.feitoRetorno}
                 </p>
               )}
-              <Button variante="transparent" tamanho="small" href="/familia/programa/escala?etapa=editar">
-                Editar minha meta da semana
+              <Button variante="secondary" tamanho="small" href="/familia/programa/escala?etapa=editar">
+                Ver e editar minha meta
               </Button>
             </div>
           )}
@@ -221,7 +221,10 @@ export function PainelCliente({
                 ))}
               </ul>
               {plano.semana_inicio === segundaDaSemana(hoje) && (
-                <DiasDaMeta dias={plano.dias} diasFeitos={plano.feitos} semanaInicio={plano.semana_inicio} hoje={hoje} onAlternar={(data) => void alternarDiaDoPlano(data)} />
+                <>
+                  <DiasDaMeta dias={plano.dias} diasFeitos={plano.feitos} semanaInicio={plano.semana_inicio} hoje={hoje} onAlternar={(data) => void alternarDiaDoPlano(data)} />
+                  <p className="text-medium-regular familia-texto-suave">Quando você valorizar um momento bom, toque no dia.</p>
+                </>
               )}
               <Button variante="secondary" tamanho="small" href="/familia/programa/valorizar">
                 {TEXTOS_VALORIZAR.verEditar}

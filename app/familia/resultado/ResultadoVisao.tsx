@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { GlifoContentCopy } from "@/components/icons/glifos";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
 import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import { Button } from "@/components/ui/Button";
@@ -15,7 +17,18 @@ import { track } from "@/lib/mixpanel";
 // pra você, avisos e, no fim, o banner de oferta ou o módulo 1. O banner (briefing 01, variação b) vem
 // depois dos avisos e, em modo de segurança, depois do cartão de segurança, nunca antes. Sem
 // `modulosDaOferta` (quem já comprou, ou a página de exemplo), entra "Começar o módulo 1" no lugar.
-export function ResultadoVisao({ resultado, apelido, modulosDaOferta = null }: { resultado: Resultado; apelido: string; modulosDaOferta?: string[] | null }) {
+// `profissionais`: lista dos carrosséis (aviso de álcool diário e contatos de emergência).
+export function ResultadoVisao({
+  resultado,
+  apelido,
+  modulosDaOferta = null,
+  profissionais,
+}: {
+  resultado: Resultado;
+  apelido: string;
+  modulosDaOferta?: string[] | null;
+  profissionais?: ProfissionalCadastrado[];
+}) {
   const [copiado, setCopiado] = useState(false);
   const t = (texto: string) => aplicarApelido(texto, apelido);
   const conversa = resultado.conversa;
@@ -93,7 +106,7 @@ export function ResultadoVisao({ resultado, apelido, modulosDaOferta = null }: {
             <h2 className="header-medium">Sua segurança vem primeiro</h2>
             <p className="text-large">{t(resultado.seguranca ?? "")}</p>
           </header>
-          <ContatosEmergencia />
+          <ContatosEmergencia profissionais={profissionais} />
         </section>
       )}
 
@@ -107,17 +120,23 @@ export function ResultadoVisao({ resultado, apelido, modulosDaOferta = null }: {
 
       <section className="familia-secao">
         {resultado.avisos.map((aviso) => (
-          <div key={aviso.problema} className="familia-variacao">
-            <span className="label-small-medium">{ROTULO_PROBLEMA[aviso.problema]}</span>
-            <p className="text-large">{t(aviso.texto)}</p>
-            {aviso.psiquiatra && (
-              <div className="familia-exercicio-acoes">
-                <Button variante="secondary" tamanho="small" href="/profissionais?especialidade=medicos-psiquiatras">
-                  Ver psiquiatra parceiro
-                </Button>
-              </div>
+          <Fragment key={aviso.problema}>
+            <div className="familia-variacao">
+              <span className="label-small-medium">{ROTULO_PROBLEMA[aviso.problema]}</span>
+              <p className="text-large">{t(aviso.texto)}</p>
+            </div>
+            {/* Álcool diário: só psiquiatras, logo abaixo do aviso. A consulta é pra quem bebe, não pro
+                familiar: título e mensagem do WhatsApp são os padrões, sem "para mim". */}
+            {aviso.psiquiatra && profissionais && (
+              <CardProfissionais
+                profissionais={profissionais}
+                variante="home"
+                especialidades={["psiquiatra"]}
+                id={`familia-profissionais-aviso-${aviso.problema}`}
+                origem="familia-resultado"
+              />
             )}
-          </div>
+          </Fragment>
         ))}
       </section>
 

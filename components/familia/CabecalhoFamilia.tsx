@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
+import { temEtapaAnterior } from "@/lib/familia/useEtapaNaUrl";
 import { SairRapido } from "./SairRapido";
 
 // Pra onde a seta do header leva quando a tela não tem setinha própria. Pela rota, nunca
@@ -36,7 +37,13 @@ export function CabecalhoFamilia() {
         onVoltar={
           destino
             ? () => {
-                const daTela = document.querySelector<HTMLButtonElement>(".familia-conteudo .familia-voltar");
+                // Etapa empilhada por uma tela de várias etapas (lib/familia/useEtapaNaUrl.ts): volta uma etapa.
+                if (temEtapaAnterior()) return window.history.back();
+                // O Next guarda montadas, com display: none, as páginas visitadas antes: a setinha de uma
+                // delas não vale. A da tela atual pode estar escondida pelo CSS, por isso o teste é o estilo inline.
+                const daTela = [...document.querySelectorAll<HTMLButtonElement>(".familia-conteudo .familia-voltar")].find(
+                  (setinha) => !setinha.closest('[style*="display: none"]'),
+                );
                 if (daTela) daTela.click();
                 else router.push(destino);
               }

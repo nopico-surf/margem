@@ -185,9 +185,11 @@ export function diaMarcavel(data: string, semanaInicio: string, hoje: string) {
 }
 
 // Toque num dia da meta: marca ou desmarca. Fora da semana da meta ou num dia futuro, devolve null.
+// Dia futuro já salvo (marcado quando a regra deixava, em 10/11/2026) sai da lista no próximo toque.
 export function alternarDiaFeito(meta: { semana_inicio: string; dias_feitos: string[] }, data: string, hoje: string) {
   if (!diaMarcavel(data, meta.semana_inicio, hoje)) return null;
-  return meta.dias_feitos.includes(data) ? meta.dias_feitos.filter((feito) => feito !== data) : [...meta.dias_feitos, data].sort();
+  const feitos = meta.dias_feitos.filter((feito) => feito <= hoje);
+  return feitos.includes(data) ? feitos.filter((feito) => feito !== data) : [...feitos, data].sort();
 }
 
 export function dataValida(valor: unknown): valor is string {

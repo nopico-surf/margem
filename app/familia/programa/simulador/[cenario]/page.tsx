@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Loader } from "@/components/ui/Loader";
 import { lerCenario, titulosDosModulosPagos } from "@/lib/familia/conteudo";
+import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { SimuladorCliente } from "./SimuladorCliente";
 
 type Props = { params: Promise<{ cenario: string }> };
@@ -22,8 +23,9 @@ export default function SimuladorPage({ params }: Props) {
 
 async function Conteudo({ params }: Props) {
   const { cenario: id } = await params;
-  const [cenario, modulos] = await Promise.all([lerCenario(id), titulosDosModulosPagos()]);
+  const [cenario, modulos, profissionais] = await Promise.all([lerCenario(id), titulosDosModulosPagos(), buscarTodosProfissionaisAtivos()]);
   if (!cenario) notFound();
   // Os títulos dos módulos vão pro banner de oferta que aparece quando o treino grátis acaba (briefing 01b).
-  return <SimuladorCliente cenario={cenario} modulosDaOferta={modulos} />;
+  // Os profissionais vão pro carrossel dos contatos de emergência (busca cacheada).
+  return <SimuladorCliente cenario={cenario} modulosDaOferta={modulos} profissionais={profissionais} />;
 }

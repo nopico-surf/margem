@@ -11,6 +11,7 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { LOGIN_GATE } from "@/lib/familia/config";
 import { aplicarApelido, calcularSafetyMode, perguntasVisiveis, respondida, type Problema, type Respostas } from "@/lib/familia/diagnostico";
 import { lerRespostasLocais, salvarRespostasLocais, temSessao } from "@/lib/familia/fluxo-cliente";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import { CardHeader } from "@/components/conversa/CardHeader";
 import { track } from "@/lib/mixpanel";
 
@@ -21,7 +22,8 @@ const PROBLEMAS_DA_LP: Problema[] = ["alcool", "outras_drogas", "apostas"];
 export function DiagnosticoCliente() {
   const router = useRouter();
   const [respostas, setRespostas] = useState<Respostas>({});
-  const [indice, setIndice] = useState(0);
+  // Cada pergunta tem endereço próprio (?tela=2, ?tela=3...) e voltar volta uma pergunta.
+  const { etapa: indice, irPara, voltar, podeVoltar } = useEtapaNaUrl(0, (i) => (i > 0 ? String(i + 1) : null));
   // A primeira pergunta aparece já no HTML: esperar o JavaScript deixava a tela só com o loader por
   // alguns segundos no celular. Só o gate "inicio" precisa esperar a conferência da sessão.
   const [pronto, setPronto] = useState(LOGIN_GATE !== "inicio");
@@ -56,8 +58,7 @@ export function DiagnosticoCliente() {
 
   function avancar(atuais: Respostas) {
     if (indice < perguntasVisiveis(atuais).length - 1) {
-      setIndice(indice + 1);
-      window.scrollTo({ top: 0 });
+      irPara(indice + 1);
       return;
     }
     const safetyMode = calcularSafetyMode(atuais);
@@ -107,7 +108,7 @@ export function DiagnosticoCliente() {
           className="familia-voltar"
           type="button"
           aria-label="Voltar para a pergunta anterior"
-          onClick={() => (indice > 0 ? setIndice(indice - 1) : router.push("/familia"))}
+          onClick={() => (podeVoltar ? voltar() : router.push("/familia"))}
         >
           <GlifoArrowBack size={24} />
         </button>

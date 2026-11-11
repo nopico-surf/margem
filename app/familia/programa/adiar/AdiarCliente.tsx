@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
+import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { Button } from "@/components/ui/Button";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
+import { focarCampo, TEXTO_SUGESTOES } from "@/lib/familia/campo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import {
   fraseDepoisDoProblema,
@@ -20,6 +23,7 @@ import {
   type ClimaDoAdiar,
   type PlanoValorizar,
 } from "@/lib/familia/valorizar";
+import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import { track } from "@/lib/mixpanel";
 
 // "Quando o combinado fica para outro dia" (briefing M4, C5). Começa pela pergunta de segurança: com
@@ -33,15 +37,16 @@ import { track } from "@/lib/mixpanel";
 type Lido = { apelido: string; problemas: string[] };
 type Tela = "clima" | "deixado" | "situacao" | "frases" | "salvo";
 
-const OUTRA = "outra";
-
-export function AdiarCliente() {
+// `profissionais`: carrossel de psicólogos quando a pessoa responde que o clima pode ficar tenso.
+export function AdiarCliente({ profissionais }: { profissionais: ProfissionalCadastrado[] }) {
   const router = useRouter();
   const [dados, setDados] = useState<Lido | null>(null);
-  const [tela, setTela] = useState<Tela>("clima");
+  // Cada tela tem endereço próprio (?tela=situacao, ?tela=frases...). Salvar desfaz as etapas no
+  // histórico: voltar da confirmação não reabre o que já foi salvo.
+  const { etapa: tela, irPara, trocar, concluir, voltar, podeVoltar } = useEtapaNaUrl<Tela>("clima", (t) => (t === "clima" ? null : t));
   const [formasDoPlano, setFormasDoPlano] = useState<string[]>([]);
-  const [escolhida, setEscolhida] = useState<string | null>(null);
-  const [outra, setOutra] = useState("");
+  // Padrão 2 (briefing 00d): a situação é uma frase da pessoa, e os chips são só sugestão.
+  const [situacao, setSituacao] = useState("");
   const [naHora, setNaHora] = useState("");
   const [depois, setDepois] = useState("");
   const [salvando, setSalvando] = useState(false);
@@ -57,13 +62,10 @@ export function AdiarCliente() {
       setFormasDoPlano(guardado?.plano?.formas ?? []);
       const salvo = guardado?.adiar;
       if (salvo?.clima === "nao") {
-        const doPlano = guardado?.plano?.formas ?? [];
-        const conhecida = salvo.situacao && (SITUACOES_DO_ADIAR.includes(salvo.situacao) || doPlano.includes(salvo.situacao));
-        setEscolhida(conhecida ? salvo.situacao : salvo.situacao ? OUTRA : null);
-        setOutra(conhecida ? "" : (salvo.situacao ?? ""));
+        setSituacao(salvo.situacao ?? "");
         setNaHora(salvo.na_hora ?? "");
         setDepois(salvo.depois ?? "");
-        setTela("situacao");
+        trocar("situacao");
       }
       setDados(lido);
     })();
@@ -80,11 +82,10 @@ export function AdiarCliente() {
   const t = (texto: string) => aplicarApelido(texto, dados.apelido);
   const problema = dados.problemas[0] ?? "alcool";
   const voltarAoModulo = () => router.push("/familia/programa/modulo/4");
-  const situacao = escolhida === OUTRA ? outra.trim() : (escolhida ?? "");
 
   async function responderClima(clima: ClimaDoAdiar) {
     if (clima === "nao") {
-      setTela("situacao");
+      irPara("situacao");
       return;
     }
     setSalvando(true);
@@ -92,22 +93,20 @@ export function AdiarCliente() {
     setSalvando(false);
     if (!resposta?.ok) return;
     track("adiar_clima", { clima });
-    setTela("deixado");
-    window.scrollTo({ top: 0 });
+    concluir("deixado");
   }
 
   async function salvar() {
     setSalvando(true);
     const resposta = await chamarApi("/api/familia/valorizar", {
       method: "POST",
-      body: JSON.stringify({ tipo: "adiar", dados: { clima: "nao", situacao, na_hora: naHora, depois } }),
+      body: JSON.stringify({ tipo: "adiar", dados: { clima: "nao", situacao: situacao.trim(), na_hora: naHora, depois } }),
     });
     setSalvando(false);
     if (!resposta?.ok) return;
     // Só a resposta de segurança, nunca o texto das frases.
     track("adiar_salvo", { clima: "nao" });
-    setTela("salvo");
-    window.scrollTo({ top: 0 });
+    concluir("salvo");
   }
 
   const topo = (voltar: () => void) => (
@@ -147,10 +146,15 @@ export function AdiarCliente() {
         <p className="header-small" role="status">
           {TEXTOS_ADIAR.climaSim}
         </p>
+        <CardProfissionais
+          profissionais={profissionais}
+          variante="home"
+          especialidades={["psicologo"]}
+          id="familia-profissionais"
+          origem="programa-adiar"
+          titulo="Profissionais que podem atender você"
+        />
         <div className="familia-acoes">
-          <Button tamanho="medium" larguraTotal href="/profissionais">
-            {TEXTOS_ADIAR.profissional}
-          </Button>
           <Button variante="secondary" tamanho="medium" larguraTotal href="/familia/programa/modulo/4">
             {TEXTOS_ADIAR.voltarAoModulo}
           </Button>
@@ -183,24 +187,31 @@ export function AdiarCliente() {
     const opcoes = [...formasDoPlano, ...SITUACOES_DO_ADIAR.filter((opcao) => !formasDoPlano.includes(opcao))];
     return (
       <section className="familia-pergunta">
-        {topo(() => setTela("clima"))}
+        {topo(() => (podeVoltar ? voltar() : trocar("clima")))}
         <header className="familia-titulo">
           <h1 className="header-large">{TEXTOS_ADIAR.titulo}</h1>
           <p className="text-large">{t(TEXTOS_ADIAR.intro)}</p>
         </header>
         {formasDoPlano.length > 0 && <p className="text-medium-regular familia-texto-suave">{TEXTOS_ADIAR.doPlano}</p>}
-        <div className="familia-chips escala-chips" role="radiogroup" aria-label={TEXTOS_ADIAR.titulo}>
+        <InputText id="adiar-situacao" rotulo={TEXTOS_ADIAR.situacaoRotulo} value={situacao} maxLength={MAXIMO_SITUACAO} autoComplete="off" onChange={setSituacao} />
+        <p className="text-medium-regular familia-texto-suave">{TEXTO_SUGESTOES}</p>
+        <div className="familia-chips escala-chips" role="group" aria-label={TEXTOS_ADIAR.titulo}>
           {opcoes.map((opcao) => (
-            <Button key={opcao} tamanho="small" redondo variante={escolhida === opcao ? "primary" : "secondary"} onClick={() => setEscolhida(escolhida === opcao ? null : opcao)}>
+            <Button
+              key={opcao}
+              tamanho="small"
+              redondo
+              variante="secondary"
+              onClick={() => {
+                setSituacao(t(opcao).slice(0, MAXIMO_SITUACAO));
+                focarCampo("adiar-situacao");
+              }}
+            >
               {t(opcao)}
             </Button>
           ))}
-          <Button tamanho="small" redondo variante={escolhida === OUTRA ? "primary" : "secondary"} onClick={() => setEscolhida(escolhida === OUTRA ? null : OUTRA)}>
-            {TEXTOS_ADIAR.outro}
-          </Button>
         </div>
-        {escolhida === OUTRA && <InputText id="adiar-outra" rotulo={TEXTOS_ADIAR.outro} value={outra} maxLength={MAXIMO_SITUACAO} autoComplete="off" onChange={setOutra} />}
-        <Button tamanho="medium" larguraTotal disabled={!situacao} onClick={() => setTela("frases")}>
+        <Button tamanho="medium" larguraTotal disabled={!situacao.trim()} onClick={() => irPara("frases")}>
           Continuar
         </Button>
       </section>
@@ -210,12 +221,22 @@ export function AdiarCliente() {
   // ===== Tela 3: o que dizer na hora e depois =====
   return (
     <section className="familia-pergunta">
-      {topo(() => setTela("situacao"))}
+      {topo(() => (podeVoltar ? voltar() : trocar("situacao")))}
       <div className="escala-meta-grupo">
         <p className="label-medium-medium">{TEXTOS_ADIAR.naHora}</p>
+        <p className="text-medium-regular familia-texto-suave">{TEXTO_SUGESTOES}</p>
         <div className="familia-chips escala-chips">
           {FRASES_NA_HORA.map((frase) => (
-            <Button key={frase} tamanho="small" redondo variante={naHora === frase ? "primary" : "secondary"} onClick={() => setNaHora(frase)}>
+            <Button
+              key={frase}
+              tamanho="small"
+              redondo
+              variante="secondary"
+              onClick={() => {
+                setNaHora(frase);
+                focarCampo("adiar-na-hora");
+              }}
+            >
               {frase}
             </Button>
           ))}
@@ -224,11 +245,21 @@ export function AdiarCliente() {
       </div>
       <div className="escala-meta-grupo">
         <p className="label-medium-medium">{TEXTOS_ADIAR.depois}</p>
+        <p className="text-medium-regular familia-texto-suave">{TEXTO_SUGESTOES}</p>
         <div className="familia-chips escala-chips">
           {FRASES_DEPOIS.map((frase) => {
             const ajustada = fraseDepoisDoProblema(frase, problema);
             return (
-              <Button key={frase} tamanho="small" redondo variante={depois === ajustada ? "primary" : "secondary"} onClick={() => setDepois(ajustada)}>
+              <Button
+                key={frase}
+                tamanho="small"
+                redondo
+                variante="secondary"
+                onClick={() => {
+                  setDepois(ajustada);
+                  focarCampo("adiar-depois");
+                }}
+              >
                 {ajustada}
               </Button>
             );

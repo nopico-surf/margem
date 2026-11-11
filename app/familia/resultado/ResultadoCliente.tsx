@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import type { Resultado } from "@/lib/familia/resultado";
+import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { track } from "@/lib/mixpanel";
 import { ResultadoVisao } from "./ResultadoVisao";
 
@@ -14,7 +15,7 @@ type Dados = { apelido: string; resultado: Resultado };
 // Página de resultado (briefing, seção 6): busca o diagnóstico da conta, montado no servidor com os
 // blocos fixos, sem IA. O desenho fica em ResultadoVisao. O banner de oferta (briefing 01) só aparece
 // pra quem ainda não tem o acesso liberado.
-export function ResultadoCliente({ modulosPagos }: { modulosPagos: string[] }) {
+export function ResultadoCliente({ modulosPagos, profissionais }: { modulosPagos: string[]; profissionais: ProfissionalCadastrado[] }) {
   const router = useRouter();
   const [dados, setDados] = useState<Dados | null>(null);
   const [acessoLiberado, setAcessoLiberado] = useState(true);
@@ -60,5 +61,12 @@ export function ResultadoCliente({ modulosPagos }: { modulosPagos: string[] }) {
     );
   }
 
-  return <ResultadoVisao resultado={dados.resultado} apelido={dados.apelido} modulosDaOferta={acessoLiberado ? null : modulosPagos} />;
+  return (
+    <ResultadoVisao
+      resultado={dados.resultado}
+      apelido={dados.apelido}
+      modulosDaOferta={acessoLiberado ? null : modulosPagos}
+      profissionais={profissionais}
+    />
+  );
 }
