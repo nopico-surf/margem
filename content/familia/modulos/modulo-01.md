@@ -14,7 +14,7 @@ minutos: 6
 O título e o "Tempo de leitura" saem do frontmatter (cabeçalho do módulo).
 Blocos ":::se problema=..." aparecem pra cada problema marcado na Q3.
 Itens ":::exercicio" viram cards com botão (components/familia/ExercicioSemana.tsx).
-Botões que ainda não têm ferramenta ficam como "Marcar como feito" (a escala já usa a ferramenta, componentes-parte1 C1):
+Os três cards do exercício abrem uma ferramenta (briefing M1, 10/11/2026): escala e meta, diário e "Como foi a conversa":
 - conversa (modo segurança): "Fazer meu plano de segurança"; por enquanto leva à página de segurança.
 Rodapé "Próximo módulo chega em DD/MM": espera a liberação semanal (Fase 2). -->
 
@@ -94,35 +94,25 @@ Algumas partes ficam guardadas até você conversar com um profissional, para tu
 ## Exercício da semana
 
 :::exercicio id=escala acao=escala
-**Como está a sua vida:** dê notas de 1 a 10 para 8 áreas da sua vida e escolha uma meta pequena para a área que mais pede cuidado.
+**Como está a sua vida**
+
+Dê uma nota de 1 a 10 para 8 áreas da sua vida, como sono, amizades e dinheiro. Depois, crie uma meta pequena para a área que mais precisa de cuidado nesta semana.
 :::
 
 :::exercicio id=observe acao=diario
 **Anotar os momentos difíceis**
 
-:::se problema=alcool
-Quando perceber que {{apelido}} bebeu, em vez de discutir na hora, anote o que aconteceu: quando, onde e o que veio antes.
+Quando acontecer um momento difícil com {{apelido}}, em vez de discutir na hora, anote aqui o que aconteceu. Leva 1 minuto, e no módulo 2 essas anotações mostram o padrão.
 :::
 
-:::se problema=outras_drogas
-Quando perceber sinais de que {{apelido}} usou, em vez de discutir na hora, anote o que aconteceu: quando, onde e o que veio antes.
+:::exercicio id=conversa acao=treinar_roteiro,contar_conversa seguranca=nao
+**A primeira conversa (opcional)**
+
+Se surgir um momento calmo com {{apelido}}, use o roteiro que você recebeu no diagnóstico. Antes, se quiser, treine aqui. Depois, conte como foi.
 :::
 
-:::se problema=apostas
-Quando perceber que {{apelido}} apostou, em vez de cobrar na hora, anote o que aconteceu: quando, quanto tempo durou e o que veio antes.
-:::
+:::exercicio id=conversa acao=plano_seguranca seguranca=sim
+**Seu plano de segurança**
 
-Isso vai ser usado no módulo 2.
-:::
-
-:::exercicio id=conversa acao=roteiro,simulador,marcar seguranca=nao
-**Se sentir que é a hora (opcional):** use o seu roteiro da primeira conversa num momento calmo. Antes, ensaie.
-
-:::se cautela=sim
-Se o clima estiver tenso, deixe para outro dia. Não existe hora certa com medo.
-:::
-:::
-
-:::exercicio id=conversa acao=seguranca,marcar seguranca=sim
-**Seu plano de segurança:** antes de qualquer conversa difícil, monte um plano para os momentos de risco.
+Antes de qualquer conversa difícil, monte um plano para os momentos de risco.
 :::

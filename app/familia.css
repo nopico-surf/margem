@@ -717,3 +717,45 @@ a.painel-modulo:focus-visible {
 .familia-status[data-estado="feito"] {
   color: var(--colors-status-success-700);
 }
+
+/* ===== Diário e "Como foi a conversa" (briefings M1 e M2, 10/11/2026) ===== */
+
+/* "Um momento difícil" e "Um momento bom", lado a lado. */
+.diario-tipos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.diario-tipos .btn {
+  min-height: var(--size-96);
+  justify-content: center;
+  text-align: center;
+}
+
+/* Escolha de dia e hora do momento anotado. */
+.diario-data {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.diario-data-campo {
+  min-height: var(--size-48);
+  padding: var(--spacing-12) var(--spacing-16);
+  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+  color: inherit;
+  font-family: inherit;
+}
+
+/* Pergunta e resposta de uma anotação ou de um registro. */
+.diario-resposta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.diario-resposta p {
+  margin: 0;
+}

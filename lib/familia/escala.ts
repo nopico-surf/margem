@@ -59,6 +59,17 @@ export const TEXTOS_META = {
   ],
   obstaculoRotulo: "O que pode atrapalhar? E o que você faz se acontecer?",
   obstaculoDica: "Exemplo: Se o dia ficar corrido, então eu faço só 5 minutos antes de dormir.",
+  porQueTitulo: "Por que \"caminhar 15 minutos na terça e na quinta\" funciona, e \"me cuidar mais\" não?",
+  porQueTexto: [
+    "Porque no fim da semana você consegue responder com um sim ou um não: fiz ou não fiz. A meta já diz o que, quanto e quando fazer, então você não precisa decidir de novo todo dia. E cada vez que você cumpre, conta como uma conquista.",
+    "\"Me cuidar mais\" não tem fim: sempre dá para achar que foi pouco, e isso cansa.",
+  ],
+  conferencia: [
+    "No fim da semana, dá para responder se você fez ou não?",
+    "Cabe na sua semana de verdade, mesmo num dia puxado?",
+    "Depende só de você, e não de {{apelido}}?",
+  ],
+  conferenciaAjuste: "Quer ajustar? Uma meta menor e mais clara costuma funcionar melhor.",
   salva: "Meta salva. Ela fica no seu painel. A cada dia que você cumprir, toque no dia para marcar.",
   feitoRetorno: "Boa. Isso é você se cuidando.",
 };
@@ -167,15 +178,15 @@ export function resumoDosDias(dias: Dia[], diasFeitos: string[], semanaInicio: s
   return aMais > 0 ? `${base}, ${aMais} a mais` : base;
 }
 
-// Dia da meta que dá pra marcar: qualquer dia da semana da meta, inclusive os que ainda não chegaram
-// (decidido em 10/11/2026: a pessoa marca quando quiser).
-export function diaMarcavel(data: string, semanaInicio: string) {
-  return segundaDaSemana(data) === semanaInicio;
+// Dia da meta que dá pra marcar (briefing 00, item 6): hoje e os dias que já passaram na semana da
+// meta. Dia futuro não marca ("Esse dia ainda não chegou."). `hoje` vem do aparelho.
+export function diaMarcavel(data: string, semanaInicio: string, hoje: string) {
+  return segundaDaSemana(data) === semanaInicio && data <= hoje;
 }
 
-// Toque num dia da meta: marca ou desmarca. Fora da semana da meta, devolve null.
-export function alternarDiaFeito(meta: { semana_inicio: string; dias_feitos: string[] }, data: string) {
-  if (!diaMarcavel(data, meta.semana_inicio)) return null;
+// Toque num dia da meta: marca ou desmarca. Fora da semana da meta ou num dia futuro, devolve null.
+export function alternarDiaFeito(meta: { semana_inicio: string; dias_feitos: string[] }, data: string, hoje: string) {
+  if (!diaMarcavel(data, meta.semana_inicio, hoje)) return null;
   return meta.dias_feitos.includes(data) ? meta.dias_feitos.filter((feito) => feito !== data) : [...meta.dias_feitos, data].sort();
 }
 

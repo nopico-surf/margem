@@ -5,7 +5,7 @@ import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { EscalaNota } from "@/components/familia/EscalaNota";
 import { alternarDiaFeito, TEXTOS_ESCALA, TEXTOS_META } from "@/lib/familia/escala";
 
-// Dias da meta tocáveis (painel e meta salva): marca e desmarca qualquer dia da semana.
+// Dias da meta tocáveis (painel e meta salva): marca e desmarca hoje e os dias que já passaram; dia futuro responde "Esse dia ainda não chegou.".
 export function DiasDaMetaGaleria() {
   const semanaInicio = "2026-11-09";
   const [feitos, setFeitos] = useState<string[]>(["2026-11-10"]);
@@ -15,7 +15,7 @@ export function DiasDaMetaGaleria() {
       diasFeitos={feitos}
       semanaInicio={semanaInicio}
       hoje="2026-11-10"
-      onAlternar={(data) => setFeitos((atual) => alternarDiaFeito({ semana_inicio: semanaInicio, dias_feitos: atual }, data) ?? atual)}
+      onAlternar={(data) => setFeitos((atual) => alternarDiaFeito({ semana_inicio: semanaInicio, dias_feitos: atual }, data, "2026-11-10") ?? atual)}
     />
   );
 }

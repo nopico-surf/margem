@@ -9,7 +9,8 @@
 // servidor pela rota de exemplo (também só dev), e o simulador vai pro servidor com o cabeçalho
 // x-familia-dev, que a rota só aceita fora de produção.
 
-import { ITEM_DO_DIARIO } from "./diario";
+import { ITEM_DA_CONVERSA_M1, sanitizarConversa } from "./conversa";
+import { itensParaMarcar, sanitizarAnotacao, type Anotacao } from "./diario";
 import { alternarDiaFeito, dataValida, sanitizarMeta, sanitizarNotas, segundaDaSemana, type Meta } from "./escala";
 
 export const MODO_DEV_DISPONIVEL = process.env.NODE_ENV !== "production";
@@ -18,6 +19,7 @@ const CHAVE_MODO = "margem-familia-dev";
 const CHAVE_DIAGNOSTICO = "margem-familia-dev-diagnostico";
 const CHAVE_EXERCICIOS = "margem-familia-dev-exercicios";
 const CHAVE_DIARIO = "margem-familia-dev-diario";
+const CHAVE_CONVERSA = "margem-familia-dev-conversa";
 const CHAVE_ESCALAS = "margem-familia-dev-escalas";
 const CHAVE_META = "margem-familia-dev-meta";
 const CHAVE_PROGRESSO = "margem-familia-dev-progresso";
@@ -113,14 +115,44 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
     return json({ itens: Object.fromEntries(Object.entries(exercicios).filter(([chave]) => chave.startsWith(prefixo)).map(([chave, data]) => [chave.slice(prefixo.length), data])) });
   }
 
-  if (caminho === "/api/familia/diario") {
-    const anotacoes = JSON.parse(ler(CHAVE_DIARIO) ?? "[]") as unknown[];
+  // Diário: as mesmas regras da rota (sanitizar, concluir itens, editar e apagar).
+  if (caminho.startsWith("/api/familia/diario")) {
+    const anotacoes = JSON.parse(ler(CHAVE_DIARIO) ?? "[]") as Anotacao[];
+    const concluir = (lista: Anotacao[]) => itensParaMarcar(lista).forEach((item) => marcarItem(item.modulo, item.item));
     if (metodo === "POST") {
-      gravar(CHAVE_DIARIO, JSON.stringify([{ id: crypto.randomUUID(), ...(corpo.anotacao as object) }, ...anotacoes]));
-      marcarItem(ITEM_DO_DIARIO.modulo, ITEM_DO_DIARIO.item);
+      const anotacao = sanitizarAnotacao(corpo.anotacao);
+      if (!anotacao) return json({ error: "anotacao_invalida" }, 400);
+      const nova = [{ id: crypto.randomUUID(), ...anotacao }, ...anotacoes].sort((a, b) => b.quando.localeCompare(a.quando));
+      gravar(CHAVE_DIARIO, JSON.stringify(nova));
+      concluir(nova);
+      return json({ ok: true });
+    }
+    if (metodo === "PATCH") {
+      const anotacao = sanitizarAnotacao(corpo.anotacao);
+      if (!anotacao) return json({ error: "anotacao_invalida" }, 400);
+      const nova = anotacoes.map((atual) => (atual.id === corpo.id ? { id: atual.id, ...anotacao } : atual));
+      gravar(CHAVE_DIARIO, JSON.stringify(nova));
+      concluir(nova);
+      return json({ ok: true });
+    }
+    if (metodo === "DELETE") {
+      const id = new URLSearchParams(caminho.split("?")[1] ?? "").get("id");
+      gravar(CHAVE_DIARIO, JSON.stringify(anotacoes.filter((atual) => atual.id !== id)));
       return json({ ok: true });
     }
     return json({ anotacoes });
+  }
+
+  if (caminho === "/api/familia/conversa") {
+    const registros = JSON.parse(ler(CHAVE_CONVERSA) ?? "[]") as unknown[];
+    if (metodo === "POST") {
+      const registro = sanitizarConversa(corpo.registro);
+      if (!registro) return json({ error: "registro_invalido" }, 400);
+      gravar(CHAVE_CONVERSA, JSON.stringify([{ id: crypto.randomUUID(), ...registro, criado_em: new Date().toISOString() }, ...registros]));
+      if (registro.modulo === ITEM_DA_CONVERSA_M1.modulo) marcarItem(ITEM_DA_CONVERSA_M1.modulo, ITEM_DA_CONVERSA_M1.item);
+      return json({ ok: true });
+    }
+    return json({ registros });
   }
 
   // Escala e meta da semana, guardadas no aparelho, com as mesmas regras das rotas.
@@ -153,7 +185,7 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
     if (metodo === "PATCH") {
       if (!atual) return json({ error: "sem_meta" }, 404);
       if (!dataValida(hoje) || !dataValida(corpo.data)) return json({ error: "data_invalida" }, 400);
-      const diasFeitos = alternarDiaFeito(atual, corpo.data as string);
+      const diasFeitos = alternarDiaFeito(atual, corpo.data as string, hoje);
       if (!diasFeitos) return json({ error: "dia_fora_da_semana" }, 400);
       atual.dias_feitos = diasFeitos;
       gravar(CHAVE_META, JSON.stringify(atual));

@@ -7,7 +7,7 @@ import { alternarDiaFeito, dataValida, sanitizarMeta, segundaDaSemana, type Meta
 //   meta" mantém a semana e os dias já feitos). Do módulo 1, marca o item "Como está a sua vida"; do
 //   módulo 7, o item "Escolher a meta".
 // PATCH { data, hoje }: marca ou desmarca um dia da meta (briefing 00, item 6). Vale hoje e qualquer
-//   dia que já passou na semana da meta, planejado ou não.
+//   dia que já passou na semana da meta, planejado ou não; dia futuro volta "dia_fora_da_semana".
 // `hoje` vem do aparelho (AAAA-MM-DD): o dia que conta é o da pessoa, não o do servidor.
 
 const CAMPOS = "id, area, texto, dias, momento, confianca, obstaculo_plano, semana_inicio, status, dias_feitos";
@@ -59,7 +59,7 @@ export async function PATCH(request: Request) {
   if (!dataValida(corpo?.hoje) || !dataValida(corpo?.data)) return Response.json({ error: "data_invalida" }, { status: 400 });
   const atual = await metaAtiva(sessao);
   if (!atual) return Response.json({ error: "sem_meta" }, { status: 404 });
-  const dias_feitos = alternarDiaFeito(atual, corpo.data as string);
+  const dias_feitos = alternarDiaFeito(atual, corpo.data as string, corpo.hoje as string);
   if (!dias_feitos) return Response.json({ error: "dia_fora_da_semana" }, { status: 400 });
   const { error } = await sessao.supabase
     .from("familia_meta_semana")

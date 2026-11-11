@@ -10,9 +10,7 @@ minutos: 5
 
 <!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
-Botões que ainda não têm ferramenta ficam como "Marcar como feito":
-- resumo: "Ver meu resumo" (resumo do diário).
-O diário ainda não tem o campo "o que você acha que {{apelido}} buscou com isso". -->
+Os três cards do exercício abrem uma ferramenta (briefing M2, 10/11/2026): diário (momento difícil e momento bom) e resumo da semana. -->
 
 ## O uso não acontece do nada
 
@@ -53,15 +51,21 @@ Esses momentos valem muito. O diário desta semana ajuda a reconhecê-los.
 ## Exercício da semana: o diário de 7 dias
 
 :::exercicio id=anotar acao=diario
-**Anotar quando acontecer:** leva cerca de 1 minuto. Quando foi, o que veio antes, o que você percebeu (sem vigiar nem confirmar nada), como você reagiu, como foi depois e o que você acha que {{apelido}} buscou com isso. Todos os campos são opcionais.
+**Anotar os momentos difíceis**
+
+Durante 7 dias, anote aqui cada momento difícil com {{apelido}}: quando foi, o que veio antes e como você reagiu. Leva 1 minuto por anotação.
 :::
 
 :::exercicio id=momentos_bons acao=momento_bom
-**Anotar os momentos bons:** quando {{apelido}} estiver presente, sem uso, de bom humor. Eles valem tanto quanto os outros e vão ser usados no módulo 4.
+**Anotar os momentos bons**
+
+Anote também quando houver um momento bom com {{apelido}}, como um almoço tranquilo ou uma conversa leve. Esses momentos são tão importantes quanto os difíceis.
 :::
 
-:::exercicio id=resumo acao=marcar
-**Ver o seu resumo:** no fim da semana, veja os dias e horários mais comuns, o que mais vem antes e os momentos bons.
+:::exercicio id=resumo acao=resumo
+**Ver o resumo da semana**
+
+Veja em que dias e horários os momentos difíceis com {{apelido}} mais aconteceram, o que costuma acontecer logo antes deles e quais momentos bons vocês tiveram.
 :::
 
 :::se problema=alcool

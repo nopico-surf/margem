@@ -16,6 +16,7 @@ import { condicoesBatem, opcoesDaEscolha, type BlocoMarkdown, type Contexto, typ
 import { ExercicioSemana } from "@/components/familia/ExercicioSemana";
 import { track } from "@/lib/mixpanel";
 
+type AnotacaoContada = { tipo: "dificil" | "bom"; quando: string };
 type Diagnostico = { apelido: string; problemas: Problema[]; reacoes: string[]; resultado: { safetyMode: boolean } };
 
 function Trechos({ trechos, apelido }: { trechos: Trecho[]; apelido: string }) {
@@ -121,6 +122,7 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
   const [concluidoEm, setConcluidoEm] = useState<string | null>(null);
   const [concluindo, setConcluindo] = useState(false);
   const [estado, setEstado] = useState<EstadoExercicio>({});
+  const [anotacoes, setAnotacoes] = useState<AnotacaoContada[]>([]);
   // Respostas dos seletores do módulo (":::escolha"). Ficam só nesta tela: o check-in que pré-marcaria
   // o seletor ainda não existe.
   const [escolhas, setEscolhas] = useState<Record<string, string>>({});
@@ -133,6 +135,11 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
       if (!resposta.ok) return;
       setDiagnostico((await resposta.json()) as Diagnostico);
       setEstado(await carregarEstado(modulo.numero));
+      // Contador "n anotações nesta semana" dos itens do diário.
+      if (modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes("diario"))) {
+        const diario = await chamarApi("/api/familia/diario");
+        if (diario?.ok) setAnotacoes(((await diario.json()) as { anotacoes: AnotacaoContada[] }).anotacoes);
+      }
       const progresso = await chamarApi("/api/familia/progresso");
       if (progresso?.ok) {
         const { modulos } = (await progresso.json()) as { modulos: Record<string, { concluido_em: string | null }> };
@@ -200,7 +207,7 @@ export function ModuloCliente({ modulo }: { modulo: Modulo }) {
         problemas={problemas}
         contexto={contexto}
         onEscolher={escolher}
-        exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} />}
+        exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} />}
       />
 
       <div className="familia-acoes">

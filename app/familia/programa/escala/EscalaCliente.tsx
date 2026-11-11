@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
+import { CheckBoxGroup } from "@/components/conversa/CheckBoxGroup";
 import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { EscalaNota } from "@/components/familia/EscalaNota";
 import { Button } from "@/components/ui/Button";
@@ -76,7 +77,12 @@ export function EscalaCliente() {
   const [manterConfianca, setManterConfianca] = useState(false);
   const [obstaculo, setObstaculo] = useState("");
   const [salvandoMeta, setSalvandoMeta] = useState(false);
+  // Conferência dos 3 itens antes de salvar (M1, 3.3). O ajuste só aparece depois que a pessoa mexe na conferência.
+  const [conferidos, setConferidos] = useState([false, false, false]);
+  const [conferiu, setConferiu] = useState(false);
   const [metaSalva, setMetaSalva] = useState<Meta | null>(null);
+  // Meta ativa ao abrir a tela: ao escolher a mesma área, "Ver e editar" parte dela em vez de um campo vazio.
+  const [metaAtiva, setMetaAtiva] = useState<Meta | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -92,6 +98,7 @@ export function EscalaCliente() {
       const ultima = escalas[0]?.notas ?? null;
       setOrigem(origemDaUrl);
       if (origemDaUrl === "modulo7") setAnterior(ultima);
+      setMetaAtiva(meta);
       if (etapaDaUrl === "editar" && meta) {
         if (ultima) setNotas(ultima);
         preencherMeta(meta);
@@ -145,9 +152,14 @@ export function EscalaCliente() {
   }
 
   function escolherArea(nova: AreaId) {
-    // Trocar de área limpa o texto, que era um exemplo (ou uma ideia) da área anterior.
-    if (nova !== area) setTexto("");
-    setArea(nova);
+    if (metaAtiva && metaAtiva.area === nova && nova !== area) {
+      // Área da meta que já existe: abre preenchida, é edição.
+      preencherMeta(metaAtiva);
+    } else {
+      // Trocar de área limpa o texto, que era um exemplo (ou uma ideia) da área anterior.
+      if (nova !== area) setTexto("");
+      setArea(nova);
+    }
     irPara({ tela: "meta" });
   }
 
@@ -329,12 +341,16 @@ export function EscalaCliente() {
           </Button>
         </div>
 
+        {/* Briefing M1, 3.2: a explicação da meta concreta substitui o primeiro item da orientação e vem antes dos exemplos. */}
         <div className="familia-cartao">
+          <h2 className="header-small">{TEXTOS_META.porQueTitulo}</h2>
+          {TEXTOS_META.porQueTexto.map((paragrafo) => (
+            <p key={paragrafo} className="text-large">
+              {paragrafo}
+            </p>
+          ))}
           <p className="text-large">Uma meta que funciona é assim:</p>
           <ul className="familia-lista text-large">
-            <li>
-              <strong>dá para saber se você fez</strong> (&quot;caminhar 15 minutos&quot;, não &quot;me cuidar mais&quot;);
-            </li>
             <li>
               <strong>cabe na sua semana de verdade</strong>, até num dia ruim;
             </li>
@@ -433,6 +449,28 @@ export function EscalaCliente() {
           autoComplete="off"
           onChange={setObstaculo}
         />
+
+        {/* Briefing M1, 3.3: conferência antes de salvar. Não é obrigatória e não impede de salvar. */}
+        <div className="familia-cartao">
+          <div className="figma-checklist">
+            {TEXTOS_META.conferencia.map((item, indice) => (
+              <CheckBoxGroup
+                key={item}
+                item={comApelido(item)}
+                selected={conferidos[indice]}
+                onChange={(marcado) => {
+                  setConferidos((atuais) => atuais.map((valor, posicao) => (posicao === indice ? marcado : valor)));
+                  setConferiu(true);
+                }}
+              />
+            ))}
+          </div>
+          {conferiu && conferidos.some((marcado) => !marcado) && (
+            <p className="text-large" role="status">
+              {TEXTOS_META.conferenciaAjuste}
+            </p>
+          )}
+        </div>
 
         <Button tamanho="medium" larguraTotal disabled={!podeSalvar} carregando={salvandoMeta} onClick={salvarMeta}>
           Salvar minha meta

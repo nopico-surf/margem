@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { GlifoCheckCircle } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
+import { ANOTACOES_PARA_CONCLUIR, contagens, ITEM_ANOTAR_M2 } from "@/lib/familia/diario";
 import { diaMes } from "@/lib/familia/escala";
 import type { EstadoExercicio, ItemExercicio } from "@/lib/familia/exercicio-cliente";
 import { condicoesBatem, type BlocoMarkdown, type Contexto, type Trecho } from "@/lib/familia/markdown";
@@ -14,6 +15,9 @@ import { track } from "@/lib/mixpanel";
 // do item como título, o texto e os botões logo abaixo. O mesmo componente aparece no módulo e no
 // painel do programa.
 //
+// Briefings M1 e M2 (10/11/2026): diário, resumo e "Como foi a conversa" são ferramentas de verdade,
+// e o item conclui quando a pessoa termina a ferramenta (a rota do diário e a da conversa marcam).
+//
 // Padrões do briefing 00 (10/11/2026): status "Concluído em DD/MM" com check verde, ou "Ainda não"
 // em cinza (item 4); concluído, o item mostra ações secundárias pra ver, editar ou refazer (item 5);
 // o botão do treino diz o que vai ser treinado (item 7). Os botões de ferramentas que ainda não
@@ -22,7 +26,11 @@ import { track } from "@/lib/mixpanel";
 const ROTULO_ACAO: Record<string, string> = {
   marcar: "Marcar como concluído",
   diario: "Anotar um momento difícil",
-  momento_bom: "Anotar um momento bom com {{apelido}}",
+  momento_bom: "Anotar um momento bom",
+  resumo: "Ver o resumo da minha semana",
+  contar_conversa: "Contar como foi a conversa",
+  treinar_roteiro: "Treinar o meu roteiro",
+  plano_seguranca: "Fazer meu plano de segurança",
   roteiro: "Ver o meu roteiro da conversa",
   profissional: "Ver psicólogo parceiro",
   profissionais_semana: "Ver psicólogos parceiros com horário nesta semana",
@@ -38,8 +46,10 @@ const HREF_ACAO: Record<string, string> = {
   escala: "/familia/programa/escala?origem=modulo1",
   refazer_escala: "/familia/programa/escala?origem=modulo7",
   escolher_meta: "/familia/programa/escala?origem=modulo7&etapa=meta",
-  diario: "/familia/programa/diario",
-  momento_bom: "/familia/programa/diario?tipo=momento_bom",
+  diario: "/familia/programa/diario?tipo=dificil",
+  momento_bom: "/familia/programa/diario?tipo=bom",
+  resumo: "/familia/programa/diario/resumo",
+  plano_seguranca: "/familia/seguranca",
   roteiro: "/familia/resultado#primeira-conversa",
   profissional: "/profissionais",
   profissionais_semana: "/profissionais",
@@ -51,9 +61,18 @@ const HREF_ACAO: Record<string, string> = {
 // Ações fora desta lista continuam como botão secundário, com o mesmo rótulo.
 const DEPOIS_DE_CONCLUIDO: Record<string, Array<{ rotulo: string; href: string }>> = {
   escala: [
-    { rotulo: "Ver e editar", href: "/familia/programa/escala?origem=modulo1&etapa=meta" },
-    { rotulo: "Fazer de novo", href: "/familia/programa/escala?origem=modulo1" },
+    { rotulo: "Ver e editar minha meta", href: "/familia/programa/escala?origem=modulo1&etapa=editar" },
+    { rotulo: "Fazer a escala de novo", href: "/familia/programa/escala?origem=modulo1" },
   ],
+  diario: [
+    { rotulo: "Anotar outro momento", href: "/familia/programa/diario?tipo=dificil" },
+    { rotulo: "Ver minhas anotações", href: "/familia/programa/diario/anotacoes" },
+  ],
+  momento_bom: [
+    { rotulo: "Anotar outro momento bom", href: "/familia/programa/diario?tipo=bom" },
+    { rotulo: "Ver minhas anotações", href: "/familia/programa/diario/anotacoes" },
+  ],
+  resumo: [{ rotulo: "Ver o resumo de novo", href: "/familia/programa/diario/resumo" }],
   refazer_escala: [
     { rotulo: "Ver e editar", href: "/familia/programa/escala?origem=modulo7&etapa=meta" },
     { rotulo: "Fazer de novo", href: "/familia/programa/escala?origem=modulo7" },
@@ -62,7 +81,11 @@ const DEPOIS_DE_CONCLUIDO: Record<string, Array<{ rotulo: string; href: string }
 };
 
 // Ações que contam o item como feito ao clicar ("Ver psicólogo parceiro" conta no modo segurança).
-const ACAO_MARCA = new Set(["marcar", "profissional", "profissionais_semana"]);
+// "Fazer meu plano de segurança" também conta: a ferramenta do plano ainda não existe, e o botão leva à página de segurança.
+const ACAO_MARCA = new Set(["marcar", "profissional", "profissionais_semana", "plano_seguranca"]);
+
+// Anotações do diário (só tipo e data bastam pra contar).
+type AnotacaoContada = { tipo: "dificil" | "bom"; quando: string };
 
 // O nome do item é o negrito que abre o texto ("**Anotar os momentos difíceis**", "**Como está a sua vida:**
 // dê notas..."). Ele vira o título do cartão; o resto do parágrafo segue como texto.
@@ -107,19 +130,31 @@ type ExercicioSemanaProps = {
   apelido: string;
   contexto: Contexto;
   onMarcar: (item: string) => void;
+  // Anotações recentes do diário, pro contador dos itens que anotam momentos difíceis.
+  anotacoes?: AnotacaoContada[];
 };
 
-export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMarcar }: ExercicioSemanaProps) {
+// "3 anotações nesta semana" (0 não aparece) e, no item do módulo 2 ainda aberto, "2 de 3 anotações".
+function contadorDoDiario(itemId: string, concluido: boolean, anotacoes: AnotacaoContada[]) {
+  const { dificeis } = contagens(anotacoes);
+  if (itemId === ITEM_ANOTAR_M2.item && !concluido) return `${dificeis} de ${ANOTACOES_PARA_CONCLUIR} anotações`;
+  if (dificeis === 0) return null;
+  return `${dificeis} ${dificeis === 1 ? "anotação" : "anotações"} nesta semana`;
+}
+
+export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMarcar, anotacoes = [] }: ExercicioSemanaProps) {
   return (
     <div className="familia-exercicio">
       {itens.map((item) => {
         const feitoEm = estado[item.id];
         const { titulo, blocos } = separarTitulo(item.blocos);
         // Treino sem cenário com arquivo não ganha botão.
-        const acoes = item.acoes.filter((acao) => acao !== "simulador" || item.cenario);
+        const acoes = item.acoes.filter((acao) => (acao !== "simulador" && acao !== "treinar_roteiro") || item.cenario);
         // Item de ação única (só marcar, só diário, só profissional): é o botão principal.
         const acaoUnica = acoes.length === 1;
         const hrefTreino = `/familia/programa/simulador/${item.cenario}?modulo=${modulo}`;
+        const hrefDaAcao = (acao: string) => (acao === "simulador" || acao === "treinar_roteiro" ? hrefTreino : acao === "contar_conversa" ? `/familia/programa/conversa?modulo=${modulo}` : HREF_ACAO[acao]);
+        const contador = item.acoes.includes("diario") ? contadorDoDiario(item.id, Boolean(feitoEm), anotacoes) : null;
         const rastrear = (acao: string) => () => {
           track("exercicio_acao", { modulo, item: item.id, acao });
           if (!feitoEm && ACAO_MARCA.has(acao)) onMarcar(item.id);
@@ -140,11 +175,16 @@ export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMa
             <div className="familia-exercicio-acoes">
               {feitoEm
                 ? acoes
-                    .filter((acao) => acao !== "marcar")
+                    .filter((acao) => acao !== "marcar" && acao !== "treinar_roteiro")
                     .flatMap((acao) =>
                       acao === "simulador"
                         ? [{ acao, rotulo: "Treinar de novo", href: hrefTreino }]
-                        : (DEPOIS_DE_CONCLUIDO[acao] ?? [{ rotulo: aplicarApelido(ROTULO_ACAO[acao] ?? acao, apelido), href: HREF_ACAO[acao] }]).map((depois) => ({ acao, ...depois })),
+                        : acao === "contar_conversa"
+                          ? [
+                              { acao, rotulo: "Ver o que você contou", href: `${hrefDaAcao(acao)}&ver=1` },
+                              { acao, rotulo: "Contar de novo", href: hrefDaAcao(acao) },
+                            ]
+                          : (DEPOIS_DE_CONCLUIDO[acao] ?? [{ rotulo: aplicarApelido(ROTULO_ACAO[acao] ?? acao, apelido), href: HREF_ACAO[acao] }]).map((depois) => ({ acao, ...depois })),
                     )
                     .map(({ acao, rotulo, href }) => (
                       <Button key={`${acao}-${rotulo}`} variante="secondary" tamanho="small" href={href} onClick={rastrear(acao)}>
@@ -154,15 +194,16 @@ export function ExercicioSemana({ modulo, itens, estado, apelido, contexto, onMa
                 : acoes.map((acao) => (
                     <Button
                       key={acao}
-                      variante={acao === "marcar" || acaoUnica ? "primary" : "secondary"}
+                      variante={acao === "marcar" || acao === "contar_conversa" || acaoUnica ? "primary" : "secondary"}
                       tamanho="small"
-                      href={acao === "simulador" ? hrefTreino : HREF_ACAO[acao]}
+                      href={hrefDaAcao(acao)}
                       onClick={rastrear(acao)}
                     >
                       {acao === "simulador" ? aplicarApelido(ROTULO_TREINO[item.cenario as string] ?? ROTULO_TREINO_PADRAO, apelido) : aplicarApelido(ROTULO_ACAO[acao] ?? acao, apelido)}
                     </Button>
                   ))}
             </div>
+            {contador && <p className="text-medium-regular familia-texto-suave">{contador}</p>}
           </div>
         );
       })}
