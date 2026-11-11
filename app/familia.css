@@ -759,3 +759,10 @@ a.painel-modulo:focus-visible {
 .diario-resposta p {
   margin: 0;
 }
+
+/* Frase de antes (módulo 3): riscada de leve, em cinza, ao lado da versão nova. */
+.frase-antes {
+  margin: 0;
+  text-decoration: line-through;
+  text-decoration-thickness: var(--border-width-thin);
+}

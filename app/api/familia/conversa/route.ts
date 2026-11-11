@@ -1,8 +1,8 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
-import { ITEM_DA_CONVERSA_M1, sanitizarConversa } from "@/lib/familia/conversa";
+import { ITENS_DA_CONVERSA, sanitizarConversa } from "@/lib/familia/conversa";
 
 // "Como foi a conversa" (briefing M1, item 2). GET devolve os registros mais recentes; POST grava um e,
-// no módulo 1, conclui o item "A primeira conversa". A frase escrita pela pessoa nunca vai pra IA nem
+// nos módulos 1 e 3, conclui o item da conversa. A frase escrita pela pessoa nunca vai pra IA nem
 // pro Mixpanel.
 
 export async function GET(request: Request) {
@@ -29,10 +29,11 @@ export async function POST(request: Request) {
     console.error("[familia] gravar conversa falhou:", error.message);
     return Response.json({ error: "falha_ao_salvar" }, { status: 500 });
   }
-  if (registro.modulo === ITEM_DA_CONVERSA_M1.modulo) {
+  const item = ITENS_DA_CONVERSA[registro.modulo];
+  if (item) {
     const marcado = await sessao.supabase
       .from("familia_exercicios")
-      .upsert({ user_id: sessao.user.id, ...ITEM_DA_CONVERSA_M1 }, { onConflict: "user_id,modulo,item", ignoreDuplicates: true });
+      .upsert({ user_id: sessao.user.id, ...item }, { onConflict: "user_id,modulo,item", ignoreDuplicates: true });
     if (marcado.error) console.error("[familia] marcar item da conversa falhou:", marcado.error.message);
   }
   return Response.json({ ok: true });

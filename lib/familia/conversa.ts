@@ -18,6 +18,12 @@ export const MODULOS_DA_CONVERSA = [1, 3, 5];
 // O item "A primeira conversa" do módulo 1 fica concluído quando a pessoa salva o registro.
 export const ITEM_DA_CONVERSA_M1 = { modulo: 1, item: "conversa" };
 
+// O item "Usar uma frase nova na vida real" do módulo 3 conclui quando a pessoa salva o registro (briefing M3).
+export const ITEM_DA_CONVERSA_M3 = { modulo: 3, item: "vida_real" };
+
+// Item que o registro conclui, por módulo de origem (o do módulo 5 ainda não foi definido).
+export const ITENS_DA_CONVERSA: Record<number, { modulo: number; item: string }> = { 1: ITEM_DA_CONVERSA_M1, 3: ITEM_DA_CONVERSA_M3 };
+
 export const MAXIMO_FRASE = 280;
 
 export const TEXTOS_CONVERSA = {

@@ -11,8 +11,10 @@ minutos: 6
 
 <!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
-Botões que ainda não têm ferramenta ficam como "Marcar como feito":
-- frases: "Reescrever minhas frases" (campos "frase de antes" e "frase nova"). -->
+Os três cards do exercício abrem uma ferramenta (briefing M3, 10/11/2026):
+- frases: "Reescrever minhas frases" (conclui na terceira frase salva);
+- ensaiar: treino "nega o problema" (conclui quando o retorno do treino aparece);
+- vida_real: "Contar como foi a conversa" (conclui ao salvar o registro). -->
 
 ## Por que a conversa vira briga
 
@@ -92,16 +94,16 @@ Se você sentir medo em algum momento, saia de perto e procure ajuda. Sua segura
 
 ## Exercício da semana
 
-:::exercicio id=frases acao=marcar
-**Reescrever frases:** escreva 3 frases que costumam virar briga na sua casa e reescreva cada uma usando as habilidades.
+:::exercicio id=frases acao=frases
+**Reescrever frases que viram briga:** Escolha 3 frases que costumam virar briga em casa e troque cada uma por uma versão nova, mais calma.
 :::
 
-:::exercicio id=ensaiar acao=simulador,marcar
-**Ensaiar no treino:** pratique o que dizer quando {{apelido}} nega que tem um problema.
+:::exercicio id=ensaiar acao=simulador
+**Treinar quando {{apelido}} nega o problema:** Pratique aqui o que dizer quando {{apelido}} diz que não tem problema nenhum. É um treino com um personagem, antes da conversa de verdade.
 :::
 
-:::exercicio id=vida_real acao=marcar
-**Usar na vida real:** escolha um momento calmo e use uma frase nova nesta semana. Pode ser sobre qualquer assunto, não precisa ser sobre o uso.
+:::exercicio id=vida_real acao=contar_conversa
+**Usar uma frase nova na vida real:** Escolha um momento calmo e use uma das suas frases novas numa conversa com {{apelido}}. Depois, conte aqui como foi.
 
 :::se cautela=sim
 Se o clima estiver tenso, deixe para outro dia. Não existe hora certa com medo.

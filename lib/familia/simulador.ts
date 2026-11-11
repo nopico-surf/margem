@@ -37,6 +37,10 @@ export const ROTULO_TREINO: Record<string, string> = {
   "pedido-de-desculpa-pro-trabalho": "Treinar como dizer não a uma desculpa",
 };
 
+// Itens do exercício ("módulo:item") que concluem quando o treino termina e o retorno aparece
+// (briefing M3, card 2: "Treinar quando {{apelido}} nega o problema").
+export const ITENS_QUE_CONCLUEM_NO_TREINO = new Set(["3:ensaiar"]);
+
 // Cenário que ainda não tem rótulo próprio na tabela do briefing 00.
 export const ROTULO_TREINO_PADRAO = "Treinar a conversa";
 

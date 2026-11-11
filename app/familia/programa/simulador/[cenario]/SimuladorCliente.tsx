@@ -15,6 +15,8 @@ import { chamarApi } from "@/lib/familia/auth-cliente";
 import { SIMULADOR_MAX_CARACTERES, SIMULADOR_MAX_MENSAGENS } from "@/lib/familia/config";
 import type { Cenario } from "@/lib/familia/conteudo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
+import { marcarFeito } from "@/lib/familia/exercicio-cliente";
+import { CHAVE_FRASE_DO_TREINO } from "@/lib/familia/frases";
 import { REACAO_DO_DIAGNOSTICO, REACOES_SIMULADOR, tituloDoTreino, type Fala, type Feedback, type ReacaoSimulador } from "@/lib/familia/simulador";
 import { track } from "@/lib/mixpanel";
 
@@ -61,6 +63,11 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
   // Módulo de onde a pessoa veio (?modulo=N, posto pelo botão do exercício); sem ele, volta ao painel.
   const moduloParam = Number(useSearchParams().get("modulo"));
   const moduloDeOrigem = Number.isInteger(moduloParam) && moduloParam >= 1 && moduloParam <= 8 ? moduloParam : null;
+  // ?item=: item do exercício que conclui quando o treino termina (briefing M3, card 2). ?ver=1: só mostra o
+  // retorno do último treino, sem treinar de novo ("Ver o retorno do treino").
+  const buscaDaUrl = useSearchParams();
+  const itemQueConclui = buscaDaUrl.get("item");
+  const soVerRetorno = buscaDaUrl.get("ver") === "1";
   const router = useRouter();
   const [etapa, setEtapa] = useState<Etapa>("carregando");
   const [apelido, setApelido] = useState("");
@@ -92,9 +99,27 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
         setReacoes(preenchidas.length ? [...new Set(preenchidas)] : ["nega"]);
         if (dados.resultado.safetyMode && cenario.bloqueadoEmModoSeguranca) setBloqueio("bloqueado_seguranca");
       }
+      if (soVerRetorno) {
+        const anterior = await chamarApi(`/api/familia/simulador?cenario=${cenario.id}`);
+        const guardado = anterior?.ok ? ((await anterior.json()) as { feedback: Feedback | null }).feedback : null;
+        if (guardado) {
+          setFeedback(guardado);
+          return setEtapa("feedback");
+        }
+      }
       setEtapa("inicio");
     })();
-  }, [cenario.bloqueadoEmModoSeguranca, router]);
+  }, [cenario.bloqueadoEmModoSeguranca, cenario.id, router, soVerRetorno]);
+
+  // "Treinar esta frase" (briefing M3): a frase escolhida entra pronta no campo, só uma vez.
+  useEffect(() => {
+    try {
+      const pronta = window.sessionStorage.getItem(CHAVE_FRASE_DO_TREINO);
+      if (!pronta) return;
+      window.sessionStorage.removeItem(CHAVE_FRASE_DO_TREINO);
+      setMensagem(pronta.slice(0, SIMULADOR_MAX_CARACTERES));
+    } catch {}
+  }, []);
 
   // O que o navegador oferece só se sabe no cliente.
   useEffect(() => {
@@ -183,6 +208,7 @@ export function SimuladorCliente({ cenario }: { cenario: Cenario }) {
     }
     setFeedback(dados.feedback);
     setEtapa("feedback");
+    if (moduloDeOrigem && itemQueConclui) void marcarFeito(moduloDeOrigem, itemQueConclui);
     track("simulador_concluido", { cenario: cenario.id, turnos: falas.filter((fala) => fala.autor === "familiar").length });
   }
 

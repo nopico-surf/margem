@@ -76,6 +76,27 @@ async function simuladorSemLogin(corpo: Corpo & { respostasDev?: unknown }) {
   return erro("acao_invalida", 400);
 }
 
+// GET ?cenario=nega-o-problema: o retorno do último treino concluído desse cenário ("Ver o retorno do
+// treino", briefing M3). Só o retorno que já ficou guardado; a conversa nunca é gravada.
+export async function GET(request: Request) {
+  const sessao = await usuarioDaRequisicao(request);
+  if (!sessao) return naoAutorizado();
+  const cenario = new URL(request.url).searchParams.get("cenario") ?? "";
+  if (!/^[a-z0-9-]{1,60}$/.test(cenario)) return erro("cenario_invalido", 400);
+  const { data, error } = await sessao.supabase
+    .from("familia_simulacoes")
+    .select("feedback")
+    .eq("user_id", sessao.user.id)
+    .eq("cenario", cenario)
+    .not("concluido_em", "is", null)
+    .not("feedback", "is", null)
+    .order("concluido_em", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) console.error("[familia] ler retorno do treino falhou:", error.message);
+  return Response.json({ feedback: (data?.feedback as unknown) ?? null });
+}
+
 export async function POST(request: Request) {
   if (process.env.NODE_ENV !== "production" && request.headers.get("x-familia-dev") === "1") {
     return simuladorSemLogin(((await request.json().catch(() => null)) ?? {}) as Corpo & { respostasDev?: unknown });

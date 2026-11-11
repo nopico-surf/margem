@@ -128,6 +128,9 @@ export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; e
   const [concluindo, setConcluindo] = useState(false);
   const [estado, setEstado] = useState<EstadoExercicio>({});
   const [anotacoes, setAnotacoes] = useState<AnotacaoContada[]>([]);
+  // Frases reescritas (módulo 3) e itens deixados para depois (módulo 4).
+  const [frasesSalvas, setFrasesSalvas] = useState(0);
+  const [deixados, setDeixados] = useState<string[]>([]);
   // Respostas dos seletores do módulo (":::escolha"). Ficam só nesta tela: o check-in que pré-marcaria
   // o seletor ainda não existe.
   const [escolhas, setEscolhas] = useState<Record<string, string>>({});
@@ -172,6 +175,16 @@ export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; e
       if (modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes("diario"))) {
         const diario = await chamarApi("/api/familia/diario");
         if (diario?.ok) setAnotacoes(((await diario.json()) as { anotacoes: AnotacaoContada[] }).anotacoes);
+      }
+      const temAcao = (acao: string) => modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes(acao));
+      if (temAcao("frases")) {
+        const frases = await chamarApi("/api/familia/frases");
+        if (frases?.ok) setFrasesSalvas(((await frases.json()) as { frases: unknown[] }).frases.length);
+      }
+      if (temAcao("adiar")) {
+        const valorizar = await chamarApi("/api/familia/valorizar");
+        const clima = valorizar?.ok ? ((await valorizar.json()) as { adiar: { clima: string } | null }).adiar?.clima : null;
+        if (clima === "sim" || clima === "nao_sei") setDeixados(["situacao"]);
       }
       track(modulo.numero === 1 ? "modulo1_iniciado" : "modulo_iniciado", { modulo: modulo.numero });
       void chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "iniciar" }) });
@@ -282,7 +295,7 @@ export function ModuloCliente({ modulo, emRevisao = false }: { modulo: Modulo; e
         problemas={problemas}
         contexto={contexto}
         onEscolher={escolher}
-        exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} />}
+        exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} frasesSalvas={frasesSalvas} deixados={deixados} />}
       />
 
       {/* Banner do módulo 1 (briefing 01, variação c): só depois de concluído e pra quem não comprou. */}

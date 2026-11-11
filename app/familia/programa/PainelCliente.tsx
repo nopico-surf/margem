@@ -8,9 +8,12 @@ import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
+import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { dataLocal, diaMes, nomeDaArea, segundaDaSemana, TEXTOS_META, type Escala, type Meta } from "@/lib/familia/escala";
 import { alternarDiaDaMeta } from "@/lib/familia/meta-cliente";
 import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
+import { TEXTOS_FRASES, type FraseSalva } from "@/lib/familia/frases";
+import { TEXTOS_VALORIZAR, type PlanoValorizar } from "@/lib/familia/valorizar";
 import { vendaSimulada } from "@/lib/familia/dev";
 import { dataDoModulo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
 import { CONTATOS } from "@/lib/contatos";
@@ -18,8 +21,9 @@ import { track } from "@/lib/mixpanel";
 
 // Painel do programa (componentes-parte2, "Painel do programa"). Ordem dos blocos, só os que têm
 // conteúdo: alertas fixos, "Esta semana" (módulo atual + sua meta), ferramentas, os 8 módulos e
-// profissionais. Ficam de fora até a ferramenta existir: card de check-in, "Anotar", "Minhas frases"
-// e os cards de valorizar, devolver, convite, problema e dinheiro. Também fora, até haver decisão:
+// profissionais. Briefings M3 e M4: "Minhas frases" entra nas ferramentas e "Valorizar o que é bom" em
+// "Esta semana". Ficam de fora até a ferramenta existir: card de check-in, "Anotar" e os cards de
+// devolver, convite, problema e dinheiro. Também fora, até haver decisão:
 // "Semana X de 8", "Precisa de ajuda agora?" e configurações.
 //
 // Compra e liberação semanal (briefing 01): sem compra, o módulo com cadeado leva à página de módulo
@@ -34,7 +38,18 @@ export type ModuloDoPainel = { numero: number; titulo: string; liberado: boolean
 type Progresso = Record<string, { iniciado_em: string; concluido_em: string | null }>;
 type Perfil = { acessoLiberado: boolean; compra: { plano: string; pagoEm: string } | null };
 // ultimaEscala: criado_em da escala mais recente (o "Concluído em" da ferramenta), ou null.
-type Dados = { safetyMode: boolean; progresso: Progresso; meta: Meta | null; ultimaEscala: string | null; perfil: Perfil; travar: boolean };
+type Dados = {
+  apelido: string;
+  safetyMode: boolean;
+  progresso: Progresso;
+  meta: Meta | null;
+  ultimaEscala: string | null;
+  perfil: Perfil;
+  travar: boolean;
+  // Plano de valorizar (módulo 4) e quantas frases a pessoa reescreveu (módulo 3).
+  plano: PlanoValorizar | null;
+  frases: number;
+};
 
 const LINK_WHATSAPP = CONTATOS.find((contato) => contato.tipo === "whatsapp")!.href;
 
@@ -54,20 +69,25 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
       if (!diagnostico || diagnostico.status === 401) return router.replace("/familia/entrar");
       if (diagnostico.status === 404) return router.replace("/familia/diagnostico");
       if (!diagnostico.ok) return;
-      const { resultado } = (await diagnostico.json()) as { resultado: { safetyMode: boolean } };
-      const [progresso, meta, escalas, perfil] = await Promise.all([
+      const { resultado, apelido } = (await diagnostico.json()) as { resultado: { safetyMode: boolean }; apelido: string };
+      const [progresso, meta, escalas, perfil, valorizar, frases] = await Promise.all([
         lerJson<{ modulos: Progresso }>("/api/familia/progresso", { modulos: {} }),
         lerJson<{ meta: Meta | null }>("/api/familia/meta", { meta: null }),
         lerJson<{ escalas: Escala[] }>("/api/familia/escala", { escalas: [] }),
         lerJson<Perfil>("/api/familia/perfil", { acessoLiberado: false, compra: null }),
+        lerJson<{ plano: PlanoValorizar | null }>("/api/familia/valorizar", { plano: null }),
+        lerJson<{ frases: FraseSalva[] }>("/api/familia/frases", { frases: [] }),
       ]);
       setDados({
+        apelido,
         safetyMode: resultado.safetyMode,
         progresso: progresso.modulos,
         meta: meta.meta,
         ultimaEscala: escalas.escalas[0]?.criado_em ?? null,
         perfil,
         travar: !MOSTRAR_REVISAO_CLINICA || vendaSimulada(),
+        plano: valorizar.plano,
+        frases: frases.frases.length,
       });
     })();
   }, [router]);
@@ -80,7 +100,7 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
     );
   }
 
-  const { safetyMode, progresso, meta, ultimaEscala, perfil, travar } = dados;
+  const { apelido, safetyMode, progresso, meta, ultimaEscala, perfil, travar, plano, frases } = dados;
   const hoje = dataLocal();
   const modulo1ConcluidoEm = progresso[1]?.concluido_em ?? null;
 
@@ -110,6 +130,14 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
     setRetornoMeta(marcou);
   }
 
+  // Toque num dia do plano de valorizar: mesma regra dos dias da meta.
+  async function alternarDiaDoPlano(data: string) {
+    const resposta = await chamarApi("/api/familia/valorizar", { method: "PATCH", body: JSON.stringify({ data, hoje }) });
+    if (!resposta?.ok) return;
+    const { plano: novo } = (await resposta.json()) as { plano: PlanoValorizar };
+    setDados((anterior) => (anterior ? { ...anterior, plano: novo } : anterior));
+  }
+
   return (
     <>
       <section className="familia-secao">
@@ -127,7 +155,7 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
         </section>
       )}
 
-      {(atual || meta) && (
+      {(atual || meta || plano) && (
         <section className="familia-secao">
           <h2 className="header-medium">Esta semana</h2>
           {atual && (
@@ -161,11 +189,35 @@ export function PainelCliente({ modulos }: { modulos: ModuloDoPainel[] }) {
               </Button>
             </div>
           )}
+          {plano && (
+            <div className="familia-cartao">
+              <h3 className="header-small">{TEXTOS_VALORIZAR.painelTitulo}</h3>
+              <ul className="familia-lista text-large">
+                {plano.formas.map((forma) => (
+                  <li key={forma}>{aplicarApelido(forma, apelido)}</li>
+                ))}
+              </ul>
+              {plano.semana_inicio === segundaDaSemana(hoje) && (
+                <DiasDaMeta dias={plano.dias} diasFeitos={plano.feitos} semanaInicio={plano.semana_inicio} hoje={hoje} onAlternar={(data) => void alternarDiaDoPlano(data)} />
+              )}
+              <Button variante="secondary" tamanho="small" href="/familia/programa/valorizar">
+                {TEXTOS_VALORIZAR.verEditar}
+              </Button>
+            </div>
+          )}
         </section>
       )}
 
       <section className="familia-secao">
         <h2 className="header-medium">Ferramentas</h2>
+        {frases > 0 && (
+          <div className="familia-cartao">
+            <h3 className="header-small">{TEXTOS_FRASES.tituloLista}</h3>
+            <Button variante="secondary" tamanho="small" href="/familia/programa/frases?modulo=3&ver=1">
+              {TEXTOS_FRASES.verMinhas}
+            </Button>
+          </div>
+        )}
         <div className="familia-cartao">
           <h3 className="header-small">Como está a sua vida</h3>
           {ultimaEscala ? (

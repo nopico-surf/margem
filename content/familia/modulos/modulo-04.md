@@ -12,9 +12,12 @@ minutos: 6
 <!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 O cenário "elogiar-sem-ironia" ainda não tem arquivo em content/familia/cenarios: até ter, o
-"Ensaiar no treino" não aparece.
-Botões que ainda não têm ferramenta ficam como "Marcar como feito":
-- lista: "Fazer minha lista"; planejar: "Planejar"; situacao: "Escolher a situação". -->
+"Treinar um elogio" não aparece.
+Os três cards do exercício abrem uma ferramenta (briefing M4, 10/11/2026):
+- lista: "Fazer a lista do que {{apelido}} gosta" (conclui com 1 item ou mais);
+- planejar: "Planejar como valorizar" (conclui ao salvar o plano);
+- situacao: "Escolher o que dizer" (conclui ao salvar; com "Sim" ou "Não sei" na pergunta de segurança
+  o item fica "Deixado para depois"). Em caution_mode, o card troca pelo texto e o botão do psicólogo parceiro. -->
 
 ## Por que olhar para o que vai bem
 
@@ -54,20 +57,20 @@ Depois, num momento sem efeito, explique: "Ontem eu não quis ver o filme porque
 
 ## Exercício da semana
 
-:::exercicio id=lista acao=marcar
-**Fazer uma lista:** anote 2 coisas que {{apelido}} gostou de fazer sem usar nos últimos meses. Se puder, pense em coisas que caibam nos dias ou horários de risco do seu diário.
+:::exercicio id=lista acao=gosta
+**Do que {{apelido}} gosta:** Liste 2 coisas que {{apelido}} gosta de fazer sem usar. Elas vão servir para oferecer algo bom nos dias e horários mais difíceis.
 :::
 
-:::exercicio id=planejar acao=marcar,simulador
-**Planejar:** escolha 2 formas de valorizar momentos sem uso nesta semana. Antes, se quiser, ensaie um elogio sem ironia.
+:::exercicio id=planejar acao=valorizar,simulador cenario=elogiar-sem-ironia
+**Planejar como valorizar os momentos bons:** Escolha 2 jeitos de mostrar a {{apelido}} que você percebeu um momento bom, sem uso, nesta semana.
 :::
 
-:::exercicio id=situacao acao=marcar cautela=nao
-**Escolher uma situação:** decida 1 situação em que você vai tirar a recompensa se houver uso. Só se for seguro para você.
+:::exercicio id=situacao acao=adiar cautela=nao
+**Quando o combinado fica para outro dia:** Decida o que você vai dizer se um programa combinado com {{apelido}} precisar ficar para outro dia por causa do uso. Com calma, sem bronca.
 :::
 
 :::exercicio id=situacao acao=profissional cautela=sim
-Nesta semana, foque só nos itens 1 e 2. A parte de tirar a recompensa fica para quando você tiver conversado com um profissional.
+Esta parte fica para quando você tiver conversado com um profissional.
 :::
 
 :::se problema=alcool

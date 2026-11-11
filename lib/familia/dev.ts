@@ -9,10 +9,12 @@
 // servidor pela rota de exemplo (também só dev), e o simulador vai pro servidor com o cabeçalho
 // x-familia-dev, que a rota só aceita fora de produção.
 
-import { ITEM_DA_CONVERSA_M1, sanitizarConversa } from "./conversa";
+import { ITENS_DA_CONVERSA, sanitizarConversa } from "./conversa";
 import { itensParaMarcar, sanitizarAnotacao, type Anotacao } from "./diario";
 import { alternarDiaFeito, dataValida, sanitizarMeta, sanitizarNotas, segundaDaSemana, type Meta } from "./escala";
+import { FRASES_PARA_CONCLUIR, ITEM_FRASES_M3, LIMITE_DE_FRASES, sanitizarFrase } from "./frases";
 import { validarCompra } from "./oferta";
+import { adiarCompleto, ITEM_ADIAR_M4, ITEM_GOSTA_M4, ITEM_PLANO_M4, sanitizarAdiar, sanitizarGosta, sanitizarPlano, type Adiar, type PlanoValorizar } from "./valorizar";
 import { pixDaPrevia } from "@/lib/apoio/pix-cliente";
 
 export const MODO_DEV_DISPONIVEL = process.env.NODE_ENV !== "production";
@@ -24,6 +26,9 @@ const CHAVE_DIARIO = "margem-familia-dev-diario";
 const CHAVE_CONVERSA = "margem-familia-dev-conversa";
 const CHAVE_ESCALAS = "margem-familia-dev-escalas";
 const CHAVE_META = "margem-familia-dev-meta";
+const CHAVE_FRASES = "margem-familia-dev-frases";
+const CHAVE_VALORIZAR = "margem-familia-dev-valorizar";
+const CHAVE_RETORNO_TREINO = "margem-familia-dev-retorno-treino";
 const CHAVE_PROGRESSO = "margem-familia-dev-progresso";
 // Compra simulada: { plano, pagoEm }. O Pix "cai" sozinho alguns segundos depois de gerado.
 const CHAVE_COMPRA = "margem-familia-dev-compra";
@@ -187,7 +192,8 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
       const registro = sanitizarConversa(corpo.registro);
       if (!registro) return json({ error: "registro_invalido" }, 400);
       gravar(CHAVE_CONVERSA, JSON.stringify([{ id: crypto.randomUUID(), ...registro, criado_em: new Date().toISOString() }, ...registros]));
-      if (registro.modulo === ITEM_DA_CONVERSA_M1.modulo) marcarItem(ITEM_DA_CONVERSA_M1.modulo, ITEM_DA_CONVERSA_M1.item);
+      const itemDaConversa = ITENS_DA_CONVERSA[registro.modulo];
+      if (itemDaConversa) marcarItem(itemDaConversa.modulo, itemDaConversa.item);
       return json({ ok: true });
     }
     return json({ registros });
@@ -232,12 +238,74 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
     return json({ meta: atual });
   }
 
+  // Frases reescritas do módulo 3 (briefing M3), guardadas no aparelho.
+  if (caminho === "/api/familia/frases") {
+    const frases = JSON.parse(ler(CHAVE_FRASES) ?? "[]") as unknown[];
+    if (metodo === "POST") {
+      const frase = sanitizarFrase(corpo.frase);
+      if (!frase) return json({ error: "frase_invalida" }, 400);
+      if (frases.length >= LIMITE_DE_FRASES) return json({ error: "limite_de_frases" }, 409);
+      gravar(CHAVE_FRASES, JSON.stringify([{ id: crypto.randomUUID(), ...frase, criada_em: new Date().toISOString() }, ...frases]));
+      if (frases.length + 1 >= FRASES_PARA_CONCLUIR) marcarItem(ITEM_FRASES_M3.modulo, ITEM_FRASES_M3.item);
+      return json({ ok: true });
+    }
+    return json({ frases });
+  }
+
+  // Módulo 4 (briefing M4): lista, plano e "adiar", com as mesmas regras da rota.
+  if (caminho === "/api/familia/valorizar") {
+    const guardado = JSON.parse(ler(CHAVE_VALORIZAR) ?? "{}") as { gosta?: unknown; plano?: PlanoValorizar; adiar?: Adiar };
+    const salvar = () => gravar(CHAVE_VALORIZAR, JSON.stringify(guardado));
+    if (metodo === "POST") {
+      if (corpo.tipo === "gosta") {
+        const gosta = sanitizarGosta(corpo.dados);
+        if (!gosta) return json({ error: "lista_invalida" }, 400);
+        guardado.gosta = gosta;
+        marcarItem(ITEM_GOSTA_M4.modulo, ITEM_GOSTA_M4.item);
+      } else if (corpo.tipo === "plano") {
+        const plano = sanitizarPlano(corpo.dados);
+        if (!plano || !dataValida(corpo.hoje)) return json({ error: "plano_invalido" }, 400);
+        const semana = segundaDaSemana(corpo.hoje as string);
+        guardado.plano = { ...plano, semana_inicio: semana, feitos: guardado.plano?.semana_inicio === semana ? guardado.plano.feitos : [] };
+        marcarItem(ITEM_PLANO_M4.modulo, ITEM_PLANO_M4.item);
+      } else if (corpo.tipo === "adiar") {
+        const adiar = sanitizarAdiar(corpo.dados);
+        if (!adiar) return json({ error: "adiar_invalido" }, 400);
+        guardado.adiar = adiar;
+        if (adiarCompleto(adiar)) marcarItem(ITEM_ADIAR_M4.modulo, ITEM_ADIAR_M4.item);
+      } else return json({ error: "tipo_invalido" }, 400);
+      salvar();
+      return json({ ok: true });
+    }
+    if (metodo === "PATCH") {
+      if (!guardado.plano) return json({ error: "sem_plano" }, 404);
+      if (!dataValida(corpo.data) || !dataValida(corpo.hoje)) return json({ error: "data_invalida" }, 400);
+      const feitos = alternarDiaFeito({ semana_inicio: guardado.plano.semana_inicio, dias_feitos: guardado.plano.feitos }, corpo.data as string, corpo.hoje as string);
+      if (!feitos) return json({ error: "dia_fora_da_semana" }, 400);
+      guardado.plano.feitos = feitos;
+      salvar();
+      return json({ plano: guardado.plano });
+    }
+    return json({ gosta: guardado.gosta ?? null, plano: guardado.plano ?? null, adiar: guardado.adiar ?? null });
+  }
+
+  // "Ver o retorno do treino" (briefing M3): o último retorno do cenário, guardado no aparelho.
+  if (caminho.startsWith("/api/familia/simulador?")) {
+    const cenario = new URLSearchParams(caminho.split("?")[1]).get("cenario") ?? "";
+    return json({ feedback: JSON.parse(ler(`${CHAVE_RETORNO_TREINO}-${cenario}`) ?? "null") });
+  }
+
   if (caminho === "/api/familia/simulador") {
-    return fetch(caminho, {
+    const resposta = await fetch(caminho, {
       ...init,
       headers: { "Content-Type": "application/json", "x-familia-dev": "1" },
       body: JSON.stringify({ ...corpo, respostasDev: respostasGuardadas() }),
     });
+    if (corpo.acao === "terminar" && resposta.ok && typeof corpo.simulacaoId === "string") {
+      const dados = (await resposta.clone().json().catch(() => null)) as { feedback?: unknown } | null;
+      if (dados?.feedback) gravar(`${CHAVE_RETORNO_TREINO}-${corpo.simulacaoId.split("~")[0]}`, JSON.stringify(dados.feedback));
+    }
+    return resposta;
   }
 
   return json({ error: "nao_encontrado" }, 404);

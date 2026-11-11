@@ -19,6 +19,7 @@ import {
 } from "@/lib/familia/conversa";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import type { Anotacao } from "@/lib/familia/diario";
+import type { FraseSalva } from "@/lib/familia/frases";
 import type { Resultado } from "@/lib/familia/resultado";
 import { SAI_PARA_SE_PROTEGER } from "@/lib/familia/diario";
 import { track } from "@/lib/mixpanel";
@@ -41,6 +42,8 @@ export function ConversaCliente() {
   const [ver, setVer] = useState(false);
   // Com medo relatado antes (modo segurança ou "saí de perto" no diário), "Se irritou" mostra o plano de segurança.
   const [comMedo, setComMedo] = useState(false);
+  // "Minhas frases" (briefing M3): as frases novas que a pessoa salvou entram na lista de "Qual frase você usou?".
+  const [minhasFrases, setMinhasFrases] = useState<string[]>([]);
 
   // Frase: o texto de uma frase salva, "outra" (campo curto) ou "nao_lembro".
   const [frase, setFrase] = useState<string | null>(null);
@@ -60,10 +63,12 @@ export function ConversaCliente() {
       const pedido = Number(busca.get("modulo"));
       const doModulo = MODULOS_DA_CONVERSA.includes(pedido) ? pedido : 1;
       const lido = (await resposta.json()) as Dados;
-      const [registros, anotacoes] = await Promise.all([
+      const [registros, anotacoes, frasesNovas] = await Promise.all([
         chamarApi("/api/familia/conversa").then(async (r) => (r?.ok ? ((await r.json()) as { registros: RegistroDaConversa[] }).registros : [])),
         chamarApi("/api/familia/diario").then(async (r) => (r?.ok ? ((await r.json()) as { anotacoes: Anotacao[] }).anotacoes : [])),
+        chamarApi("/api/familia/frases").then(async (r) => (r?.ok ? ((await r.json()) as { frases: FraseSalva[] }).frases : [])),
       ]);
+      setMinhasFrases(frasesNovas.map((frase) => frase.frase_nova));
       const ultimoDoModulo = registros.find((registro) => registro.modulo === doModulo) ?? null;
       setModulo(doModulo);
       setUltimo(ultimoDoModulo);
@@ -83,8 +88,8 @@ export function ConversaCliente() {
 
   const { apelido, resultado } = dados;
   const t = (texto: string) => aplicarApelido(texto, apelido);
-  // Frases do roteiro do diagnóstico. "Minhas frases" ainda não existe.
-  const frasesSalvas = resultado.conversa ? [resultado.conversa.abertura, ...resultado.conversa.frasesUteis] : [];
+  // Minhas frases primeiro, depois as do roteiro do diagnóstico.
+  const frasesSalvas = [...new Set([...minhasFrases, ...(resultado.conversa ? [resultado.conversa.abertura, ...resultado.conversa.frasesUteis] : [])])];
   const hrefTreino = `/familia/programa/simulador/primeira-conversa?modulo=${modulo}`;
   const hrefModulo = `/familia/programa/modulo/${modulo}`;
 
