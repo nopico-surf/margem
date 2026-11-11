@@ -228,12 +228,45 @@ function periodoDoDia(hora: number) {
   return "à noite";
 }
 
+// Usado só pelo convite do M5 (momentoBomMaisComum). O resumo da semana usa pistaMaisComum.
 function maisComum(valores: string[]) {
   const contagem = new Map<string, number>();
   for (const valor of valores) contagem.set(valor, (contagem.get(valor) ?? 0) + 1);
   let melhor: string | null = null;
   for (const [valor, total] of contagem) if (!melhor || total > (contagem.get(melhor) ?? 0)) melhor = valor;
   return melhor;
+}
+
+export type Pista = { valores: string[]; total: number };
+
+// Regra única de pista do resumo (briefing M2b): o valor mais frequente só vira pista com `minimo`
+// ocorrências ou mais; até 2 empatados no topo aparecem juntos; 3 ou mais empatados não são padrão.
+export function pistaMaisComum(valores: string[], minimo = 2): Pista | null {
+  const contagem = new Map<string, number>();
+  for (const valor of valores) contagem.set(valor, (contagem.get(valor) ?? 0) + 1);
+  const total = Math.max(0, ...contagem.values());
+  if (total < minimo) return null;
+  const topo = [...contagem].filter(([, n]) => n === total).map(([valor]) => valor);
+  return topo.length <= 2 ? { valores: topo, total } : null;
+}
+
+// O valor foi escrito pela pessoa no "Outro": não está entre as opções daquela pergunta (gerais e
+// extras de qualquer problema) e não é "Outro" nem "Não sei".
+export function escritoPelaPessoa(campo: CampoLista, valor: string) {
+  if (valor === OUTRO || valor === "Não sei") return false;
+  const pergunta = [...PERGUNTAS_DIFICIL, ...PERGUNTAS_BOM].find((p) => p.campo === campo);
+  if (!pergunta) return false;
+  return !pergunta.opcoes.includes(valor) && !Object.values(pergunta.extras ?? {}).some((extras) => extras.includes(valor));
+}
+
+// Pra coluna usou_outro_escrito (briefing M2b, item 5): pelo menos um valor da anotação foi escrito.
+export function usouOutroEscrito(anotacao: Record<CampoLista, string[]>) {
+  return CAMPOS_LISTA.some((campo) => anotacao[campo].some((valor) => escritoPelaPessoa(campo, valor)));
+}
+
+// "a e b", pra frase com dois valores empatados.
+export function juntar(valores: string[]) {
+  return valores.join(" e ");
 }
 
 function minuscula(texto: string) {
@@ -256,12 +289,19 @@ export type ResumoDaSemana = {
   total: number;
   dificeis: number;
   bons: number;
-  // Só existem quando há dado.
-  quando: { dia: string; periodo: string } | null;
-  antes: string | null;
-  buscou: string | null;
-  reacao: { texto: string; frase: string | null; seguranca: boolean } | null;
+  // Cada pista só existe quando passa na regra do pistaMaisComum. Dia e período contam em separado.
+  dia: Pista | null;
+  periodo: Pista | null;
+  antes: Pista | null;
+  buscou: Pista | null;
+  // No empate, a frase de apoio é a da reação com segurança; o botão aparece se qualquer uma tiver.
+  reacao: { textos: string[]; frase: string | null; seguranca: boolean } | null;
+  // O que a pessoa escreveu no "Outro" de antes, buscou e reagiu: até 3, da anotação mais recente pra mais antiga.
+  escritos: string[];
 };
+
+const MAXIMO_ESCRITOS = 3;
+const CAMPOS_ESCRITOS: CampoLista[] = ["antes", "buscou", "reagiu"];
 
 // Agregação semanal simples (contagem), sem IA, sobre os últimos 7 dias. Dia e período usam a hora do
 // aparelho, por isso isto roda no cliente.
@@ -269,21 +309,37 @@ export function resumirSemana(anotacoes: Anotacao[], agora = new Date()): Resumo
   const recentes = anotacoes.filter((anotacao) => dentroDosUltimosDias(anotacao.quando, agora));
   const dificeis = recentes.filter((anotacao) => anotacao.tipo === "dificil");
   const horarios = dificeis.map((anotacao) => new Date(anotacao.quando));
-  const dia = maisComum(horarios.map((data) => DIA_NO_RESUMO[data.getDay()]));
-  const periodo = maisComum(horarios.map((data) => periodoDoDia(data.getHours())));
   // "Não sei" e "Outro" sem texto não viram pista.
   const util = (valores: string[]) => valores.filter((valor) => valor !== "Não sei" && valor !== OUTRO);
-  const reacao = maisComum(util(dificeis.flatMap((anotacao) => anotacao.reagiu)));
-  const mapa = reacao ? FRASE_DA_REACAO[reacao] : undefined;
+  const reacao = pistaMaisComum(util(dificeis.flatMap((anotacao) => anotacao.reagiu)));
+  const mapas = (reacao?.valores ?? []).map((valor) => FRASE_DA_REACAO[valor]);
+  const comSeguranca = mapas.find((mapa) => mapa?.seguranca);
+  const escritos = [...dificeis]
+    .sort((a, b) => Date.parse(b.quando) - Date.parse(a.quando))
+    .flatMap((anotacao) => CAMPOS_ESCRITOS.flatMap((campo) => anotacao[campo].filter((valor) => escritoPelaPessoa(campo, valor))))
+    .slice(0, MAXIMO_ESCRITOS);
   return {
     total: recentes.length,
     dificeis: dificeis.length,
     bons: recentes.length - dificeis.length,
-    quando: dia && periodo ? { dia, periodo } : null,
-    antes: maisComum(util(dificeis.flatMap((anotacao) => anotacao.antes))),
-    buscou: maisComum(util(dificeis.flatMap((anotacao) => anotacao.buscou))),
-    reacao: reacao ? { texto: minuscula(reacao), frase: mapa?.frase ?? null, seguranca: Boolean(mapa?.seguranca) } : null,
+    dia: pistaMaisComum(horarios.map((data) => DIA_NO_RESUMO[data.getDay()])),
+    periodo: pistaMaisComum(horarios.map((data) => periodoDoDia(data.getHours()))),
+    antes: pistaMaisComum(util(dificeis.flatMap((anotacao) => anotacao.antes))),
+    buscou: pistaMaisComum(util(dificeis.flatMap((anotacao) => anotacao.buscou))),
+    reacao: reacao
+      ? {
+          textos: reacao.valores.map(minuscula),
+          frase: reacao.valores.length === 1 ? (mapas[0]?.frase ?? null) : (comSeguranca?.frase ?? null),
+          seguranca: Boolean(comSeguranca),
+        }
+      : null,
+    escritos,
   };
+}
+
+// Valor único de uma pista (sem empate), pra telas que só sabem lidar com um.
+export function valorUnico(pista: Pista | null) {
+  return pista && pista.valores.length === 1 ? pista.valores[0] : null;
 }
 
 export { minuscula };

@@ -1,5 +1,5 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
-import { itensParaMarcar, sanitizarAnotacao } from "@/lib/familia/diario";
+import { itensParaMarcar, sanitizarAnotacao, usouOutroEscrito } from "@/lib/familia/diario";
 
 // Diário (briefing M2). GET devolve as anotações mais recentes; POST grava uma e conclui os itens do
 // programa que ela completa (1 difícil: módulo 1; 3 difíceis em 7 dias e 1 bom: módulo 2); PATCH edita
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   const corpo = (await request.json().catch(() => null)) as { anotacao?: unknown } | null;
   const anotacao = sanitizarAnotacao(corpo?.anotacao);
   if (!anotacao) return Response.json({ error: "anotacao_invalida" }, { status: 400 });
-  const { error } = await sessao.supabase.from("familia_diario").insert({ user_id: sessao.user.id, ...anotacao });
+  const { error } = await sessao.supabase.from("familia_diario").insert({ user_id: sessao.user.id, ...anotacao, usou_outro_escrito: usouOutroEscrito(anotacao) });
   if (error) {
     console.error("[familia] gravar diário falhou:", error.message);
     return Response.json({ error: "falha_ao_salvar" }, { status: 500 });
@@ -64,7 +64,7 @@ export async function PATCH(request: Request) {
   const corpo = (await request.json().catch(() => null)) as { id?: unknown; anotacao?: unknown } | null;
   const anotacao = sanitizarAnotacao(corpo?.anotacao);
   if (!anotacao || typeof corpo?.id !== "string") return Response.json({ error: "anotacao_invalida" }, { status: 400 });
-  const { error } = await sessao.supabase.from("familia_diario").update(anotacao).eq("id", corpo.id).eq("user_id", sessao.user.id);
+  const { error } = await sessao.supabase.from("familia_diario").update({ ...anotacao, usou_outro_escrito: usouOutroEscrito(anotacao) }).eq("id", corpo.id).eq("user_id", sessao.user.id);
   if (error) {
     console.error("[familia] editar diário falhou:", error.message);
     return Response.json({ error: "falha_ao_salvar" }, { status: 500 });

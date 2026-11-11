@@ -22,9 +22,11 @@ export const TEXTO_CONSENTIMENTO_DADOS =
   "Concordo que a Margem armazene minhas respostas para personalizar o programa. Não informei dados que identifiquem a pessoa que eu amo.";
 export const TEXTO_CONSENTIMENTO_COMUNICACOES = "Quero receber conteúdos e novidades da Margem por e-mail.";
 
-// Conteúdo marcado [REVISÃO CLÍNICA] no conteúdo v2 (instrução 7): aparece no servidor local e não
-// vai pra produção antes da revisão da psicóloga parceira. Liberar aqui quando a revisão sair.
-export const MOSTRAR_REVISAO_CLINICA = process.env.NODE_ENV !== "production";
+// Liberava os módulos 2 a 8 só fora de produção, enquanto a revisão era de uma psicóloga parceira.
+// A curadoria do conteúdo passou a ser feita pela equipe, então a trava saiu: os 8 módulos valem em
+// produção igual ao servidor local. As marcas [REVISÃO CLÍNICA] nos .md viraram só histórico do que
+// foi revisado, e não escondem nada. A compra continua sendo o que libera módulo, no painel.
+export const MOSTRAR_REVISAO_CLINICA = true;
 
 // [PENDÊNCIA DO FUNDADOR] Prazo de acesso depois das 8 semanas (FAQ da LP), ex.: "12 meses". Nulo: a
 // pergunta "O que acontece depois das 8 semanas?" não aparece.

@@ -8,7 +8,7 @@ import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
-import { minuscula, resumirSemana, type Anotacao } from "@/lib/familia/diario";
+import { minuscula, resumirSemana, valorUnico, type Anotacao } from "@/lib/familia/diario";
 import { BUSCA_DO_DIARIO, GRUPOS_DE_IDEIAS, MAXIMO_ITEM_GOSTA, TEXTOS_GOSTA, type BuscaId } from "@/lib/familia/valorizar";
 import { track } from "@/lib/mixpanel";
 
@@ -57,8 +57,12 @@ export function GostaCliente() {
   }
 
   const t = (texto: string) => aplicarApelido(texto, dados.apelido);
-  const buscaDoDiario = resumo.buscou ? (BUSCA_DO_DIARIO[resumo.buscou] ?? null) : null;
-  const comDiario = Boolean(resumo.buscou && resumo.quando);
+  // Este texto só sabe falar de uma busca, um dia e um período: com empate (briefing M2b), cai no "sem diário".
+  const buscou = valorUnico(resumo.buscou);
+  const dia = valorUnico(resumo.dia);
+  const periodo = valorUnico(resumo.periodo);
+  const buscaDoDiario = buscou ? (BUSCA_DO_DIARIO[buscou] ?? null) : null;
+  const comDiario = Boolean(buscou && dia && periodo);
   const gruposAbertos = buscaDoDiario ? GRUPOS_DE_IDEIAS.filter((grupo) => grupo.id === buscaDoDiario) : GRUPOS_DE_IDEIAS;
   const gruposRecolhidos = buscaDoDiario ? GRUPOS_DE_IDEIAS.filter((grupo) => grupo.id !== buscaDoDiario) : [];
   const preenchidos = itens.filter((item) => item.trim()).length;
@@ -102,7 +106,7 @@ export function GostaCliente() {
   const textoDoDiario = t(TEXTOS_GOSTA.comDiario)
     .split(/(\{\{buscou\}\}|\{\{dia\}\}|\{\{periodo\}\})/)
     .map((parte, indice) => {
-      const valor = parte === "{{buscou}}" ? minuscula(resumo.buscou ?? "") : parte === "{{dia}}" ? resumo.quando?.dia : parte === "{{periodo}}" ? resumo.quando?.periodo : null;
+      const valor = parte === "{{buscou}}" ? minuscula(buscou ?? "") : parte === "{{dia}}" ? dia : parte === "{{periodo}}" ? periodo : null;
       return valor ? <strong key={indice}>{valor}</strong> : <Fragment key={indice}>{parte}</Fragment>;
     });
 

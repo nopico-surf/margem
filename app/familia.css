@@ -37,14 +37,21 @@
   color: var(--colors-neutral-0);
 }
 
-/* Telas com a barra que já tem a própria setinha: o header volta a ser o normal, sem a seta
-   (CabecalhoFamilia). Sem a seta, o space-between leva o logo pra esquerda, e o logo é o completo. */
-.familia:has(.familia-voltar) .app-header-com-voltar .voltar-button,
-.familia:has(.familia-voltar) .app-header-com-voltar .app-logo-icone {
+/* Setinha da tela sozinha, sem a barra de progresso ao lado: a linha some e quem volta é a seta do
+   header, que repete o clique dessa setinha (CabecalhoFamilia). */
+.familia-pergunta-topo:not(:has(> .progress-bar)),
+.familia-checkout-topo {
   display: none;
 }
 
-.familia:has(.familia-voltar) .app-header-com-voltar .app-logo-completo {
+/* Setinha junto da barra de progresso: ela fica, e o header volta a ser o normal, sem a seta. Sem a
+   seta, o space-between leva o logo pra esquerda, e o logo é o completo. */
+.familia:has(.familia-pergunta-topo > .progress-bar) .app-header-com-voltar .voltar-button,
+.familia:has(.familia-pergunta-topo > .progress-bar) .app-header-com-voltar .app-logo-icone {
+  display: none;
+}
+
+.familia:has(.familia-pergunta-topo > .progress-bar) .app-header-com-voltar .app-logo-completo {
   display: block;
 }
 
@@ -234,6 +241,16 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-12);
+}
+
+/* Mesmo arredondamento da lista de serviços da /conversa (.figma-result-band, resultado.css), no
+   desktop. Cobre os contatos de emergência e as listas da rede de apoio. */
+@media (min-width: 1088px) {
+  .familia .figma-resource-list,
+  .familia-contatos .figma-resource-list {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
 }
 
 /* Nos serviços da /conversa a descrição corta em 3 linhas e o "Saiba mais" mostra o resto. Aqui não
@@ -589,6 +606,27 @@ button.dias-da-meta-dia:focus-visible {
   background: var(--colors-alpha-88);
 }
 
+
+/* Carrossel de profissionais (painel e módulos 5 e 6). A .familia-conteudo já dá a margem lateral:
+   sem isto a faixa e o container somavam a deles por cima (bloco recuado em relação ao resto), e a
+   regra da home prendia a fileira no container de 1080, cortando os cards no meio da página. Aqui a
+   fileira vai de ponta a ponta da tela, igual à da /conversa (resultado.css). */
+#familia-profissionais.figma-result-band {
+  padding: 0;
+  background: transparent;
+}
+
+#familia-profissionais .figma-section-inner {
+  max-width: none;
+  padding: 0;
+}
+
+@media (min-width: 1088px) {
+  #familia-profissionais .figma-professionals-row {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+}
 
 /* Título e subtítulo (CardHeader, o padrão do site). As regras ".familia-secao p" e ".familia-lp p"
    zeravam a margem do subtítulo; aqui volta o espaço do padrão (o mesmo 8 de resultado.css). E o

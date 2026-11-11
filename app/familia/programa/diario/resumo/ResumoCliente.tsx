@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
-import { ANOTACOES_PARA_CONCLUIR, ITEM_RESUMO_M2, minuscula, resumirSemana, type Anotacao, type ResumoDaSemana } from "@/lib/familia/diario";
+import { ANOTACOES_PARA_CONCLUIR, ITEM_RESUMO_M2, juntar, minuscula, resumirSemana, type Anotacao, type ResumoDaSemana } from "@/lib/familia/diario";
 import { marcarFeito } from "@/lib/familia/exercicio-cliente";
 
 // Resumo da semana (briefing M2). Um cartão por pista, e a pista só aparece se houver dado. Abrir o
@@ -41,8 +41,14 @@ export function ResumoCliente() {
   }
 
   const t = (texto: string) => aplicarApelido(texto, apelido);
-  const { quando, antes, buscou, reacao, bons } = resumo;
+  const { dia, periodo, antes, buscou, reacao, bons, escritos } = resumo;
   const poucas = resumo.total < ANOTACOES_PARA_CONCLUIR;
+  const temQuando = Boolean(dia || periodo);
+  const temPista = Boolean(temQuando || antes || buscou || reacao);
+  const dias = dia ? juntar(dia.valores) : null;
+  const periodos = periodo ? juntar(periodo.valores) : null;
+  const fraseQuando = dias && periodos ? `${dias}, ${periodos}` : dias ? dias : `${periodos}, em dias variados`;
+  const dois = (pista: { valores: string[] }) => juntar(pista.valores.map(minuscula));
 
   return (
     <section className="familia-pergunta">
@@ -65,26 +71,36 @@ export function ResumoCliente() {
         </div>
       ) : (
         <>
-          {quando && (
+          {temQuando && (
             <div className="familia-cartao">
-              <p className="text-large">{t(`Os momentos difíceis com {{apelido}} aconteceram mais ${quando.dia}, ${quando.periodo}.`)}</p>
+              <p className="text-large">{t(`Os momentos difíceis com {{apelido}} aconteceram mais ${fraseQuando}.`)}</p>
             </div>
           )}
           {antes && (
             <div className="familia-cartao">
-              <p className="text-large">{t(`O que mais aconteceu logo antes desses momentos difíceis: ${minuscula(antes)}.`)}</p>
+              <p className="text-large">
+                {antes.valores.length === 1
+                  ? t(`O que mais aconteceu logo antes desses momentos difíceis: ${dois(antes)}.`)
+                  : t(`Logo antes dos momentos difíceis, duas coisas apareceram o mesmo número de vezes: ${dois(antes)}.`)}
+              </p>
             </div>
           )}
           {buscou && (
             <div className="familia-cartao">
               <p className="text-large">
-                {t(`Pelas suas anotações, o que {{apelido}} mais pareceu buscar com o uso foi: ${minuscula(buscou)}. No módulo 4, você vai pensar em outras formas de trazer isso.`)}
+                {buscou.valores.length === 1
+                  ? t(`Pelas suas anotações, o que {{apelido}} mais pareceu buscar com o uso foi: ${dois(buscou)}. No módulo 4, você vai pensar em outras formas de trazer isso.`)
+                  : t(`Pelas suas anotações, {{apelido}} pareceu buscar duas coisas com o uso, nas mesmas vezes: ${dois(buscou)}. No módulo 4, você vai pensar em outras formas de trazer isso.`)}
               </p>
             </div>
           )}
           {reacao && (
             <div className="familia-cartao">
-              <p className="text-large">{t(`Nesses momentos, a sua reação mais comum foi: ${reacao.texto}.${reacao.frase ? ` ${reacao.frase}` : ""}`)}</p>
+              <p className="text-large">
+                {t(
+                  `${reacao.textos.length === 1 ? "Nesses momentos, a sua reação mais comum foi" : "Nesses momentos, as suas reações mais comuns foram"}: ${juntar(reacao.textos)}.${reacao.frase ? ` ${reacao.frase}` : ""}`,
+                )}
+              </p>
               {reacao.seguranca && (
                 <Button variante="transparent" tamanho="small" href="/familia/seguranca">
                   Veja o seu plano de segurança
@@ -92,10 +108,23 @@ export function ResumoCliente() {
               )}
             </div>
           )}
+          {/* Briefing M2b, item 4: o que a pessoa escreveu no "Outro" não some da tela. */}
+          {escritos.length > 0 && (
+            <div className="familia-cartao">
+              <h2 className="header-small">O que você escreveu com as suas palavras</h2>
+              <p className="text-large">Nesta semana você escreveu isto nos campos de &apos;Outro&apos;. Não entra na contagem acima porque cada coisa apareceu de um jeito diferente.</p>
+              <ul className="familia-lista text-large">
+                {escritos.map((escrito, indice) => (
+                  <li key={indice}>{escrito}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </>
       )}
 
-      {/* Com 3 anotações ou mais (briefing M2): os momentos bons em três versões e a frase final das pistas. */}
+      {/* Com 3 anotações ou mais (briefing M2): os momentos bons em três versões. A frase final só fala
+          de pista quando existe pista (briefing M2b); sem nenhuma, entra o cartão de "nada se repetiu". */}
       {!poucas && (
         <>
           <div className="familia-cartao">
@@ -105,7 +134,17 @@ export function ResumoCliente() {
                 : t(bons === 1 ? "Você anotou 1 momento bom com {{apelido}} nesta semana." : `Você anotou ${bons} momentos bons com {{apelido}} nesta semana.`)}
             </p>
           </div>
-          <p className="text-large">{t("Essas pistas mostram em que dias e horários é melhor se preparar, e em quais momentos uma conversa com {{apelido}} tem mais chance de ir bem.")}</p>
+          {temQuando ? (
+            <p className="text-large">{t("Essas pistas mostram em que dias e horários é melhor se preparar, e em quais momentos uma conversa com {{apelido}} tem mais chance de ir bem.")}</p>
+          ) : temPista ? (
+            <p className="text-large">{t("Essas pistas ajudam a ver o que costuma vir antes dos momentos difíceis com {{apelido}}.")}</p>
+          ) : (
+            <div className="familia-cartao">
+              <p className="text-large">
+                Nesta semana nada se repetiu nas suas anotações: cada momento foi diferente do outro. Isso também diz algo, e quer dizer que ainda não dá para apontar um padrão. Com mais uma ou duas semanas de anotações, ele costuma aparecer.
+              </p>
+            </div>
+          )}
         </>
       )}
 
