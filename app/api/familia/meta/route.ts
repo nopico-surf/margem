@@ -59,7 +59,7 @@ export async function PATCH(request: Request) {
   if (!dataValida(corpo?.hoje) || !dataValida(corpo?.data)) return Response.json({ error: "data_invalida" }, { status: 400 });
   const atual = await metaAtiva(sessao);
   if (!atual) return Response.json({ error: "sem_meta" }, { status: 404 });
-  const dias_feitos = alternarDiaFeito(atual, corpo.data as string, corpo.hoje as string);
+  const dias_feitos = alternarDiaFeito(atual, corpo.data as string);
   if (!dias_feitos) return Response.json({ error: "dia_fora_da_semana" }, { status: 400 });
   const { error } = await sessao.supabase
     .from("familia_meta_semana")

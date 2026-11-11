@@ -1,8 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { EscalaNota } from "@/components/familia/EscalaNota";
-import { TEXTOS_ESCALA, TEXTOS_META } from "@/lib/familia/escala";
+import { alternarDiaFeito, TEXTOS_ESCALA, TEXTOS_META } from "@/lib/familia/escala";
+
+// Dias da meta tocáveis (painel e meta salva): marca e desmarca qualquer dia da semana.
+export function DiasDaMetaGaleria() {
+  const semanaInicio = "2026-11-09";
+  const [feitos, setFeitos] = useState<string[]>(["2026-11-10"]);
+  return (
+    <DiasDaMeta
+      dias={["ter", "qui"]}
+      diasFeitos={feitos}
+      semanaInicio={semanaInicio}
+      hoje="2026-11-10"
+      onAlternar={(data) => setFeitos((atual) => alternarDiaFeito({ semana_inicio: semanaInicio, dias_feitos: atual }, data) ?? atual)}
+    />
+  );
+}
 
 // Estados da escala de nota na galeria: sem nota, com nota (tocável) e a versão 0 a 10 da confiança.
 export function EscalaNotaGaleria() {

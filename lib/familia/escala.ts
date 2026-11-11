@@ -61,7 +61,6 @@ export const TEXTOS_META = {
   obstaculoDica: "Exemplo: Se o dia ficar corrido, então eu faço só 5 minutos antes de dormir.",
   salva: "Meta salva. Ela fica no seu painel. A cada dia que você cumprir, toque no dia para marcar.",
   feitoRetorno: "Boa. Isso é você se cuidando.",
-  diaFuturo: "Esse dia ainda não chegou.",
 };
 
 export const MAXIMO_ACAO = 120;
@@ -168,14 +167,15 @@ export function resumoDosDias(dias: Dia[], diasFeitos: string[], semanaInicio: s
   return aMais > 0 ? `${base}, ${aMais} a mais` : base;
 }
 
-// Dia da meta que dá pra marcar: dentro da semana da meta e até hoje.
-export function diaMarcavel(data: string, semanaInicio: string, hoje: string) {
-  return segundaDaSemana(data) === semanaInicio && data <= hoje;
+// Dia da meta que dá pra marcar: qualquer dia da semana da meta, inclusive os que ainda não chegaram
+// (decidido em 10/11/2026: a pessoa marca quando quiser).
+export function diaMarcavel(data: string, semanaInicio: string) {
+  return segundaDaSemana(data) === semanaInicio;
 }
 
-// Toque num dia da meta: marca ou desmarca. Fora da semana da meta ou no futuro, devolve null.
-export function alternarDiaFeito(meta: { semana_inicio: string; dias_feitos: string[] }, data: string, hoje: string) {
-  if (!diaMarcavel(data, meta.semana_inicio, hoje)) return null;
+// Toque num dia da meta: marca ou desmarca. Fora da semana da meta, devolve null.
+export function alternarDiaFeito(meta: { semana_inicio: string; dias_feitos: string[] }, data: string) {
+  if (!diaMarcavel(data, meta.semana_inicio)) return null;
   return meta.dias_feitos.includes(data) ? meta.dias_feitos.filter((feito) => feito !== data) : [...meta.dias_feitos, data].sort();
 }
 

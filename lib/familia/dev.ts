@@ -153,7 +153,7 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
     if (metodo === "PATCH") {
       if (!atual) return json({ error: "sem_meta" }, 404);
       if (!dataValida(hoje) || !dataValida(corpo.data)) return json({ error: "data_invalida" }, 400);
-      const diasFeitos = alternarDiaFeito(atual, corpo.data as string, hoje);
+      const diasFeitos = alternarDiaFeito(atual, corpo.data as string);
       if (!diasFeitos) return json({ error: "dia_fora_da_semana" }, 400);
       atual.dias_feitos = diasFeitos;
       gravar(CHAVE_META, JSON.stringify(atual));

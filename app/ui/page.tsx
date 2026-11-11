@@ -32,7 +32,7 @@ import { LoginSocial } from "@/components/familia/LoginSocial";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
 import { BlocoComImagem } from "@/components/familia/BlocoComImagem";
 import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
-import { EscalaNotaGaleria } from "./EscalaGaleria";
+import { DiasDaMetaGaleria, EscalaNotaGaleria } from "./EscalaGaleria";
 import { Accordion } from "@/components/ui/Accordion";
 import { Marquee } from "@/components/ui/Marquee";
 import "./galeria.css";
@@ -565,6 +565,7 @@ export default async function GaleriaDeComponentes() {
           <ProgressBar atual={3} total={10} rotulo="Nota 3 de 10" neutra />
           <ProgressBar atual={8} total={10} rotulo="Nota 8 de 10" neutra />
           <DiasDaMeta dias={["seg", "ter", "qui", "sab"]} diasFeitos={["2026-11-09"]} semanaInicio="2026-11-09" hoje="2026-11-11" />
+          <DiasDaMetaGaleria />
         </div>
       </section>
 

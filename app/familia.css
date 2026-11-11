@@ -509,8 +509,9 @@ button.dias-da-meta-dia {
   cursor: pointer;
 }
 
-button.dias-da-meta-dia[aria-disabled="true"] {
-  cursor: default;
+/* "marcar" / "desmarcar" embaixo do dia: deixa claro que o dia é tocável. */
+.dias-da-meta-acao {
+  color: var(--colors-neutral-400);
 }
 
 button.dias-da-meta-dia:focus-visible {
