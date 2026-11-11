@@ -9,6 +9,7 @@
 //   rótulo" uma opção. O valor escolhido vira condição (versao=aceitou) pros blocos ":::se";
 // - ":::alcool" (formato antigo) aparece pra quem marcou aquele problema.
 // Link: uma linha "[rótulo](/caminho)" vira link; "@botao [rótulo](/caminho)" vira botão.
+// Uma linha "@resumo" marca onde entra o resumo das 8 semanas (encerramento do módulo 8).
 // Sem dependência nova.
 
 export type Frontmatter = Record<string, string | number | boolean>;
@@ -20,6 +21,7 @@ export type BlocoMarkdown =
   | { tipo: "titulo"; texto: string }
   | { tipo: "lista"; ordenada: boolean; itens: Trecho[][] }
   | { tipo: "link"; rotulo: string; href: string; botao: boolean }
+  | { tipo: "resumo" }
   | { tipo: "variacao"; problema: string; blocos: BlocoMarkdown[] }
   | { tipo: "condicional"; condicoes: Record<string, string>; blocos: BlocoMarkdown[] }
   | { tipo: "escolha"; id: string; blocos: BlocoMarkdown[] }
@@ -163,6 +165,12 @@ export function lerBlocosMarkdown(corpo: string): BlocoMarkdown[] {
       fecharParagrafo();
       fecharLista();
       destino().push({ tipo: "link", rotulo: link[2], href: link[3], botao: Boolean(link[1]) });
+      continue;
+    }
+    if (linha === "@resumo") {
+      fecharParagrafo();
+      fecharLista();
+      destino().push({ tipo: "resumo" });
       continue;
     }
     const titulo = linha.match(/^##\s+(.*)$/);

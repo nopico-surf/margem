@@ -34,6 +34,8 @@ import {
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { momentoBomMaisComum, type Anotacao } from "@/lib/familia/diario";
 import { dataLocal } from "@/lib/familia/escala";
+import { marcarFeito } from "@/lib/familia/exercicio-cliente";
+import { ITEM_NOVO_CONVITE_M8 } from "@/lib/familia/modulo8";
 import { fotoPequena } from "@/lib/foto-pequena";
 import { track } from "@/lib/mixpanel";
 
@@ -74,6 +76,9 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
   const [planoB, setPlanoB] = useState<PlanoB | null>(null);
   const [dataRetorno, setDataRetorno] = useState(() => emSemanas(SEMANAS_PADRAO_RETORNO));
   const [salvando, setSalvando] = useState(false);
+  // ?modulo=8: "Rever meu convite" do módulo 8 (versão "disse não"). Abre com o que já foi salvo; salvar
+  // o passo 5 conclui o item "Preparar um novo convite" de lá, e voltar leva ao módulo 8.
+  const [modulo, setModulo] = useState(5);
 
   useEffect(() => {
     (async () => {
@@ -94,6 +99,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
         if (guardado.data_retorno) setDataRetorno(guardado.data_retorno);
         setTela(guardado.passo >= PASSOS_DO_CONVITE ? 1 : guardado.passo === 0 ? "intro" : ((guardado.passo + 1) as Tela));
       }
+      if (new URLSearchParams(window.location.search).get("modulo") === "8") setModulo(8);
       setDados(lido);
     })();
   }, [router]);
@@ -121,7 +127,10 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
 
   async function avancar(passo: number, extra: Record<string, unknown> = {}) {
     if (!(await gravarPasso(passo, extra))) return;
-    if (passo >= PASSOS_DO_CONVITE) return router.push("/familia/programa/modulo/5");
+    if (passo >= PASSOS_DO_CONVITE) {
+      if (modulo === 8) await marcarFeito(8, ITEM_NOVO_CONVITE_M8);
+      return router.push(`/familia/programa/modulo/${modulo}`);
+    }
     setTela((passo + 1) as Tela);
     window.scrollTo({ top: 0 });
   }
@@ -140,7 +149,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
   }
 
   const voltar = () => {
-    if (tela === "intro" || tela === 1) return router.push("/familia/programa/modulo/5");
+    if (tela === "intro" || tela === 1) return router.push(`/familia/programa/modulo/${modulo}`);
     setTela((tela - 1) as Tela);
     window.scrollTo({ top: 0 });
   };
@@ -322,7 +331,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
               larguraTotal
               carregando={salvando}
               onClick={async () => {
-                if (await gravarPasso(4)) router.push(`/familia/programa/simulador/${CENARIO_DO_CONVITE}?modulo=5`);
+                if (await gravarPasso(4)) router.push(`/familia/programa/simulador/${CENARIO_DO_CONVITE}?modulo=${modulo}`);
               }}
             >
               {TEXTOS_CONVITE.treinar}

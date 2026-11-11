@@ -1,5 +1,5 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
-import { aplicarPasso, CONVITE_VAZIO, ITEM_CONTAR_M5, ITEM_PREPARAR_M5, PASSOS_DO_CONVITE, sanitizarResultado, type Convite } from "@/lib/familia/convite";
+import { aplicarPasso, aplicarPausa, CONVITE_VAZIO, ITEM_CONTAR_M5, ITEM_PREPARAR_M5, PASSOS_DO_CONVITE, sanitizarResultado, type Convite } from "@/lib/familia/convite";
 
 // Módulo 5 (briefing M5, C6): o convite.
 // GET devolve o convite (ou null).
@@ -7,6 +7,8 @@ import { aplicarPasso, CONVITE_VAZIO, ITEM_CONTAR_M5, ITEM_PREPARAR_M5, PASSOS_D
 //   conclui o item "preparar".
 // POST { tipo: "resultado", resultado: "sim" | "pensar" | "nao" | null } grava "Contar como foi". Com uma
 //   resposta, conclui o item "contar"; null ("Ainda não convidei") limpa o resultado e não conclui nada.
+// POST { tipo: "pausa", data_retorno } (módulo 8, "Dar um tempo no assunto") grava a data pra pensar de
+//   novo. Quem marca o item "pausa" do módulo 8 é a tela, pela rota do exercício.
 // A frase escrita pela pessoa nunca vai pra IA nem pro Mixpanel.
 
 type Sessao = NonNullable<Awaited<ReturnType<typeof usuarioDaRequisicao>>>;
@@ -46,6 +48,9 @@ export async function POST(request: Request) {
     const resultado = sanitizarResultado(corpo.resultado);
     if (corpo.resultado !== null && !resultado) return Response.json({ error: "resultado_invalido" }, { status: 400 });
     novo = { ...atual, resultado, data_resultado: resultado ? new Date().toISOString() : null };
+  } else if (corpo?.tipo === "pausa") {
+    novo = aplicarPausa(atual, (corpo as { data_retorno?: unknown }).data_retorno);
+    if (!novo) return Response.json({ error: "data_invalida" }, { status: 400 });
   } else {
     return Response.json({ error: "tipo_invalido" }, { status: 400 });
   }

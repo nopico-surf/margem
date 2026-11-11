@@ -22,12 +22,16 @@ import {
   type FraseSalva,
   type HabilidadeId,
 } from "@/lib/familia/frases";
+import { marcarFeito } from "@/lib/familia/exercicio-cliente";
+import { ITEM_FRASE_M8 } from "@/lib/familia/modulo8";
 import { track } from "@/lib/mixpanel";
 
 // "Reescrever minhas frases" (briefing M3, ferramenta C3). Telas: abertura, escolher a frase de antes,
 // exemplo e a frase nova, conferir, frase salva; e a lista "Minhas frases".
 //
 // ?modulo=3: de onde a pessoa veio. ?ver=1: abre direto a lista "Minhas frases".
+// ?modulo=8 (briefing M8, "Escolher minha frase"): copiar uma frase da lista ou salvar uma nova conclui
+// o item "Uma frase para a próxima conversa" do módulo 8.
 // Sem IA: a conferência é da própria pessoa. A IA só entra se ela tocar em "Treinar esta frase", que
 // leva a frase pronta ao simulador. A frase nunca vai pro Mixpanel.
 //
@@ -122,6 +126,7 @@ export function FrasesCliente() {
     track("frase_reescrita", { total: salvas.length + 1, itens_marcados: marcados.length, partiu_de_exemplo: Boolean(modelo) });
     const lidas = await chamarApi("/api/familia/frases");
     if (lidas?.ok) setSalvas(((await lidas.json()) as { frases: FraseSalva[] }).frases);
+    if (modulo === 8) await marcarFeito(8, ITEM_FRASE_M8);
     setTela("salva");
     window.scrollTo({ top: 0 });
   }
@@ -145,6 +150,8 @@ export function FrasesCliente() {
 
   function copiar(texto: string) {
     void navigator.clipboard?.writeText(texto).catch(() => {});
+    // Módulo 8, versão "voltou a usar": copiar uma das frases é escolher a frase da próxima conversa.
+    if (modulo === 8) void marcarFeito(8, ITEM_FRASE_M8);
   }
 
   const topo = (voltar: () => void, rotulo: string) => (

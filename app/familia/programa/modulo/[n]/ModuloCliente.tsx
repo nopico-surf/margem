@@ -12,9 +12,10 @@ import { vendaSimulada } from "@/lib/familia/dev";
 import { dataDoModulo, moduloChegou } from "@/lib/familia/oferta";
 import { OfertaPrograma } from "@/components/familia/OfertaPrograma";
 import type { Modulo } from "@/lib/familia/conteudo";
-import { VERSAO_DO_MODULO8, type Convite } from "@/lib/familia/convite";
+import { SERVICOS_DO_CONVITE, VERSAO_DO_MODULO8, type Convite } from "@/lib/familia/convite";
 import { aplicarApelido, ROTULO_PROBLEMA, type Problema } from "@/lib/familia/diagnostico";
-import { diaMes } from "@/lib/familia/escala";
+import { AREAS, diaMes, type Escala, type Notas } from "@/lib/familia/escala";
+import { ITEM_PAUSA_M8 } from "@/lib/familia/modulo8";
 import { carregarEstado, contextoDo, itensDoExercicio, marcarFeito, type EstadoExercicio } from "@/lib/familia/exercicio-cliente";
 import { condicoesBatem, opcoesDaEscolha, type BlocoMarkdown, type Contexto, type Trecho } from "@/lib/familia/markdown";
 import { ExercicioSemana } from "@/components/familia/ExercicioSemana";
@@ -43,14 +44,48 @@ type BlocosProps = {
   onEscolher: (id: string, valor: string) => void;
   // Itens do exercício, desenhados no lugar do primeiro ":::exercicio" do texto (só no nível de cima).
   exercicio?: ReactNode;
+  // Resumo das 8 semanas, no lugar da linha "@resumo" (encerramento do módulo 8).
+  resumo?: ReactNode;
 };
 
-function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }: BlocosProps) {
+// Resumo visual do encerramento (briefing M8, C12): as notas da escala do módulo 1 ao 7 (se houver),
+// quantas anotações no diário e quantas frases salvas. Sem IA, só contagem.
+export type DadosDoResumo = { antes: Notas | null; depois: Notas | null; anotacoes: number; frases: number };
+
+function ResumoDoPrograma({ dados }: { dados: DadosDoResumo }) {
+  const { antes, depois, anotacoes, frases } = dados;
+  const areas = antes && depois ? AREAS.filter((area) => typeof antes[area.id] === "number" || typeof depois[area.id] === "number") : [];
+  return (
+    <div className="familia-cartao">
+      {areas.length > 0 && antes && depois && (
+        <>
+          <h3 className="header-small">Como está a sua vida</h3>
+          <ul className="familia-lista text-large">
+            {areas.map((area) => (
+              <li key={area.id}>
+                {area.nome}: {antes[area.id] ?? "-"} → {depois[area.id] ?? "-"}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      <p className="text-large">
+        <strong>{anotacoes}</strong> {anotacoes === 1 ? "anotação no diário" : "anotações no diário"}
+      </p>
+      <p className="text-large">
+        <strong>{frases}</strong> {frases === 1 ? "frase salva" : "frases salvas"}
+      </p>
+    </div>
+  );
+}
+
+function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio, resumo }: BlocosProps) {
   const posicaoDoExercicio = exercicio ? blocos.findIndex((bloco) => bloco.tipo === "exercicio") : -1;
   return (
     <>
       {blocos.map((bloco, indice) => {
         if (bloco.tipo === "titulo") return <h2 key={indice} className="header-medium">{aplicarApelido(bloco.texto, apelido)}</h2>;
+        if (bloco.tipo === "resumo") return <Fragment key={indice}>{resumo}</Fragment>;
         if (bloco.tipo === "link")
           return (
             <div key={indice} className="familia-exercicio-acoes">
@@ -123,14 +158,17 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio }:
 
 // `emRevisao`: o módulo chegou sem o texto (produção, antes da revisão clínica). Quem comprou vê o
 // título e volta ao painel; quem não comprou, a página de módulo bloqueado.
+// `enderecos`: página de cada profissional ativo, por id (só no módulo 8, pro "Retomar o apoio").
 // `profissionais`: lista do carrossel do fim do módulo (só nos módulos 5 e 6, briefing M56).
 export function ModuloCliente({
   modulo,
   emRevisao = false,
+  enderecos,
   profissionais,
 }: {
   modulo: Modulo;
   emRevisao?: boolean;
+  enderecos?: Record<string, string>;
   profissionais?: ProfissionalCadastrado[];
 }) {
   const router = useRouter();
@@ -144,6 +182,9 @@ export function ModuloCliente({
   const [frasesSalvas, setFrasesSalvas] = useState(0);
   const [deixados, setDeixados] = useState<string[]>([]);
   const [passoDoConvite, setPassoDoConvite] = useState(0);
+  // Módulo 8: o convite salvo (data do "dar um tempo" e profissional de antes) e o resumo do encerramento.
+  const [convite, setConvite] = useState<Convite | null>(null);
+  const [resumo, setResumo] = useState<DadosDoResumo | null>(null);
   // Respostas dos seletores do módulo (":::escolha"). Ficam só nesta tela: o check-in que pré-marcaria
   // o seletor ainda não existe.
   const [escolhas, setEscolhas] = useState<Record<string, string>>({});
@@ -204,10 +245,21 @@ export function ModuloCliente({
       const temEscolhaVersao = modulo.blocos.some((bloco) => bloco.tipo === "escolha" && bloco.id === "versao");
       if (temAcao("convite") || temEscolhaVersao) {
         const resposta = await chamarApi("/api/familia/convite");
-        const convite = resposta?.ok ? ((await resposta.json()) as { convite: Convite | null }).convite : null;
-        setPassoDoConvite(convite?.passo ?? 0);
-        const versao = convite?.resultado ? VERSAO_DO_MODULO8[convite.resultado] : undefined;
+        const guardado = resposta?.ok ? ((await resposta.json()) as { convite: Convite | null }).convite : null;
+        setPassoDoConvite(guardado?.passo ?? 0);
+        setConvite(guardado);
+        const versao = guardado?.resultado ? VERSAO_DO_MODULO8[guardado.resultado] : undefined;
         if (temEscolhaVersao && versao) setEscolhas((atuais) => ({ ...atuais, versao }));
+      }
+      // Encerramento do módulo 8: a escala do módulo 7 ao lado da anterior (as duas últimas), o diário e as frases.
+      if (modulo.blocos.some((bloco) => bloco.tipo === "resumo")) {
+        const [escalas, diario, frases] = await Promise.all([
+          chamarApi("/api/familia/escala").then(async (r) => (r?.ok ? ((await r.json()) as { escalas: Escala[] }).escalas : [])),
+          chamarApi("/api/familia/diario").then(async (r) => (r?.ok ? ((await r.json()) as { anotacoes: unknown[] }).anotacoes.length : 0)),
+          chamarApi("/api/familia/frases").then(async (r) => (r?.ok ? ((await r.json()) as { frases: unknown[] }).frases.length : 0)),
+        ]);
+        const comparar = escalas[0]?.origem === "modulo7" && escalas[1];
+        setResumo({ antes: comparar ? escalas[1].notas : null, depois: comparar ? escalas[0].notas : null, anotacoes: diario, frases });
       }
       track(modulo.numero === 1 ? "modulo1_iniciado" : "modulo_iniciado", { modulo: modulo.numero });
       void chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "iniciar" }) });
@@ -280,6 +332,19 @@ export function ModuloCliente({
     await marcarFeito(modulo.numero, item);
   }
 
+  // "Dar um tempo no assunto" (módulo 8): grava a data no convite e conclui o item.
+  async function escolherPausa(data: string) {
+    const resposta = await chamarApi("/api/familia/convite", { method: "POST", body: JSON.stringify({ tipo: "pausa", data_retorno: data }) });
+    if (!resposta?.ok) return false;
+    setConvite(((await resposta.json()) as { convite: Convite }).convite);
+    await marcar(ITEM_PAUSA_M8);
+    return true;
+  }
+
+  // "Retomar o apoio" (módulo 8): o primeiro profissional ou serviço salvo no convite que ainda existe.
+  const retomarHref =
+    convite?.profissionais_salvos.map((id) => SERVICOS_DO_CONVITE.find((servico) => servico.id === id)?.href ?? enderecos?.[id]).find(Boolean) ?? null;
+
   async function concluir() {
     setConcluindo(true);
     const resposta = await chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "concluir" }) });
@@ -318,7 +383,26 @@ export function ModuloCliente({
         problemas={problemas}
         contexto={contexto}
         onEscolher={escolher}
-        exercicio={itens.length > 0 && <ExercicioSemana modulo={modulo.numero} itens={itens} estado={estado} apelido={apelido} contexto={contexto} onMarcar={marcar} anotacoes={anotacoes} frasesSalvas={frasesSalvas} deixados={deixados} passoDoConvite={passoDoConvite} />}
+        exercicio={
+          itens.length > 0 && (
+            <ExercicioSemana
+              modulo={modulo.numero}
+              itens={itens}
+              estado={estado}
+              apelido={apelido}
+              contexto={contexto}
+              onMarcar={marcar}
+              anotacoes={anotacoes}
+              frasesSalvas={frasesSalvas}
+              deixados={deixados}
+              passoDoConvite={passoDoConvite}
+              dataRetorno={convite?.data_retorno ?? null}
+              onPausa={escolherPausa}
+              retomarHref={retomarHref}
+            />
+          )
+        }
+        resumo={resumo && <ResumoDoPrograma dados={resumo} />}
       />
 
       {/* Briefing M56: no fim dos módulos 5 e 6, o carrossel no lugar do botão. Não conclui nenhum item. */}

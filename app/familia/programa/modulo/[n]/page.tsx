@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Loader } from "@/components/ui/Loader";
 import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
 import { lerModulo, TOTAL_MODULOS } from "@/lib/familia/conteudo";
+import { enderecosDosProfissionais } from "@/lib/familia/convite-servidor";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { ModuloCliente } from "./ModuloCliente";
 
@@ -39,7 +40,10 @@ async function Conteudo({ params }: Props) {
   // página de módulo bloqueado mostrar "O que você vai aprender" em vez de um erro (briefing 01).
   const emRevisao = modulo.numero !== 1 && !MOSTRAR_REVISAO_CLINICA;
   const enviado = emRevisao ? { ...modulo, blocos: modulo.blocos.filter((bloco) => bloco.tipo === "titulo"), audio: null, video: null } : modulo;
+  // "Retomar o apoio" (módulo 8, briefing M8): a página do profissional salvo no convite.
+  const temRetomar = !emRevisao && modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes("retomar"));
+  const enderecos = temRetomar ? await enderecosDosProfissionais() : undefined;
   // Carrossel de profissionais no fim dos módulos 5 e 6 (briefing M56). A busca é cacheada.
   const profissionais = !emRevisao && MODULOS_COM_CARROSSEL.has(modulo.numero) ? await buscarTodosProfissionaisAtivos() : undefined;
-  return <ModuloCliente modulo={enviado} emRevisao={emRevisao} profissionais={profissionais} />;
+  return <ModuloCliente modulo={enviado} emRevisao={emRevisao} enderecos={enderecos} profissionais={profissionais} />;
 }

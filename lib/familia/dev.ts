@@ -10,11 +10,12 @@
 // x-familia-dev, que a rota só aceita fora de produção.
 
 import { ITENS_DA_CONVERSA, sanitizarConversa } from "./conversa";
-import { aplicarPasso, CONVITE_VAZIO, ITEM_CONTAR_M5, ITEM_PREPARAR_M5, PASSOS_DO_CONVITE, sanitizarResultado, type Convite } from "./convite";
+import { aplicarPasso, aplicarPausa, CONVITE_VAZIO, ITEM_CONTAR_M5, ITEM_PREPARAR_M5, PASSOS_DO_CONVITE, sanitizarResultado, type Convite } from "./convite";
 import { itensParaMarcar, sanitizarAnotacao, type Anotacao } from "./diario";
 import { alternarDiaFeito, dataValida, sanitizarMeta, sanitizarNotas, segundaDaSemana, type Meta } from "./escala";
 import { FRASES_PARA_CONCLUIR, ITEM_FRASES_M3, LIMITE_DE_FRASES, sanitizarFrase } from "./frases";
 import { validarCompra } from "./oferta";
+import { aplicarRede, ITEM_APOIO_M7, REDE_VAZIA, type Rede } from "./rede";
 import { adiarCompleto, ITEM_ADIAR_M4, ITEM_GOSTA_M4, ITEM_PLANO_M4, sanitizarAdiar, sanitizarGosta, sanitizarPlano, type Adiar, type PlanoValorizar } from "./valorizar";
 import { pixDaPrevia } from "@/lib/apoio/pix-cliente";
 
@@ -30,6 +31,7 @@ const CHAVE_META = "margem-familia-dev-meta";
 const CHAVE_FRASES = "margem-familia-dev-frases";
 const CHAVE_VALORIZAR = "margem-familia-dev-valorizar";
 const CHAVE_CONVITE = "margem-familia-dev-convite";
+const CHAVE_REDE = "margem-familia-dev-rede";
 const CHAVE_RETORNO_TREINO ="margem-familia-dev-retorno-treino";
 const CHAVE_PROGRESSO = "margem-familia-dev-progresso";
 // Compra simulada: { plano, pagoEm }. O Pix "cai" sozinho alguns segundos depois de gerado.
@@ -226,6 +228,7 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
       gravar(CHAVE_META, JSON.stringify(nova));
       if (corpo.modulo === 1) marcarItem(1, "escala");
       if (corpo.modulo === 7) marcarItem(7, "meta");
+      if (corpo.modulo === 8) marcarItem(8, "meta");
       return json({ meta: nova });
     }
     if (metodo === "PATCH") {
@@ -305,11 +308,27 @@ export async function respostaDev(caminho: string, init?: RequestInit): Promise<
         if (corpo.resultado !== null && !resultado) return json({ error: "resultado_invalido" }, 400);
         novo = { ...atual, resultado, data_resultado: resultado ? new Date().toISOString() : null };
         if (resultado) marcarItem(ITEM_CONTAR_M5.modulo, ITEM_CONTAR_M5.item);
+      } else if (corpo.tipo === "pausa") {
+        novo = aplicarPausa(atual, corpo.data_retorno);
+        if (!novo) return json({ error: "data_invalida" }, 400);
       } else return json({ error: "tipo_invalido" }, 400);
       gravar(CHAVE_CONVITE, JSON.stringify(novo));
       return json({ convite: novo });
     }
     return json({ convite: ler(CHAVE_CONVITE) ? atual : null });
+  }
+
+  // Módulo 7 (briefing M7): a rede de apoio, com as mesmas regras da rota.
+  if (caminho === "/api/familia/rede") {
+    const atual = JSON.parse(ler(CHAVE_REDE) ?? "null") as Rede | null;
+    if (metodo === "POST") {
+      const nova = aplicarRede(atual ?? REDE_VAZIA, corpo, new Date().toISOString());
+      if (!nova) return json({ error: "passo_invalido" }, 400);
+      gravar(CHAVE_REDE, JSON.stringify(nova));
+      marcarItem(ITEM_APOIO_M7.modulo, ITEM_APOIO_M7.item);
+      return json({ rede: nova });
+    }
+    return json({ rede: atual });
   }
 
   // "Ver o retorno do treino" (briefing M3): o último retorno do cenário, guardado no aparelho.

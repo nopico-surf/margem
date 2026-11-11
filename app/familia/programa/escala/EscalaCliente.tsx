@@ -46,6 +46,9 @@ import {
 // ?origem=modulo1 (padrão) | modulo7 (refazer e comparar) | painel
 // ?etapa=meta: abre direto no resultado, com as notas da última escala ("Escolher minha meta da semana").
 // ?etapa=editar: abre a criação da meta preenchida com a meta ativa ("Editar minha meta da semana").
+// ?etapa=criar: abre direto a criação da meta na área de nota mais baixa da última escala ("Criar minha
+//   meta", briefings M7 e M8); voltar leva ao resultado, onde dá pra escolher outra área.
+// ?modulo=8: a meta é do módulo 8 (versão "aceitou"): salvar marca o item de lá e o voltar leva a ele.
 
 type Diagnostico = { apelido: string; problemas: string[] };
 type Etapa = { tela: "intro" } | { tela: "area"; indice: number } | { tela: "resultado" } | { tela: "meta" } | { tela: "salva" };
@@ -55,13 +58,14 @@ const ID_CAMPO_ACAO = "familia-meta-acao";
 function lerParametros() {
   const busca = new URLSearchParams(window.location.search);
   const origem = (["modulo1", "modulo7", "painel"] as OrigemEscala[]).find((item) => item === busca.get("origem")) ?? "modulo1";
-  return { origem, etapa: busca.get("etapa") };
+  return { origem, etapa: busca.get("etapa"), modulo: busca.get("modulo") === "8" ? 8 : null };
 }
 
 export function EscalaCliente() {
   const router = useRouter();
   const [diagnostico, setDiagnostico] = useState<Diagnostico | null>(null);
   const [origem, setOrigem] = useState<OrigemEscala>("modulo1");
+  const [moduloPedido, setModuloPedido] = useState<number | null>(null);
   const [etapa, setEtapa] = useState<Etapa>({ tela: "intro" });
   const [notas, setNotas] = useState<Notas>({});
   // Escala anterior, pro "módulo 1 → agora" do módulo 7.
@@ -90,16 +94,28 @@ export function EscalaCliente() {
       if (!resposta || resposta.status === 401) return router.replace("/familia/entrar");
       if (resposta.status === 404) return router.replace("/familia/diagnostico");
       if (!resposta.ok) return;
-      const { origem: origemDaUrl, etapa: etapaDaUrl } = lerParametros();
+      const { origem: origemDaUrl, etapa: etapaDaUrl, modulo: moduloDaUrl } = lerParametros();
       const [escalas, meta] = await Promise.all([
         chamarApi("/api/familia/escala").then(async (r) => (r?.ok ? ((await r.json()) as { escalas: Escala[] }).escalas : [])),
         chamarApi("/api/familia/meta").then(async (r) => (r?.ok ? ((await r.json()) as { meta: Meta | null }).meta : null)),
       ]);
       const ultima = escalas[0]?.notas ?? null;
       setOrigem(origemDaUrl);
-      if (origemDaUrl === "modulo7") setAnterior(ultima);
+      setModuloPedido(moduloDaUrl);
+      // Refazendo, a anterior é a última; abrindo uma escala já feita ("Ver a comparação"), é a de antes dela.
+      if (origemDaUrl === "modulo7") setAnterior(etapaDaUrl ? (escalas[1]?.notas ?? null) : ultima);
       setMetaAtiva(meta);
-      if (etapaDaUrl === "editar" && meta) {
+      const sugerida = ultima ? areaSugerida(ultima) : null;
+      if (etapaDaUrl === "criar" && ultima && sugerida) {
+        setNotas(ultima);
+        // Meta ativa na mesma área: abre preenchida, é edição.
+        if (meta && meta.area === sugerida) preencherMeta(meta);
+        else setArea(sugerida);
+        setEtapa({ tela: "meta" });
+      } else if (etapaDaUrl === "criar" && ultima) {
+        setNotas(ultima);
+        setEtapa({ tela: "resultado" });
+      } else if (etapaDaUrl === "editar" && meta) {
         if (ultima) setNotas(ultima);
         preencherMeta(meta);
         setEtapa({ tela: "meta" });
@@ -130,7 +146,7 @@ export function EscalaCliente() {
 
   const { apelido, problemas } = diagnostico;
   const comApelido = (valor: string) => aplicarApelido(valor, apelido);
-  const moduloDeVolta = origem === "modulo7" ? 7 : 1;
+  const moduloDeVolta = moduloPedido ?? (origem === "modulo7" ? 7 : 1);
 
   function irPara(nova: Etapa) {
     setEtapa(nova);
@@ -171,7 +187,7 @@ export function EscalaCliente() {
       body: JSON.stringify({
         meta: { area, texto, dias, momento, confianca, obstaculo_plano: obstaculo },
         hoje: dataLocal(),
-        modulo: origem === "painel" ? null : moduloDeVolta,
+        modulo: origem === "painel" && !moduloPedido ? null : moduloDeVolta,
       }),
     });
     setSalvandoMeta(false);

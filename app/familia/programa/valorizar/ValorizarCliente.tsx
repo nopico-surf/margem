@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { Loader } from "@/components/ui/Loader";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
+import { marcarFeito } from "@/lib/familia/exercicio-cliente";
+import { ITEM_VALORIZAR_M8 } from "@/lib/familia/modulo8";
 import { DIAS, MOMENTOS, dataLocal, type Dia, type Momento } from "@/lib/familia/escala";
 import {
   CENARIO_DO_ELOGIO,
@@ -25,6 +27,9 @@ import { track } from "@/lib/mixpanel";
 // mostra a confirmação; o plano e os 7 dias ficam no painel. Voltar a esta tela abre o plano preenchido
 // ("Ver e editar o plano").
 //
+// ?modulo=8: aberto pelo card "Valorizar sem vigiar" do módulo 8 (briefing M8, versão "aceitou"). Salvar
+// também conclui o item de lá, e voltar leva ao módulo 8.
+//
 // `temTreinoDeElogio`: o cenário "elogiar-sem-ironia" tem arquivo. Sem ele, "Treinar um elogio" não aparece.
 //
 // [PENDÊNCIA DO FUNDADOR] Texto de erro ao salvar: não está na especificação. Por ora o botão só volta a
@@ -40,6 +45,7 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
   const [periodos, setPeriodos] = useState<Momento[]>([]);
   const [salvando, setSalvando] = useState(false);
   const [salvo, setSalvo] = useState(false);
+  const [modulo, setModulo] = useState(4);
 
   useEffect(() => {
     (async () => {
@@ -54,6 +60,7 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
         setDias(guardado.dias);
         setPeriodos(guardado.periodos);
       }
+      if (new URLSearchParams(window.location.search).get("modulo") === "8") setModulo(8);
       setDados(lido);
     })();
   }, [router]);
@@ -67,7 +74,8 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
   }
 
   const t = (texto: string) => aplicarApelido(texto, dados.apelido);
-  const voltarAoModulo = () => router.push("/familia/programa/modulo/4");
+  const hrefModulo = `/familia/programa/modulo/${modulo}`;
+  const voltarAoModulo = () => router.push(hrefModulo);
 
   function alternarForma(forma: string) {
     setFormas((atuais) => (atuais.includes(forma) ? atuais.filter((item) => item !== forma) : atuais.length < FORMAS_PARA_ESCOLHER ? [...atuais, forma] : atuais));
@@ -83,6 +91,7 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
     if (!resposta?.ok) return;
     // Só o que a pessoa escolheu entre as opções, nunca texto livre (aqui não há).
     track("plano_valorizar_salvo", { formas, dias: dias.length, periodos: periodos.length });
+    if (modulo === 8) await marcarFeito(8, ITEM_VALORIZAR_M8);
     setSalvo(true);
     window.scrollTo({ top: 0 });
   }
@@ -94,7 +103,7 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
           {TEXTOS_VALORIZAR.salvo}
         </p>
         <div className="familia-acoes">
-          <Button tamanho="medium" larguraTotal href="/familia/programa/modulo/4">
+          <Button tamanho="medium" larguraTotal href={hrefModulo}>
             Voltar ao módulo
           </Button>
           <Button variante="transparent" tamanho="medium" larguraTotal href="/familia/programa">
@@ -142,7 +151,7 @@ export function ValorizarCliente({ temTreinoDeElogio }: { temTreinoDeElogio: boo
             ))}
           </ul>
           {temTreinoDeElogio && (
-            <Button variante="secondary" tamanho="small" href={`/familia/programa/simulador/${CENARIO_DO_ELOGIO}?modulo=4`}>
+            <Button variante="secondary" tamanho="small" href={`/familia/programa/simulador/${CENARIO_DO_ELOGIO}?modulo=${modulo}`}>
               {TEXTOS_VALORIZAR.treinarElogio}
             </Button>
           )}

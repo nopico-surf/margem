@@ -10,9 +10,10 @@ minutos: 5
 
 <!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
-Botões que ainda não têm ferramenta ficam como "Marcar como feito":
-- apoio: "Escolher meu apoio".
-Escala e meta já usam a ferramenta (componentes-parte1, C1). -->
+Os três cards do exercício abrem uma ferramenta (briefing M7, 11/11/2026):
+- escala: "Dar notas de novo e comparar" (C1 no modo refazer e comparar; conclui ao terminar a escala);
+- meta: "Criar minha meta" (abre a meta com a área de nota mais baixa da escala nova; conclui ao salvar);
+- apoio: "Escolher meu apoio" (C10, a rede de apoio; conclui com "Contar que mandei" ou "Contar que fui"). -->
 
 ## Quem cuida também precisa de cuidado
 
@@ -59,15 +60,15 @@ Do seu jeito, volte para perto disso. Cuidar de si também é lembrar quem você
 ## Exercício da semana
 
 :::exercicio id=escala acao=refazer_escala
-**Refazer a escala:** dê notas de 1 a 10 para as 8 áreas e compare com o começo.
+**Como está a sua vida agora:** Dê notas de novo para as 8 áreas da sua vida e veja, lado a lado, as notas de agora e as do módulo 1.
 :::
 
 :::exercicio id=meta acao=escolher_meta
-**Escolher a meta:** uma meta pequena para a área que mais pede atenção.
+**A sua meta desta semana:** Crie a meta desta semana para a área da sua vida que mais precisa de cuidado agora.
 :::
 
-:::exercicio id=apoio acao=marcar
-**Dar um passo na sua rede:** mande uma mensagem para alguém de confiança ou veja o horário de um grupo.
+:::exercicio id=apoio acao=rede
+**Não carregar tudo sem ajuda:** Mande uma mensagem para alguém de confiança ou conheça um grupo de apoio para familiares. Um passo só já ajuda.
 :::
 
 :::se problema=alcool

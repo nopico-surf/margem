@@ -230,6 +230,14 @@ export function aplicarPasso(atual: Convite, entrada: unknown): Convite | null {
   return novo;
 }
 
+// Módulo 8, versão "disse não" (briefing M8): "Dar um tempo no assunto" grava a data pra pensar de novo
+// no mesmo lugar do plano B "focar nas suas metas" do módulo 5. O aviso por e-mail ainda não existe.
+export function aplicarPausa(atual: Convite, data: unknown): Convite | null {
+  const dataRetorno = dataISO(data);
+  if (!dataRetorno) return null;
+  return { ...atual, plano_b: "focar_metas", data_retorno: dataRetorno };
+}
+
 export function sanitizarResultado(valor: unknown): ResultadoConvite | null {
   return RESPOSTAS_DO_CONVITE.find((resposta) => resposta.id === valor)?.id ?? null;
 }

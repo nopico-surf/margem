@@ -14,10 +14,16 @@ minutos: 5
 O check-in ainda não existe. O seletor começa marcado pelo "Contar como foi o convite" do módulo 5
 (Sim: aceitou; Não: recusou); com "Vou pensar" ou sem resposta, começa sem nada marcado e a versão
 aparece quando a pessoa escolhe. O encerramento aparece sempre.
-O treino do "Novo convite" é o do módulo 5 ("convite-para-ajuda"), que ainda não tem arquivo.
-Botões que ainda não têm ferramenta ficam como "Marcar como feito":
-- valorizar: "Planejar"; meta: "Escolher minha meta"; pausa: "Escolher a data";
-  frase: "Escolher minha frase". O "Voltar ao painel" do encerramento é o do rodapé do módulo. -->
+Cards do exercício (briefing M8, 11/11/2026), todos abrindo uma ferramenta:
+- aceitou: "Planejar como valorizar" (C4) e "Criar minha meta" (C1), com ?modulo=8;
+- recusou: "Rever meu convite" (C6 com o que já foi salvo; conclui ao salvar o passo 5) ou "Escolher a
+  data" no próprio card (padrão 4 semanas). Fazer um marca o outro como "Não se aplica". O "Treinar o
+  convite" é o do módulo 5 ("convite-para-ajuda"), que ainda não tem arquivo, então não aparece. O aviso
+  por e-mail na data ainda não existe: a data só fica salva;
+- recaida: "Escolher minha frase" ("Minhas frases", C3; conclui ao copiar uma frase ou salvar uma nova) e
+  "Ver o profissional ou serviço de antes" (o salvo no convite; sem nada salvo, "Ver psicólogo parceiro").
+Encerramento (C12): "Oito semanas depois", o resumo (@resumo) e os botões. O "Voltar ao painel" é o do
+rodapé do módulo. Fica de fora até existir o resumo da jornada: "Baixar o resumo para o profissional". -->
 
 :::escolha id=versao
 Como estão as coisas agora?
@@ -88,36 +94,34 @@ Se {{apelido}} tinha um profissional, um grupo ou um serviço, esse é o primeir
 ## Exercício
 :::
 
-:::exercicio id=valorizar acao=marcar versao=aceitou
-**Valorizar:** planeje 2 formas de valorizar momentos bons nesta semana, sem falar do tratamento.
+:::exercicio id=valorizar acao=valorizar_m8 versao=aceitou
+**Valorizar sem vigiar:** Planeje 2 jeitos de valorizar os momentos bons de {{apelido}} nesta semana, sem perguntar do tratamento.
 :::
 
-:::exercicio id=meta acao=marcar versao=aceitou
-**Voltar para você:** escolha uma meta da sua escala para esta semana.
+:::exercicio id=meta acao=meta_m8 versao=aceitou
+**A sua meta desta semana:** Volte a cuidar de você: crie uma meta para a área da sua vida que mais precisa de cuidado.
 :::
 
-:::exercicio id=novo_convite acao=simulador,marcar cenario=convite-para-ajuda versao=recusou
-**Novo convite:** revise suas frases e ensaie no treino.
+:::exercicio id=novo_convite acao=rever_convite,simulador cenario=convite-para-ajuda versao=recusou
+**Preparar um novo convite:** Reveja a sua frase, treine de novo e espere a próxima hora certa.
 :::
 
-:::exercicio id=pausa acao=marcar versao=recusou
-**Ou uma pausa:** escolha uma data para voltar ao assunto. Avisamos você quando chegar.
+:::exercicio id=pausa acao=pausa versao=recusou
+**Ou dar um tempo no assunto:** Escolha uma data para pensar de novo no convite. Até lá, o foco é você.
 :::
 
-:::exercicio id=frase acao=marcar versao=recaida
-**Uma frase:** escolha ou escreva 1 frase para a próxima conversa calma.
+:::exercicio id=frase acao=escolher_frase versao=recaida
+**Uma frase para a próxima conversa:** Escolha ou escreva uma frase curta, sem acusar, para quando surgir um momento calmo com {{apelido}}.
 :::
 
-:::exercicio id=retomar acao=profissional versao=recaida
-**Retomar o apoio:** veja de novo o profissional ou o serviço que ajudou antes.
+:::exercicio id=retomar acao=retomar versao=recaida
+**Retomar o apoio:** Procure de novo o profissional ou o serviço que ajudou {{apelido}} antes, e também apoio para você.
 :::
 
-## Até aqui
+## Oito semanas depois
 
-Você chegou ao fim de 8 semanas. Talvez as coisas tenham mudado bastante, talvez pouco. De qualquer jeito, você aprendeu a olhar para tudo isso de outro lugar.
+Você chegou ao fim das 8 semanas. Talvez muita coisa tenha mudado, talvez pouca. De qualquer jeito, você aprendeu a olhar para tudo isso de outro lugar, e a se incluir nessa história. Mudança raramente anda em linha reta, e nada aqui é garantido. Mas cada conversa sem briga e cada cuidado com você deixaram uma porta aberta.
 
-Nada aqui é garantido, e mudança raramente anda em linha reta. Mas cada conversa sem briga, cada momento bom valorizado e cada cuidado com você deixou uma porta aberta.
-
-O programa continua disponível para você rever quando quiser. E a Margem continua aqui.
+@resumo
 
 @botao [Ver psicólogo parceiro](/profissionais)

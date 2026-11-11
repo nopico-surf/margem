@@ -17,6 +17,7 @@ import { TEXTOS_FRASES, type FraseSalva } from "@/lib/familia/frases";
 import { TEXTOS_VALORIZAR, type PlanoValorizar } from "@/lib/familia/valorizar";
 import { nomeDoSalvo, PLANOS_B, TEXTOS_CONVITE, type Convite, type ProfissionalDoConvite } from "@/lib/familia/convite";
 import { vendaSimulada } from "@/lib/familia/dev";
+import { primeiroPasso, TEXTOS_REDE, type Rede } from "@/lib/familia/rede";
 import { dataDoModulo, moduloChegou, podeDesistir } from "@/lib/familia/oferta";
 import { CONTATOS } from "@/lib/contatos";
 import { track } from "@/lib/mixpanel";
@@ -26,6 +27,7 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // conteúdo: alertas fixos, "Esta semana" (módulo atual + sua meta), ferramentas, os 8 módulos e
 // profissionais. Briefings M3 e M4: "Minhas frases" entra nas ferramentas e "Valorizar o que é bom" em
 // "Esta semana". Briefing M5: "Meu convite" (profissional salvo, frase, plano B) também em "Esta semana".
+// Briefing M7: "A sua rede de apoio" entra nas ferramentas.
 // Ficam de fora até a ferramenta existir: card de check-in, "Anotar" e os cards de devolver, problema e
 // dinheiro. Também fora, até haver decisão:
 // "Semana X de 8", "Precisa de ajuda agora?" e configurações.
@@ -55,6 +57,8 @@ type Dados = {
   frases: number;
   // Convite do módulo 5 (briefing M5).
   convite: Convite | null;
+  // Rede de apoio do módulo 7 (briefing M7).
+  rede: Rede | null;
 };
 
 const LINK_WHATSAPP = CONTATOS.find((contato) => contato.tipo === "whatsapp")!.href;
@@ -84,7 +88,7 @@ export function PainelCliente({
       if (diagnostico.status === 404) return router.replace("/familia/diagnostico");
       if (!diagnostico.ok) return;
       const { resultado, apelido } = (await diagnostico.json()) as { resultado: { safetyMode: boolean }; apelido: string };
-      const [progresso, meta, escalas, perfil, valorizar, frases, convite] = await Promise.all([
+      const [progresso, meta, escalas, perfil, valorizar, frases, convite, rede] = await Promise.all([
         lerJson<{ modulos: Progresso }>("/api/familia/progresso", { modulos: {} }),
         lerJson<{ meta: Meta | null }>("/api/familia/meta", { meta: null }),
         lerJson<{ escalas: Escala[] }>("/api/familia/escala", { escalas: [] }),
@@ -92,6 +96,7 @@ export function PainelCliente({
         lerJson<{ plano: PlanoValorizar | null }>("/api/familia/valorizar", { plano: null }),
         lerJson<{ frases: FraseSalva[] }>("/api/familia/frases", { frases: [] }),
         lerJson<{ convite: Convite | null }>("/api/familia/convite", { convite: null }),
+        lerJson<{ rede: Rede | null }>("/api/familia/rede", { rede: null }),
       ]);
       setDados({
         apelido,
@@ -104,6 +109,7 @@ export function PainelCliente({
         plano: valorizar.plano,
         frases: frases.frases.length,
         convite: convite.convite,
+        rede: rede.rede,
       });
     })();
   }, [router]);
@@ -116,7 +122,8 @@ export function PainelCliente({
     );
   }
 
-  const { apelido, safetyMode, progresso, meta, ultimaEscala, perfil, travar, plano, frases, convite } = dados;
+  const { apelido, safetyMode, progresso, meta, ultimaEscala, perfil, travar, plano, frases, convite, rede } = dados;
+  const redeConcluidaEm = primeiroPasso(rede);
   const temConvite = Boolean(convite && convite.passo > 0);
   const hoje = dataLocal();
   const modulo1ConcluidoEm = progresso[1]?.concluido_em ?? null;
@@ -253,6 +260,32 @@ export function PainelCliente({
             </Button>
           </div>
         )}
+        <div className="familia-cartao">
+          <h3 className="header-small">{TEXTOS_REDE.titulo}</h3>
+          {redeConcluidaEm ? (
+            <>
+              <span className="familia-status label-small-medium" data-estado="feito">
+                <GlifoCheckCircle size={20} color="var(--colors-status-success-500)" />
+                Concluído em {diaMes(redeConcluidaEm)}
+              </span>
+              <div className="familia-exercicio-acoes">
+                <Button variante="secondary" tamanho="small" href="/familia/programa/rede?ver=1&origem=painel">
+                  {TEXTOS_REDE.verApoio}
+                </Button>
+                <Button variante="secondary" tamanho="small" href="/familia/programa/rede?origem=painel">
+                  {TEXTOS_REDE.outroPasso}
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="familia-status label-small-medium">Ainda não</span>
+              <Button tamanho="small" href="/familia/programa/rede?origem=painel">
+                {TEXTOS_REDE.escolher}
+              </Button>
+            </>
+          )}
+        </div>
         <div className="familia-cartao">
           <h3 className="header-small">Como está a sua vida</h3>
           {ultimaEscala ? (

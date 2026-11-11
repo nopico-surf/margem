@@ -5,13 +5,13 @@ import { alternarDiaFeito, dataValida, sanitizarMeta, segundaDaSemana, type Meta
 // GET: a meta ativa (ou null).
 // POST { meta, hoje, modulo? }: cria a meta da semana de `hoje`, ou edita a ativa ("Editar minha
 //   meta" mantém a semana e os dias já feitos). Do módulo 1, marca o item "Como está a sua vida"; do
-//   módulo 7, o item "Escolher a meta".
+//   módulo 7, o item "Escolher a meta"; do módulo 8 (versão "aceitou"), o item "A sua meta desta semana".
 // PATCH { data, hoje }: marca ou desmarca um dia da meta (briefing 00, item 6). Vale hoje e qualquer
 //   dia que já passou na semana da meta, planejado ou não; dia futuro volta "dia_fora_da_semana".
 // `hoje` vem do aparelho (AAAA-MM-DD): o dia que conta é o da pessoa, não o do servidor.
 
 const CAMPOS = "id, area, texto, dias, momento, confianca, obstaculo_plano, semana_inicio, status, dias_feitos";
-const ITEM_DO_MODULO: Record<number, string> = { 1: "escala", 7: "meta" };
+const ITEM_DO_MODULO: Record<number, string> = { 1: "escala", 7: "meta", 8: "meta" };
 
 async function metaAtiva(sessao: NonNullable<Awaited<ReturnType<typeof usuarioDaRequisicao>>>) {
   const { data, error } = await sessao.supabase.from("familia_meta_semana").select(CAMPOS).eq("user_id", sessao.user.id).eq("status", "ativa").maybeSingle();
