@@ -28,6 +28,10 @@ export type Cenario = {
   objetivoDoFamiliar: string;
   bloqueadoEmModoSeguranca: boolean;
   gratis: boolean;
+  // Ajustes por cenário (briefing M4b), opcionais: a nota entra no prompt do personagem e o foco no do
+  // feedback. Cenário sem eles usa os prompts como são.
+  notaDoPersonagem: string;
+  focoDoFeedback: string;
 };
 
 export const TOTAL_MODULOS = 8;
@@ -101,6 +105,8 @@ export async function lerCenario(id: string): Promise<Cenario | null> {
     objetivoDoFamiliar: texto(dados.objetivo_do_familiar) ?? "",
     bloqueadoEmModoSeguranca: dados.bloqueado_em_modo_seguranca === true,
     gratis: dados.gratis === true,
+    notaDoPersonagem: texto(dados.nota_do_personagem) ?? "",
+    focoDoFeedback: texto(dados.foco_do_feedback) ?? "",
   };
 }
 

@@ -1,6 +1,6 @@
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
 import { buscarPerfil, buscarUltimoDiagnostico } from "@/lib/familia/dados";
-import { lerCenario, lerPrompt } from "@/lib/familia/conteudo";
+import { lerCenario, lerPrompt, type Cenario } from "@/lib/familia/conteudo";
 import { limparApelido, rotuloDaOpcao, sanitizarRespostas, ROTULO_PROBLEMA } from "@/lib/familia/diagnostico";
 import { temTermoDeRisco } from "@/lib/familia/risco";
 import { gerarFeedback, historicoValido, responderComoPersonagem, REACOES_SIMULADOR } from "@/lib/familia/simulador";
@@ -29,16 +29,32 @@ async function buscarSimulacao(supabase: NonNullable<Awaited<ReturnType<typeof u
   return data as { id: string; cenario: string; concluido_em: string | null; parou_por_seguranca: boolean } | null;
 }
 
-async function promptDoPersonagem(respostasBrutas: unknown, reacoesDoCorpo: unknown, contexto: string) {
+// A cena e a nota do cenário entram no prompt antes das trocas, pra que um {{apelido}} escrito dentro delas
+// também seja substituído (briefing M4b).
+async function promptDoPersonagem(respostasBrutas: unknown, reacoesDoCorpo: unknown, cenario: Cenario) {
   const respostas = sanitizarRespostas(respostasBrutas);
   const reacoesValidas = new Map(REACOES_SIMULADOR.map((reacao) => [reacao.valor as string, reacao.rotulo]));
   const reacoes = Array.isArray(reacoesDoCorpo) ? reacoesDoCorpo.filter((item): item is string => typeof item === "string" && reacoesValidas.has(item)) : [];
-  return (await lerPrompt("personagem"))
+  const base = (await lerPrompt("personagem")).replaceAll("{{contexto_do_cenario}}", cenario.contexto);
+  const prompt = cenario.notaDoPersonagem ? `${base}
+
+Ajuste para esta cena: ${cenario.notaDoPersonagem}` : base;
+  return prompt
     .replaceAll("{{apelido}}", limparApelido(respostas.apelido) || "a pessoa")
     .replaceAll("{{problemas}}", (respostas.problemas ?? []).map((problema) => ROTULO_PROBLEMA[problema].toLowerCase()).join(", ") || "álcool ou outras drogas")
     .replaceAll("{{relacao}}", respostas.relacao ? rotuloDaOpcao("relacao", respostas.relacao) : "pessoa próxima")
-    .replaceAll("{{reacoes}}", reacoes.map((reacao) => reacoesValidas.get(reacao)?.toLowerCase()).join(", ") || "nega")
-    .replaceAll("{{contexto_do_cenario}}", contexto);
+    .replaceAll("{{reacoes}}", reacoes.map((reacao) => reacoesValidas.get(reacao)?.toLowerCase()).join(", ") || "nega");
+}
+
+// Prompt do feedback: o foco do cenário entra no fim, e só depois o apelido é trocado (briefing M4b).
+// Sem foco, é o prompt de sempre.
+async function promptDoFeedback(cenario: Cenario, respostasBrutas: unknown) {
+  const prompt = await lerPrompt("feedback");
+  if (!cenario.focoDoFeedback) return prompt;
+  const respostas = sanitizarRespostas(respostasBrutas);
+  return `${prompt}
+
+Foco desta cena: ${cenario.focoDoFeedback}`.replaceAll("{{apelido}}", limparApelido(respostas.apelido) || "a pessoa");
 }
 
 // SÓ DESENVOLVIMENTO: modo sem login (lib/familia/dev.ts). Sem conta, sem banco e sem limite de uso;
@@ -59,7 +75,7 @@ async function simuladorSemLogin(corpo: Corpo & { respostasDev?: unknown }) {
     const turnos = historico.filter((fala) => fala.autor === "familiar").length;
     if (turnos > SIMULADOR_MAX_MENSAGENS) return erro("limite_de_mensagens", 400);
     if (temTermoDeRisco(historico[historico.length - 1].texto)) return Response.json({ tipo: "seguranca", mensagem: null, origem: "palavra" });
-    const resposta = await responderComoPersonagem(await promptDoPersonagem(corpo.respostasDev, corpo.reacoes, cenario.contexto), historico);
+    const resposta = await responderComoPersonagem(await promptDoPersonagem(corpo.respostasDev, corpo.reacoes, cenario), historico);
     if (!resposta.ok) return Response.json({ error: "ia_indisponivel", motivo: resposta.motivo }, { status: 503 });
     if (resposta.tipo === "seguranca") return Response.json({ tipo: "seguranca", mensagem: resposta.mensagem, origem: "ia" });
     return Response.json({ tipo: "fala", texto: resposta.texto, turnos, ultima: turnos >= SIMULADOR_MAX_MENSAGENS });
@@ -68,7 +84,7 @@ async function simuladorSemLogin(corpo: Corpo & { respostasDev?: unknown }) {
   if (corpo.acao === "terminar") {
     const historico = historicoValido(corpo.historico, false);
     if (!historico) return erro("historico_invalido", 400);
-    const resultado = await gerarFeedback(await lerPrompt("feedback"), historico);
+    const resultado = await gerarFeedback(await promptDoFeedback(cenario, corpo.respostasDev), historico);
     if (!resultado.ok) return Response.json({ error: "ia_indisponivel", motivo: resultado.motivo }, { status: 503 });
     return Response.json({ feedback: resultado.feedback });
   }
@@ -156,7 +172,7 @@ export async function POST(request: Request) {
 
     const [cenario, diagnostico] = await Promise.all([lerCenario(simulacao.cenario), buscarUltimoDiagnostico(supabase, user.id)]);
     if (!cenario) return erro("cenario_invalido", 404);
-    const sistema = await promptDoPersonagem(diagnostico?.respostas, corpo.reacoes, cenario.contexto);
+    const sistema = await promptDoPersonagem(diagnostico?.respostas, corpo.reacoes, cenario);
 
     const resposta = await responderComoPersonagem(sistema, historico);
     if (!resposta.ok) {
@@ -174,7 +190,9 @@ export async function POST(request: Request) {
   if (corpo.acao === "terminar") {
     const historico = historicoValido(corpo.historico, false);
     if (!historico) return erro("historico_invalido", 400);
-    const resultado = await gerarFeedback(await lerPrompt("feedback"), historico);
+    const [cenario, diagnostico] = await Promise.all([lerCenario(simulacao.cenario), buscarUltimoDiagnostico(supabase, user.id)]);
+    if (!cenario) return erro("cenario_invalido", 404);
+    const resultado = await gerarFeedback(await promptDoFeedback(cenario, diagnostico?.respostas), historico);
     if (!resultado.ok) {
       console.error("[familia] feedback do simulador falhou:", resultado.motivo, "detalhe" in resultado ? resultado.detalhe : "");
       return Response.json({ error: "ia_indisponivel", motivo: resultado.motivo }, { status: 503 });

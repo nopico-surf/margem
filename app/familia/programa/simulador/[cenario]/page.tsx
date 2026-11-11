@@ -8,7 +8,7 @@ type Props = { params: Promise<{ cenario: string }> };
 
 // Cenários do simulador, em content/familia/cenarios (briefing, seção 8).
 export function generateStaticParams() {
-  return [{ cenario: "primeira-conversa" }, { cenario: "nega-o-problema" }];
+  return [{ cenario: "primeira-conversa" }, { cenario: "nega-o-problema" }, { cenario: "elogiar-sem-ironia" }];
 }
 
 // O params fica dentro do Suspense, como no blog (exigência do cacheComponents).
