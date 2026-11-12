@@ -7,15 +7,15 @@ import { DadosPixModal } from "@/components/apoio/DadosPixModal";
 import { FormularioDadosPix } from "@/components/apoio/FormularioDadosPix";
 import { TelaPix } from "@/components/apoio/TelaPix";
 import { CardHeader } from "@/components/conversa/CardHeader";
+import { ContainerConteudo } from "@/components/conversa/ContainerConteudo";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { GlifoArrowBack } from "@/components/icons/glifos";
-import { IconeConfirmado } from "@/components/icons";
+import { IconeConfirmado, IconeEditar } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { PainelInferior } from "@/components/ui/PainelInferior";
-import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import {
   CAMPO_DO_ERRO,
   ERRO_DADOS_RECUSADOS,
@@ -36,6 +36,7 @@ import {
   SESSAO_MAXIMA,
   SESSAO_MINIMA,
   VALOR_SUGERIDO,
+  VALORES_PROGRAMA,
   VALORES_SESSAO,
   DIAS_PARA_DESISTIR,
   dataDoModulo,
@@ -55,7 +56,10 @@ import { track } from "@/lib/mixpanel";
 // Nome e CPF ficam só na memória da aba, pra "Gerar um novo" reaproveitar. No Mixpanel entram a etapa,
 // o plano e os valores escolhidos, nunca nome, CPF ou e-mail. Nada daqui vai pro dataLayer (Meta).
 
-type Etapa = "carregando" | "plano" | "valor" | "sessao" | "dados" | "pix" | "expirado" | "confirmado";
+const MINIMO_PROGRAMA = VALORES_PROGRAMA[0];
+const MAXIMO_PROGRAMA = VALORES_PROGRAMA[VALORES_PROGRAMA.length - 1];
+
+type Etapa ="carregando" | "plano" | "valor" | "sessao" | "resumo" | "dados" | "pix" | "expirado" | "confirmado";
 
 // `profissionais`: carrossel de psicólogos da confirmação do plano com acompanhamento.
 export function CheckoutCliente({ profissionais }: { profissionais: ProfissionalCadastrado[] }) {
@@ -81,6 +85,8 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
   const [temDiagnostico, setTemDiagnostico] = useState(true);
   const [modulo2Em, setModulo2Em] = useState<Date | null>(null);
   const [devolucaoAte, setDevolucaoAte] = useState<string | null>(null);
+  // Voltou pelo lápis do resumo: a escolha leva de volta ao resumo, sem passar pela outra tela.
+  const [editando, setEditando] = useState(false);
   const gerandoRef = useRef(false);
   const pixGerados = useRef(0);
 
@@ -132,9 +138,9 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
     // O plano entra como propriedade, mas o evento é da troca de etapa.
   }, [etapa]);
 
-  // A barra do Gerar Pix entra subindo quando a tela de dados abre, como no /plano.
+  // A barra do Continuar e a do Gerar Pix entram subindo quando o resumo e a tela de dados abrem, como no /plano.
   useEffect(() => {
-    if (etapa !== "dados") {
+    if (etapa !== "dados" && etapa !== "resumo") {
       setPainelVisivel(false);
       return;
     }
@@ -181,6 +187,18 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
     setOutroValor("");
     setErroOutroValor("");
     track("valor_escolhido", { plano: "acompanhamento", valor_sessao: escolhido, outro_valor: false });
+  }
+
+  // Lápis do resumo: volta à escolha e, ao continuar, retorna ao resumo.
+  function editar(tela: "valor" | "sessao") {
+    setEditando(true);
+    irPara(tela);
+  }
+
+  function continuarDoValor() {
+    if (editando || plano === "programa") irPara("resumo");
+    else irPara("sessao");
+    setEditando(false);
   }
 
   function abrirOutroValor() {
@@ -292,8 +310,10 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
 
   if (etapa === "carregando" || gerando) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
+      <div className="plano-pagina familia-checkout" aria-busy="true">
+        <ContainerConteudo id="familia-carregando">
+          <Loader />
+        </ContainerConteudo>
       </div>
     );
   }
@@ -308,7 +328,8 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
   }
 
   const textoDoValor = `Valor total: R$ ${compra.total}`;
-  const podeVoltar = etapa === "plano" || etapa === "valor" || etapa === "sessao" || etapa === "dados";
+  const podeVoltar = etapa === "plano" || etapa === "valor" || etapa === "sessao" || etapa === "resumo" || etapa === "dados";
+  const continuarDoResumo = () => irPara("dados");
   const linkGratuito = (
     <p className="plano-nota">
       Nem o menor valor cabe agora?{" "}
@@ -319,7 +340,7 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
   );
 
   return (
-    <div className="familia-checkout" data-etapa={etapa}>
+    <div className="plano-pagina familia-checkout" data-etapa={etapa}>
       {podeVoltar && (
         <div className="familia-checkout-topo">
           <button className="familia-voltar" type="button" aria-label="Voltar para a etapa anterior" onClick={voltar}>
@@ -329,32 +350,33 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
       )}
 
       {etapa === "plano" && (
-        <section className="familia-secao">
+        <ContainerConteudo id="familia-plano">
           <CardHeader as="h1" title="Como você quer começar" />
           <div className="plano-cards">
             <CardPlano
               arranjo="opcional"
               nome="Programa de 8 semanas"
-              descricao="R$ 47 a R$ 147, e você escolhe quanto pode pagar."
-              selecionado={plano === "programa"}
+              descricao="Você escolhe quanto pode pagar."
+              faixa={{ valor: `R$ ${MINIMO_PROGRAMA} a R$ ${MAXIMO_PROGRAMA}` }}
               onSelecionar={() => escolherPlano("programa")}
             />
             <CardPlano
               arranjo="opcional"
               nome="Programa com acompanhamento"
               selo="20% de desconto"
-              descricao="A partir de R$ 37 pelo programa, mais a primeira sessão com um profissional parceiro, no valor que você escolher. Com um profissional junto, você não precisa decidir sem ajuda o que fazer em casa."
-              complemento="Nos estudos deste método, quem faz o programa com apoio profissional tem mais chance de avançar do que quem segue sem acompanhamento."
-              selecionado={plano === "acompanhamento"}
+              descricao="Tudo do programa de 8 semanas, mais:"
+              complemento="a primeira sessão com um psicólogo parceiro, no valor que você escolher"
+              faixa={{ antes: "A partir de ", valor: `R$ ${valoresDoPrograma("acompanhamento")[0]}`, depois: " + sessão" }}
+              destaque
               onSelecionar={() => escolherPlano("acompanhamento")}
             />
           </div>
           {linkGratuito}
-        </section>
+        </ContainerConteudo>
       )}
 
       {etapa === "valor" && (
-        <section className="familia-secao">
+        <ContainerConteudo id="familia-valor">
           <CardHeader
             as="h1"
             title="Quanto você quer pagar"
@@ -379,16 +401,20 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
           {plano === "programa" && (
             <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
           )}
-          <Button tamanho="medium" larguraTotal onClick={() => irPara(plano === "programa" ? "dados" : "sessao")}>
+          <Button tamanho="medium" larguraTotal onClick={continuarDoValor}>
             Continuar para o pagamento
           </Button>
           {linkGratuito}
-        </section>
+        </ContainerConteudo>
       )}
 
       {etapa === "sessao" && (
-        <section className="familia-secao">
-          <ValorSessaoPsicologos especialidade="psicologo" />
+        <ContainerConteudo id="familia-sessao">
+          <CardHeader
+            as="h1"
+            title="Quanto você quer pagar na sessão"
+            description="A sessão é igual em qualquer valor que você escolher: o mesmo tempo e o mesmo cuidado do psicólogo parceiro. Quem pode pagar mais ajuda a manter os atendimentos abertos para quem não pode pagar agora."
+          />
           <div className="familia-chips familia-valores" role="group" aria-label="Valor da sessão">
             {VALORES_SESSAO.map((opcao) => (
               <Button
@@ -419,20 +445,52 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
               maxLength={3}
             />
           )}
-          {sessao !== null && (
-            <div className="text-large">
-              <p>Programa: R$ {compra.valorPrograma}</p>
-              <p>Primeira sessão: R$ {sessao}</p>
-              <p>
-                <strong>Total: R$ {compra.total}, num Pix só</strong>
-              </p>
-            </div>
-          )}
-          <Button tamanho="medium" larguraTotal disabled={sessao === null} onClick={() => irPara("dados")}>
+          <Button tamanho="medium" larguraTotal disabled={sessao === null} onClick={() => { setEditando(false); irPara("resumo"); }}>
             Continuar para o pagamento
           </Button>
           {linkGratuito}
-        </section>
+        </ContainerConteudo>
+      )}
+
+      {/* Resumo antes do pagamento: o mesmo cartão do "Planos selecionados" do /plano, com o lápis em cada linha. */}
+      {etapa === "resumo" && (
+        <ContainerConteudo id="familia-resumo">
+          <CardHeader as="h1" title="Resumo do pagamento" description="Confira os valores antes de continuar" />
+          <section className="plano-resumo">
+            <div className="plano-resumo-itens">
+              <div className="plano-resumo-linha">
+                <span>Programa de 8 semanas</span>
+                <span className="plano-resumo-valor">
+                  R$ {compra.valorPrograma}
+                  <button type="button" aria-label="Trocar o valor do programa" onClick={() => editar("valor")}>
+                    <IconeEditar />
+                  </button>
+                </span>
+              </div>
+              {compra.valorSessao !== null && (
+                <div className="plano-resumo-linha">
+                  <span>Primeira sessão</span>
+                  <span className="plano-resumo-valor">
+                    R$ {compra.valorSessao}
+                    <button type="button" aria-label="Trocar o valor da sessão" onClick={() => editar("sessao")}>
+                      <IconeEditar />
+                    </button>
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="plano-resumo-total">
+              <span>Valor total</span>
+              <strong>R$ {compra.total}</strong>
+            </div>
+          </section>
+          <div className="plano-resumo-acoes">
+            <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
+            <Button tamanho="medium" onClick={continuarDoResumo}>
+              Continuar para o pagamento
+            </Button>
+          </div>
+        </ContainerConteudo>
       )}
 
       {etapa === "dados" && (
@@ -467,23 +525,25 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
       )}
 
       {etapa === "confirmado" && (
-        <section className="familia-secao">
+        <ContainerConteudo id="familia-confirmado">
           <div className="plano-confirmacao">
             <IconeConfirmado />
             <h1>Pagamento confirmado</h1>
           </div>
-          <p className="text-large">O acesso às 8 semanas do programa já está liberado para você.</p>
-          <p className="text-large">
-            {modulo2Em ? `O módulo 2 chega em ${diaMes(modulo2Em.toISOString())}, e um` : "Um"} módulo novo fica disponível a cada semana.
-          </p>
-          {devolucaoAte && (
-            <p className="text-large">Até {devolucaoAte} você pode pedir o seu dinheiro de volta, num toque, sem precisar explicar o motivo.</p>
-          )}
-          {plano === "acompanhamento" && (
-            <p className="text-large">
-              A gente avisa quem você escolheu para a sua primeira sessão. Essa pessoa entra em contato com você pelo WhatsApp para combinar o horário.
+          <div className="familia-confirmado-textos">
+            <p className="text-medium-regular">O acesso às 8 semanas do programa já está liberado para você.</p>
+            <p className="text-medium-regular">
+              {modulo2Em ? `O módulo 2 chega em ${diaMes(modulo2Em.toISOString())}, e um` : "Um"} módulo novo fica disponível a cada semana.
             </p>
-          )}
+            {devolucaoAte && (
+              <p className="text-medium-regular">Até {devolucaoAte} você pode pedir o seu dinheiro de volta, num toque, sem precisar explicar o motivo.</p>
+            )}
+            {plano === "acompanhamento" && (
+              <p className="text-medium-regular">
+                A gente avisa quem você escolheu para a sua primeira sessão. Essa pessoa entra em contato com você pelo WhatsApp para combinar o horário.
+              </p>
+            )}
+          </div>
           <div className="familia-acoes">
             {temDiagnostico ? (
               <Button tamanho="medium" larguraTotal href="/familia/programa">
@@ -506,9 +566,10 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
               titulo="Profissionais que podem atender você"
             />
           )}
-        </section>
+        </ContainerConteudo>
       )}
 
+      {etapa === "resumo" && <PainelInferior variante="continuar" visivel={painelVisivel} texto="Continuar para o pagamento" onContinuar={continuarDoResumo} />}
       {etapa === "dados" && <PainelInferior variante="pix" visivel={painelVisivel && !dadosAbertos} texto={textoDoValor} onGerar={() => void gerarPix()} />}
     </div>
   );

@@ -132,7 +132,7 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], seguranca
             <div className="oferta-programa-plano">
               <p className="oferta-programa-plano-nome">Programa de 8 semanas</p>
               <p className="oferta-programa-texto">
-                R$ {MINIMO} a R$ {MAXIMO}, e você escolhe quanto pode pagar.
+                <strong>R$ {MINIMO} a R$ {MAXIMO}</strong>, e você escolhe quanto pode pagar.
               </p>
             </div>
             <div className="oferta-programa-plano">
@@ -141,7 +141,7 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], seguranca
                 <Badge color="primary">20% de desconto</Badge>
               </div>
               <p className="oferta-programa-texto">
-                A partir de R$ {MINIMO_COM_ACOMPANHAMENTO} pelo programa, mais a primeira sessão com um profissional parceiro, no valor que você escolher.
+                <strong>A partir de R$ {MINIMO_COM_ACOMPANHAMENTO}</strong> pelo programa, mais a primeira sessão com um profissional parceiro, no valor que você escolher.
               </p>
               <p className="oferta-programa-texto">Com um profissional junto, você não precisa decidir sem ajuda o que fazer em casa.</p>
             </div>
@@ -168,11 +168,11 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], seguranca
         <div className="oferta-programa-acoes">
           {variante === "lp" ? (
             <>
-              <Button tamanho="medium" larguraTotal href="/familia/diagnostico" onClick={clicar("diagnostico")}>
-                Começar pelo diagnóstico grátis
-              </Button>
-              <Button variante="transparent" tamanho="medium" larguraTotal href="/familia/checkout?origem=lp" onClick={clicar("garantir_acesso")}>
+              <Button tamanho="medium" larguraTotal href="/familia/checkout?origem=lp" onClick={clicar("garantir_acesso")}>
                 Já quero garantir meu acesso
+              </Button>
+              <Button variante="secondary" tamanho="medium" larguraTotal href="/familia/diagnostico" onClick={clicar("diagnostico")}>
+                Começar pelo diagnóstico grátis
               </Button>
             </>
           ) : (

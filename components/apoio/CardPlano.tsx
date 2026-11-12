@@ -32,6 +32,9 @@ type CardPlanoProps = {
   // A segunda linha das descrições de Divulgação e Divulgação Plus, em negrito.
   complemento?: string;
   centavos?: number;
+  // Checkout do programa: faixa de preço no mesmo desenho do valor do /plano ("R$ 47 a R$ 147", ou
+  // "A partir de" + "R$ 37" + "+ sessão"), com o valor em Header/Large.
+  faixa?: { antes?: string; valor: string; depois?: string };
   selo?: string;
   itens?: string[];
   destaque?: boolean;
@@ -40,7 +43,7 @@ type CardPlanoProps = {
   onSelecionar?: () => void;
 };
 
-export function CardPlano({ arranjo, nome, descricao, complemento, centavos, selo, itens, destaque = false, selecionado = false, atual = false, onSelecionar }: CardPlanoProps) {
+export function CardPlano({ arranjo, nome, descricao, complemento, centavos, faixa, selo, itens, destaque = false, selecionado = false, atual = false, onSelecionar }: CardPlanoProps) {
   return (
     <article className="card-plano" data-arranjo={arranjo} onClick={onSelecionar}>
       <div className="card-plano-info">
@@ -57,7 +60,13 @@ export function CardPlano({ arranjo, nome, descricao, complemento, centavos, sel
           <p>{descricao}</p>
           {complemento && <p className="card-plano-complemento">{complemento}</p>}
         </div>
-        {centavos === undefined ? null : centavos === 0 ? (
+        {faixa ? (
+          <p className="card-plano-preco">
+            {faixa.antes && <span>{faixa.antes}</span>}
+            <span className="card-plano-valor">{faixa.valor}</span>
+            {faixa.depois && <span className="card-plano-por-mes">{faixa.depois}</span>}
+          </p>
+        ) : centavos === undefined ? null : centavos === 0 ? (
           <p className="card-plano-preco card-plano-gratuito">Gratuito</p>
         ) : (
           <p className="card-plano-preco">
