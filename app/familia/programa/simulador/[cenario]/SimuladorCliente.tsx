@@ -110,20 +110,48 @@ export function SimuladorCliente({
   const continuarOuvindo = useRef(false);
   const gravacaoAtiva = useRef(false);
   const numeroDaGravacao = useRef(0);
-  const fim = useRef<HTMLDivElement>(null);
   const secao = useRef<HTMLElement>(null);
-  const rodape = useRef<HTMLDivElement>(null);
+  const rolagem = useRef<HTMLDivElement>(null);
+  // A área da conversa estava mostrando o fim (a última mensagem) na última vez que rolou.
+  const rolagemNoFim = useRef(true);
 
-  // O rodapé fixo sobe com o teclado (mesma detecção da busca do blog).
+  // A coluna da conversa vai até a linha do teclado (mesma detecção da busca do blog).
   useLinhaDoTeclado({ seletor: ".familia-simulador-rodape", prefixo: "treino" });
 
-  // A conversa reserva embaixo a altura do rodapé, que muda com o campo crescendo de linha e a gaveta abrindo.
+  // Na conversa, a página não rola: quem rola é a área da conversa, e a coluna começa logo abaixo do
+  // header. Assim o navegador não tem página pra empurrar quando o teclado abre.
   useEffect(() => {
-    const elemento = rodape.current;
-    if (etapa !== "conversa" || !elemento) return;
-    const observer = new ResizeObserver(() => secao.current?.style.setProperty("--treino-rodape", `${elemento.offsetHeight}px`));
-    observer.observe(elemento);
-    return () => observer.disconnect();
+    const coluna = secao.current;
+    const area = rolagem.current;
+    if (etapa !== "conversa" || !coluna || !area) return;
+    const root = document.documentElement;
+    root.classList.add("familia-treino-aberto");
+    const cabecalho = document.querySelector<HTMLElement>(".familia-cabecalho");
+    const medirCabecalho = () => coluna.style.setProperty("--treino-cabecalho", `${cabecalho?.offsetHeight ?? 0}px`);
+    medirCabecalho();
+    // A área encolheu (teclado abrindo, campo crescendo): quem estava vendo o fim continua vendo.
+    // A rolagem que esse ajuste causa não conta como a pessoa rolando: no meio da animação a área já
+    // encolheu mais um pouco, e ela seria lida como "saiu do fim".
+    let ajustandoAte = 0;
+    const aoMudarTamanho = () => {
+      medirCabecalho();
+      if (!rolagemNoFim.current) return;
+      ajustandoAte = performance.now() + 150;
+      area.scrollTop = area.scrollHeight;
+    };
+    const aoRolar = () => {
+      if (performance.now() < ajustandoAte) return;
+      rolagemNoFim.current = area.scrollTop + area.clientHeight >= area.scrollHeight - 2;
+    };
+    const observer = new ResizeObserver(aoMudarTamanho);
+    observer.observe(area);
+    if (cabecalho) observer.observe(cabecalho);
+    area.addEventListener("scroll", aoRolar, { passive: true });
+    return () => {
+      observer.disconnect();
+      area.removeEventListener("scroll", aoRolar);
+      root.classList.remove("familia-treino-aberto");
+    };
   }, [etapa]);
 
   useEffect(() => {
@@ -172,8 +200,13 @@ export function SimuladorCliente({
     };
   }, []);
 
+  // Mensagem nova, carregando ou erro: a área da conversa rola até o fim.
   useEffect(() => {
-    fim.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const area = rolagem.current;
+    if (!area) return;
+    rolagemNoFim.current = true;
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    area.scrollTo({ top: area.scrollHeight, behavior: semMovimento ? "auto" : "smooth" });
   }, [historico, esperando, falha]);
 
   const t = (texto: string) => aplicarApelido(texto, apelido);
@@ -439,35 +472,39 @@ export function SimuladorCliente({
   const podeEscrever = turnos < SIMULADOR_MAX_MENSAGENS;
 
   return (
-    <section className="familia-secao familia-simulador-conversa" ref={secao}>
-      <h1 className="header-large">{tituloDoTreino(cenario.titulo)}</h1>
-      {aviso}
-      {vozDisponivel.ouvir && (
-        <div className="familia-exercicio-acoes">
-          <Button variante="transparent" tamanho="small" onClick={alternarLeitura}>
-            {lerRespostas ? <GlifoVolumeUp size={20} /> : <GlifoVolumeOff size={20} />}
-            Ouvir as respostas
-          </Button>
-        </div>
-      )}
-
-      <div className="figma-result-messages" aria-live="polite">
-        {historico.map((fala, indice) =>
-          fala.autor === "familiar" ? (
-            <UserMessage key={indice} message={fala.texto} />
-          ) : (
-            <div key={indice} className="figma-response-copy" aria-label={`${nomeDaPessoa}, no treino com IA`}>
-              <p>{fala.texto}</p>
+    // Coluna do header até a linha do teclado (familia.css): em cima a conversa, com rolagem própria;
+    // embaixo o campo e o "Terminar", que sobem junto com o teclado.
+    <section className="familia-simulador-conversa" ref={secao}>
+      <div className="familia-simulador-rolagem" ref={rolagem}>
+        <div className="familia-secao familia-simulador-rolagem-conteudo">
+          <h1 className="header-large">{tituloDoTreino(cenario.titulo)}</h1>
+          {aviso}
+          {vozDisponivel.ouvir && (
+            <div className="familia-exercicio-acoes">
+              <Button variante="transparent" tamanho="small" onClick={alternarLeitura}>
+                {lerRespostas ? <GlifoVolumeUp size={20} /> : <GlifoVolumeOff size={20} />}
+                Ouvir as respostas
+              </Button>
             </div>
-          ),
-        )}
-        {esperando && <ResponseLoading />}
-        {erro}
-        <div ref={fim} className="familia-simulador-fim" />
+          )}
+
+          <div className="figma-result-messages" aria-live="polite">
+            {historico.map((fala, indice) =>
+              fala.autor === "familiar" ? (
+                <UserMessage key={indice} message={fala.texto} />
+              ) : (
+                <div key={indice} className="figma-response-copy" aria-label={`${nomeDaPessoa}, no treino com IA`}>
+                  <p>{fala.texto}</p>
+                </div>
+              ),
+            )}
+            {esperando && <ResponseLoading />}
+            {erro}
+          </div>
+        </div>
       </div>
 
-      {/* Campo e "Terminar" presos no pé da tela, subindo com o teclado (familia.css); a conversa rola por trás. */}
-      <div className="familia-simulador-rodape" ref={rodape}>
+      <div className="familia-simulador-rodape">
         <div className="familia-simulador-rodape-conteudo">
           {podeEscrever && (
             <MessageInput
@@ -478,6 +515,8 @@ export function SimuladorCliente({
               dica={`Mensagem ${turnos + 1} de ${SIMULADOR_MAX_MENSAGENS}`}
               maxLength={SIMULADOR_MAX_CARACTERES}
               gravando={ouvindo}
+              // Enquanto a IA prepara a resposta dá pra escrever e falar, mas não mandar outra.
+              envioDesabilitado={esperando}
               acessorio={
                 vozDisponivel.falar && (
                   <button

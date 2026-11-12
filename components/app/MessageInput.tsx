@@ -20,6 +20,9 @@ type MessageInputProps = {
   acessorio?: ReactNode;
   // Ouvindo a voz (como o Gemini): o campo fica fechado, com barrinhas animadas no lugar do texto.
   gravando?: boolean;
+  // Só o "Enviar" fica desabilitado (ex.: treino de conversa enquanto a IA prepara a resposta): dá pra
+  // continuar escrevendo e falando, mas não mandar.
+  envioDesabilitado?: boolean;
 };
 
 // REGRA: se um botão ou input está num container que muda de visibilidade/layout baseado em outro
@@ -41,6 +44,12 @@ let tecladoMedido: { largura: number; altura: number } | null = null;
 
 type VirtualKeyboardApi = EventTarget & { overlaysContent: boolean; boundingRect: DOMRect };
 
+// Altura de cada barrinha da gravação (de 0,2 a 1): um padrão fixo que varia ao longo da fileira,
+// como uma onda de voz, sempre igual pra a mesma posição.
+function alturaDaOnda(indice: number) {
+  return Math.max(0.2, Math.abs(Math.sin(indice * 1.7) * 0.6 + Math.sin(indice * 0.45) * 0.4));
+}
+
 export function MessageInput({
   value,
   onChange,
@@ -51,6 +60,7 @@ export function MessageInput({
   maxLength,
   acessorio,
   gravando = false,
+  envioDesabilitado = false,
 }: MessageInputProps) {
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -65,6 +75,23 @@ export function MessageInput({
   // Começou a gravar com o campo aberto: fecha o teclado.
   useEffect(() => {
     if (gravando && document.activeElement === textareaRef.current) textareaRef.current?.blur();
+  }, [gravando]);
+
+  // As barrinhas da gravação ocupam a largura toda do campo: quantas cabem (barra + espaço) nela.
+  const ondasRef = useRef<HTMLSpanElement>(null);
+  const [quantasOndas, setQuantasOndas] = useState(0);
+  useLayoutEffect(() => {
+    const fileira = ondasRef.current;
+    if (!gravando || !fileira) return;
+    const medir = () => {
+      const espaco = parseFloat(getComputedStyle(fileira).columnGap) || 0;
+      const barra = fileira.firstElementChild instanceof HTMLElement ? fileira.firstElementChild.offsetWidth : 2;
+      setQuantasOndas(Math.max(1, Math.floor((fileira.clientWidth + espaco) / (barra + espaco))));
+    };
+    medir();
+    const observer = new ResizeObserver(medir);
+    observer.observe(fileira);
+    return () => observer.disconnect();
   }, [gravando]);
 
   // Mantém o campo logo acima do teclado virtual (ele fica no pé da tela cheia, que vai até a linha
@@ -209,7 +236,7 @@ export function MessageInput({
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       const textarea = textareaRef.current;
-      if (!textarea || document.activeElement === textarea) return;
+      if (!textarea || document.activeElement === textarea || gravando) return;
       const target = event.target as HTMLElement | null;
       if (target && target !== document.body && target.closest("input, textarea, select, button, a")) return;
       if (event.metaKey || event.ctrlKey || event.altKey) return;
@@ -231,7 +258,7 @@ export function MessageInput({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [value, onChange]);
+  }, [value, onChange, gravando]);
 
   // Cresce linha a linha (via scrollHeight real, cobre quebra por largura) até 3 linhas, depois ativa scroll interno.
   useLayoutEffect(() => {
@@ -292,9 +319,9 @@ export function MessageInput({
         <div className="message-component-placeholder label-medium-regular" aria-hidden="true">
           {gravando ? (
             // Ouvindo a voz: barrinhas num ritmo fixo no lugar do texto (o navegador não informa o volume).
-            <span className="message-component-ondas">
-              {Array.from({ length: 13 }, (_, indice) => (
-                <span key={indice} style={{ "--onda-indice": indice, "--onda-altura": 1 - Math.abs(indice - 6) / 8 } as CSSProperties} />
+            <span className="message-component-ondas" ref={ondasRef}>
+              {Array.from({ length: quantasOndas }, (_, indice) => (
+                <span key={indice} style={{ "--onda-indice": indice % 7, "--onda-altura": alturaDaOnda(indice) } as CSSProperties} />
               ))}
             </span>
           ) : (
@@ -349,7 +376,7 @@ export function MessageInput({
               {!acessorioNaLinha && acessorio}
               {/* Sem o onMouseDown o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão.
                   O onClick não deixa o clique subir pro form, que focaria o campo e abriria o teclado depois de enviar uma mensagem falada. */}
-              <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()} onClick={(event) => event.stopPropagation()}>Enviar</button>
+              <button type="submit" className="label-small-medium" disabled={!value.trim() || envioDesabilitado} onMouseDown={(event) => event.preventDefault()} onClick={(event) => event.stopPropagation()}>Enviar</button>
             </div>
           </div>
         </div>

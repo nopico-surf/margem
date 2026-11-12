@@ -197,11 +197,21 @@
 }
 
 /* Barrinhas da gravação: mais altas no meio, num ritmo fixo (o navegador não informa o volume). */
+/* A fileira vai até o botão parar; o MessageInput põe quantas barras cabem e o space-between
+   distribui a sobra, pra a última encostar na margem. */
 .message-component-ondas {
   display:flex;
+  flex:1;
+  min-width:0;
   align-items:center;
+  justify-content:space-between;
   gap:var(--spacing-4);
   height:var(--size-20);
+  overflow:hidden;
+}
+
+.message-component-ondas > span {
+  flex:none;
 }
 
 .message-component-ondas > span {

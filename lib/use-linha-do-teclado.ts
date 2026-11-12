@@ -22,8 +22,29 @@ const TEMPO_SEM_SINAL = 500;
 const ESTIMATIVA_TECLADO = 0.38;
 
 // Altura do teclado na última vez que o navegador informou, na mesma largura de tela. Serve de reserva
-// provisória na próxima abertura, antes de o navegador informar de novo.
+// provisória na próxima abertura, antes de o navegador informar de novo. Fica guardada no aparelho
+// (só esse número de layout, nada da pessoa): sem isso, a primeira abertura depois de carregar a
+// página usava a estimativa, e num teclado mais baixo que ela o campo subia além do ponto e voltava.
 let tecladoMedido: { largura: number; altura: number } | null = null;
+const CHAVE_TECLADO = "margem-teclado";
+
+function lerTecladoGuardado() {
+  if (tecladoMedido) return;
+  try {
+    const guardado = JSON.parse(window.localStorage.getItem(CHAVE_TECLADO) ?? "null") as { largura?: unknown; altura?: unknown } | null;
+    if (guardado && typeof guardado.largura === "number" && typeof guardado.altura === "number" && guardado.altura > 0) {
+      tecladoMedido = { largura: guardado.largura, altura: guardado.altura };
+    }
+  } catch {}
+}
+
+function guardarTeclado(medida: { largura: number; altura: number }) {
+  if (tecladoMedido?.largura === medida.largura && tecladoMedido.altura === medida.altura) return;
+  tecladoMedido = medida;
+  try {
+    window.localStorage.setItem(CHAVE_TECLADO, JSON.stringify(medida));
+  } catch {}
+}
 
 type VirtualKeyboardApi = EventTarget & { overlaysContent: boolean; boundingRect: DOMRect };
 
@@ -50,6 +71,11 @@ export function useLinhaDoTeclado({ seletor = ".blog-busca", prefixo = "busca" }
       if (virtualKeyboard && virtualKeyboard.boundingRect.height > 0) virtualKeyboardInformou = true;
       update();
     };
+
+    lerTecladoGuardado();
+    let maiorNaAbertura = 0;
+    const reservaProvisoria = () =>
+      tecladoMedido?.largura === larguraAtual ? tecladoMedido.altura : alturaSemTeclado * ESTIMATIVA_TECLADO;
 
     const alturaVisivel = () => (viewport ? viewport.height : window.innerHeight);
     const campoObservado = (el: Element | null) =>
@@ -81,8 +107,7 @@ export function useLinhaDoTeclado({ seletor = ".blog-busca", prefixo = "busca" }
         // O teclado ainda está subindo e o navegador não informou nada: reserva o espaço já no toque,
         // pra o campo ir direto pra perto do lugar final em vez de ir até o pé da tela e saltar.
         modo = "provisorio";
-        const reserva = tecladoMedido?.largura === larguraAtual ? tecladoMedido.altura : alturaSemTeclado * ESTIMATIVA_TECLADO;
-        linhaDoTeclado = window.innerHeight - reserva;
+        linhaDoTeclado = window.innerHeight - reservaProvisoria();
       } else if (focado && (virtualKeyboardInformou || viewportInformou)) {
         // O navegador já provou que informa o teclado e agora diz que não tem: foi fechado sem tirar o foco.
         modo = "fechado";
@@ -97,7 +122,17 @@ export function useLinhaDoTeclado({ seletor = ".blog-busca", prefixo = "busca" }
       // No iOS a página rola ao abrir o teclado: o topo visível é o offsetTop do visualViewport.
       if (aberto) {
         const topo = modo === "real" && viewport && tecladoReal > 120 ? viewport.offsetTop : 0;
-        if (modo === "real") tecladoMedido = { largura: larguraAtual, altura: window.innerHeight - (linhaDoTeclado - topo) };
+        if (modo === "real") {
+          const altura = window.innerHeight - (linhaDoTeclado - topo);
+          const reserva = reservaProvisoria();
+          const subindo = touch && performance.now() - focoEm < TEMPO_SEM_SINAL;
+          // Guarda a maior altura desta abertura: a do meio da animação (abrindo ou fechando) é menor.
+          // Logo depois do toque, uma altura menor que a reserva é o teclado ainda subindo: não guarda.
+          maiorNaAbertura = Math.max(maiorNaAbertura, altura);
+          if (!subindo || maiorNaAbertura >= reserva) guardarTeclado({ largura: larguraAtual, altura: maiorNaAbertura });
+          // E não puxa o campo pra baixo da reserva: ele desceria e subiria de novo.
+          if (subindo && altura < reserva) linhaDoTeclado = window.innerHeight + topo - reserva;
+        }
         root.style.setProperty(varTopo, `${topo}px`);
         root.style.setProperty(varLinha, `${linhaDoTeclado}px`);
       } else {
@@ -109,6 +144,7 @@ export function useLinhaDoTeclado({ seletor = ".blog-busca", prefixo = "busca" }
     function aoFocar(event: FocusEvent) {
       if (!campoObservado(event.target as Element | null)) return;
       focoEm = performance.now();
+      maiorNaAbertura = 0;
       timers.forEach(window.clearTimeout);
       // Se até aqui o navegador não informou teclado nenhum, entra a estimativa.
       timers = [TEMPO_SEM_SINAL + 50, TEMPO_SEM_SINAL + 500].map((ms) => window.setTimeout(update, ms));
