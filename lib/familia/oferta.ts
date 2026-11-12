@@ -14,10 +14,6 @@ export const VALOR_SUGERIDO = 97;
 // valor cheio. O recomendado continua R$ 97 nos dois planos (briefing 01c).
 export const VALORES_PROGRAMA_COM_ACOMPANHAMENTO = [37, 67, 97, 127, 147] as const;
 
-// TEMPORÁRIO: só o texto do plano com acompanhamento no banner da LP ainda usa. Sai quando esse
-// texto for reescrito para a régua nova (pendente de copy do fundador).
-export const VALOR_PROGRAMA_COM_ACOMPANHAMENTO = 47;
-
 export function valoresDoPrograma(plano: PlanoFamilia): readonly number[] {
   return plano === "acompanhamento" ? VALORES_PROGRAMA_COM_ACOMPANHAMENTO : VALORES_PROGRAMA;
 }

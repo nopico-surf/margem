@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { GlifoMicNone, GlifoVolumeOff, GlifoVolumeUp } from "@/components/icons/glifos";
+import { GlifoMicNone, GlifoStop, GlifoVolumeOff, GlifoVolumeUp } from "@/components/icons/glifos";
 import { MessageInput } from "@/components/app/MessageInput";
 import { AvisoIA } from "@/components/familia/AvisoIA";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
@@ -46,7 +46,7 @@ type Reconhecimento = {
   continuous: boolean;
   onresult: ((evento: { resultIndex: number; results: ArrayLike<ResultadoVoz> }) => void) | null;
   onend: (() => void) | null;
-  onerror: (() => void) | null;
+  onerror: ((evento: { error?: string }) => void) | null;
   start: () => void;
   stop: () => void;
 };
@@ -103,6 +103,13 @@ export function SimuladorCliente({
   const [lerRespostas, setLerRespostas] = useState(false);
   const [vozDisponivel, setVozDisponivel] = useState({ falar: false, ouvir: false });
   const reconhecimento = useRef<Reconhecimento | null>(null);
+  // Gravação de voz (alternarMicrofone): a fala das sessões que já terminaram, a da sessão em curso,
+  // se ainda é pra continuar ouvindo, se existe gravação aberta e qual é ela.
+  const falaGuardada = useRef("");
+  const falaDaSessao = useRef("");
+  const continuarOuvindo = useRef(false);
+  const gravacaoAtiva = useRef(false);
+  const numeroDaGravacao = useRef(0);
   const fim = useRef<HTMLDivElement>(null);
   const secao = useRef<HTMLElement>(null);
   const rodape = useRef<HTMLDivElement>(null);
@@ -157,6 +164,9 @@ export function SimuladorCliente({
   useEffect(() => {
     setVozDisponivel({ falar: construtorDeVoz() !== null, ouvir: "speechSynthesis" in window });
     return () => {
+      // Saindo da tela: nada recomeça e nada entra no campo.
+      continuarOuvindo.current = false;
+      gravacaoAtiva.current = false;
       reconhecimento.current?.stop();
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
@@ -185,30 +195,73 @@ export function SimuladorCliente({
     });
   }
 
-  function alternarMicrofone() {
-    if (ouvindo) {
-      reconhecimento.current?.stop();
-      return;
-    }
+  // Gravação como a do Gemini: tocar no microfone não abre o campo, ninguém vê o texto enquanto a
+  // pessoa fala, e só ao tocar no "parar" tudo o que ela falou entra digitado, depois do que já estava
+  // escrito. O navegador encerra o reconhecimento sozinho numa pausa: aí uma sessão nova começa, e a
+  // fala de cada sessão vai sendo guardada, até a pessoa tocar no "parar".
+  function iniciarSessaoDeVoz() {
     const Construtor = construtorDeVoz();
-    if (!Construtor) return;
+    if (!Construtor) return encerrarGravacao();
     const voz = new Construtor();
     voz.lang = "pt-BR";
     voz.interimResults = true;
     voz.continuous = false;
-    // O que já estava escrito fica; a fala entra depois.
-    const antes = mensagem.trim();
     voz.onresult = (evento) => {
       let falado = "";
       for (let indice = 0; indice < evento.results.length; indice += 1) falado += evento.results[indice][0].transcript;
-      setMensagem([antes, falado.trim()].filter(Boolean).join(" ").slice(0, SIMULADOR_MAX_CARACTERES));
+      falaDaSessao.current = falado.trim();
     };
-    voz.onend = () => setOuvindo(false);
-    voz.onerror = () => setOuvindo(false);
+    // Silêncio ("no-speech") e sessão interrompida não encerram a gravação; o resto (sem permissão,
+    // sem microfone, sem rede) encerra, com o que já tinha sido falado.
+    voz.onerror = (evento) => {
+      if (evento.error !== "no-speech" && evento.error !== "aborted") continuarOuvindo.current = false;
+    };
+    voz.onend = () => {
+      falaGuardada.current = [falaGuardada.current, falaDaSessao.current].filter(Boolean).join(" ");
+      falaDaSessao.current = "";
+      if (continuarOuvindo.current) iniciarSessaoDeVoz();
+      else encerrarGravacao();
+    };
     reconhecimento.current = voz;
+    try {
+      voz.start();
+    } catch {
+      continuarOuvindo.current = false;
+      encerrarGravacao();
+    }
+  }
+
+  function encerrarGravacao() {
+    if (!gravacaoAtiva.current) return;
+    gravacaoAtiva.current = false;
+    continuarOuvindo.current = false;
+    const falado = [falaGuardada.current, falaDaSessao.current].filter(Boolean).join(" ").trim();
+    falaGuardada.current = "";
+    falaDaSessao.current = "";
+    setOuvindo(false);
+    if (falado) setMensagem((atual) => [atual.trim(), falado].filter(Boolean).join(" ").slice(0, SIMULADOR_MAX_CARACTERES));
+  }
+
+  function alternarMicrofone() {
+    if (ouvindo) {
+      continuarOuvindo.current = false;
+      reconhecimento.current?.stop();
+      // Se o navegador não avisar que terminou, o que foi falado entra assim mesmo.
+      const gravacao = numeroDaGravacao.current;
+      window.setTimeout(() => {
+        if (numeroDaGravacao.current === gravacao) encerrarGravacao();
+      }, 2000);
+      return;
+    }
+    if (!construtorDeVoz()) return;
+    numeroDaGravacao.current += 1;
+    gravacaoAtiva.current = true;
+    continuarOuvindo.current = true;
+    falaGuardada.current = "";
+    falaDaSessao.current = "";
     setOuvindo(true);
     track("simulador_microfone", { cenario: cenario.id });
-    voz.start();
+    iniciarSessaoDeVoz();
   }
 
   async function comecar() {
@@ -272,8 +325,7 @@ export function SimuladorCliente({
   function enviar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     const limpo = mensagem.trim().slice(0, SIMULADOR_MAX_CARACTERES);
-    if (!limpo || esperando || falha || turnos >= SIMULADOR_MAX_MENSAGENS) return;
-    reconhecimento.current?.stop();
+    if (!limpo || esperando || falha || turnos >= SIMULADOR_MAX_MENSAGENS || ouvindo) return;
     const falas: Fala[] = [...historico, { autor: "familiar", texto: limpo }];
     setHistorico(falas);
     setMensagem("");
@@ -353,7 +405,7 @@ export function SimuladorCliente({
               {MENSAGEM_BLOQUEIO[bloqueio]}
             </p>
             {bloqueio === "bloqueado_seguranca" && <ContatosEmergencia profissionais={profissionais} />}
-            {bloqueio === "limite_gratis" && <OfertaPrograma variante="resultado" apelido={apelido} modulos={modulosDaOferta} />}
+            {bloqueio === "limite_gratis" && <OfertaPrograma variante="treino" apelido={apelido} />}
           </>
         ) : (
           <>
@@ -425,6 +477,7 @@ export function SimuladorCliente({
               rotulo="Escreva ou fale o que você diria"
               dica={`Mensagem ${turnos + 1} de ${SIMULADOR_MAX_MENSAGENS}`}
               maxLength={SIMULADOR_MAX_CARACTERES}
+              gravando={ouvindo}
               acessorio={
                 vozDisponivel.falar && (
                   <button
@@ -439,7 +492,7 @@ export function SimuladorCliente({
                       alternarMicrofone();
                     }}
                   >
-                    <GlifoMicNone size={20} />
+                    {ouvindo ? <GlifoStop size={20} /> : <GlifoMicNone size={20} />}
                   </button>
                 )
               }

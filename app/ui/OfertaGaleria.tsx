@@ -22,10 +22,13 @@ export function OfertaProgramaGaleria({ modulos }: { modulos: string[] }) {
       <Estado nome="resultado (módulos 1 a 8 trancados)">
         <OfertaPrograma variante="resultado" apelido="Lu" modulos={modulos} />
       </Estado>
-      <Estado nome="modulo1 (só depois de concluído)">
-        <OfertaPrograma variante="modulo1" dataModulo2="17/11" />
+      <Estado nome="resultado em modo de segurança">
+        <OfertaPrograma variante="resultado" apelido="Lu" modulos={modulos} seguranca />
       </Estado>
-      <Estado nome="bloqueado (mesmo texto do resultado)">
+      <Estado nome="treino (fim do treino grátis)">
+        <OfertaPrograma variante="treino" apelido="Lu" />
+      </Estado>
+      <Estado nome="bloqueado (módulo sem compra)">
         <OfertaPrograma variante="bloqueado" apelido="Lu" />
       </Estado>
     </div>

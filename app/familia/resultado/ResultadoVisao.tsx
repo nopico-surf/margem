@@ -143,7 +143,7 @@ export function ResultadoVisao({
       {/* Quem não comprou: o banner é o botão principal (briefing 01b). Quem comprou: o módulo 1. */}
       {modulosDaOferta ? (
         <section className="familia-secao">
-          <OfertaPrograma variante="resultado" apelido={apelido} modulos={modulosDaOferta} />
+          <OfertaPrograma variante="resultado" apelido={apelido} modulos={modulosDaOferta} seguranca={!conversa} />
         </section>
       ) : (
         <section className="familia-secao">

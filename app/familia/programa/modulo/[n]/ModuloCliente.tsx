@@ -287,8 +287,8 @@ export function ModuloCliente({
 
   const { apelido, problemas } = diagnostico;
 
-  // Módulo bloqueado (briefing 01, variação d): o título, "O que você vai aprender" (os dois primeiros
-  // subtítulos do texto do módulo) e o banner. Nunca a página vazia ou um erro.
+  // Módulo bloqueado (briefing 01d, variação d): o título, "O que você vai ver nesta semana" (os dois
+  // primeiros subtítulos do texto do módulo) e o banner. Nunca a página vazia ou um erro.
   if (acesso === "bloqueado") {
     const aprender = modulo.blocos.filter((bloco): bloco is Extract<BlocoMarkdown, { tipo: "titulo" }> => bloco.tipo === "titulo").slice(0, 2);
     return (
@@ -299,7 +299,7 @@ export function ModuloCliente({
         </header>
         {aprender.length > 0 && (
           <section className="familia-titulo">
-            <h2 className="header-medium">O que você vai aprender</h2>
+            <h2 className="header-medium">O que você vai ver nesta semana</h2>
             <ul className="oferta-aprender">
               {aprender.map((bloco) => (
                 <li key={bloco.texto} className="text-large">
@@ -439,11 +439,6 @@ export function ModuloCliente({
           origem={`programa-modulo-${modulo.numero}`}
           titulo="Profissionais que podem atender você"
         />
-      )}
-
-      {/* Banner do módulo 1 (briefing 01, variação c): só depois de concluído e pra quem não comprou. */}
-      {modulo.numero === 1 && concluidoEm && acessoLiberado === false && (
-        <OfertaPrograma variante="modulo1" dataModulo2={diaMes((dataDoModulo(2, concluidoEm) ?? new Date()).toISOString())} />
       )}
 
       <div className="familia-acoes">

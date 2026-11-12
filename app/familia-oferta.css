@@ -118,8 +118,97 @@
   background: var(--colors-neutral-50);
 }
 
-.oferta-programa-plano .badge {
+/* Os dois mini-cards da LP: lado a lado no desktop, empilhados no celular. */
+.oferta-programa-planos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-16);
+}
+
+@media (min-width: 48em) {
+  .oferta-programa-planos {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.oferta-programa-plano-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-8);
+}
+
+.oferta-programa-plano-cabecalho .badge {
+  flex: none;
+}
+
+/* "Saiba mais": link em texto, na cor de destaque do bloco, logo abaixo da linha de apoio. */
+.oferta-programa-saiba-mais {
   align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--colors-brand-primary-100);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.oferta-programa-saiba-mais:hover {
+  color: var(--colors-neutral-0);
+}
+
+/* Lightbox do "Saiba mais": fecha no botão, no X, tocando fora e no Esc. */
+.oferta-programa-lightbox {
+  width: calc(100% - var(--spacing-32));
+  max-width: var(--layout-content-max-width-sm);
+  max-height: calc(100% - var(--spacing-32));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+  color: var(--colors-neutral-950);
+}
+
+.oferta-programa-lightbox::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+
+.oferta-programa-lightbox-conteudo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+  padding: var(--spacing-24) var(--spacing-20);
+}
+
+.oferta-programa-lightbox-conteudo h2,
+.oferta-programa-lightbox-conteudo p {
+  margin: 0;
+}
+
+.oferta-programa-lightbox-conteudo h2 {
+  padding-right: var(--spacing-40);
+  font: var(--font-weight-bold) var(--font-size-xl) / var(--line-height-2xl) var(--font-urbanist), sans-serif;
+}
+
+.oferta-programa-lightbox-conteudo p {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-2xl);
+}
+
+.oferta-programa-lightbox-x {
+  position: absolute;
+  top: var(--spacing-16);
+  right: var(--spacing-16);
+  display: flex;
+  padding: var(--spacing-4);
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .oferta-programa-plano-nome {

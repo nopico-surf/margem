@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 
 type MessageInputProps = {
   value: string;
@@ -14,10 +14,12 @@ type MessageInputProps = {
   rotulo?: string;
   dica?: string;
   maxLength?: number;
-  // Botão a mais na linha do texto, à direita, visível em todos os estados (ex.: microfone do treino
-  // de conversa, pedido de 11/11/2026). Use a classe message-component-acessorio e onMouseDown com
-  // preventDefault, pela regra abaixo.
+  // Botão a mais (ex.: microfone do treino de conversa, pedido de 11/11/2026): com o campo fechado
+  // fica na linha do texto, à direita; aberto, ao lado do "Enviar". Use a classe
+  // message-component-acessorio e onMouseDown com preventDefault, pela regra abaixo.
   acessorio?: ReactNode;
+  // Ouvindo a voz (como o Gemini): o campo fica fechado, com barrinhas animadas no lugar do texto.
+  gravando?: boolean;
 };
 
 // REGRA: se um botão ou input está num container que muda de visibilidade/layout baseado em outro
@@ -48,13 +50,22 @@ export function MessageInput({
   dica = "Conte do seu jeito",
   maxLength,
   acessorio,
+  gravando = false,
 }: MessageInputProps) {
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const initialFocusRef = useRef(true);
   const espelhoRef = useRef<HTMLDivElement>(null);
   const [cursorEm, setCursorEm] = useState<number | null>(null);
-  const state = value.length > 0 ? "filed" : focused || expandido ? "focused" : "default";
+  // Gravando, o campo fica fechado (como o Gemini): sem abrir, sem teclado, só as barrinhas e o parar.
+  const state = gravando ? "default" : value.length > 0 ? "filed" : focused || expandido ? "focused" : "default";
+  // Fechado, o acessório fica na linha do texto; aberto, ao lado do "Enviar".
+  const acessorioNaLinha = Boolean(acessorio) && state === "default";
+
+  // Começou a gravar com o campo aberto: fecha o teclado.
+  useEffect(() => {
+    if (gravando && document.activeElement === textareaRef.current) textareaRef.current?.blur();
+  }, [gravando]);
 
   // Mantém o campo logo acima do teclado virtual (ele fica no pé da tela cheia, que vai até a linha
   // do teclado). Cada navegador informa o teclado de um jeito: o Chrome e o Safari encolhem o visualViewport, alguns webviews encolhem a janela
@@ -257,20 +268,41 @@ export function MessageInput({
     const textarea = textareaRef.current;
     const espelho = espelhoRef.current;
     if (!textarea || !espelho) return;
-    espelho.style.paddingRight = `calc(var(--spacing-8) + var(--message-acessorio-espaco, var(--spacing-0)) + ${textarea.offsetWidth - textarea.clientWidth}px)`;
+    espelho.style.paddingRight = `calc(var(--spacing-8) + ${textarea.offsetWidth - textarea.clientWidth}px)`;
     espelho.scrollTop = textarea.scrollTop;
   }, [value, cursorEm]);
 
   const posicaoCursor = cursorEm === null ? null : Math.min(cursorEm, value.length);
 
   return (
-    <form className={`message-component message-component-${state}${acessorio ? " message-component-com-acessorio" : ""}`} onSubmit={onSubmit} onClick={() => { setFocused(true); textareaRef.current?.focus(); }}>
+    <form
+      className={`message-component message-component-${state}${acessorio ? " message-component-com-acessorio" : ""}${gravando ? " message-component-gravando" : ""}`}
+      onSubmit={onSubmit}
+      onClick={() => {
+        // Gravando, tocar no campo não abre o teclado: só o "parar" encerra a gravação.
+        if (gravando) return;
+        setFocused(true);
+        textareaRef.current?.focus();
+      }}
+    >
       {/* Placeholder e "Conte do seu jeito" ficam montados e só esmaecem ou recolhem (message-input.css):
-          assim o campo vai virando o outro estado, em vez de um bloco sumir e outro aparecer. */}
-      {value.length === 0 && (
+          assim o campo vai virando o outro estado, em vez de um bloco sumir e outro aparecer.
+          Gravando, as barrinhas ficam no lugar do texto, mesmo que já tenha algo escrito. */}
+      {(value.length === 0 || gravando) && (
         <div className="message-component-placeholder label-medium-regular" aria-hidden="true">
-          <span className="message-component-caret" />
-          <span>{rotulo}</span>
+          {gravando ? (
+            // Ouvindo a voz: barrinhas num ritmo fixo no lugar do texto (o navegador não informa o volume).
+            <span className="message-component-ondas">
+              {Array.from({ length: 13 }, (_, indice) => (
+                <span key={indice} style={{ "--onda-indice": indice, "--onda-altura": 1 - Math.abs(indice - 6) / 8 } as CSSProperties} />
+              ))}
+            </span>
+          ) : (
+            <>
+              <span className="message-component-caret" />
+              <span>{rotulo}</span>
+            </>
+          )}
         </div>
       )}
       <div className="message-component-field">
@@ -307,14 +339,18 @@ export function MessageInput({
             </>
           )}
         </div>
-        {acessorio}
+        {acessorioNaLinha && acessorio}
       </div>
       <div className="message-component-gaveta" inert={state === "default"}>
         <div className="message-component-gaveta-conteudo">
           <div className="message-component-meta">
             <span className="label-x-small">{dica}</span>
-            {/* Sem isso o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão. */}
-            <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()}>Enviar</button>
+            <div className="message-component-meta-acoes">
+              {!acessorioNaLinha && acessorio}
+              {/* Sem o onMouseDown o toque tira o foco da textarea, o campo volta ao centro antes do dedo soltar e o clique erra o botão.
+                  O onClick não deixa o clique subir pro form, que focaria o campo e abriria o teclado depois de enviar uma mensagem falada. */}
+              <button type="submit" className="label-small-medium" disabled={!value.trim()} onMouseDown={(event) => event.preventDefault()} onClick={(event) => event.stopPropagation()}>Enviar</button>
+            </div>
           </div>
         </div>
       </div>

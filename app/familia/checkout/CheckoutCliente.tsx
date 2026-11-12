@@ -35,7 +35,6 @@ import { useEtapaNaUrl } from "@/lib/familia/useEtapaNaUrl";
 import {
   SESSAO_MAXIMA,
   SESSAO_MINIMA,
-  VALOR_PROGRAMA_COM_ACOMPANHAMENTO,
   VALOR_SUGERIDO,
   VALORES_SESSAO,
   DIAS_PARA_DESISTIR,
@@ -57,14 +56,6 @@ import { track } from "@/lib/mixpanel";
 // o plano e os valores escolhidos, nunca nome, CPF ou e-mail. Nada daqui vai pro dataLayer (Meta).
 
 type Etapa = "carregando" | "plano" | "valor" | "sessao" | "dados" | "pix" | "expirado" | "confirmado";
-
-const ITENS_DO_PROGRAMA = [
-  "8 módulos, um por semana, também em áudio",
-  "Diário e escala da sua vida",
-  "Treino de conversa com IA",
-  "Plano de segurança",
-  "Resumo para levar a um profissional",
-];
 
 // `profissionais`: carrossel de psicólogos da confirmação do plano com acompanhamento.
 export function CheckoutCliente({ profissionais }: { profissionais: ProfissionalCadastrado[] }) {
@@ -320,7 +311,7 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
   const podeVoltar = etapa === "plano" || etapa === "valor" || etapa === "sessao" || etapa === "dados";
   const linkGratuito = (
     <p className="plano-nota">
-      Nem o valor mínimo cabe agora?{" "}
+      Nem o menor valor cabe agora?{" "}
       <Button variante="transparent" tamanho="small" semPadding href="/familia/acesso-gratuito?origem=checkout">
         Pedir acesso gratuito
       </Button>
@@ -339,21 +330,21 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
 
       {etapa === "plano" && (
         <section className="familia-secao">
+          <CardHeader as="h1" title="Como você quer começar" />
           <div className="plano-cards">
             <CardPlano
               arranjo="opcional"
-              nome="Programa"
-              itens={ITENS_DO_PROGRAMA}
-              descricao="Você escolhe quanto pagar, de R$ 47 a R$ 147."
+              nome="Programa de 8 semanas"
+              descricao="R$ 47 a R$ 147, e você escolhe quanto pode pagar."
               selecionado={plano === "programa"}
               onSelecionar={() => escolherPlano("programa")}
             />
             <CardPlano
               arranjo="opcional"
               nome="Programa com acompanhamento"
-              selo="Recomendado"
-              descricao="Nos estudos, os melhores resultados aparecem quando o familiar tem apoio de um profissional."
-              complemento="Programa por R$ 47 + a primeira sessão com um profissional parceiro."
+              selo="20% de desconto"
+              descricao="A partir de R$ 37 pelo programa, mais a primeira sessão com um profissional parceiro, no valor que você escolher. Com um profissional junto, você não precisa decidir sem ajuda o que fazer em casa."
+              complemento="Nos estudos deste método, quem faz o programa com apoio profissional tem mais chance de avançar do que quem segue sem acompanhamento."
               selecionado={plano === "acompanhamento"}
               onSelecionar={() => escolherPlano("acompanhamento")}
             />
@@ -366,8 +357,8 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
         <section className="familia-secao">
           <CardHeader
             as="h1"
-            title="Escolha quanto pagar"
-            description="Quem pode pagar mais ajuda a manter o programa acessível para quem pode pagar menos. O conteúdo é o mesmo em qualquer valor."
+            title="Quanto você quer pagar"
+            description="O conteúdo do programa é igual em qualquer valor que você escolher. Quem pode pagar mais ajuda a manter o programa aberto para quem não pode pagar agora."
           />
           <div className="familia-chips familia-valores" role="group" aria-label="Valor do programa">
             {valoresDoPrograma(plano).map((opcao) => (
@@ -384,8 +375,10 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
               </Button>
             ))}
           </div>
-          {plano === "acompanhamento" && <p className="plano-nota">Levando a primeira sessão junto, o programa começa 20% mais barato.</p>}
-          <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
+          {plano === "acompanhamento" && <p className="plano-nota">Ao incluir a primeira sessão, o valor do programa começa 20% menor.</p>}
+          {plano === "programa" && (
+            <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
+          )}
           <Button tamanho="medium" larguraTotal onClick={() => irPara(plano === "programa" ? "dados" : "sessao")}>
             Continuar para o pagamento
           </Button>
@@ -477,20 +470,24 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
         <section className="familia-secao">
           <div className="plano-confirmacao">
             <IconeConfirmado />
-            <h1>Pagamento confirmado.</h1>
+            <h1>Pagamento confirmado</h1>
           </div>
+          <p className="text-large">O acesso às 8 semanas do programa já está liberado para você.</p>
+          <p className="text-large">
+            {modulo2Em ? `O módulo 2 chega em ${diaMes(modulo2Em.toISOString())}, e um` : "Um"} módulo novo fica disponível a cada semana.
+          </p>
           {devolucaoAte && (
+            <p className="text-large">Até {devolucaoAte} você pode pedir o seu dinheiro de volta, num toque, sem precisar explicar o motivo.</p>
+          )}
+          {plano === "acompanhamento" && (
             <p className="text-large">
-              Seu acesso está liberado. Até {devolucaoAte} você pode pedir o dinheiro de volta, num toque, sem precisar explicar por quê.
+              A gente avisa quem você escolheu para a sua primeira sessão. Essa pessoa entra em contato com você pelo WhatsApp para combinar o horário.
             </p>
           )}
-          <p className="text-large">
-            {modulo2Em ? `O módulo 2 chega em ${diaMes(modulo2Em.toISOString())}. ` : ""}A cada semana, um novo módulo.
-          </p>
           <div className="familia-acoes">
             {temDiagnostico ? (
               <Button tamanho="medium" larguraTotal href="/familia/programa">
-                Voltar ao painel
+                Ir para o meu programa
               </Button>
             ) : (
               <Button tamanho="medium" larguraTotal href="/familia/diagnostico">

@@ -14,7 +14,7 @@ import { track } from "@/lib/mixpanel";
 
 // "Pedir acesso gratuito" (briefing 01): tela curta, campo opcional, sem comprovante de renda. O pedido
 // vai pra familia_pedidos_gratuidade e o fundador libera à mão. O texto nunca vai pro Mixpanel: só a
-// origem (lp, resultado, modulo1, bloqueado, checkout) e se a pessoa escreveu algo.
+// origem (lp, resultado, treino, bloqueado, checkout) e se a pessoa escreveu algo.
 
 const MAXIMO = 500;
 

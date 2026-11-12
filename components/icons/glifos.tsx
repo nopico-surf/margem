@@ -40,7 +40,8 @@
 //   GlifoSearch           search              (Action)
 //   GlifoPlayArrow        play_arrow          (AV)
 //   GlifoPause            pause               (AV)
-//   GlifoSend             send                (Content)
+//   GlifoStop             stop                (AV)
+//   GlifoSend            send                (Content)
 //   GlifoLocalBar             local_bar
 //   GlifoOfflineBolt     offline_bolt
 //   GlifoCasino               casino
@@ -569,6 +570,15 @@ export function GlifoPause({ className, color = "currentColor", opacity = 1, siz
   return (
     <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M6 19H10V5H6V19ZM14 5V19H18V5H14Z" fill={color} fillOpacity={opacity} />
+    </svg>
+  );
+}
+
+export function GlifoStop({ className, color = "currentColor", opacity = 1, size = 24 }: GlifoProps) {
+  // Outline (Ícones, segunda coleção, nó 1:6287). Parar a gravação de voz do treino de conversa.
+  return (
+    <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M16 8V16H8V8H16ZM18 6H6V18H18V6Z" fill={color} fillOpacity={opacity} />
     </svg>
   );
 }
