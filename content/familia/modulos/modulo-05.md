@@ -1,6 +1,7 @@
 ---
 numero: 5
 titulo: "O convite"
+descricao: "Deixar um profissional e um horário prontos antes de convidar {{apelido}} para buscar ajuda, e saber o que fazer com cada resposta."
 publicado: true
 cenario_simulador: "convite-para-ajuda"
 bloqueado_em_modo_seguranca: true

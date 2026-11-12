@@ -37,7 +37,13 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // (lib/familia/dev.ts). Em produção, as contas de teste (FAMILIA_TESTADORES) também abrem todos.
 
 // liberado: o servidor pode mandar o conteúdo (módulo 1 sempre; 2 a 8 depois da revisão clínica).
-export type ModuloDoPainel = { numero: number; titulo: string; liberado: boolean; bloqueadoEmModoSeguranca: boolean };
+export type ModuloDoPainel = {
+  numero: number;
+  titulo: string;
+  descricao: string | null;
+  liberado: boolean;
+  bloqueadoEmModoSeguranca: boolean;
+};
 
 type Progresso = Record<string, { iniciado_em: string; concluido_em: string | null }>;
 type Perfil = { acessoLiberado: boolean; compra: { plano: string; pagoEm: string } | null; testador?: boolean };
@@ -326,6 +332,7 @@ export function PainelCliente({
               <>
                 <span className="label-small-medium familia-texto-suave">Módulo {modulo.numero}</span>
                 <span className="header-small painel-modulo-titulo">{modulo.titulo}</span>
+                {modulo.descricao && <span className="text-medium-regular familia-texto-suave">{aplicarApelido(modulo.descricao, apelido)}</span>}
                 {feitoEm && (
                   <span className="familia-status label-small-medium" data-estado="feito">
                     <GlifoCheckCircle size={20} color="var(--colors-status-success-500)" />

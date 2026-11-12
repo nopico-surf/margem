@@ -1,6 +1,7 @@
 ---
 numero: 8
 titulo: "Depois da resposta"
+descricao: "Depois do convite para buscar ajuda, apoiar sem vigiar se vier um sim, tentar outra vez se vier um não e manter a calma se o uso voltar."
 publicado: true
 bloqueado_em_modo_seguranca: true
 versao_por_checkin: true   # aceitou | recusou | recaida; se não houver check-in, mostrar o seletor "Como estão as coisas agora?"

@@ -30,6 +30,7 @@ async function Conteudo() {
     .map((modulo) => ({
       numero: modulo.numero,
       titulo: modulo.titulo,
+      descricao: modulo.descricao,
       liberado: modulo.numero === 1 || MOSTRAR_REVISAO_CLINICA,
       bloqueadoEmModoSeguranca: modulo.bloqueadoEmModoSeguranca,
     }));

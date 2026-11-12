@@ -1,6 +1,7 @@
 ---
 numero: 3
 titulo: "Conversar sem brigar"
+descricao: "Trocar as frases que viram briga por outras mais curtas e calmas, e treinar o que dizer quando {{apelido}} nega o problema."
 publicado: true
 cenario_simulador: "nega-o-problema"
 bloqueado_em_modo_seguranca: true

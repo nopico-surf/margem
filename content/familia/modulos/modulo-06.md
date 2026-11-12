@@ -1,6 +1,7 @@
 ---
 numero: 6
 titulo: "Deixar as consequências acontecerem e resolver problemas"
+descricao: "Parar de cobrir o que é responsabilidade de {{apelido}}, como desculpas no trabalho e dívidas, e proteger o dinheiro da casa, sempre com segurança."
 publicado: true
 cenario_simulador: "pedido-de-dinheiro"   # apostas; demais: "pedido-de-desculpa-pro-trabalho"
 bloqueado_em_modo_seguranca: true

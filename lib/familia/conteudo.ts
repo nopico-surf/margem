@@ -12,6 +12,7 @@ const PASTA = path.join(process.cwd(), "content", "familia");
 export type Modulo = {
   numero: number;
   titulo: string;
+  descricao: string | null;
   publicado: boolean;
   cenarioSimulador: string | null;
   bloqueadoEmModoSeguranca: boolean;
@@ -59,6 +60,7 @@ export async function lerModulo(numero: number): Promise<Modulo | null> {
   return {
     numero,
     titulo: texto(dados.titulo) ?? `Módulo ${numero}`,
+    descricao: texto(dados.descricao),
     publicado: dados.publicado === true,
     cenarioSimulador,
     bloqueadoEmModoSeguranca: dados.bloqueado_em_modo_seguranca === true,
@@ -75,6 +77,18 @@ export async function titulosDosModulosPagos() {
   const numeros = Array.from({ length: TOTAL_MODULOS }, (_, indice) => indice + 1);
   const lidos = await Promise.all(numeros.map((numero) => lerModulo(numero)));
   return lidos.filter((modulo): modulo is Modulo => modulo !== null && modulo.publicado).map((modulo) => modulo.titulo);
+}
+
+// Número, título e descrição dos módulos publicados que têm descrição: a seção "Os 8 módulos" da LP
+// (briefing L1). A descrição vem só do frontmatter, a mesma que o painel mostra. O "use cache" deixa a
+// leitura no shell estático do build, sem Suspense (exigência do cacheComponents).
+export async function resumosDosModulos() {
+  "use cache";
+  const numeros = Array.from({ length: TOTAL_MODULOS }, (_, indice) => indice + 1);
+  const lidos = await Promise.all(numeros.map((numero) => lerModulo(numero)));
+  return lidos.flatMap((modulo) =>
+    modulo && modulo.publicado && modulo.descricao ? [{ numero: modulo.numero, titulo: modulo.titulo, descricao: modulo.descricao }] : [],
+  );
 }
 
 async function cenarioExistente(id: string | null) {

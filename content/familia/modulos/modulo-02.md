@@ -1,6 +1,7 @@
 ---
 numero: 2
 titulo: "Entender o padrão"
+descricao: "Anotar por 7 dias os momentos difíceis e os bons com {{apelido}} e descobrir o que costuma vir antes do uso."
 publicado: true
 bloqueado_em_modo_seguranca: false
 audio: ""

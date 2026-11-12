@@ -1,6 +1,7 @@
 ---
 numero: 1
 titulo: "O que está acontecendo (e o que não é culpa sua)"
+descricao: "Entender por que é tão difícil parar, o que não é culpa sua e o que costuma piorar as coisas em casa."
 publicado: true
 cenario_simulador: "primeira-conversa"
 bloqueado_em_modo_seguranca: false

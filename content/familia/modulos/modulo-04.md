@@ -1,6 +1,7 @@
 ---
 numero: 4
 titulo: "Valorizar o que é bom"
+descricao: "Descobrir do que {{apelido}} gosta e planejar jeitos simples de valorizar os dias sem uso, com elogios sinceros e sem ironia."
 publicado: true
 cenario_simulador: "elogiar-sem-ironia"
 bloqueado_em_modo_seguranca: true

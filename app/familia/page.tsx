@@ -20,6 +20,8 @@ import { Accordion } from "@/components/ui/Accordion";
 import { Button } from "@/components/ui/Button";
 import { Marquee } from "@/components/ui/Marquee";
 import { MOSTRAR_REVISAO_CLINICA, PRAZO_ACESSO, REVISAO_DO_TREINO_DECIDIDA } from "@/lib/familia/config";
+import { resumosDosModulos } from "@/lib/familia/conteudo";
+import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 
 // Landing page do programa para familiares. Texto do conteúdo v2 (10/11/2026); layout das
@@ -245,7 +247,9 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
   },
 ];
 
-export default function FamiliaPage() {
+export default async function FamiliaPage() {
+  // Lido no build, como no painel: a página continua estática (briefing L1).
+  const modulos = await resumosDosModulos();
   // Repetido no fim dos blocos, só no desktop (no celular o botão já fica fixo no rodapé).
   const ctaDoBloco = (
     <div className="familia-lp-cta-bloco">
@@ -325,6 +329,26 @@ export default function FamiliaPage() {
         </BlocoComImagem>
         {ctaDoBloco}
       </section>
+
+      {modulos.length > 0 && (
+        <section className="familia-lp-secao">
+          <div className="familia-lp-modulos-cabecalho">
+            <h2 className="home-secao-titulo">{`Os ${modulos.length} módulos`}</h2>
+            <p className="text-medium-regular">Um módulo por semana, com uma leitura curta e exercícios para encaixar no dia a dia.</p>
+          </div>
+          <div className="familia-lp-grade familia-lp-grade-4 familia-lp-grade-eixos">
+            {modulos.map((modulo) => (
+              <CardsLp
+                key={modulo.numero}
+                icone={<span className="label-small-medium familia-texto-suave">Módulo {modulo.numero}</span>}
+                titulo={modulo.titulo}
+                texto={aplicarApelido(modulo.descricao, undefined)}
+              />
+            ))}
+          </div>
+          {ctaDoBloco}
+        </section>
+      )}
 
       {/* Banner de oferta, antes da FAQ (briefing 01, variação a). */}
       <section className="familia-lp-secao">

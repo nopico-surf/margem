@@ -1,6 +1,7 @@
 ---
 numero: 7
 titulo: "A sua vida e a sua rede"
+descricao: "Dar notas de novo para a sua vida, comparar com as notas do módulo 1 e encontrar pessoas e grupos que acolhem familiares."
 publicado: true
 bloqueado_em_modo_seguranca: false
 audio: ""

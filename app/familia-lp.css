@@ -90,6 +90,13 @@
   gap: var(--spacing-24);
 }
 
+/* "Os 8 módulos": a linha de apoio colada no título, não com o espaço de 24 da seção (briefing L1). */
+.familia-lp-modulos-cabecalho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
 /* Cards de "O que você vai aprender" no mesmo tamanho e peso de texto do "Sem julgamento"
    (card-header), a pedido do fundador em 11/11/2026. */
 .familia-lp-grade-eixos .cards-lp-titulo {
