@@ -246,6 +246,14 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
 ];
 
 export default function FamiliaPage() {
+  // Repetido no fim dos blocos, só no desktop (no celular o botão já fica fixo no rodapé).
+  const ctaDoBloco = (
+    <div className="familia-lp-cta-bloco">
+      <Button tamanho="medium" href="/familia/diagnostico">
+        {CTA}
+      </Button>
+    </div>
+  );
   return (
     <div className="familia-lp">
       <Rastrear evento="lp_visualizada" />
@@ -285,6 +293,7 @@ export default function FamiliaPage() {
               <CardHomeHeader key={passo.titulo} titulo={passo.titulo} descricao={passo.texto} icone={passo.icone} acao={null} />
             ))}
           </ActionRow>
+          {ctaDoBloco}
         </div>
       </section>
 
@@ -297,6 +306,7 @@ export default function FamiliaPage() {
               <CardsLp key={eixo.titulo} icone={null} titulo={eixo.titulo} texto={eixo.texto} />
             ))}
           </div>
+          {ctaDoBloco}
         </div>
       </section>
 
@@ -313,6 +323,7 @@ export default function FamiliaPage() {
             description="Você não precisa dizer o nome de ninguém, e ninguém precisa saber que você está aqui. Seus dados não são compartilhados sem a sua autorização."
           />
         </BlocoComImagem>
+        {ctaDoBloco}
       </section>
 
       {/* Banner de oferta, antes da FAQ (briefing 01, variação a). */}

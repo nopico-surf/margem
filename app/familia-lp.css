@@ -114,7 +114,45 @@
   box-shadow: var(--shadow-glow);
 }
 
+/* Botão repetido no fim dos blocos: só no desktop, porque no celular a barra acima já fica fixa. */
+.familia-lp-cta-bloco {
+  display: none;
+}
+
+/* Botão fixo pulsando, só no celular e só pra quem não pediu menos movimento (escolhido em 12/11/2026,
+   depois de testar brilho e respirar). Um anel amarelo da Margem sai da borda e some: um tom acima do
+   selo de valor dos profissionais (Badge secondary usa o 300), porque o 300 ficou discreto sobre a barra
+   branca. O anel fica cheio até a metade do caminho e só então some. Vai até 14px, dentro dos 16 de
+   respiro da barra. */
+@media (max-width: 47.99em) and (prefers-reduced-motion: no-preference) {
+  .familia-lp-cta-barra .btn {
+    animation: familia-cta-pulsar 2s ease-out infinite;
+  }
+}
+
+@keyframes familia-cta-pulsar {
+  0% {
+    box-shadow: 0 0 0 0 var(--colors-brand-secondary-400);
+  }
+  35% {
+    box-shadow: 0 0 0 8px var(--colors-brand-secondary-400);
+  }
+  75%,
+  100% {
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--colors-brand-secondary-400) 0%, transparent);
+  }
+}
+
 @media (min-width: 48em) {
+  .familia-lp-cta-bloco {
+    display: block;
+  }
+
+  /* Em "Sem julgamento / Sua privacidade" o botão ocupa a linha toda da grade, abaixo dos dois blocos. */
+  .familia-lp-grade-2 > .familia-lp-cta-bloco {
+    grid-column: 1 / -1;
+  }
+
   .familia-lp {
     gap: var(--spacing-64);
     padding-bottom: var(--spacing-64);
