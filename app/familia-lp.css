@@ -90,6 +90,19 @@
   gap: var(--spacing-24);
 }
 
+/* Cards de "O que você vai aprender" no mesmo tamanho e peso de texto do "Sem julgamento"
+   (card-header), a pedido do fundador em 11/11/2026. */
+.familia-lp-grade-eixos .cards-lp-titulo {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semi-bold);
+  line-height: var(--line-height-2xl);
+}
+
+.familia-lp-grade-eixos .cards-lp-descricao {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
 /* CTA: fixo embaixo no celular (mesmo desenho do "Agendar" da página do profissional). */
 .familia-lp-cta-barra {
   position: fixed;

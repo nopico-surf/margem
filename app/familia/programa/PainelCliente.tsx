@@ -281,7 +281,7 @@ export function PainelCliente({
             </>
           ) : (
             <>
-              <span className="familia-status label-small-medium">Ainda não</span>
+              <span className="familia-status label-small-medium">Não iniciado</span>
               <Button tamanho="small" href="/familia/programa/rede?origem=painel">
                 {TEXTOS_REDE.escolher}
               </Button>
@@ -307,7 +307,7 @@ export function PainelCliente({
             </>
           ) : (
             <>
-              <span className="familia-status label-small-medium">Ainda não</span>
+              <span className="familia-status label-small-medium">Não iniciado</span>
               <Button tamanho="small" href="/familia/programa/escala?origem=painel">
                 Dar notas para a minha vida
               </Button>
@@ -378,11 +378,11 @@ export function PainelCliente({
 
       {/* Briefing 01b: enquanto o prazo corre, a linha de apoio e a tela de pedir o dinheiro de volta. */}
       {mostrarReembolso && perfil.compra && (
-        <section className="familia-secao">
-          <p className="text-medium-regular familia-texto-suave">Você tem até {fimDoPrazo(perfil.compra.pagoEm)} para pedir o dinheiro de volta.</p>
-          <Button variante="transparent" tamanho="medium" larguraTotal href="/familia/programa/devolucao">
+        <section className="familia-secao painel-reembolso">
+          <Button variante="transparent" tamanho="xx-small" href="/familia/programa/devolucao">
             Pedir o dinheiro de volta
           </Button>
+          <p className="text-medium-regular familia-texto-suave">Você tem até {fimDoPrazo(perfil.compra.pagoEm)} para pedir o dinheiro de volta.</p>
         </section>
       )}
     </>

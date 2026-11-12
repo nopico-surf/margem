@@ -8,7 +8,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: var(--border-width-thin) solid var(--colors-neutral-200);
   border-radius: var(--radius-xl);
   background: var(--colors-neutral-0);
 }

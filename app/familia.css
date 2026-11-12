@@ -77,6 +77,12 @@
   margin-bottom: var(--spacing-40);
 }
 
+/* Rodapé do painel (briefing 01b): botão de pedir o dinheiro de volta e a data abaixo, no centro. */
+.familia-secao.painel-reembolso {
+  align-items: center;
+  text-align: center;
+}
+
 /* Treino de conversa (SimuladorCliente): uma coluna fixa do header até a linha do teclado
    (lib/use-linha-do-teclado.ts, variáveis --treino-teclado-*; sem teclado, o pé da tela). Em cima a
    conversa, com rolagem própria; embaixo o campo e o "Terminar e ver o retorno". A página não rola
@@ -180,10 +186,17 @@ html[data-treino-teclado="provisorio"] .familia-simulador-conversa {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
-  padding: var(--spacing-20);
-  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  /* Card padrão do site (cards-lp, card de profissional): sem contorno, 16 no celular e 24 no
+     desktop (pedido do fundador em 11/11/2026). */
+  padding: var(--spacing-16);
   border-radius: var(--radius-xl);
   background: var(--colors-neutral-0);
+}
+
+@media (min-width: 48em) {
+  .familia-cartao {
+    padding: var(--spacing-24);
+  }
 }
 
 /* Título interno fica perto do texto dele (8) e longe do bloco de cima (24), pra ficar claro a
@@ -197,12 +210,10 @@ html[data-treino-teclado="provisorio"] .familia-simulador-conversa {
 }
 
 .familia-cartao-destaque {
-  border-color: transparent;
   background: var(--colors-brand-primary-50);
 }
 
 .familia-cartao-alerta {
-  border-color: transparent;
   background: var(--colors-status-warning-50);
 }
 
@@ -481,7 +492,7 @@ html[data-treino-teclado="provisorio"] .familia-simulador-conversa {
   flex-direction: column;
   gap: var(--spacing-8);
   padding: var(--spacing-12) var(--spacing-16);
-  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  border: 0;
   border-radius: var(--radius-xl);
   background: var(--colors-neutral-0);
   color: inherit;
@@ -490,8 +501,9 @@ html[data-treino-teclado="provisorio"] .familia-simulador-conversa {
   cursor: pointer;
 }
 
+/* Sem contorno, o hover é o mesmo do card de módulo. */
 .escala-resultado-area:hover {
-  border-color: var(--colors-alpha-24);
+  background: var(--colors-alpha-4);
 }
 
 .escala-resultado-area:focus-visible {
@@ -707,11 +719,6 @@ button.dias-da-meta-dia:focus-visible {
   white-space: normal;
 }
 
-/* Resultado: fundo branco (pedido do fundador em 09/11/2026). As outras telas seguem no cinza. */
-.familia:has(.familia-resultado-topo) {
-  background: var(--colors-neutral-0);
-}
-
 /* Topo do resultado: faixa de ponta a ponta. A faixa é uma sombra que se espalha pros lados e é
    cortada em cima e embaixo (clip-path), então não cria rolagem horizontal. Encosta no header. */
 .familia-resultado-topo {
@@ -746,7 +753,6 @@ button.dias-da-meta-dia:focus-visible {
 
 .familia-exercicio-item[data-feito="true"] {
   background: var(--colors-status-success-50);
-  border-color: transparent;
 }
 
 /* ===== Painel do programa: lista dos 8 módulos ===== */
@@ -764,12 +770,17 @@ button.dias-da-meta-dia:focus-visible {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4);
-  padding: var(--spacing-16) var(--spacing-20);
-  border: var(--border-width-thin) solid var(--colors-alpha-8);
+  padding: var(--spacing-16);
   border-radius: var(--radius-xl);
   background: var(--colors-neutral-0);
   color: inherit;
   text-decoration: none;
+}
+
+@media (min-width: 48em) {
+  .painel-modulo {
+    padding: var(--spacing-24);
+  }
 }
 
 a.painel-modulo:hover {
@@ -783,7 +794,6 @@ a.painel-modulo:focus-visible {
 
 /* Módulo atual em destaque, no mesmo verde-claro dos cartões de destaque. */
 .painel-modulo[data-atual="true"] {
-  border-color: transparent;
   background: var(--colors-brand-primary-50);
 }
 
