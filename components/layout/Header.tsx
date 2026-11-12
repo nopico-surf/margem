@@ -30,9 +30,19 @@ type HeaderProps = {
   mostrarProfissionais?: boolean;
   // Só o logo, sem menu (Figma: telas do Pix e do código vencido, 1537:36169 e 1542:40036).
   semMenu?: boolean;
-  // Botão ao lado do menu, só no header com seta (a Mochila põe o de som aqui).
+  // Botão ao lado do menu (a Mochila põe o de som aqui), ou ao lado do X quando ele vem.
   antesDoMenu?: React.ReactNode;
 };
+
+function BotaoFechar({ onFechar }: { onFechar: () => void }) {
+  return (
+    // Sem o onMouseDown, o toque tira o foco do campo antes do clique: o teclado começa a fechar, o
+    // campo cai pro pé da tela e só então o fechamento anima. Quem tira o foco é o próprio onFechar.
+    <button className="menu-button" type="button" aria-label="Fechar" onClick={onFechar} onMouseDown={(event) => event.preventDefault()}>
+      <IconeFecharHeader />
+    </button>
+  );
+}
 
 export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar, mostrarProfissionais = true, semMenu = false, antesDoMenu }: HeaderProps) {
   const logo = onVoltar ? (
@@ -59,11 +69,15 @@ export function Header({ onOpenMenu, hrefDoLogo, onLogoClick, onVoltar, onFechar
         logo
       )}
       {semMenu ? null : onFechar ? (
-        // Sem o onMouseDown, o toque tira o foco do campo antes do clique: o teclado começa a fechar, o
-        // campo cai pro pé da tela e só então o fechamento anima. Quem tira o foco é o próprio onFechar.
-        <button className="menu-button" type="button" aria-label="Fechar" onClick={onFechar} onMouseDown={(event) => event.preventDefault()}>
-          <IconeFecharHeader />
-        </button>
+        antesDoMenu ? (
+          // Botão extra ao lado do X (treino de conversa do programa para familiares: "Sair rápido").
+          <div className="app-header-direita">
+            {antesDoMenu}
+            <BotaoFechar onFechar={onFechar} />
+          </div>
+        ) : (
+          <BotaoFechar onFechar={onFechar} />
+        )
       ) : mostrarProfissionais && !onVoltar ? (
         <div className="app-header-direita">
           <Button variante="transparent" tamanho="x-small" semPadding href="/profissionais">

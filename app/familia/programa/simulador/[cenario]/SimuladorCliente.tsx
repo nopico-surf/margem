@@ -117,7 +117,6 @@ export function SimuladorCliente({
 
   // A coluna da conversa vai até a linha do teclado (mesma detecção da busca do blog).
   useLinhaDoTeclado({ seletor: ".familia-simulador-rodape", prefixo: "treino" });
-
   // Na conversa, a página não rola: quem rola é a área da conversa, e a coluna começa logo abaixo do
   // header. Assim o navegador não tem página pra empurrar quando o teclado abre.
   useEffect(() => {

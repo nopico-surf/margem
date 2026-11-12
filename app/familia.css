@@ -77,10 +77,17 @@
   margin-bottom: var(--spacing-40);
 }
 
-/* Rodapé do painel (briefing 01b): botão de pedir o dinheiro de volta e a data abaixo, no centro. */
+/* Rodapé do painel (briefing 01b): frase do prazo com o link de pedir o dinheiro de volta, no centro,
+   separada do carrossel de profissionais. */
 .familia-secao.painel-reembolso {
   align-items: center;
+  margin-top: var(--spacing-40);
   text-align: center;
+}
+
+.painel-reembolso-link {
+  color: var(--colors-brand-primary-800);
+  text-decoration: underline;
 }
 
 /* Treino de conversa (SimuladorCliente): uma coluna fixa do header até a linha do teclado
@@ -92,8 +99,17 @@ html.familia-treino-aberto {
   overflow: hidden;
 }
 
+/* O header também fica preso ao topo visível, como o campo aberto da home: se o Chrome empurrar a
+   tela pra mostrar o campo, header e coluna acompanham juntos, em vez de o header sumir pra cima. */
+html.familia-treino-aberto .familia-cabecalho {
+  position: fixed;
+  top: var(--treino-teclado-topo, var(--spacing-0));
+  right: 0;
+  left: 0;
+}
+
 .familia-simulador-conversa {
-  --treino-topo: max(var(--treino-cabecalho, var(--spacing-0)), var(--treino-teclado-topo, var(--spacing-0)));
+  --treino-topo: calc(var(--treino-teclado-topo, var(--spacing-0)) + var(--treino-cabecalho, var(--spacing-0)));
   position: fixed;
   top: var(--treino-topo);
   right: 0;

@@ -143,6 +143,23 @@ export function useLinhaDoTeclado({ seletor = ".blog-busca", prefixo = "busca" }
 
     function aoFocar(event: FocusEvent) {
       if (!campoObservado(event.target as Element | null)) return;
+      tecladoAbrindo();
+    }
+
+    // No Android dá pra baixar o teclado sem sair do campo. Tocar no campo de novo reabre o teclado,
+    // mas não dispara focusin, e o teclado subia com o campo ainda lá embaixo: o Chrome o via coberto
+    // e empurrava a tela inteira pra cima (medido num Android em 12/11/2026: 255 px, a altura do
+    // teclado). No clique, que só vem depois de o dedo sair da tela (o teclado subiu 100 ms depois),
+    // o campo já vai pra cima da linha do teclado, como na primeira abertura. No pointerdown não: o
+    // campo mudava de lugar com o dedo ainda na tela, o clique caía fora dele e o campo fechava.
+    // Só o toque no próprio campo, já focado e com o teclado baixado.
+    function aoClicar(event: MouseEvent) {
+      if (!touch || event.target !== document.activeElement || !campoObservado(event.target as Element | null)) return;
+      if (root.dataset[chaveDataset] !== "fechado") return;
+      tecladoAbrindo();
+    }
+
+    function tecladoAbrindo() {
       focoEm = performance.now();
       maiorNaAbertura = 0;
       timers.forEach(window.clearTimeout);
@@ -157,9 +174,11 @@ export function useLinhaDoTeclado({ seletor = ".blog-busca", prefixo = "busca" }
     window.addEventListener("resize", update);
     document.addEventListener("focusin", aoFocar);
     document.addEventListener("focusout", update);
+    document.addEventListener("click", aoClicar, true);
     virtualKeyboard?.addEventListener("geometrychange", aoMudarVirtualKeyboard);
 
     return () => {
+      document.removeEventListener("click", aoClicar, true);
       timers.forEach(window.clearTimeout);
       viewport?.removeEventListener("resize", update);
       viewport?.removeEventListener("scroll", update);

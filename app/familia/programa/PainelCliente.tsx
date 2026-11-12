@@ -379,10 +379,9 @@ export function PainelCliente({
       {/* Briefing 01b: enquanto o prazo corre, a linha de apoio e a tela de pedir o dinheiro de volta. */}
       {mostrarReembolso && perfil.compra && (
         <section className="familia-secao painel-reembolso">
-          <Button variante="transparent" tamanho="xx-small" href="/familia/programa/devolucao">
-            Pedir o dinheiro de volta
-          </Button>
-          <p className="text-medium-regular familia-texto-suave">Você tem até {fimDoPrazo(perfil.compra.pagoEm)} para pedir o dinheiro de volta.</p>
+          <p className="text-medium-regular familia-texto-suave">
+            Você tem até {fimDoPrazo(perfil.compra.pagoEm)} para <Link className="painel-reembolso-link" href="/familia/programa/devolucao">pedir o dinheiro de volta</Link>.
+          </p>
         </section>
       )}
     </>
