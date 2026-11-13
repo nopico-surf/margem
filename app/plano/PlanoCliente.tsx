@@ -363,10 +363,26 @@ export function PlanoCliente() {
     // mostrarPix é recriada a cada render, mas só troca estado: fica de fora das dependências.
   }, [token, planoBase, opcional, nome, cpfCnpj, email, trocando]);
 
+  // "Turbine sua presença" e "Planos selecionados" estão escondidas por enquanto (pedido do Vitor,
+  // 13/11/2026): escolher o plano vai direto para os dados do Pix, ou ativa o Bronze gratuito. O
+  // opcional escolhido no cadastro é descartado, pra ninguém pagar por um serviço que não viu. Na troca
+  // de plano o resumo continua (mostra quanto se paga hoje e confirma o downgrade) e o opcional atual
+  // fica como está. As telas seguem no código e na prévia (#previa-opcional, #previa-resumo). Pra
+  // trazer de volta: aqui, o corpo volta a ser só `setPlanoBase(plano); setEtapa(editando ? "resumo" :
+  // "opcional"); setEditando(false);`, e no VOLTA, `resumo` e `resumo_troca` voltam a "opcional" e
+  // `dados` volta a `trocando ? "resumo_troca" : "resumo"`.
   function selecionarBase(plano: PlanoBase) {
     setPlanoBase(plano);
-    setEtapa(editando ? "resumo" : "opcional");
     setEditando(false);
+    if (trocando) {
+      setEtapa("resumo_troca");
+      return;
+    }
+    setOpcional(null);
+    setErroGeral("");
+    if (link && link.planosBase[plano].centavos > 0) setEtapa("dados");
+    else if (etapaDaPrevia(token)) setEtapa("perfil_ativado");
+    else ativarSemPagamento(plano);
   }
 
   function selecionarOpcional(plano: PlanoOpcional | null) {
@@ -451,9 +467,16 @@ export function PlanoCliente() {
     setErroGeral("");
     if (!semPagamento) setEtapa("dados");
     else if (etapaDaPrevia(token)) setEtapa("perfil_ativado");
-    else ativarSemPagamento();
+    else if (planoBase) ativarSemPagamento(planoBase);
   };
-  async function ativarSemPagamento() {
+  // A mensagem de erro da ativação só existe no resumo: se o Bronze não ativar, ele abre com o erro e o
+  // botão "Ativar meu perfil" para tentar de novo.
+  function falhouAtivacao() {
+    setErroGeral(ERRO_ATIVACAO);
+    setEtapa("resumo");
+  }
+  // Recebe o plano porque é chamada no mesmo toque que escolhe o Bronze, antes de o estado atualizar.
+  async function ativarSemPagamento(plano: PlanoBase) {
     if (gerandoRef.current) return;
     gerandoRef.current = true;
     setAtivando(true);
@@ -461,16 +484,16 @@ export function PlanoCliente() {
       const resposta = await fetch("/api/apoio/pix", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, planoBase, opcional: null }),
+        body: JSON.stringify({ token, planoBase: plano, opcional: null }),
       });
       const corpo = (await resposta.json().catch(() => null)) as { gratuito?: boolean; error?: string } | null;
       if (resposta.ok && corpo?.gratuito) setEtapa("perfil_ativado");
       else if (corpo?.error === "link_invalido") setEtapa("link_invalido");
       else if (corpo?.error === "plano_ja_ativo") setEtapa("plano_ja_ativo");
       else if (corpo?.error === "plano_invalido") setEtapa("base");
-      else setErroGeral(ERRO_ATIVACAO);
+      else falhouAtivacao();
     } catch {
-      setErroGeral(ERRO_ATIVACAO);
+      falhouAtivacao();
     } finally {
       gerandoRef.current = false;
       setAtivando(false);
@@ -488,9 +511,9 @@ export function PlanoCliente() {
   const VOLTA: Partial<Record<Etapa, Etapa>> = {
     base: trocando ? "meu_plano" : undefined,
     opcional: "base",
-    resumo: "opcional",
-    resumo_troca: "opcional",
-    dados: trocando ? "resumo_troca" : "resumo",
+    resumo: "base",
+    resumo_troca: "base",
+    dados: trocando ? "resumo_troca" : "base",
   };
   const destinoDoVoltar = editando && (etapa === "base" || etapa === "opcional") ? "resumo" : VOLTA[etapa];
   const voltar = destinoDoVoltar
