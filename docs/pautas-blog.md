@@ -17,7 +17,6 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 - cocaína e álcool
 - filho usando drogas
 - como saber se sou alcoólatra
-- cannabis medicinal
 - ansiedade e álcool
 
 ## Publicadas
@@ -26,3 +25,4 @@ Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
 
 - 2026-11-08: clonazepam (/blog/clonazepam)
 - 2026-11-11: lsd (/blog/lsd)
+- 2026-11-13: cannabis medicinal (/blog/cannabis-medicinal)

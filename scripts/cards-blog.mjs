@@ -38,6 +38,7 @@ const RECORTES = {
   "caps-ad": { sujeito: [190, 1900], topo: 150, largura: 1800 },
   "clonazepam": { sujeito: [935, 1730], topo: 250, largura: 1300 },
   "lsd": { sujeito: [705, 1790], topo: 220, largura: 1500 },
+  "cannabis-medicinal": { sujeito: [450, 1865], topo: 185, largura: 1680 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {

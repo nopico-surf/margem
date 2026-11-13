@@ -3486,6 +3486,228 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Folha pequena de papel branco picotado em quadradinhos sobre uma mesa de madeira clara, ao lado de um copo de água, com luz da tarde e plantas perto da janela ao fundo.",
     imagemCard: true,
   },
+  // Guia de cannabis medicinal (13/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/cannabis-medicinal.md). Formato dos títulos: afirmativo (o anterior, lsd, usou perguntas).
+  // Regras conferidas com a Anvisa (RDC 660/2022 e RDC 1.015/2026, em vigor desde 4/5/2026) e indicações com o
+  // Sírio-Libanês e o HCX FMUSP. Sem dose e sem marca de propósito. CBD pra parar de usar igual ao guia de maconha.
+  // Mesma exceção de copy dos outros guias.
+  {
+    slug: "cannabis-medicinal",
+    publicadoEm: "2026-11-13",
+    atualizadoEm: "2026-11-13",
+    title: "Cannabis medicinal: para que serve, riscos, lei e como ter acesso | Margem",
+    descricao:
+      "Entenda o que é a cannabis medicinal, a diferença entre CBD e THC, para que serve, os riscos, o que diz a Anvisa em 2026 e como ter acesso, inclusive sem pagar.",
+    h1: "Cannabis medicinal: para que serve, riscos e como ter acesso no Brasil",
+    abertura:
+      "Talvez um médico tenha falado em canabidiol e você queira entender o que é. Talvez você esteja pensando em tentar pra dor, ansiedade ou insônia. Talvez você já use maconha e se pergunte se isso conta como tratamento. Ou talvez seja alguém próximo de você. A cannabis medicinal é um tratamento legal no Brasil, ajuda em algumas situações e não serve pra tudo. Aqui a gente explica o que já se sabe, os riscos, o que mudou nas regras e os caminhos pra ter acesso, inclusive pra quem não pode pagar.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que é a cannabis medicinal",
+        blocos: [
+          p("Cannabis medicinal é o uso, como tratamento, de substâncias tiradas da planta Cannabis sativa, a mesma da maconha. Em vez da planta fumada, o tratamento usa produtos com quantidade conhecida de cada substância, receitados por um profissional e acompanhados ao longo do tempo."),
+          p("A forma mais comum é o óleo em gotas, colocado na boca. Também existem cápsulas, sprays, produtos pra usar embaixo da língua e cremes pra passar na pele. Com as regras novas da Anvisa, de 2026, os produtos podem ser de uso oral, inalatório, bucal, sublingual ou na pele."),
+        ],
+      },
+      {
+        titulo: "A diferença entre CBD e THC",
+        blocos: [
+          p("A planta tem mais de cem substâncias parecidas, chamadas canabinoides. Duas concentram a maior parte das pesquisas e dos produtos:"),
+          {
+            tipo: "tabela",
+            legenda: "Diferença entre CBD e THC",
+            colunas: ["Substância", "Dá barato?", "O que mais se estuda"],
+            linhas: [
+              ["Canabidiol (CBD)", "Não causa euforia", "Convulsões, ansiedade, inflamação"],
+              ["Tetra-hidrocanabinol (THC)", "Sim, é o que dá o efeito da maconha", "Dor, náusea, apetite, rigidez dos músculos"],
+            ],
+          },
+          p("Existem produtos só com CBD, produtos com os dois em proporções diferentes e produtos com quase nada de THC. Qual faz sentido depende do que está sendo tratado, da idade e da resposta de cada pessoa, e quem decide é quem receita."),
+        ],
+      },
+      {
+        titulo: "Para que serve a cannabis medicinal",
+        blocos: [
+          p("Vale separar o que já tem pesquisa forte do que ainda está sendo estudado. As situações em que a evidência é mais sólida são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Alguns tipos de epilepsia que não melhoram com outros remédios, como as síndromes de Dravet e de Lennox-Gastaut",
+              "Rigidez e espasmos dos músculos na esclerose múltipla",
+              "Náusea e vômito causados pela quimioterapia",
+              "Dor crônica, com efeito em geral modesto",
+            ],
+          },
+          p("Ainda em estudo, com resultados que variam: sintomas do autismo como irritação e sono, agitação em quem tem Alzheimer, sintomas do Parkinson, ansiedade, insônia e cuidados paliativos."),
+          p("Na maioria dos casos, a cannabis medicinal não é a primeira escolha. Ela costuma entrar quando outros tratamentos não deram certo, e o resultado muda de pessoa pra pessoa. Desconfie de quem promete cura ou melhora garantida."),
+        ],
+      },
+      {
+        titulo: "Tratamento com cannabis não é o mesmo que usar maconha por conta própria",
+        blocos: [
+          p("Muita gente usa maconha pra dormir, pra relaxar ou pra aguentar a ansiedade. Às vezes ajuda por um tempo, e não tem nada de errado em querer alívio. Mas tem diferenças importantes em relação ao tratamento:"),
+          {
+            tipo: "lista",
+            itens: [
+              "A maconha da rua costuma ter muito THC e pouco CBD, e não dá pra saber quanto tem de cada um",
+              "O THC em quantidade alta pode piorar a ansiedade e, em algumas pessoas, provocar crises de pânico",
+              "Usando todo dia pra dormir, o corpo se acostuma e, quando a pessoa para, a insônia costuma voltar mais forte por um tempo",
+              "Fumar faz mal pros pulmões, seja qual for a planta",
+            ],
+          },
+          p("Se a maconha virou o jeito de dar conta da ansiedade ou do sono, vale conversar com um profissional sobre o que está por trás disso. Ele pode avaliar se um tratamento com cannabis faz sentido no seu caso, ou outro caminho. [Ler como parar de fumar maconha](/blog/como-parar-de-fumar-maconha)"),
+          p("O canabidiol também vem sendo estudado pra ajudar quem quer parar de usar maconha, crack ou outras drogas, mas ainda não é um tratamento estabelecido pra isso."),
+        ],
+      },
+      {
+        titulo: "Os efeitos colaterais e os riscos",
+        blocos: [
+          p("Como qualquer tratamento, a cannabis medicinal pode ter efeitos colaterais. Os mais comuns são:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Sono e moleza",
+              "Tontura",
+              "Boca seca",
+              "Mudança no apetite",
+              "Diarreia ou desconforto na barriga",
+            ],
+          },
+          p("Produtos com THC também podem causar dificuldade de atenção e de memória, ansiedade, coração acelerado e reflexo mais lento. Com uso frequente, o THC pode levar à dependência. Por isso não é seguro dirigir depois de tomar um produto com THC."),
+          p("O canabidiol passa pelo fígado e pode mudar o efeito de outros remédios, como alguns anticonvulsivantes, anticoagulantes e calmantes. Em doses altas, pode alterar exames do fígado. Por isso quem receita precisa saber tudo o que você toma, inclusive álcool e outras drogas. O que você conta fica em sigilo."),
+        ],
+      },
+      {
+        titulo: "Quem precisa de mais cuidado",
+        blocos: [
+          {
+            tipo: "lista",
+            itens: [
+              "Quem já teve psicose, esquizofrenia ou transtorno bipolar, ou tem esses diagnósticos na família: o THC pode desencadear crises",
+              "Gestantes e quem amamenta",
+              "Crianças e adolescentes, que só usam em situações específicas, com especialista",
+              "Pessoas mais velhas, pelo risco maior de tontura e queda",
+              "Quem tem problema no fígado ou no coração",
+              "Quem toma muitos remédios ao mesmo tempo",
+            ],
+          },
+          p("Pelas regras da Anvisa, produtos com mais de 0,2% de THC não são indicados pra menores de 18 anos, gestantes e quem amamenta."),
+        ],
+      },
+      {
+        titulo: "O que diz a lei no Brasil",
+        blocos: [
+          p("A cannabis medicinal é legal no Brasil, com receita e dentro das regras da Anvisa. O caminho foi construído aos poucos:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Desde 2015, a Anvisa autoriza pessoas a importar produtos de cannabis pra tratamento próprio. Hoje a regra da importação é a RDC 660, de 2022",
+              "Desde 2019, produtos de cannabis autorizados podem ser vendidos em farmácias, com receita",
+              "Em maio de 2026 entrou em vigor a RDC 1.015, que substituiu a regra de 2019. Ela ampliou as formas de uso, abriu caminho pra manipulação em farmácia, que ainda depende de regulamentação, e permitiu produtos com mais THC também pra pessoas com doenças debilitantes graves, além de quem está em cuidados paliativos ou tem condições irreversíveis ou terminais",
+              "Também em 2026, a Anvisa criou regras pra empresas, universidades e associações de pacientes cultivarem a planta pra fins medicinais",
+            ],
+          },
+          p("Nada disso vale pro uso recreativo, que continua proibido. A decisão do STF sobre maconha pra consumo pessoal é outro assunto e não autoriza tratamento por conta própria. [Entender o que diz a Lei de Drogas](/blog/lei-de-drogas)"),
+        ],
+      },
+      {
+        titulo: "Como conseguir o tratamento",
+        blocos: [
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Consulta: um médico, ou um dentista em casos da área dele, avalia sua história, os tratamentos que você já tentou e se a cannabis faz sentido pra você. Pode ser o médico que já te acompanha",
+              "Receita: se houver indicação, sai uma receita de controle especial. O tipo depende da quantidade de THC do produto",
+              "Onde conseguir o produto: na farmácia, com a receita, ou por importação, pedindo a autorização da Anvisa pelo gov.br. A autorização vale por dois anos, e a Anvisa não fornece o produto, só autoriza a compra. Algumas associações de pacientes também produzem pra quem é associado",
+              "Acompanhamento: o tratamento costuma começar com dose baixa, ajustada aos poucos conforme a resposta e os efeitos colaterais",
+            ],
+          },
+          p("O valor pesa: um frasco na farmácia pode custar centenas de reais, e o tratamento costuma ser contínuo. Antes de começar, vale perguntar a quem receita quanto vai durar, quanto deve custar por mês e se existe uma opção mais barata pro seu caso."),
+          p("Desconfie de óleo ou goma vendidos sem receita, em site ou rede social. Sem registro, o produto pode ter mais ou menos CBD do que diz o rótulo, ter THC sem avisar ou ter contaminantes."),
+        ],
+      },
+      {
+        titulo: "Como ter acesso sem pagar",
+        blocos: [
+          p("Ainda é difícil, mas existem caminhos:"),
+          {
+            tipo: "lista",
+            itens: [
+              "SUS em alguns estados: São Paulo tem lei desde 2023 e distribui canabidiol desde 2024 pra algumas condições, como as síndromes de Dravet e de Lennox-Gastaut e o complexo da esclerose tuberosa. Outros estados também têm leis próprias, e a Secretaria de Saúde do seu estado pode informar o que vale aí",
+              "Justiça: quem tem receita e não consegue pagar pode pedir o tratamento ao SUS pela Justiça. A Defensoria Pública atende sem custo quem não pode pagar advogado",
+              "Associações de pacientes: algumas cobram valores menores e ajudam com a documentação",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Plantar em casa: o que vale hoje",
+        blocos: [
+          p("As regras de cultivo da Anvisa valem só pra empresas, universidades e associações de pacientes. Pra pessoa física, o cultivo não foi liberado. Algumas pessoas conseguiram na Justiça autorização pra plantar pro próprio tratamento, mas isso depende de cada caso, de receita e de acompanhamento de um advogado ou da Defensoria Pública. Sem essa autorização, plantar continua sendo proibido."),
+        ],
+      },
+      {
+        titulo: "Como usar com menos risco",
+        blocos: [
+          p("Se você usa ou vai usar cannabis, com ou sem receita, alguns cuidados fazem diferença. Risco menor não é risco zero, e cuidar dele também é um caminho, que se chama [redução de danos](/blog/reducao-de-danos):"),
+          {
+            tipo: "lista",
+            itens: [
+              "Preferir produto com registro, que diz quanto tem de CBD e de THC",
+              "Seguir a dose combinada e não aumentar por conta própria quando parecer que não fez efeito: pode demorar",
+              "Não misturar com álcool, calmantes ou remédios pra dormir, que somam o sono e a lentidão",
+              "Não dirigir depois de usar produto com THC",
+              "Guardar longe de crianças e de animais, principalmente gomas e chocolates, que parecem doce",
+              "Contar a quem receita todos os remédios e substâncias que você usa",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Se você está pensando em tratamento com cannabis, o primeiro passo é uma consulta. Na página inicial da Margem, dá pra falar pelo WhatsApp sobre consulta e acesso ao tratamento com cannabis medicinal. [Ver a página inicial da Margem](/inicio)"),
+          p("Se o uso de maconha está pesando na sua vida, ou se a ansiedade e a insônia não dão trégua, conversar com alguém pode ajudar. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. Conversar sobre o seu uso não leva a internação, e o que você conta fica em sigilo. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Fora da Margem, a Unidade Básica de Saúde pode fazer o primeiro acolhimento, e o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento quando o uso de álcool ou outras drogas está pesando. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "O que é cannabis medicinal e para que serve?",
+        resposta:
+          "É o tratamento com substâncias da planta Cannabis sativa, como o CBD e o THC, em produtos com quantidade conhecida, receitados e acompanhados por um profissional. A evidência é mais forte em algumas epilepsias, na rigidez da esclerose múltipla, na náusea da quimioterapia e na dor crônica.",
+      },
+      {
+        pergunta: "Quem pode comprar cannabis medicinal?",
+        resposta:
+          "Quem tem receita. Com ela, dá pra comprar produtos autorizados na farmácia ou pedir à Anvisa, pelo gov.br, autorização pra importar. Produtos com mais de 0,2% de THC não são indicados pra menores de 18 anos, gestantes e quem amamenta.",
+      },
+      {
+        pergunta: "O canabidiol é vendido em farmácias?",
+        resposta:
+          "Sim, os produtos autorizados pela Anvisa, sempre com receita de controle especial. Óleo ou goma vendidos sem receita, em site ou rede social, não têm garantia do que contêm.",
+      },
+      {
+        pergunta: "Qual o risco de tomar canabidiol?",
+        resposta:
+          "Os efeitos mais comuns são sono, tontura, boca seca, mudança no apetite e diarreia. Ele pode mudar o efeito de outros remédios e, em doses altas, alterar exames do fígado. Por isso quem receita precisa saber tudo o que você toma.",
+      },
+      {
+        pergunta: "Cannabis medicinal dá barato?",
+        resposta:
+          "Depende do produto. Os que têm só CBD não causam euforia. Os que têm THC podem causar algum efeito, e por isso a dose é ajustada com cuidado e não é seguro dirigir depois de tomar.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Mão de uma pessoa de camisa de linho segurando um conta-gotas sobre um frasco pequeno de vidro âmbar, numa mesa de madeira clara com um copo de água e uma folha de papel branca dobrada, com plantas perto da janela ao fundo.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
