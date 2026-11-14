@@ -3714,7 +3714,9 @@ export const GUIAS: Guia[] = [
   // fiscalização conferidos nas perguntas frequentes da Anvisa (RDC 29/2011); vagas gratuitas pela página do
   // governo do Paraná. Internação involuntária igual ao guia do psicólogo pra álcool e drogas. Sem citar
   // comunidade nenhuma pelo nome. O carrossel fica só no fim, como no do CAPS AD. Mesma exceção de copy dos
-  // outros guias.
+  // outros guias. Revisto no mesmo dia, a pedido do Vitor, pra não soar como endosso: a abertura e a segunda
+  // seção dizem que a Margem prefere o cuidado em liberdade e põem o CAPS AD antes; as denúncias citam a
+  // Inspeção Nacional de 2017 (CFP, MNPCT e MPF, relatório no site do CFP); a vaga gratuita ficou curta.
   {
     slug: "comunidade-terapeutica",
     publicadoEm: "2026-11-14",
@@ -3724,7 +3726,7 @@ export const GUIAS: Guia[] = [
       "Entenda o que é uma comunidade terapêutica, a diferença pra clínica, se ela pode internar contra a vontade, como conseguir vaga gratuita e o que conferir antes de escolher.",
     h1: "Comunidade terapêutica: o que é, como funciona e o que conferir antes de escolher",
     abertura:
-      "Talvez alguém tenha sugerido uma comunidade terapêutica pra você ou pra alguém que você ama, e você não saiba direito o que acontece lá dentro. Talvez a família esteja cansada e procurando um lugar com urgência. Aqui a gente explica o que é uma comunidade terapêutica, o que ela pode e não pode fazer, como chegar a uma vaga e o que conferir antes, pra que a decisão seja tomada com mais informação e menos pressa.",
+      "Talvez alguém tenha sugerido uma comunidade terapêutica pra você ou pra alguém que você ama, e você não saiba direito o que acontece lá dentro. Talvez a família esteja cansada e procurando um lugar com urgência. A Margem acredita no cuidado em liberdade, perto da casa, da família e do trabalho, e por isso começa pelo CAPS AD. Mas, se você está considerando uma comunidade terapêutica, aqui a gente explica o que ela é, o que pode e não pode fazer e o que conferir antes, pra que a decisão seja tomada com mais informação e menos pressa.",
     carrossel: ["psicologo", "psiquiatra"],
     carrosselTopo: false,
     secoes: [
@@ -3734,6 +3736,14 @@ export const GUIAS: Guia[] = [
           p("É um lugar onde a pessoa mora por um tempo pra se afastar do uso de álcool ou de outras drogas, convivendo com outras pessoas que estão passando por algo parecido. A convivência entre elas, com rotina e regras combinadas, é a principal ferramenta de cuidado. A proposta costuma ser parar de usar."),
           p("Pela regra da Anvisa, a comunidade terapêutica não é um serviço de saúde, e sim um serviço de interesse à saúde. Ela não precisa ter médico nem enfermagem o tempo todo. Por isso não deve receber quem precisa de cuidado médico que ela não oferece, como uma abstinência grave ou uma crise de saúde mental."),
           p("Muitas são ligadas a igrejas ou a grupos religiosos, e outras não. A duração costuma ficar entre 6 e 12 meses, mas cada lugar define a sua."),
+        ],
+      },
+      {
+        titulo: "Comunidade terapêutica é o melhor caminho?",
+        blocos: [
+          p("Na maior parte das vezes, não é o primeiro. A reforma psiquiátrica brasileira e a rede de saúde mental do SUS apostam no cuidado em liberdade: a pessoa segue morando onde mora, com consultas, terapia, grupos de apoio e o [CAPS AD](/blog/caps-ad), que atende sem encaminhamento e tem acolhimento noturno nos momentos mais difíceis. É nisso que a Margem acredita."),
+          p("Ficar meses longe de casa afasta da rotina, mas também do trabalho, dos vínculos e da rede que vai estar lá na volta. E o que espera a pessoa na saída pesa tanto quanto o tempo lá dentro. Conselhos profissionais e pesquisadores da área fazem críticas sérias ao modelo, e já houve denúncias graves, como você vê mais abaixo."),
+          p("Também não existe um único objetivo possível. Pra algumas pessoas a meta é parar; pra outras, diminuir o uso e os riscos, o que se chama [redução de danos](/blog/reducao-de-danos). [Ver os caminhos pra parar de usar drogas](/blog/como-parar-de-usar-drogas)"),
         ],
       },
       {
@@ -3784,17 +3794,8 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Como conseguir vaga gratuita em comunidade terapêutica?",
         blocos: [
-          p("Muitas comunidades terapêuticas cobram uma mensalidade. Algumas têm vagas pagas pelo governo federal ou, em alguns lugares, pelo estado ou pela prefeitura. Nessas vagas, nada pode ser cobrado da pessoa nem da família, nem em dinheiro, nem em troca de serviço."),
-          {
-            tipo: "lista-numerada",
-            itens: [
-              "Pergunte no CAPS AD, no CRAS ou na Secretaria de Saúde da sua cidade quais comunidades têm vagas financiadas na região",
-              "Ou ligue direto pra comunidade e pergunte se ela tem vagas pagas pelo governo",
-              "Faça a avaliação médica antes da entrada, que é obrigatória. Ela pode ser feita na Unidade Básica de Saúde, no CAPS ou com um médico",
-              "Leve documento com foto e, se tiver, o cartão do SUS",
-            ],
-          },
-          p("As vagas financiadas pelo governo federal têm limite de tempo: até 12 meses, seguidos ou não, dentro de um período de 24 meses."),
+          p("Muitas comunidades terapêuticas cobram uma mensalidade. Algumas têm vagas pagas pelo governo, e nelas nada pode ser cobrado da pessoa nem da família, nem em dinheiro, nem em troca de serviço. As vagas pagas pelo governo federal vão até 12 meses dentro de um período de 24."),
+          p("O melhor lugar pra perguntar é o CAPS AD: além de saber onde há vagas na região, a equipe ajuda a pensar se esse é mesmo o caminho ou se dá pra começar pelo cuidado sem sair de casa. Qualquer entrada em comunidade terapêutica exige uma avaliação médica antes."),
         ],
       },
       {
@@ -3819,7 +3820,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Quando desconfiar de uma comunidade terapêutica?",
         blocos: [
-          p("Já houve denúncias de abuso e violência em comunidades terapêuticas no Brasil. Alguns sinais pedem atenção:"),
+          p("Em outubro de 2017, o Conselho Federal de Psicologia, o Mecanismo Nacional de Prevenção e Combate à Tortura e o Ministério Público Federal visitaram 28 comunidades terapêuticas em 11 estados e no Distrito Federal. O relatório descreve internações forçadas, castigos, isolamento, trabalho imposto como regra, remédio controlado sem acompanhamento e culto obrigatório. Nem toda comunidade é assim, mas esses sinais pedem atenção:"),
           {
             tipo: "lista",
             itens: [
@@ -3840,13 +3841,6 @@ export const GUIAS: Guia[] = [
         titulo: "Quem fiscaliza as comunidades terapêuticas?",
         blocos: [
           p("A fiscalização sanitária é da Vigilância Sanitária do município ou do estado, que confere estrutura, documentos, equipe e rotina, e pode advertir, multar ou interditar. O Ministério Público e os conselhos profissionais também podem fiscalizar, cada um na sua área."),
-        ],
-      },
-      {
-        titulo: "Comunidade terapêutica é o único caminho?",
-        blocos: [
-          p("Não. Ela é uma possibilidade entre outras, e não serve pra todo mundo. Muita gente faz o cuidado sem sair de casa, com consultas, terapia, CAPS AD e grupos de apoio. Afastar-se por um tempo pode ajudar algumas pessoas, mas o que espera a pessoa na volta, como casa, trabalho e rede de apoio, pesa tanto quanto o tempo lá dentro."),
-          p("Também não existe um único objetivo possível. Pra algumas pessoas a meta é parar; pra outras, diminuir o uso e os riscos, o que se chama [redução de danos](/blog/reducao-de-danos). [Ver os caminhos pra parar de usar drogas](/blog/como-parar-de-usar-drogas)"),
         ],
       },
       {
