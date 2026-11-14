@@ -274,7 +274,7 @@ async function GuiaConteudo({ params }: Props) {
             </div>
           ))}
         </section>
-        <Button variante="transparent" tamanho="medium" semPadding href="/blog">
+        <Button variante="secondary" tamanho="medium" href="/blog">
           Ver todos os textos do blog
         </Button>
       </div>
