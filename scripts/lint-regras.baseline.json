@@ -1,6 +1,7 @@
 {
   "px-cru": {
     "app/dados-privacidade-modal.css": 20,
+    "app/familia.css": 2,
     "app/footer.css": 6,
     "app/globals.css": 17,
     "app/home.css": 6,

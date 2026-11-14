@@ -129,24 +129,27 @@
 /* Botão fixo pulsando, só no celular e só pra quem não pediu menos movimento (escolhido em 12/11/2026,
    depois de testar brilho e respirar). Um anel amarelo da Margem sai da borda e some: um tom acima do
    selo de valor dos profissionais (Badge secondary usa o 300), porque o 300 ficou discreto sobre a barra
-   branca. O anel fica cheio até a metade do caminho e só então some. Vai até 14px, dentro dos 16 de
-   respiro da barra. */
+   branca. O anel fica cheio até a metade do caminho e só então some. Vai até --spacing-14, dentro dos
+   --spacing-16 de respiro da barra. */
 @media (max-width: 47.99em) and (prefers-reduced-motion: no-preference) {
   .familia-lp-cta-barra .btn {
-    animation: familia-cta-pulsar 2s ease-out infinite;
+    --familia-anel-inicio: 0 0 0 0 var(--colors-brand-secondary-400);
+    --familia-anel-meio: 0 0 0 var(--spacing-8) var(--colors-brand-secondary-400);
+    --familia-anel-fim: 0 0 0 var(--spacing-14) color-mix(in srgb, var(--colors-brand-secondary-400) 0%, transparent);
+    animation: familia-cta-pulsar calc(var(--duration-1000) * 2) ease-out infinite;
   }
 }
 
 @keyframes familia-cta-pulsar {
   0% {
-    box-shadow: 0 0 0 0 var(--colors-brand-secondary-400);
+    box-shadow: var(--familia-anel-inicio);
   }
   35% {
-    box-shadow: 0 0 0 8px var(--colors-brand-secondary-400);
+    box-shadow: var(--familia-anel-meio);
   }
   75%,
   100% {
-    box-shadow: 0 0 0 14px color-mix(in srgb, var(--colors-brand-secondary-400) 0%, transparent);
+    box-shadow: var(--familia-anel-fim);
   }
 }
 
