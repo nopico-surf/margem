@@ -44,13 +44,19 @@ export default async function ConversaCardPage({ params }: Props) {
     perguntas_aprofundamento: resposta.perguntas_aprofundamento,
   };
 
+  // h1 escondido com o mesmo texto do <title>, sem o " | Margem" do fim: a tela não tem título
+  // visível (é conversa), e sem h1 o Google e as IAs ficam sem a frase que diz do que a página trata.
+  const tituloDaPagina = (card.tituloSeo ?? card.titulo).replace(/ \| Margem$/, "");
   return (
-    <CardResultado
-      cardIndex={indice}
-      slug={card.slug}
-      message={card.titulo}
-      orientation={orientation}
-      riscoEmergency={detectarRisco(card.chave).emergency}
-    />
+    <>
+      <h1 className="figma-result-h1-oculto">{tituloDaPagina}</h1>
+      <CardResultado
+        cardIndex={indice}
+        slug={card.slug}
+        message={card.titulo}
+        orientation={orientation}
+        riscoEmergency={detectarRisco(card.chave).emergency}
+      />
+    </>
   );
 }

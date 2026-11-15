@@ -229,15 +229,26 @@ export async function registrarConsentimento(sessaoId: string) {
   if (auditoria.error) console.error("[supabase] registrarConsentimento (auditoria_sessoes) falhou:", auditoria.error.message);
 }
 
+// Com cache a resposta do card entra no prerender de /conversa/[slug] e chega pronta no HTML (antes
+// chegava no fim do arquivo, depois do "Preparando informações"). Edição no Supabase aparece em até
+// 1h, como a dos profissionais. Falha ou resposta ausente não ficam no cache: o perfil 'seconds'
+// tira do prerender e a busca volta a acontecer na requisição.
 export async function buscarRespostaPorChave(chaveBusca: string) {
+  "use cache";
   const supabase = getServerClient();
-  if (!supabase) return null;
+  if (!supabase) {
+    cacheLife("seconds");
+    return null;
+  }
   try {
     const { data } = await supabase.from("respostas").select("*").eq("chave_busca", chaveBusca).maybeSingle().throwOnError();
+    if (data) cacheLife({ stale: 300, revalidate: 1800, expire: 3300 });
+    else cacheLife("seconds");
     return data as (Orientation & { id: string }) | null;
   } catch (erro) {
     unstable_rethrow(erro);
     console.error("[supabase] buscarRespostaPorChave falhou:", mensagemDoErro(erro));
+    cacheLife("seconds");
     return null;
   }
 }

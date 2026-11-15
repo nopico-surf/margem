@@ -664,6 +664,19 @@
   background:var(--colors-neutral-0);
 }
 
+/* Título da resposta de card (/conversa/[slug]) só pro leitor de tela e pros buscadores: a tela é
+   conversa e não tem título visível, mas a página precisa de um h1. Mesmo texto do <title>. */
+.figma-result-h1-oculto {
+  position:absolute;
+  width:var(--size-1);
+  height:var(--size-1);
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0 0 0 0);
+  white-space:nowrap;
+  border:0;
+}
+
 .figma-checklist-input {
   position:absolute;
   width:var(--size-1);
