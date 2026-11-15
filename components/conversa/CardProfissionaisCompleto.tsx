@@ -52,9 +52,12 @@ type CardProfissionaisCompletoProps = {
   posicao?: number;
   // De onde o perfil foi aberto, quando a rota não basta (nos guias de SEO, o slug do guia).
   origem?: string;
+  // Vem do servidor quando o card entra no prerender (/profissionais): ler o relógio no render tira
+  // a página do HTML (ver lib/anos-experiencia.ts). Montado só no navegador, pode faltar.
+  anoAtual?: number;
 };
 
-export function CardProfissionaisCompleto({ profissional, estado = "default", posicao, origem }: CardProfissionaisCompletoProps) {
+export function CardProfissionaisCompleto({ profissional, estado = "default", posicao, origem, anoAtual }: CardProfissionaisCompletoProps) {
   const pathname = usePathname();
 
   if (estado === "in-construction") {
@@ -104,7 +107,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
             </strong>
             <span>{rotuloEspecialidade(profissional)}</span>
           </div>
-          <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia)}</small>
+          <small>{profissional.registro_profissional && <>{registroLabel[profissional.especialidade]}: {profissional.registro_profissional}<br /></>}{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia, anoAtual)}</small>
         </div>
       </div>
       {profissional.tags.length > 0 && (

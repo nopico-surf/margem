@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
@@ -27,12 +26,21 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 type ProfissionaisClienteProps = {
   profissionais: ProfissionalCadastrado[];
+  especialidadeInicial: Especialidade;
+  anoAtual: number;
 };
 
-export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProps) {
-  // A especialidade mora só na URL: o replaceState de trocarEspecialidade atualiza o useSearchParams.
-  const especialidadeSelecionada = especialidadeDaUrl(useSearchParams().get("especialidade"));
+export function ProfissionaisCliente({ profissionais, especialidadeInicial, anoAtual }: ProfissionaisClienteProps) {
+  // A especialidade continua morando na URL, mas lida depois da hidratação, não com useSearchParams:
+  // o hook suspende a árvore do cliente e o HTML que chega a quem não roda JavaScript (robô de IA)
+  // fica sem a lista. O primeiro quadro usa a aba da rota, que já vem certa nos dois links do menu.
+  const [especialidadeSelecionada, setEspecialidadeSelecionada] = useState<Especialidade>(especialidadeInicial);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const daUrl = new URLSearchParams(window.location.search).get("especialidade");
+    if (daUrl) setEspecialidadeSelecionada(especialidadeDaUrl(daUrl));
+  }, []);
   const [fotosCarregadas, setFotosCarregadas] = useState<string[]>([]);
 
   const urlsDasFotos = profissionais.map((profissional) => fotoPequena(profissional.foto_url || URL_AVATAR_PADRAO));
@@ -72,6 +80,7 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
   }
 
   function trocarEspecialidade(especialidade: Especialidade) {
+    setEspecialidadeSelecionada(especialidade);
     window.history.replaceState(null, "", urlDaEspecialidade(especialidade));
   }
 
@@ -116,15 +125,25 @@ export function ProfissionaisCliente({ profissionais }: ProfissionaisClienteProp
           <CardProfissionaisCompleto estado="in-construction" />
         </ContainerConteudo>
       ) : !fotosProntas ? (
-        <div className="profissionais-grid">
-          {profissionaisFiltrados.map((profissional) => (
-            <CardProfissionalSkeleton key={profissional.id} />
-          ))}
-        </div>
+        <>
+          <div className="profissionais-grid">
+            {profissionaisFiltrados.map((profissional) => (
+              <CardProfissionalSkeleton key={profissional.id} />
+            ))}
+          </div>
+          {/* Enquanto o skeleton aparece, os cards de verdade (em ordem alfabética, sem o sorteio da
+              sessão) ficam no HTML fora da tela, pros robôs que não rodam JavaScript. Quem usa a tela
+              e o leitor de tela não vê nem alcança: aria-hidden e inert. Some quando os cards entram. */}
+          <div className="profissionais-grid figma-oculto-visual" aria-hidden="true" inert>
+            {profissionaisFiltrados.map((profissional) => (
+              <CardProfissionaisCompleto profissional={profissional} anoAtual={anoAtual} key={profissional.id} />
+            ))}
+          </div>
+        </>
       ) : (
         <div className="profissionais-grid">
           {profissionaisFiltrados.map((profissional, index) => (
-            <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} key={profissional.id} />
+            <CardProfissionaisCompleto profissional={profissional} posicao={index + 1} anoAtual={anoAtual} key={profissional.id} />
           ))}
         </div>
       )}

@@ -49,7 +49,7 @@ export default async function ConversaCardPage({ params }: Props) {
   const tituloDaPagina = (card.tituloSeo ?? card.titulo).replace(/ \| Margem$/, "");
   return (
     <>
-      <h1 className="figma-result-h1-oculto">{tituloDaPagina}</h1>
+      <h1 className="figma-oculto-visual">{tituloDaPagina}</h1>
       <CardResultado
         cardIndex={indice}
         slug={card.slug}

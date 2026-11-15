@@ -664,9 +664,10 @@
   background:var(--colors-neutral-0);
 }
 
-/* Título da resposta de card (/conversa/[slug]) só pro leitor de tela e pros buscadores: a tela é
-   conversa e não tem título visível, mas a página precisa de um h1. Mesmo texto do <title>. */
-.figma-result-h1-oculto {
+/* Fora da tela, mas no HTML. Usos: o h1 da resposta de card (/conversa/[slug]), que só existe pro
+   leitor de tela e pros buscadores, e os cards da /profissionais enquanto o skeleton aparece, pros
+   robôs que não rodam JavaScript (esses também saem do leitor de tela, com aria-hidden e inert). */
+.figma-oculto-visual {
   position:absolute;
   width:var(--size-1);
   height:var(--size-1);

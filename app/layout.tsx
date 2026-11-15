@@ -38,15 +38,17 @@ export const metadata: Metadata = {
   },
 };
 
-// Dados estruturados pro Google entender o que é a Margem. O `sameAs` liga o site ao perfil do
-// Instagram: é como as máquinas entendem que os dois são a mesma organização.
+// Dados estruturados pro Google entender o que é a Margem. O `sameAs` liga o site ao Instagram e ao
+// grupo do Facebook (que se chama "Outros olhares sobre Álcool e outras Drogas", mas é da Margem): é
+// como as máquinas entendem que são a mesma organização. Endereço canônico do grupo, sem o link de
+// compartilhamento nem utm.
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Margem",
   url: URL_DO_SITE,
   description: DESCRICAO,
-  sameAs: ["https://instagram.com/somos_margem_"],
+  sameAs: ["https://instagram.com/somos_margem_", "https://www.facebook.com/groups/1462309285950947/"],
 };
 
 export const viewport: Viewport = {
