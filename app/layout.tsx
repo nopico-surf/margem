@@ -38,13 +38,15 @@ export const metadata: Metadata = {
   },
 };
 
-// Dados estruturados pro Google entender o que é a Margem.
+// Dados estruturados pro Google entender o que é a Margem. O `sameAs` liga o site ao perfil do
+// Instagram: é como as máquinas entendem que os dois são a mesma organização.
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Margem",
   url: URL_DO_SITE,
   description: DESCRICAO,
+  sameAs: ["https://instagram.com/somos_margem_"],
 };
 
 export const viewport: Viewport = {

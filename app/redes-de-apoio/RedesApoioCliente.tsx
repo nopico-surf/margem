@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
@@ -24,10 +23,16 @@ const ROTA = "/redes-de-apoio";
 // Figma: Experiência do produto, frame "Profissionais" (1478:12507), mobile. O desktop é o da
 // /conversa: o ContainerConteudo e o CardRecurso já carregam as regras dele.
 export function RedesApoioCliente({ publicas, independentes }: RedesApoioClienteProps) {
-  const pathname = usePathname();
-  // A aba mora só na URL: o replaceState de trocarTipo atualiza o useSearchParams.
-  const tipoSelecionado = tipoDeRedeDaUrl(useSearchParams().get("tipo"));
+  // A aba continua morando na URL, mas lida depois da hidratação, não com useSearchParams: o hook
+  // suspende a árvore do cliente e o prerender perde as duas listas, então o HTML que chega a quem
+  // não roda JavaScript (robô de busca e de IA) fica só com o skeleton. Quem abre um link com
+  // ?tipo=independentes vê a aba Serviços públicos no primeiro quadro e a troca na hidratação.
+  const [tipoSelecionado, setTipoSelecionado] = useState<TipoRede>(tipoDeRedeDaUrl(null));
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setTipoSelecionado(tipoDeRedeDaUrl(new URLSearchParams(window.location.search).get("tipo")));
+  }, []);
 
   function abrirMenu() {
     setMenuOpen(true);
@@ -40,7 +45,8 @@ export function RedesApoioCliente({ publicas, independentes }: RedesApoioCliente
   }
 
   function trocarTipo(tipo: TipoRede) {
-    window.history.replaceState(null, "", `${pathname}?tipo=${tipo}`);
+    setTipoSelecionado(tipo);
+    window.history.replaceState(null, "", `${ROTA}?tipo=${tipo}`);
   }
 
   function selecionarTipo(tipo: TipoRede) {

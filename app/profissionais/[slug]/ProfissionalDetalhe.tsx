@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { SideMenu } from "@/components/layout/SideMenu";
 import { Footer } from "@/components/layout/Footer";
@@ -70,8 +70,9 @@ function gradienteDoTopo(foto: HTMLImageElement, menu: HTMLElement): string | nu
   }
 }
 
-export function ProfissionalDetalhe({ profissional }: { profissional: ProfissionalCadastrado }) {
-  const pathname = usePathname();
+type ProfissionalDetalheProps = { profissional: ProfissionalCadastrado; rota: string; anoAtual: number };
+
+export function ProfissionalDetalhe({ profissional, rota, anoAtual }: ProfissionalDetalheProps) {
   const router = useRouter();
   const paginaRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -108,7 +109,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
   function voltar() {
     const navegacao = (window as Window & { navigation?: { canGoBack: boolean } }).navigation;
     const temTelaAnterior = navegacao ? navegacao.canGoBack : window.history.length > 1;
-    track("voltar_clicado", { rota: pathname, destino: temTelaAnterior ? "tela_anterior" : "inicio" });
+    track("voltar_clicado", { rota, destino: temTelaAnterior ? "tela_anterior" : "inicio" });
     if (temTelaAnterior) router.back();
     else router.push("/inicio");
   }
@@ -126,7 +127,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
 
   function agendar() {
     track("agendar_whatsapp_clicado", {
-      rota: pathname,
+      rota,
       tipo_recurso: "profissional",
       profissional_id: profissional.id,
       recurso_nome: profissional.nome,
@@ -152,19 +153,19 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
       <Header
         onOpenMenu={() => {
           setMenuOpen(true);
-          track("menu_clicado", { rota: pathname });
+          track("menu_clicado", { rota });
         }}
         hrefDoLogo="/inicio"
-        onLogoClick={() => track("logo_clicado", { rota: pathname })}
+        onLogoClick={() => track("logo_clicado", { rota })}
         onVoltar={voltar}
         mostrarProfissionais={false}
       />
       <SideMenu
         open={menuOpen}
-        rota={pathname}
+        rota={rota}
         onClose={() => {
           setMenuOpen(false);
-          track("menu_fechado", { rota: pathname });
+          track("menu_fechado", { rota });
         }}
       />
 
@@ -180,7 +181,7 @@ export function ProfissionalDetalhe({ profissional }: { profissional: Profission
               <p className="profissional-especialidade">{rotuloEspecialidade(profissional)}</p>
               <div className="profissional-registro">
                 <span>{profissional.registro_profissional && `${registroLabel[profissional.especialidade]}: ${profissional.registro_profissional}`}</span>
-                <span>{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia)}</span>
+                <span>{rotuloAnosDeExperiencia(profissional.ano_inicio_experiencia, anoAtual)}</span>
               </div>
             </div>
 
