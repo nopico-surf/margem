@@ -11,7 +11,7 @@ export function ValorSessaoPsicologos({ especialidade = "psicologo" }: { especia
   const [minimo, maximo] = FAIXA[especialidade];
   return (
     <div className="valor-sessao">
-      <Badge color="secondary">Sessões de <strong>{minimo}</strong> a <strong>{maximo}</strong></Badge>
+      <Badge color="secondary">{especialidade === "psiquiatra" ? "Atendimentos" : "Sessões"} de <strong>{minimo}</strong> a <strong>{maximo}</strong></Badge>
       <p className="valor-sessao-texto">Você escolhe o valor dentro dessa faixa, sem precisar justificar</p>
     </div>
   );
