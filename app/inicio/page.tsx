@@ -5,7 +5,7 @@ import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 import { InicioCliente } from "./InicioCliente";
 import { InicioCarregando } from "./InicioCarregando";
 
-const TITULO = "Margem: apoio e redução de danos em álcool e outras drogas";
+const TITULO = "Saúde mental e redução de danos em álcool e outras drogas | Margem";
 const DESCRICAO =
   "Conte o que está vivendo e receba orientação, redução de danos e contatos de profissionais e serviços. Sem julgamento e sem precisar se identificar.";
 
