@@ -10,7 +10,6 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 - como ajudar alguém que usa drogas
 - recaída
 - internação involuntária
-- alcoólicos anônimos
 - overdose o que fazer
 - pode beber tomando remédio
 - cocaína e álcool
@@ -26,3 +25,4 @@ Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
 - 2026-11-11: lsd (/blog/lsd)
 - 2026-11-13: cannabis medicinal (/blog/cannabis-medicinal)
 - 2026-11-14: comunidade terapêutica (/blog/comunidade-terapeutica)
+- 2026-11-16: alcoólicos anônimos (/blog/alcoolicos-anonimos)

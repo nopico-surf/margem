@@ -3904,6 +3904,202 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Duas pessoas de costas, de chapéu, cuidando de uma horta num sítio: uma rega os canteiros com mangueira e a outra carrega um regador, com uma casa de madeira com varanda e árvores ao fundo.",
     imagemCard: true,
   },
+  // Guia dos Alcoólicos Anônimos (16/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do
+  // Google (docs/pesquisas-blog/alcoolicos-anonimos.md). Formato dos títulos: afirmativo (o anterior,
+  // comunidade-terapeutica, usou perguntas). Sem taxa, ninguém expulso e reunião aberta e fechada conferidos na
+  // página "O grupo" do aa.org.br; pesquisa pela revisão Cochrane de 2020, com cautela. Os 12 passos ficam
+  // resumidos com palavras nossas, sem copiar o texto do AA. Abstinência igual ao guia de como parar de beber.
+  // Sem telefone do AA (muda e fica no site oficial). Carrossel só no fim, como nos guias de serviços.
+  // Mesma exceção de copy dos outros guias.
+  {
+    slug: "alcoolicos-anonimos",
+    publicadoEm: "2026-11-16",
+    atualizadoEm: "2026-11-16",
+    title: "Alcoólicos Anônimos (AA): como funciona e como achar reunião | Margem",
+    descricao:
+      "Entenda como funciona o AA, o que acontece numa reunião, a diferença entre reunião aberta e fechada, os 12 passos, o que o AA não faz e onde achar reunião presencial ou online.",
+    h1: "Alcoólicos Anônimos: como funciona o AA e como encontrar uma reunião",
+    abertura:
+      "Talvez a bebida esteja pesando e alguém tenha falado do AA. Talvez você tenha vontade de ir, mas não sabe o que acontece lá dentro, se vai precisar falar ou se tem a ver com religião. Talvez seja alguém da sua família. O AA é um dos caminhos mais conhecidos pra quem quer parar de beber, e é sem custo. Não é o único, e não precisa ser o caminho de todo mundo. Aqui a gente explica como ele funciona, o que esperar da primeira reunião e um cuidado importante antes de parar.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: false,
+    secoes: [
+      {
+        titulo: "O que é o AA",
+        blocos: [
+          p("Alcoólicos Anônimos, o AA, é um grupo de ajuda mútua: pessoas que tiveram problemas com a bebida se encontram pra conversar sobre o que viveram e se apoiar pra ficar sem beber. Ninguém ali é profissional de saúde. A força do grupo está em ouvir e ser ouvido por quem passou por algo parecido."),
+          p("O AA começou em 1935, nos Estados Unidos, e hoje tem grupos no mundo todo, inclusive em muitas cidades do Brasil. Para participar, a única exigência é o desejo de parar de beber. Não é preciso se inscrever, apresentar documento nem provar nada."),
+          p("Não tem taxa nem mensalidade. Os grupos se mantêm com contribuições voluntárias dos próprios membros, que ninguém é obrigado a dar. O AA não é ligado a religião, partido nem empresa, e ninguém é expulso."),
+        ],
+      },
+      {
+        titulo: "Como funciona uma reunião do AA",
+        blocos: [
+          p("Cada grupo tem o seu jeito, mas a reunião costuma seguir um roteiro parecido:"),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Um membro do grupo coordena a reunião e lê alguns textos de abertura",
+              "Quem quiser conta um pouco da própria história com a bebida e de como está agora. No AA isso se chama depoimento ou partilha",
+              "Os outros escutam, sem interromper, sem dar conselho e sem julgar",
+              "No fim, costuma passar uma sacola pra contribuição voluntária. Dá pra não colocar nada",
+            ],
+          },
+          p("A reunião costuma durar entre uma hora e uma hora e meia. Muitos grupos se encontram toda semana no mesmo dia e horário, alguns todos os dias, e o lugar costuma ser uma sala cedida por uma igreja, uma escola ou uma associação de bairro."),
+          p("Com o tempo, muita gente escolhe um padrinho ou uma madrinha: alguém com mais tempo no grupo, que acompanha de perto e com quem dá pra conversar fora da reunião."),
+        ],
+      },
+      {
+        titulo: "O que esperar da primeira reunião",
+        blocos: [
+          p("É comum chegar com medo de ser reconhecido, de ter que falar ou de não se encaixar. Algumas coisas que ajudam a ir mais tranquilo:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Você não precisa falar. Dá pra só ouvir, quantas vezes quiser",
+              "Você não precisa dizer o nome completo, nem se apresentar como alcoólico se não se sentir assim",
+              "O que se fala na reunião fica na reunião, e quem você encontra lá não é exposto. É por isso que o grupo se chama anônimo",
+              "Dá pra visitar grupos diferentes até achar um em que você se sinta bem",
+              "Se for difícil ir pessoalmente, existem reuniões online, por vídeo ou só por áudio",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "A diferença entre reunião aberta e reunião fechada",
+        blocos: [
+          {
+            tipo: "tabela",
+            legenda: "Reunião aberta e reunião fechada no AA",
+            colunas: ["Tipo", "Quem pode ir"],
+            linhas: [
+              ["Reunião fechada", "Só quem tem problema com a bebida e deseja parar de beber"],
+              ["Reunião aberta", "Qualquer pessoa interessada, inclusive familiares, amigos, estudantes e profissionais"],
+            ],
+          },
+          p("Se você quer acompanhar alguém ou só entender como funciona, procure uma reunião aberta. A lista de reuniões costuma dizer qual é qual."),
+        ],
+      },
+      {
+        titulo: "Os 12 passos, em poucas palavras",
+        blocos: [
+          p("O programa do AA se organiza em 12 passos, um caminho que cada membro percorre no próprio ritmo, com o apoio do grupo e do padrinho ou da madrinha. Resumindo com as nossas palavras, eles passam por:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Reconhecer que a bebida saiu do controle e que sozinho está difícil",
+              "Confiar em algo maior do que você, do jeito que fizer sentido pra você",
+              "Olhar com honestidade pra própria vida e conversar sobre isso com alguém de confiança",
+              "Reparar, quando possível, o mal causado a outras pessoas",
+              "Seguir cuidando disso no dia a dia e ajudar quem está chegando",
+            ],
+          },
+          p("Além dos passos, o AA tem 12 tradições, que são as regras de convivência dos grupos, como o anonimato e o autossustento. Uma ideia que aparece muito nas reuniões é a de evitar o primeiro gole só por hoje, em vez de pensar no resto da vida de uma vez."),
+        ],
+      },
+      {
+        titulo: "A espiritualidade no AA",
+        blocos: [
+          p("O AA se define como espiritual, mas não religioso. Os passos falam em um Poder Superior e em Deus, cada um como o entende, e muitas reuniões terminam com uma oração. Pessoas de qualquer religião, e também sem religião, participam."),
+          p("Pra algumas pessoas, essa parte faz muito sentido. Pra outras, incomoda. Muita gente sem religião entende o Poder Superior como o próprio grupo. Se mesmo assim não for confortável pra você, tudo bem: existem outros caminhos de cuidado, que você vê mais abaixo."),
+        ],
+      },
+      {
+        titulo: "O que o AA não faz",
+        blocos: [
+          p("O AA não é tratamento de saúde, e não tenta ser. Ele não faz diagnóstico, não receita remédio, não interna, não cuida da abstinência e não oferece casa, comida ou ajuda em dinheiro. Ele também não cobra pra participar e não acompanha a vida dos membros fora do que cada um quiser contar."),
+          p("Por isso, um cuidado importante: se você bebe muito há bastante tempo, todos os dias ou quase todos, e costuma sentir tremor, suor, enjoo ou ansiedade quando fica sem beber, parar de uma vez pode ser perigoso. Nesse caso, fale com um médico antes de parar, ou logo no começo. Pode ser a Unidade Básica de Saúde, o [CAPS AD](/blog/caps-ad) ou um psiquiatra. O AA pode caminhar junto com esse cuidado. [Ler como parar de beber com mais segurança](/blog/como-parar-de-beber)"),
+        ],
+      },
+      {
+        titulo: "O que as pesquisas dizem sobre o AA",
+        blocos: [
+          p("Em 2020, a Cochrane, uma organização que reúne e compara estudos de saúde, revisou dezenas de pesquisas sobre o AA e os programas baseados nos 12 passos. A conclusão foi que eles ajudam mais pessoas a ficar sem beber por mais tempo, em comparação com outros tratamentos estudados."),
+          p("Isso não quer dizer que funciona pra todo mundo, nem que quem não se adaptou fez algo errado. Muita gente vai a algumas reuniões e não volta, e muita gente combina o grupo com terapia, consulta médica ou o CAPS AD. Voltar a beber depois de um tempo sem beber acontece com frequência e não apaga o que foi construído."),
+        ],
+      },
+      {
+        titulo: "O AA não é o único caminho",
+        blocos: [
+          p("O AA tem como meta parar de beber de vez, sempre um dia de cada vez. Nem todo mundo está nesse momento, e tudo bem. Pra algumas pessoas o caminho é diminuir e beber com menos risco, o que se chama [redução de danos](/blog/reducao-de-danos). Outros caminhos possíveis:"),
+          {
+            tipo: "lista",
+            itens: [
+              "CAPS AD: serviço do SUS especializado em álcool e outras drogas, que atende sem encaminhamento",
+              "Terapia com psicólogo, sozinha ou junto com o grupo",
+              "Consulta com psiquiatra, quando a abstinência preocupa ou quando há ansiedade, depressão ou insônia junto",
+              "Narcóticos Anônimos, que funcionam do mesmo jeito pra quem usa outras drogas, além ou no lugar do álcool",
+            ],
+          },
+          p("Muita gente combina mais de um desses caminhos. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Como encontrar uma reunião do AA",
+        blocos: [
+          p("O site oficial do AA no Brasil, aa.org.br, tem a lista de reuniões presenciais, com endereço, dia e horário, e de reuniões à distância, por vídeo ou telefone. No mesmo site dá pra falar por WhatsApp ou telefone com um membro do AA, pra tirar dúvidas antes de ir."),
+          p("Também dá pra perguntar na Unidade Básica de Saúde ou no CAPS AD do bairro, que costumam saber onde há grupos por perto. Na Margem, reunimos grupos de apoio presenciais e online. [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+        ],
+      },
+      {
+        titulo: "Apoio para a família: Al-Anon e Alateen",
+        blocos: [
+          p("Conviver com alguém que bebe pode ser muito desgastante. O Al-Anon reúne familiares e amigos de pessoas que bebem, sem custo e no mesmo formato de grupo. O Alateen faz parte do Al-Anon e é pra adolescentes e jovens que convivem com o álcool na família."),
+          p("Esses grupos são pra quem convive, mesmo que a outra pessoa não queira ir ao AA. Pressionar ou levar alguém à força pra uma reunião costuma afastar. Ajuda mais dizer o que você está vendo, sem acusar, e mostrar que o caminho existe quando ela quiser. Uma terapia pra você também é cuidado."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Com ou sem AA, conversar com alguém pode ajudar, pra quem bebe e pra família. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. Conversar sobre a bebida não leva a internação, e o que você conta fica em sigilo. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Fora da Margem, o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento, e a Unidade Básica de Saúde pode fazer o primeiro acolhimento. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Como funciona o Alcoólicos Anônimos?",
+        resposta:
+          "São grupos de ajuda mútua em que pessoas que tiveram problemas com a bebida se reúnem pra contar o que viveram e se apoiar pra ficar sem beber, seguindo um programa de 12 passos. A única exigência pra participar é o desejo de parar de beber.",
+      },
+      {
+        pergunta: "O AA é gratuito?",
+        resposta:
+          "Sim. Não tem taxa nem mensalidade. Os grupos se mantêm com contribuições voluntárias dos próprios membros, e ninguém é obrigado a contribuir.",
+      },
+      {
+        pergunta: "Existe reunião do AA online?",
+        resposta:
+          "Sim. O site oficial, aa.org.br, lista reuniões à distância, por vídeo ou telefone, em vários horários, além das presenciais.",
+      },
+      {
+        pergunta: "Preciso falar na primeira reunião?",
+        resposta:
+          "Não. Dá pra só ouvir, quantas vezes quiser, e não é preciso dizer o nome completo.",
+      },
+      {
+        pergunta: "Precisa ser religioso pra ir ao AA?",
+        resposta:
+          "Não. O AA não é ligado a nenhuma religião. Os passos falam em um Poder Superior, que cada pessoa entende do seu jeito, e participam pessoas de todas as crenças e sem crença.",
+      },
+      {
+        pergunta: "Familiar pode ir na reunião do AA?",
+        resposta:
+          "Pode, nas reuniões abertas. As fechadas são só pra quem tem problema com a bebida. Pra familiares e amigos, existem também o Al-Anon e, pra adolescentes, o Alateen.",
+      },
+      {
+        pergunta: "O que o AA não faz?",
+        resposta:
+          "O AA não é tratamento de saúde: não faz diagnóstico, não receita remédio, não interna e não cuida da abstinência. Quem bebe todo dia há muito tempo e sente tremor, suor ou ansiedade sem beber deve falar com um médico antes de parar.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Pessoas adultas sentadas em cadeiras dispostas em círculo num salão simples à noite, a maioria vista de costas ou de lado, com uma mesa em primeiro plano com garrafas térmicas de café, copinhos de papel e um pote de biscoitos.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
