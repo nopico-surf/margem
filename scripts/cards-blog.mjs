@@ -40,7 +40,7 @@ const RECORTES = {
   "lsd": { sujeito: [705, 1790], topo: 220, largura: 1500 },
   "cannabis-medicinal": { sujeito: [450, 1865], topo: 185, largura: 1680 },
   "comunidade-terapeutica": { sujeito: [780, 1500], topo: 150, largura: 1500 },
-  "alcoolicos-anonimos": { sujeito: [320, 1940], topo: 150, largura: 1700 },
+  "alcoolicos-anonimos": { sujeito: [225, 1945], topo: 150, largura: 1800 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {

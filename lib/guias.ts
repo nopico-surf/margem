@@ -4021,7 +4021,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "O AA não é o único caminho",
         blocos: [
-          p("O AA tem como meta parar de beber de vez, sempre um dia de cada vez. Nem todo mundo está nesse momento, e tudo bem. Pra algumas pessoas o caminho é diminuir e beber com menos risco, o que se chama [redução de danos](/blog/reducao-de-danos). Outros caminhos possíveis:"),
+          p("O AA trabalha com uma meta só: parar de beber de vez, um dia de cada vez. Ele não fala de redução de danos, e a Margem considera essa abordagem importante. Nem todo mundo está no momento de parar, e isso não impede de se cuidar. Pra muita gente, o caminho é diminuir a bebida e os riscos, e isso também é cuidado. [Ler sobre redução de danos](/blog/reducao-de-danos) Outros caminhos possíveis:"),
           {
             tipo: "lista",
             itens: [
@@ -4091,13 +4091,18 @@ export const GUIAS: Guia[] = [
           "Pode, nas reuniões abertas. As fechadas são só pra quem tem problema com a bebida. Pra familiares e amigos, existem também o Al-Anon e, pra adolescentes, o Alateen.",
       },
       {
+        pergunta: "O AA trabalha com redução de danos?",
+        resposta:
+          "Não. A meta do AA é parar de beber de vez. A Margem considera a redução de danos importante: diminuir a bebida e os riscos também é cuidado, e dá pra combinar com terapia, o CAPS AD ou outros caminhos.",
+      },
+      {
         pergunta: "O que o AA não faz?",
         resposta:
           "O AA não é tratamento de saúde: não faz diagnóstico, não receita remédio, não interna e não cuida da abstinência. Quem bebe todo dia há muito tempo e sente tremor, suor ou ansiedade sem beber deve falar com um médico antes de parar.",
       },
     ],
     imagem: true,
-    imagemAlt: "Pessoas adultas sentadas em cadeiras dispostas em círculo num salão simples à noite, a maioria vista de costas ou de lado, com uma mesa em primeiro plano com garrafas térmicas de café, copinhos de papel e um pote de biscoitos.",
+    imagemAlt: "Pessoas brasileiras de idades e cores variadas sentadas em cadeiras de plástico em círculo, num salão de bairro à noite, com uma mesa em primeiro plano com garrafa térmica vermelha, copinhos plásticos e um pote de biscoitos.",
     imagemCard: true,
   },
 ];

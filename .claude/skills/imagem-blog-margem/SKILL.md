@@ -13,6 +13,8 @@ Projeto: https://flow.google.com/project/f61255c7-6c18-4dae-8400-5b2925f64f5f
 
 Pensar uma cena que represente o tema do guia sem expor ninguém num momento de uso ou de sofrimento. O que já foi usado: mãos e objetos sobre a mesa (substâncias), roda de conversa (CAPS AD), mão em sinal de pare (como parar). Evitar seringa, sangue, pessoa caída, rosto em close de alguém que usa e qualquer texto escrito na imagem.
 
+Em cena com grupo de pessoas, o prompt sempre diz que são pessoas brasileiras de raças variadas.
+
 ## 2. Gerar no Flow
 
 Usar o Claude in Chrome (`mcp__claude-in-chrome__*`), onde a conta Google do Vitor está sempre logada. Abrir uma aba nova no projeto.
