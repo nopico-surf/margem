@@ -13,7 +13,6 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 - overdose o que fazer
 - pode beber tomando remédio
 - cocaína e álcool
-- filho usando drogas
 - como saber se sou alcoólatra
 - ansiedade e álcool
 
@@ -26,3 +25,4 @@ Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
 - 2026-11-13: cannabis medicinal (/blog/cannabis-medicinal)
 - 2026-11-14: comunidade terapêutica (/blog/comunidade-terapeutica)
 - 2026-11-16: alcoólicos anônimos (/blog/alcoolicos-anonimos)
+- 2026-11-17: filho usando drogas (/blog/filho-usando-drogas)

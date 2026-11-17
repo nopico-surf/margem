@@ -4105,6 +4105,214 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Pessoas brasileiras de idades e cores variadas sentadas em cadeiras de plástico em círculo, num salão de bairro à noite, com uma mesa em primeiro plano com garrafa térmica vermelha, copinhos plásticos e um pote de biscoitos.",
     imagemCard: true,
   },
+  // Guia pra mães e pais de filho que usa drogas (17/11/2026, tarefa diária), escrito depois da pesquisa dos 10
+  // primeiros do Google (docs/pesquisas-blog/filho-usando-drogas.md). Formato dos títulos: perguntas (o anterior,
+  // alcoolicos-anonimos, usou afirmativos). Internação involuntária igual ao guia do psicólogo pra álcool e drogas;
+  // sinais de emergência iguais aos guias de cocaína e de como parar de usar drogas; CAPS infantojuvenil como no
+  // guia da maconha. Sem citar clínica, comunidade ou grupo de "amor exigente" pelo nome. Mesma exceção de copy
+  // dos outros guias.
+  {
+    slug: "filho-usando-drogas",
+    publicadoEm: "2026-11-17",
+    atualizadoEm: "2026-11-17",
+    title: "Filho usando drogas: o que fazer e como conversar | Margem",
+    descricao:
+      "Descobriu ou desconfia que seu filho está usando drogas? Veja que sinais observar, como conversar sem brigar, como pôr limites, o que muda se ele for adulto e onde buscar apoio.",
+    h1: "Filho usando drogas: o que fazer, como conversar e onde buscar apoio",
+    abertura:
+      "Talvez você tenha achado alguma coisa no quarto, sentido um cheiro diferente ou notado que seu filho anda distante. Talvez ele mesmo tenha contado. Medo, raiva, culpa e vontade de resolver tudo hoje costumam vir juntos. Respire: a primeira reação não precisa ser a definitiva, e a maior parte das situações tem caminho sem internação. Aqui a gente fala do que observar, de como puxar a conversa, de como pôr limites sem romper o vínculo e de onde buscar apoio, pra ele e pra você.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "Como saber se meu filho está usando drogas?",
+        blocos: [
+          p("Não existe um sinal que confirme sozinho. Muitas das mudanças que preocupam os pais também aparecem na adolescência, numa fase de tristeza, ansiedade ou conflito, ou por outros problemas de saúde. Mais do que um detalhe isolado, o que pede atenção é uma mudança que dura e que vem junto com outras:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Mudança grande no sono, no apetite ou no humor, que não passa",
+              "Queda nas notas, faltas na escola ou no trabalho",
+              "Afastamento dos amigos de sempre e das coisas de que gostava",
+              "Pedidos de dinheiro sem explicação, ou dinheiro e objetos sumindo de casa",
+              "Olhos vermelhos, cheiro diferente na roupa, isqueiros, sedas ou embalagens pequenas",
+              "Segredos e mentiras sobre onde estava e com quem",
+            ],
+          },
+          p("Vasculhar o celular, seguir ou fazer teste escondido costuma quebrar a confiança e afastar justo quando você mais precisa dela. Se algo está preocupando, o caminho mais seguro é conversar."),
+        ],
+      },
+      {
+        titulo: "Experimentar é o mesmo que ter problema com drogas?",
+        blocos: [
+          p("Não. Muita gente experimenta álcool ou outra droga na adolescência e não segue usando, e nem todo uso vira um problema. Isso não quer dizer que não haja risco: quanto mais cedo começa e quanto mais frequente fica, maior a chance de o uso atrapalhar a saúde, os estudos e as relações."),
+          p("O que costuma indicar que o uso está pesando é ele começar a ocupar espaço: acontecer cada vez mais vezes, vir antes de coisas importantes, continuar mesmo trazendo prejuízo, ou a pessoa tentar diminuir e não conseguir. Um psicólogo, o CAPS infantojuvenil ou o CAPS AD podem ajudar a entender em que momento seu filho está."),
+        ],
+      },
+      {
+        titulo: "O que fazer quando descubro que meu filho usa drogas?",
+        blocos: [
+          p("O primeiro passo costuma ser não agir no calor da descoberta. Algumas coisas que ajudam:"),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Espere a raiva baixar antes de conversar. Briga, grito e castigo no impulso costumam fechar a porta",
+              "Se houver outro responsável, conversem antes entre vocês, pra falar a mesma coisa ao filho",
+              "Escolha um momento calmo, sem pressa, e nunca enquanto ele estiver sob efeito",
+              "Procure entender o que está acontecendo antes de decidir o que fazer",
+              "Busque orientação pra você, mesmo que ele ainda não queira ajuda",
+            ],
+          },
+          p("Se houver risco imediato, como seu filho desacordado, com dificuldade pra respirar, com convulsão ou muito confuso, a conversa fica pra depois: veja mais abaixo o que fazer numa emergência."),
+        ],
+      },
+      {
+        titulo: "Como conversar com um filho que usa drogas?",
+        blocos: [
+          p("Uma conversa sozinha raramente resolve, e tudo bem. O objetivo da primeira é abrir um canal que continue aberto. Costuma ajudar:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Falar do que você viu e sentiu, sem acusar. Em vez de \"você está se drogando\", algo como \"eu achei isso no seu quarto e fiquei com medo por você\"",
+              "Perguntar mais do que afirmar: o que ele usa, desde quando, em que situações, o que sente",
+              "Perguntar o que a droga está resolvendo pra ele. Às vezes ela alivia ansiedade, tristeza, timidez ou um problema que você não conhecia",
+              "Ouvir até o fim, mesmo quando a resposta incomoda",
+              "Dizer com clareza que você está do lado dele, mesmo não concordando com o uso",
+              "Evitar rótulos e comparações, como \"drogado\", \"viciado\" ou \"você vai acabar como fulano\"",
+            ],
+          },
+          p("Se a conversa virar briga, dá pra parar e combinar de voltar ao assunto outro dia. Se ele não quiser falar, mostre que a porta continua aberta."),
+        ],
+      },
+      {
+        titulo: "Como pôr limites sem abandonar meu filho?",
+        blocos: [
+          p("Limite não é castigo nem ameaça. É deixar claro o que você aceita dentro de casa e o que vai fazer se isso não for respeitado, e cumprir com calma. Alguns exemplos de limite:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não aceitar uso de drogas dentro de casa",
+              "Não dar dinheiro em espécie quando ele pode ir pra droga. Dá pra pagar direto a conta, a passagem ou o curso",
+              "Não pagar dívidas ligadas ao uso nem esconder dos outros as consequências dele",
+              "Combinar horários e avisos, e o que acontece se não forem cumpridos",
+            ],
+          },
+          p("Ao mesmo tempo, vale reforçar os momentos bons: elogiar quando ele cumpre o combinado, fazer junto algo de que ele gosta, estar presente quando ele está bem. O vínculo é o que mais ajuda a pessoa a aceitar apoio mais pra frente."),
+          p("Se houver violência ou ameaça em casa, a sua segurança e a de quem mora com você vêm primeiro. Numa situação de perigo, ligue para a Polícia no 190."),
+        ],
+      },
+      {
+        titulo: "E se meu filho for usar mesmo assim?",
+        blocos: [
+          p("Nem sempre o filho vai parar só porque os pais pediram. Enquanto isso, dá pra conversar sobre como reduzir os riscos, sem que isso signifique aprovar o uso. É o que se chama [redução de danos](/blog/reducao-de-danos):"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não misturar drogas entre si nem com álcool ou remédios",
+              "Não dirigir e não pegar carona com quem usou",
+              "Não usar sozinho, e ter alguém de confiança por perto",
+              "Beber água e comer, e não usar quando estiver mal",
+              "Saber que pode ligar pra casa a qualquer hora, sem sermão naquele momento, se precisar de ajuda pra voltar ou se alguém passar mal",
+            ],
+          },
+          p("Esse último combinado pode fazer muita diferença: o filho que tem medo da reação dos pais demora mais pra pedir ajuda numa emergência."),
+        ],
+      },
+      {
+        titulo: "O que muda se meu filho for menor de idade?",
+        blocos: [
+          p("Enquanto ele tem menos de 18 anos, os pais ou responsáveis respondem por ele e participam das decisões sobre a saúde dele. Também é a fase em que o uso traz mais riscos, porque o cérebro ainda está em formação. Vale buscar orientação cedo, sem esperar o uso piorar."),
+          p("Pelo SUS, o CAPS infantojuvenil atende crianças e adolescentes em sofrimento psíquico, inclusive pelo uso de álcool e outras drogas, nas cidades que têm. Onde não tem, o [CAPS AD](/blog/caps-ad) ou a Unidade Básica de Saúde do bairro fazem o primeiro acolhimento. O pediatra ou o médico da família também podem orientar e encaminhar."),
+          p("Na terapia, o psicólogo conversa com os responsáveis sobre o que for necessário pro cuidado, mas não repete tudo o que o adolescente conta. Esse espaço de sigilo costuma ser o que faz ele se abrir."),
+        ],
+      },
+      {
+        titulo: "E se meu filho já for adulto?",
+        blocos: [
+          p("Um filho maior de idade decide sobre a própria vida e o próprio tratamento. Na maior parte das situações, ele não pode ser levado a se tratar contra a vontade. Isso costuma ser a parte mais difícil de aceitar."),
+          p("O que não muda é a influência. Os pais continuam sendo, muitas vezes, quem ele procura quando as coisas apertam. Conversar sem acusar, pôr limites sobre a casa e o dinheiro e mostrar que o apoio existe quando ele quiser continua valendo. Se ele mora com você, os combinados da casa podem ser revistos, sempre com clareza e sem ameaça."),
+        ],
+      },
+      {
+        titulo: "Dá pra internar um filho contra a vontade?",
+        blocos: [
+          p("A lei brasileira permite a internação involuntária só em situações específicas: um médico precisa avaliar e autorizar, ela só acontece quando outros tratamentos não deram conta e dura o tempo necessário pra desintoxicação. A internação precisa ser comunicada ao Ministério Público."),
+          p("Na maior parte das vezes, o cuidado funciona melhor quando a pessoa participa da decisão, e a maioria dos jovens pode ser cuidada sem sair de casa. Lugar que oferece buscar seu filho à força ou impede a saída dele está fora da lei. Antes de pensar em internação, o CAPS pode ajudar a família a entender o momento e os caminhos possíveis. [Entender o que é uma comunidade terapêutica e o que conferir](/blog/comunidade-terapeutica)"),
+        ],
+      },
+      {
+        titulo: "A culpa é minha?",
+        blocos: [
+          p("Quase todo pai e toda mãe se pergunta onde errou. O uso de drogas tem muitas causas, que passam pela própria pessoa, pelos amigos, pela escola, pelo bairro, pelo que ela está sentindo e pelo acesso às substâncias. Ninguém escolhe sozinho o caminho de outra pessoa, nem um filho."),
+          p("Culpa paralisa. O que ajuda é olhar pro que está ao seu alcance agora: a forma de conversar, os combinados da casa, o cuidado com você. Isso vale também quando a família está passando por um momento difícil."),
+        ],
+      },
+      {
+        titulo: "Quando é uma emergência?",
+        blocos: [
+          p("Se seu filho estiver desacordado, com dificuldade pra respirar, tiver uma convulsão, dor forte no peito ou ficar muito confuso, ligue para o SAMU no 192 e, se puder, diga o que foi usado: isso ajuda no atendimento. Enquanto espera, não deixe ele sozinho. Se ele estiver desacordado e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+          p("Se ele falar em se machucar ou em não querer mais viver, leve a sério: não deixe ele sozinho e procure ajuda na hora. O CVV atende 24 horas pelo 188, e o SAMU, no 192."),
+        ],
+      },
+      {
+        titulo: "Quem cuida de quem cuida?",
+        blocos: [
+          p("Acompanhar um filho que usa drogas cansa, assusta e às vezes isola. Você também merece cuidado, e não precisa esperar ele aceitar ajuda pra buscar o seu. Pais que se cuidam costumam ter mais calma pra conversar e mais força pra manter os combinados."),
+          p("O Nar-Anon reúne familiares e amigos de pessoas que usam drogas, e o Al-Anon, de pessoas que bebem, sem custo, com reuniões presenciais e online. Muitos CAPS AD atendem familiares mesmo quando a pessoa que usa não quer ir. E uma terapia pra você também é cuidado. [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio?",
+        blocos: [
+          p("Conversar com alguém pode ajudar, pro seu filho e pra você. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. Conversar sobre o uso não leva a internação, e o que se conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Fora da Margem, o CAPS infantojuvenil e o [CAPS AD](/blog/caps-ad) atendem pelo SUS sem encaminhamento, e a Unidade Básica de Saúde pode fazer o primeiro acolhimento. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ler sobre os caminhos pra parar de usar drogas](/blog/como-parar-de-usar-drogas)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o momento de vocês antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "O que fazer quando o filho está usando drogas?",
+        resposta:
+          "Esperar a raiva baixar, escolher um momento calmo pra conversar, ouvir mais do que falar e buscar orientação. O CAPS infantojuvenil, o CAPS AD, a Unidade Básica de Saúde e um psicólogo podem ajudar a entender o momento e os caminhos possíveis.",
+      },
+      {
+        pergunta: "Como saber se meu filho está usando drogas?",
+        resposta:
+          "Nenhum sinal confirma sozinho. Pedem atenção mudanças que duram e vêm juntas: no sono, no humor, na escola, nos amigos, no dinheiro. O caminho mais seguro é conversar, sem vasculhar nem acusar.",
+      },
+      {
+        pergunta: "Como conversar com um filho que usa drogas?",
+        resposta:
+          "Num momento calmo, sem ele estar sob efeito, falando do que você viu e sentiu, sem acusar, perguntando o que está acontecendo e ouvindo até o fim. Uma conversa só raramente resolve; o importante é o canal continuar aberto.",
+      },
+      {
+        pergunta: "Devo dar dinheiro pro meu filho que usa drogas?",
+        resposta:
+          "Dinheiro em espécie pode acabar indo pra droga. Uma alternativa é pagar direto o que ele precisa, como a conta, a passagem ou o curso, e não assumir dívidas ligadas ao uso.",
+      },
+      {
+        pergunta: "Posso internar meu filho contra a vontade dele?",
+        resposta:
+          "Só em situações específicas previstas em lei, com avaliação e autorização de um médico e comunicação ao Ministério Público. Na maior parte das vezes, o cuidado funciona melhor sem internação e com a participação dele.",
+      },
+      {
+        pergunta: "Onde buscar ajuda de graça pra um filho que usa drogas?",
+        resposta:
+          "Pelo SUS, no CAPS infantojuvenil, pra crianças e adolescentes, no CAPS AD e na Unidade Básica de Saúde. Pra família, o Nar-Anon e o Al-Anon têm reuniões presenciais e online, sem custo.",
+      },
+      {
+        pergunta: "A culpa de o filho usar drogas é dos pais?",
+        resposta:
+          "Não. O uso tem muitas causas, e ninguém escolhe sozinho o caminho de outra pessoa. O que ajuda é olhar pro que está ao seu alcance agora: a conversa, os combinados da casa e o cuidado com você.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Uma mãe e um filho adolescente sentados frente a frente à mesa da cozinha no fim da tarde, conversando, com a mão dela sobre a dele, duas canecas na toalha florida e um filtro de barro e uma geladeira com ímãs ao fundo.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
