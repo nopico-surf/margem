@@ -4313,6 +4313,217 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Uma mãe e um filho adolescente sentados frente a frente à mesa da cozinha no fim da tarde, conversando, com a mão dela sobre a dele, duas canecas na toalha florida e um filtro de barro e uma geladeira com ímãs ao fundo.",
     imagemCard: true,
   },
+  // Guia de internação involuntária (18/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do
+  // Google (docs/pesquisas-blog/internacao-involuntaria.md). Formato dos títulos: afirmativo (o anterior,
+  // filho-usando-drogas, usou perguntas). Regras da Lei 10.216/2001 e do art. 23-A da Lei 11.343/2006 (incluído
+  // pela Lei 13.840/2019), iguais aos guias de comunidade terapêutica, do psicólogo pra álcool e drogas e do filho
+  // usando drogas; sinais de emergência iguais ao guia do filho. A Margem se posiciona pelo cuidado em liberdade
+  // sem desqualificar a família que pensa em internar. Sem citar clínica pelo nome. Mesma exceção de copy dos
+  // outros guias.
+  {
+    slug: "internacao-involuntaria",
+    publicadoEm: "2026-11-18",
+    atualizadoEm: "2026-11-18",
+    title: "Internação involuntária: como funciona e o que diz a lei | Margem",
+    descricao:
+      "Quando a lei permite internar alguém sem o consentimento, quem pode pedir, quanto tempo dura, como é pelo SUS, quais são os direitos da pessoa internada e que caminhos existem antes.",
+    h1: "Internação involuntária: o que diz a lei, como funciona e que caminhos existem antes",
+    abertura:
+      "Quem procura por internação involuntária quase sempre está num momento muito difícil: alguém que você ama usa álcool ou outras drogas, as coisas parecem fora de controle e a ideia de internar aparece como a última saída. Esse cansaço e esse medo são reais. Aqui a gente explica o que a lei permite, como o pedido funciona, quais são os direitos da pessoa internada e que outros caminhos existem, pra que a decisão, qualquer que seja, venha com informação e não só com desespero.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "Os três tipos de internação previstos na lei",
+        blocos: [
+          p("A Lei 10.216, de 2001, conhecida como Lei da Reforma Psiquiátrica, prevê três formas de internação em saúde mental. Elas são diferentes e não devem ser confundidas:"),
+          {
+            tipo: "tabela",
+            legenda: "Internação voluntária, involuntária e compulsória, lado a lado",
+            colunas: ["Tipo", "Quem decide", "Como começa"],
+            linhas: [
+              ["Voluntária", "A própria pessoa", "Ela concorda e assina uma declaração na entrada"],
+              ["Involuntária", "Um médico, a pedido de um terceiro", "A família ou o responsável pede, e o médico avalia e autoriza"],
+              ["Compulsória", "Um juiz", "Uma decisão da Justiça, baseada em laudo médico"],
+            ],
+          },
+          p("A internação involuntária, então, é a que acontece sem o consentimento da pessoa, a pedido de outra pessoa e com autorização de um médico. Não precisa de ordem judicial, mas também não pode ser decidida só pela família."),
+        ],
+      },
+      {
+        titulo: "Quando a lei permite a internação involuntária",
+        blocos: [
+          p("A lei trata a internação como exceção. Ela só pode ser indicada quando os cuidados fora do hospital, como o CAPS e o atendimento ambulatorial, não deram conta da situação. Sempre exige um laudo médico que explique os motivos."),
+          p("Na prática, ela costuma ser considerada quando há um risco sério e imediato, como:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Risco de a pessoa tirar a própria vida ou se machucar gravemente",
+              "Risco de ela agredir outras pessoas",
+              "Intoxicação grave ou uma abstinência perigosa, que precisa de cuidado médico",
+              "Perda grave da capacidade de cuidar de si, como deixar de comer, beber água ou se proteger",
+            ],
+          },
+          p("Usar drogas, mesmo com frequência, não basta sozinho pra justificar uma internação involuntária. Quando o motivo é o uso de álcool ou outras drogas, a Lei 13.840, de 2019, pede ainda uma avaliação do tipo de substância e do padrão de uso, e que fique comprovado que outros tratamentos da rede de saúde não podiam ser usados naquele momento."),
+        ],
+      },
+      {
+        titulo: "Como funciona o pedido",
+        blocos: [
+          p("O pedido pode ser feito por um familiar ou pelo responsável legal. Quando a pessoa não tem família nem responsável, um servidor público da saúde ou da assistência social também pode pedir. Profissionais da segurança pública não podem. O caminho costuma ser este:"),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "A família procura um serviço de saúde: o CAPS AD, um pronto-socorro, uma emergência psiquiátrica ou, numa crise, o SAMU",
+              "Um médico avalia a pessoa e decide se a internação é mesmo necessária, ou se há outro caminho",
+              "Se for, o pedido é feito por escrito e o médico registra os motivos num laudo",
+              "A internação acontece em unidade de saúde ou hospital geral com equipe de vários profissionais",
+              "O serviço comunica a internação ao Ministério Público e à Defensoria Pública em até 72 horas, e de novo na alta",
+            ],
+          },
+          p("Essa comunicação existe pra proteger a pessoa internada e impedir que a internação vire um jeito de prender alguém. É um cuidado da lei, não uma denúncia contra a família."),
+        ],
+      },
+      {
+        titulo: "Quanto tempo dura e como termina",
+        blocos: [
+          p("A internação dura o tempo necessário pra estabilizar a situação de saúde. Quando o motivo é o uso de drogas, a lei fala no tempo necessário pra desintoxicação, com prazo máximo de 90 dias. Durante a internação, a equipe precisa fazer um plano de cuidado individual, com participação da família."),
+          p("Ela termina quando o médico responsável entende que não há mais indicação, ou quando a família ou o responsável legal pede por escrito, a qualquer momento. A alta não é o fim do cuidado: o mais importante costuma acontecer depois, perto de casa."),
+        ],
+      },
+      {
+        titulo: "Internação involuntária pelo SUS é gratuita",
+        blocos: [
+          p("Pelo SUS, a internação é gratuita, e a lei pede que ela aconteça de preferência em leito de hospital geral, onde também dá pra cuidar de outros problemas de saúde que aparecerem. Não existe uma fila em que a família se inscreve: a porta de entrada é um serviço de saúde que avalia a pessoa."),
+          p("Fora de uma crise, o melhor lugar pra começar é o [CAPS AD](/blog/caps-ad). A equipe conhece a rede da sua cidade, ajuda a entender se a internação é mesmo o caminho e, se for, encaminha. Alguns CAPS AD funcionam 24 horas e têm leitos pra acolher a pessoa por alguns dias, sem que isso seja uma internação em hospital. Numa crise, o SAMU, no 192, ou o pronto-socorro mais perto."),
+          p("Clínicas particulares cobram pela internação, e os valores variam muito. Antes de fechar qualquer coisa, vale conferir se o lugar é um serviço de saúde, com médico responsável registrado no CRM e alvará da Vigilância Sanitária."),
+        ],
+      },
+      {
+        titulo: "O que a lei proíbe",
+        blocos: [
+          p("Algumas práticas comuns são ilegais, mesmo quando são vendidas como solução:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Internar contra a vontade em comunidade terapêutica. Ali, a entrada é sempre voluntária e a pessoa pode sair quando quiser",
+              "Internar sem avaliação e autorização de um médico",
+              "Manter a pessoa em lugar com características de asilo, isolada, sem tratamento de saúde de verdade",
+              "Impedir a pessoa de se comunicar, aplicar castigos ou manter a internação depois que o médico deu alta",
+            ],
+          },
+          p("Desconfie de quem oferece buscar alguém à força em casa antes de qualquer avaliação médica. Levar uma pessoa contra a vontade sem seguir a lei pode ser crime, e a família também pode responder. [Entender o que é uma comunidade terapêutica e o que conferir](/blog/comunidade-terapeutica)"),
+        ],
+      },
+      {
+        titulo: "Os direitos da pessoa internada",
+        blocos: [
+          p("Ser internada sem consentimento não tira os direitos da pessoa. A Lei 10.216 garante, entre outros:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Ser tratada com respeito e humanidade, protegida de abuso e exploração",
+              "Ter acesso a um médico que explique por que a internação foi feita",
+              "Receber informação sobre a própria saúde e o tratamento",
+              "Ter acesso a meios de comunicação",
+              "Ter sigilo sobre o que conta",
+              "Ser tratada pelos meios menos invasivos possíveis, de preferência em serviços perto de onde vive",
+            ],
+          },
+          p("Se você acha que uma internação está sendo feita de forma abusiva, com a pessoa presa, sem contato ou sem tratamento, o Ministério Público e a Defensoria Pública da sua cidade podem ser procurados."),
+        ],
+      },
+      {
+        titulo: "O que a Margem acredita",
+        blocos: [
+          p("A Margem acredita no cuidado em liberdade. Na maior parte das vezes, o cuidado funciona melhor quando a pessoa participa das decisões sobre a própria vida, e quando acontece perto de casa, dos vínculos e da rotina. A internação pode salvar uma vida numa crise, mas ela não é o tratamento: é uma pausa curta, e o que vem depois é o que mais pesa."),
+          p("Quando a pessoa sai sem ter construído nenhum cuidado fora dali, é comum voltar à situação de antes. Por isso, mesmo quando a internação acontece, vale já pensar no que vem depois: CAPS AD, terapia, grupos de apoio, [redução de danos](/blog/reducao-de-danos)."),
+          p("Isso não diz que a família que pensa em internar está errada. Quem chega nesse ponto quase sempre está exausto e com medo, e tem razão em querer proteger quem ama. O que a gente quer é que a internação, quando acontecer, seja pelo motivo certo, do jeito que a lei prevê, e não a única porta que a família conhece."),
+        ],
+      },
+      {
+        titulo: "Caminhos antes da internação",
+        blocos: [
+          p("Mesmo quando a pessoa não quer ajuda agora, a família tem o que fazer:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Procurar o CAPS AD, que atende familiares mesmo quando a pessoa que usa não quer ir",
+              "Conversar num momento calmo, sem ela estar sob efeito, falando do que você vê e sente, sem acusar",
+              "Combinar limites claros sobre a casa e o dinheiro, e cumprir com calma",
+              "Falar de como reduzir os riscos enquanto o uso continua: não misturar substâncias, não usar sozinho, não dirigir",
+              "Manter a porta aberta, pra que ela saiba que pode pedir ajuda quando quiser",
+            ],
+          },
+          p("Muitas pessoas que hoje não aceitam ajuda aceitam mais pra frente, e o vínculo com a família costuma ser o que faz essa diferença. [Ler sobre o que fazer quando um filho usa drogas](/blog/filho-usando-drogas) [Ler sobre os caminhos pra parar de usar drogas](/blog/como-parar-de-usar-drogas)"),
+        ],
+      },
+      {
+        titulo: "Quando é uma emergência",
+        blocos: [
+          p("Se a pessoa estiver desacordada, com dificuldade pra respirar, tiver uma convulsão, dor forte no peito ou ficar muito confusa, ligue para o SAMU no 192 e, se puder, diga o que foi usado. Enquanto espera, não deixe ela sozinha. Se estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+          p("Se ela falar em se machucar ou em não querer mais viver, leve a sério: não deixe ela sozinha e procure ajuda na hora. O CVV atende 24 horas pelo 188, e o SAMU, no 192. Se houver violência ou ameaça em casa, a sua segurança vem primeiro: numa situação de perigo, ligue para a Polícia no 190."),
+        ],
+      },
+      {
+        titulo: "Cuidado pra quem cuida",
+        blocos: [
+          p("Conviver com alguém que usa álcool ou outras drogas e chegar a pensar em internação costuma ser exaustivo. Você também merece cuidado, e não precisa esperar a outra pessoa aceitar ajuda pra buscar o seu."),
+          p("O Nar-Anon reúne familiares e amigos de pessoas que usam drogas, e o Al-Anon, de pessoas que bebem, sem custo, com reuniões presenciais e online. Uma terapia pra você também é cuidado. [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Conversar com alguém pode ajudar, pra pessoa que usa e pra você. Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. Conversar sobre o uso não leva a internação, e o que se conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Fora da Margem, o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento, e a Unidade Básica de Saúde pode fazer o primeiro acolhimento. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o momento de vocês antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "O que é internação involuntária?",
+        resposta:
+          "É a internação feita sem o consentimento da pessoa, a pedido de um familiar ou responsável legal e com avaliação e autorização de um médico. Está prevista na Lei 10.216, de 2001, e só deve acontecer quando os cuidados fora do hospital não deram conta.",
+      },
+      {
+        pergunta: "Qual a diferença entre internação involuntária e compulsória?",
+        resposta:
+          "A involuntária é pedida pela família ou pelo responsável e autorizada por um médico, sem precisar de juiz. A compulsória é determinada pela Justiça, com base em laudo médico.",
+      },
+      {
+        pergunta: "Qual o prazo máximo da internação involuntária?",
+        resposta:
+          "Ela dura o tempo necessário pra estabilizar a situação. Quando o motivo é o uso de drogas, a lei fala no tempo necessário pra desintoxicação, com prazo máximo de 90 dias. A família pode pedir o fim da internação por escrito a qualquer momento.",
+      },
+      {
+        pergunta: "Como conseguir internação involuntária gratuita?",
+        resposta:
+          "Pelo SUS. Fora de uma crise, o caminho é o CAPS AD, que avalia a situação e encaminha se a internação for necessária. Numa crise, o SAMU, no 192, ou o pronto-socorro.",
+      },
+      {
+        pergunta: "Quem pode pedir a internação involuntária?",
+        resposta:
+          "Um familiar ou o responsável legal. Na falta deles, um servidor público da saúde ou da assistência social. Profissionais da segurança pública não podem pedir. Em todos os casos, quem autoriza é um médico.",
+      },
+      {
+        pergunta: "Comunidade terapêutica pode fazer internação involuntária?",
+        resposta:
+          "Não. Na comunidade terapêutica, a entrada é sempre voluntária e a pessoa pode sair quando quiser. A internação involuntária só pode acontecer em unidade de saúde ou hospital geral.",
+      },
+      {
+        pergunta: "A internação involuntária resolve o uso de drogas?",
+        resposta:
+          "Ela pode proteger a vida numa crise, mas não é o tratamento. O que costuma fazer diferença é o cuidado que vem depois, perto de casa: CAPS AD, terapia, grupos de apoio e redução de danos.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Uma mulher de meia-idade e um rapaz sentados lado a lado diante de uma profissional de saúde de jaleco branco, numa sala de atendimento com paredes verde-claras, biombos, um vaso de planta e uma mesa com prancheta, pastas e um copo d'água.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {

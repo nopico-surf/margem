@@ -42,6 +42,7 @@ const RECORTES = {
   "comunidade-terapeutica": { sujeito: [780, 1500], topo: 150, largura: 1500 },
   "alcoolicos-anonimos": { sujeito: [225, 1945], topo: 150, largura: 1800 },
   "filho-usando-drogas": { sujeito: [170, 1730], topo: 120, largura: 1800 },
+  "internacao-involuntaria": { sujeito: [165, 1935], topo: 120, largura: 1800 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {
