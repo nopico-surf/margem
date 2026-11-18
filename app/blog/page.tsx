@@ -41,6 +41,7 @@ export default function BlogPage() {
               <CardPublico
                 href={`/blog/${guia.slug}`}
                 foto={guia.imagem ? caminhoDaImagemDoCard(guia) : undefined}
+                posicaoDaFoto={guia.posicaoDaFotoDoCard}
                 // A largura do slot, não a da viewport: o card perde os 16 de padding da página no
                 // celular e os 32 mais o gap do grid no tablet. Sem isso o navegador pede um degrau
                 // de imagem acima do que vai mostrar.

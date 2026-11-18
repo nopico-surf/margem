@@ -54,6 +54,9 @@ export type Guia = {
   // Recorte mais aproximado pro card da lista, em /public/blog/<slug>-card.webp (proporção próxima de 2:1).
   // Sem ele, o card usa a imagem do topo.
   imagemCard?: boolean;
+  // Onde o card ancora a foto (object-position), quando o centro corta o rosto das pessoas: o card tem
+  // altura fixa e, numa coluna larga, mostra só a faixa do meio. Sem ele, "center".
+  posicaoDaFotoDoCard?: string;
 };
 
 const p = (texto: string): BlocoGuia => ({ tipo: "paragrafo", texto });
@@ -4523,6 +4526,8 @@ export const GUIAS: Guia[] = [
     imagem: true,
     imagemAlt: "Uma mulher de meia-idade e um rapaz sentados lado a lado diante de uma profissional de saúde de jaleco branco, numa sala de atendimento com paredes verde-claras, biombos, um vaso de planta e uma mesa com prancheta, pastas e um copo d'água.",
     imagemCard: true,
+    // Os rostos ficam no alto da imagem: ancorado no centro, o card cortava as cabeças.
+    posicaoDaFotoDoCard: "center top",
   },
 ];
 
