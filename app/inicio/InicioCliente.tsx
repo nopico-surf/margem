@@ -213,8 +213,8 @@ export function InicioCliente({ profissionais }: { profissionais: ProfissionalCa
                   <h3>Importante</h3>
                   <p>
                     A Margem realiza atendimento psicológico e psiquiátrico online com valor social, com especialidade
-                    no cuidado de pessoas em uso de álcool e outras drogas. Mesmo tendo esse foco, atendemos qualquer
-                    pessoa que não esteja nessa condição.
+                    no cuidado de pessoas em uso de álcool e outras drogas. Mesmo tendo esse foco, também atendemos
+                    pessoas que não estejam nessa condição.
                   </p>
                   <p>
                     Se você tem menos de 18 anos, converse com seus responsáveis.
