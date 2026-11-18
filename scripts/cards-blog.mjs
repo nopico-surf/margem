@@ -41,7 +41,7 @@ const RECORTES = {
   "cannabis-medicinal": { sujeito: [450, 1865], topo: 185, largura: 1680 },
   "comunidade-terapeutica": { sujeito: [780, 1500], topo: 150, largura: 1500 },
   "alcoolicos-anonimos": { sujeito: [225, 1945], topo: 150, largura: 1800 },
-  "filho-usando-drogas": { sujeito: [165, 1935], topo: 100, largura: 1800 },
+  "filho-usando-drogas": { sujeito: [230, 1840], topo: 100, largura: 1800 },
   "internacao-involuntaria": { sujeito: [165, 1935], topo: 120, largura: 1800 },
 };
 
