@@ -910,6 +910,12 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   color: var(--colors-alpha-80);
 }
 
+/* 188 e 192 ligam direto no celular; mesmo texto, só sublinhado. */
+.home-importante p a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 /* Desktop: os três lado a lado. 368 de altura em 1080 e 1920, 483 em 2800. No Figma os três dividem
    a linha por igual e o padding do Importante soma por fora: as duas primeiras colunas valem um terço
    do que sobra depois dos gaps e dos 48 de padding, e a terceira fica com o resto.
@@ -922,7 +928,8 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
     grid-template-columns: repeat(2, calc((100% - 4 * var(--spacing-24)) / 3)) 1fr;
     grid-template-rows: minmax(0, 1fr) auto;
     gap: 0 var(--spacing-24);
-    height: max(23rem, 17.25vw);
+    /* Mínimo, não fixo: entre 768 e ~900 o texto do Importante não cabe em 368 e a linha cresce. */
+    min-height: max(23rem, 17.25vw);
   }
 
   .home-publico .card-publico {
@@ -1128,9 +1135,9 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   height: 0.75rem;
 }
 
-/* 159 é o Importante pronto no mobile. */
+/* 267 é o Importante pronto no mobile (375 de largura). */
 .home-osso-importante {
-  min-height: 9.9375rem;
+  min-height: 16.6875rem;
 }
 
 .home-osso-importante .figma-skeleton {

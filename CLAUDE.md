@@ -8,7 +8,7 @@ Este arquivo fica na raiz do repositório. É a primeira coisa que você lê ant
 
 Uma plataforma web onde alguém que usa álcool ou outras drogas, ou alguém próximo dessa pessoa, chega, descreve o que está vivendo e recebe na mesma tela: acolhimento, orientação prática, um checklist do que dá pra fazer agora e contatos reais de quem pode ajudar.
 
-A Margem é ponte, não substituto. Não é clínica, não é terapia, não é chat de conversa contínua. Ela conecta a serviços públicos, grupos de apoio e profissionais que já existem.
+A Margem realiza atendimento psicológico e psiquiátrico online com valor social, com especialidade no cuidado de pessoas em uso de álcool e outras drogas, e atende também quem não está nessa condição (texto do Importante da `/inicio`, desde 18/11/2026). Além do atendimento, a plataforma conecta a serviços públicos, grupos de apoio e profissionais que já existem. Não é chat de conversa contínua.
 
 Consequência prática disso: nenhuma tela pode dar a entender que a Margem resolve sozinha, e nenhuma tela pode prometer resultado.
 

@@ -7,7 +7,7 @@ import { InicioCarregando } from "./InicioCarregando";
 
 const TITULO = "Saúde mental e redução de danos em álcool e outras drogas | Margem";
 const DESCRICAO =
-  "Conte o que está vivendo e receba orientação, redução de danos e contatos de profissionais e serviços. Sem julgamento e sem precisar se identificar.";
+  "Atendimento psicológico e psiquiátrico online com valor social, especializado em álcool e outras drogas. Conte o que está vivendo e receba orientação, sem julgamento.";
 
 // Sem canonical, o Google trata /inicio?utm_source=... (links do Instagram) como cópia.
 export const metadata: Metadata = {

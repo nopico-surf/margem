@@ -212,8 +212,16 @@ export function InicioCliente({ profissionais }: { profissionais: ProfissionalCa
                 <div className="home-importante-texto">
                   <h3>Importante</h3>
                   <p>
-                    A Margem não faz atendimento e não substitui profissional ou serviço público. Se você tem menos de
-                    18 anos, conversar com seus responsáveis pode ajudar
+                    A Margem realiza atendimento psicológico e psiquiátrico online com valor social, com especialidade
+                    no cuidado de pessoas em uso de álcool e outras drogas. Mesmo tendo esse foco, atendemos qualquer
+                    pessoa que não esteja nessa condição.
+                  </p>
+                  <p>
+                    Se você tem menos de 18 anos, converse com seus responsáveis. Em caso de urgência, ligue
+                    <br />
+                    <a href="tel:188">188</a> (CVV) para apoio emocional
+                    <br />
+                    <a href="tel:192">192</a> (SAMU) para emergência médica
                   </p>
                 </div>
                 <Button variante="transparent" tamanho="x-small" semPadding className="home-importante-dados" onClick={() => verDados("importante")}>

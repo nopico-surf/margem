@@ -19,7 +19,8 @@ const urbanist = Urbanist({
 });
 
 const URL_DO_SITE = "https://www.somosmargem.com.br";
-const DESCRICAO = "Orientação e conexão profissional para pessoas em uso de álcool ou outras drogas";
+const DESCRICAO =
+  "Atendimento psicológico e psiquiátrico online com valor social e orientação para pessoas em uso de álcool e outras drogas";
 
 export const metadata: Metadata = {
   metadataBase: new URL(URL_DO_SITE),
