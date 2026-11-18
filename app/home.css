@@ -1135,9 +1135,9 @@ html.keyboard-cramped .home-hero[data-expandido="true"] .home-hero-texto {
   height: 0.75rem;
 }
 
-/* 267 é o Importante pronto no mobile (375 de largura). */
+/* 293 é o Importante pronto no mobile (375 de largura). */
 .home-osso-importante {
-  min-height: 16.6875rem;
+  min-height: 18.3125rem;
 }
 
 .home-osso-importante .figma-skeleton {

@@ -217,7 +217,10 @@ export function InicioCliente({ profissionais }: { profissionais: ProfissionalCa
                     pessoa que não esteja nessa condição.
                   </p>
                   <p>
-                    Se você tem menos de 18 anos, converse com seus responsáveis. Em caso de urgência, ligue
+                    Se você tem menos de 18 anos, converse com seus responsáveis.
+                  </p>
+                  <p>
+                    Em caso de urgência, ligue:
                     <br />
                     <a href="tel:188">188</a> (CVV) para apoio emocional
                     <br />
