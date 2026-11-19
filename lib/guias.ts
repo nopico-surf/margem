@@ -4738,8 +4738,11 @@ export const GUIAS: Guia[] = [
           "Com a maioria dos antibióticos, pouca quantidade não corta o efeito, mas pode aumentar o enjoo e atrapalhar a recuperação. Com metronidazol e tinidazol, não: a mistura causa uma reação forte, inclusive dias depois da última dose.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Uma mulher de cabelo cacheado conversa com uma farmacêutica de jaleco branco no balcão de vidro de uma farmácia de bairro, com prateleiras cheias de caixas coloridas ao fundo, uma cestinha azul e um frasco de álcool em gel sobre o balcão.",
+    imagemCard: true,
+    // As cabeças ficam perto do alto do recorte: ancorado no centro, o card podia cortá-las.
+    posicaoDaFotoDoCard: "center top",
   },
 ];
 
