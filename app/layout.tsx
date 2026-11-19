@@ -30,24 +30,26 @@ export const metadata: Metadata = {
     type: "website",
     title: "Margem",
     description: DESCRICAO,
-    images: [{ url: "/assets/og-margem.webp", width: 1200, height: 630, alt: "Margem" }],
+    images: [{ url: "/assets/og-margem.jpg", width: 1200, height: 630, alt: "Margem" }],
     siteName: OG_SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/assets/og-margem.webp"],
+    images: ["/assets/og-margem.jpg"],
   },
 };
 
 // Dados estruturados pro Google entender o que é a Margem. O `sameAs` liga o site ao Instagram e ao
 // grupo do Facebook (que se chama "Outros olhares sobre Álcool e outras Drogas", mas é da Margem): é
 // como as máquinas entendem que são a mesma organização. Endereço canônico do grupo, sem o link de
-// compartilhamento nem utm.
+// compartilhamento nem utm. O `logo` é o símbolo do favicon em PNG: buscadores e o ChatGPT não leem
+// o icon.svg como logo da marca.
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Margem",
   url: URL_DO_SITE,
+  logo: `${URL_DO_SITE}/assets/logo-margem.png`,
   description: DESCRICAO,
   sameAs: ["https://instagram.com/somos_margem_", "https://www.facebook.com/groups/1462309285950947/"],
 };
