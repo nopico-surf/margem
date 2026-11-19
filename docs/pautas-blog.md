@@ -8,9 +8,8 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 
 - como parar de usar crack
 - como ajudar alguém que usa drogas
-- recaída
+- recaída drogas
 - overdose o que fazer
-- pode beber tomando remédio
 - cocaína e álcool
 - como saber se sou alcoólatra
 - ansiedade e álcool
@@ -26,3 +25,4 @@ Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
 - 2026-11-16: alcoólicos anônimos (/blog/alcoolicos-anonimos)
 - 2026-11-17: filho usando drogas (/blog/filho-usando-drogas)
 - 2026-11-18: internação involuntária (/blog/internacao-involuntaria)
+- 2026-11-19: pode beber tomando remédio (/blog/pode-beber-tomando-remedio)

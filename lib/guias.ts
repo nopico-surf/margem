@@ -4529,6 +4529,218 @@ export const GUIAS: Guia[] = [
     // Os rostos ficam no alto da imagem: ancorado no centro, o card cortava as cabeças.
     posicaoDaFotoDoCard: "center top",
   },
+  // Guia de álcool com remédios (19/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/pode-beber-tomando-remedio.md). Formato dos títulos: perguntas (o anterior,
+  // internacao-involuntaria, usou afirmativos). Fatos conferidos contra os guias de clonazepam (álcool soma o efeito
+  // de calmantes), como parar de beber (dissulfiram), opioides (paracetamol e fígado), MDMA (antidepressivos) e
+  // sintomas de abstinência; sinais de emergência iguais aos outros guias. Sem número fixo de horas pra antibiótico:
+  // o texto manda pra bula e pro farmacêutico. Mesma exceção de copy dos outros guias.
+  {
+    slug: "pode-beber-tomando-remedio",
+    publicadoEm: "2026-11-19",
+    atualizadoEm: "2026-11-19",
+    title: "Pode beber tomando remédio? Riscos e o que saber | Margem",
+    descricao:
+      "Quais remédios não combinam com álcool, se o álcool corta o efeito do antibiótico, quem toma remédio controlado pode beber, quanto tempo esperar e onde tirar a dúvida sobre o seu caso.",
+    h1: "Pode beber tomando remédio? O que acontece, quais misturas pedem cuidado e onde tirar a dúvida",
+    abertura:
+      "Tem uma festa no fim de semana, um aniversário, uma cerveja com os amigos, e você está tomando algum remédio. A dúvida é comum e não tem uma resposta só: depende do remédio, da quantidade de álcool e da sua saúde. Algumas misturas quase não mudam nada, outras pedem cuidado e algumas podem ser perigosas. Aqui a gente explica o que acontece no corpo, quais remédios pedem mais atenção, o que é mito e onde tirar a dúvida sobre o seu caso, sem sermão.",
+    carrossel: ["psiquiatra", "psicologo"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "Pode beber tomando remédio?",
+        blocos: [
+          p("Depende do remédio. Com muitos deles, a recomendação é evitar o álcool ou beber bem pouco. Com alguns, a mistura pode causar uma reação forte ou deixar a respiração lenta demais. E com outros, uma quantidade pequena não costuma trazer problema."),
+          p("Por isso, a resposta mais segura é olhar o seu remédio específico. A bula tem uma parte sobre interações, e o farmacêutico de qualquer farmácia pode responder na hora, sem custo. Se você bebe com frequência, contar isso ao médico que receitou ajuda ele a escolher o remédio e a dose certos pra você."),
+        ],
+      },
+      {
+        titulo: "O que acontece quando se mistura álcool e remédio?",
+        blocos: [
+          p("O álcool e boa parte dos remédios passam pelo fígado pra serem processados. Quando os dois chegam juntos, o fígado pode dar conta de um deles mais devagar ou mais depressa do que o esperado. Na prática, a mistura pode:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Somar os efeitos: álcool e remédios que dão sono, juntos, deixam a pessoa muito mais sedada do que cada um sozinho",
+              "Aumentar os efeitos colaterais, como tontura, enjoo, queda de pressão e irritação no estômago",
+              "Diminuir o efeito do remédio, como acontece com alguns tratamentos de uso contínuo",
+              "Provocar uma reação própria, com vermelhidão, enjoo, vômito e coração acelerado, no caso de alguns remédios",
+              "Sobrecarregar o fígado, principalmente em quem bebe muito ou com frequência",
+            ],
+          },
+          p("O risco costuma ser maior pra pessoas mais velhas, pra quem tem algum problema no fígado e pra quem toma vários remédios ao mesmo tempo."),
+        ],
+      },
+      {
+        titulo: "Quais remédios não podem ser misturados com álcool?",
+        blocos: [
+          p("A lista abaixo não tem todos, mas reúne os grupos que mais pedem atenção. O nome do remédio pode ser diferente do que aparece aqui: na dúvida, a bula e o farmacêutico dizem a qual grupo ele pertence."),
+          {
+            tipo: "tabela",
+            legenda: "Grupos de remédios que pedem cuidado com álcool e o que a mistura pode causar",
+            colunas: ["Tipo de remédio", "Exemplos", "O que pode acontecer"],
+            linhas: [
+              ["Calmantes e remédios pra dormir", "Clonazepam, diazepam, alprazolam, zolpidem", "Sono profundo, apagão, quedas e respiração lenta demais"],
+              ["Opioides", "Codeína, tramadol, morfina", "Sedação forte e respiração lenta demais"],
+              ["Antidepressivos e antipsicóticos", "Fluoxetina, sertralina, amitriptilina, quetiapina", "Mais sono e tontura, e piora da ansiedade e do humor"],
+              ["Antialérgicos que dão sono", "Dexclorfeniramina, prometazina, hidroxizina", "Muito sono, tontura e reflexo lento"],
+              ["Paracetamol", "Remédios pra dor e febre, sozinhos ou em fórmulas pra gripe", "Mais risco de lesão no fígado, principalmente em quem bebe muito ou com frequência"],
+              ["Anti-inflamatórios e AAS", "Ibuprofeno, diclofenaco, ácido acetilsalicílico", "Irritação e sangramento no estômago"],
+              ["Alguns antibióticos e antifúngicos", "Metronidazol, tinidazol", "Enjoo, vômito, vermelhidão, coração acelerado, mesmo dias depois da última dose"],
+              ["Remédios pra diabetes", "Insulina, glibenclamida, gliclazida", "Açúcar baixo no sangue, que pode ser confundido com embriaguez"],
+              ["Remédios pra pressão", "Vários tipos", "Queda de pressão, tontura e desmaio"],
+              ["Anticoagulantes", "Varfarina", "Mudança no efeito do remédio e mais risco de sangramento"],
+            ],
+          },
+          p("Alguns antidepressivos mais antigos, da classe IMAO, e o antibiótico linezolida ainda pedem cuidado com cervejas artesanais, cervejas e vinhos caseiros e outras bebidas ricas em tiramina, que podem subir muito a pressão. E o dissulfiram, usado por quem quer parar de beber, provoca uma reação forte com qualquer quantidade de álcool. [Entender os remédios usados pra parar de beber](/blog/como-parar-de-beber)"),
+        ],
+      },
+      {
+        titulo: "O álcool corta o efeito do antibiótico?",
+        blocos: [
+          p("Na maioria dos antibióticos, uma quantidade pequena de álcool não corta o efeito. Isso não quer dizer que beber durante o tratamento seja uma boa ideia: o álcool pode aumentar o enjoo e a dor de estômago que alguns antibióticos já causam, atrapalhar o sono e deixar a recuperação mais lenta."),
+          p("A exceção importante é o metronidazol, e também o tinidazol, usados em infecções intestinais, ginecológicas e dentárias. Com álcool, eles podem causar uma reação parecida com a do dissulfiram: vermelhidão no rosto, enjoo, vômito, dor de cabeça e coração acelerado. A recomendação é não beber durante o tratamento e por alguns dias depois da última dose, pelo prazo que a bula indica. Alguns xaropes, enxaguantes bucais e cervejas \"sem álcool\" têm um pouco de álcool e também contam."),
+        ],
+      },
+      {
+        titulo: "E o anticoncepcional, o álcool corta o efeito?",
+        blocos: [
+          p("Não. O álcool não diminui o efeito da pílula nem do anticoncepcional injetável. O que pode atrapalhar é vomitar pouco tempo depois de tomar a pílula, porque ela pode não ter sido absorvida. Se isso acontecer, a bula explica o que fazer, e o farmacêutico também pode orientar."),
+          p("O álcool também pode fazer a pessoa esquecer de tomar a pílula no horário ou deixar de usar camisinha. Nos dois casos, vale lembrar que a camisinha é o que protege de infecções sexualmente transmissíveis."),
+        ],
+      },
+      {
+        titulo: "Quem toma remédio controlado pode beber?",
+        blocos: [
+          p("\"Remédio controlado\" é o que precisa de receita especial, como muitos calmantes, antidepressivos, antipsicóticos, estabilizadores de humor e remédios pra dor mais fortes. Boa parte deles age no cérebro, e o álcool também. Por isso, a recomendação geral é evitar a mistura, ou pelo menos conversar com quem receitou antes."),
+          p("Com calmantes e remédios pra dormir, o risco é o mais sério: os dois juntos podem deixar a respiração lenta demais, mesmo em quantidades que separadas pareceriam pequenas. Com antidepressivos, a mistura costuma aumentar o sono e a tontura, e o álcool pode piorar justamente a ansiedade e a tristeza que o remédio está tratando. [Ler sobre o clonazepam e o risco de misturar com álcool](/blog/clonazepam)"),
+          p("Vinho, cerveja ou destilado não faz diferença nesse ponto: o que conta é a quantidade de álcool. E cada caso é um caso. Um psiquiatra pode conversar com você sobre o que faz sentido no seu tratamento, inclusive sobre beber, sem julgamento."),
+        ],
+      },
+      {
+        titulo: "Posso pular o remédio no dia em que for beber?",
+        blocos: [
+          p("Parece uma saída, mas pode trazer outro risco. Alguns remédios não devem ser interrompidos de uma vez, nem por um ou dois dias:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Antidepressivos podem causar tontura, enjoo, irritação e sensação de choque quando são parados de repente",
+              "Calmantes usados todo dia por semanas podem causar abstinência, que pode ser perigosa",
+              "Remédios pra convulsão, quando falham, podem trazer uma crise",
+              "Remédios pra pressão, diabetes e coração deixam de proteger justo no dia em que o corpo está mais exigido",
+            ],
+          },
+          p("Se a dúvida é entre o remédio e a festa, vale falar com o médico ou o farmacêutico antes. Às vezes dá pra ajustar o horário, às vezes a orientação é beber menos naquele dia. Parar ou mudar um remédio por conta própria é o caminho com mais risco. [Ler sobre sintomas de abstinência](/blog/sintomas-de-abstinencia)"),
+        ],
+      },
+      {
+        titulo: "Quanto tempo depois de tomar remédio posso beber?",
+        blocos: [
+          p("Não existe um prazo que sirva pra todos. Cada remédio fica um tempo diferente no corpo, e isso aparece na bula. Algumas referências que ajudam:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Remédio de uso contínuo, tomado todo dia, está sempre no corpo. Esperar algumas horas depois da dose não resolve a interação",
+              "Remédio tomado uma vez só, como um analgésico pra dor de cabeça, costuma sair do corpo em algumas horas, mas o tempo varia",
+              "Metronidazol e tinidazol pedem alguns dias sem álcool depois da última dose",
+              "O caminho inverso também vale: depois de beber, o álcool leva horas pra sair do corpo, e quanto mais se bebeu, mais tempo leva",
+            ],
+          },
+          p("Depois de uma noite de muita bebida, o paracetamol pra ressaca merece atenção, porque o fígado ainda está trabalhando pra eliminar o álcool. Se você precisa de um remédio nessa hora, o farmacêutico pode indicar a opção mais segura."),
+        ],
+      },
+      {
+        titulo: "E se eu bebo todo dia e o médico pediu pra parar?",
+        blocos: [
+          p("Quem bebe muito e todo dia pode ter sintomas de abstinência ao parar de uma vez: tremor, suor, ansiedade, insônia e, em alguns casos, convulsão e confusão grave. Por isso, se o médico pediu pra parar de beber por causa de um remédio ou de um tratamento, vale contar a ele quanto você bebe hoje, pra ele planejar uma parada segura."),
+          p("Essa conversa não precisa vir com vergonha. O médico precisa dessa informação pra cuidar de você, e o que você conta fica em sigilo. Se o assunto é diminuir ou parar de beber, existem caminhos com apoio, inclusive sem internação. [Ler sobre os caminhos pra parar de beber](/blog/como-parar-de-beber)"),
+        ],
+      },
+      {
+        titulo: "Se eu for beber mesmo assim, como reduzir os riscos?",
+        blocos: [
+          p("A decisão é sua. Se você for beber estando em tratamento, algumas coisas diminuem o risco. É o que se chama [redução de danos](/blog/reducao-de-danos):"),
+          {
+            tipo: "lista",
+            itens: [
+              "Perguntar antes ao farmacêutico ou ao médico se o seu remédio tem alguma interação séria",
+              "Beber menos do que de costume e mais devagar, intercalando com água",
+              "Comer antes e durante",
+              "Não somar outros calmantes, remédios pra dormir ou outras drogas",
+              "Não dirigir e não pegar carona com quem bebeu",
+              "Estar com alguém de confiança que saiba qual remédio você toma",
+              "Parar de beber se sentir muito sono, tontura forte ou o coração acelerado",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "E outras drogas junto com remédio?",
+        blocos: [
+          p("Não é só o álcool que interage com remédios. O MDMA com antidepressivos pode causar uma reação grave, com febre, tremor e confusão. Calmantes com opioides, GHB ou ketamina somam a sedação, como acontece com o álcool. E a cocaína junto com álcool sobrecarrega o coração. [Ler sobre o MDMA e as misturas perigosas](/blog/mdma) [Ler sobre opioides](/blog/opioides)"),
+          p("Se você usa alguma substância e toma remédio, vale contar ao médico. Ele não precisa concordar com o uso pra ajudar você a evitar uma combinação perigosa, e o que você conta fica em sigilo."),
+        ],
+      },
+      {
+        titulo: "Quando é uma emergência?",
+        blocos: [
+          p("Se alguém que misturou álcool com remédio estiver desacordado, não acordar quando chamado, respirar muito devagar, ficar com os lábios roxos, tiver uma convulsão ou vomitar sem acordar, ligue para o SAMU no 192 e, se puder, diga qual remédio foi tomado e quanto se bebeu. Enquanto espera, não deixe a pessoa sozinha. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+          p("Se a pessoa falar em se machucar ou em não querer mais viver, leve a sério: não deixe ela sozinha e procure ajuda na hora. O CVV atende 24 horas pelo 188, e o SAMU, no 192."),
+        ],
+      },
+      {
+        titulo: "Onde tirar a dúvida sobre o meu remédio?",
+        blocos: [
+          p("O farmacêutico, em qualquer farmácia, pode dizer na hora se o seu remédio combina com álcool, sem custo. A bula também traz essa informação, na parte de interações. O médico que receitou ou a Unidade Básica de Saúde do seu bairro podem ajustar o tratamento se você bebe com frequência."),
+          p("Se a dúvida vem junto com uma preocupação com o quanto você bebe, conversar com alguém pode ajudar. Na Margem, a consulta com psiquiatra custa de R$ 110 a R$ 290, e a sessão com psicólogo, de R$ 60 a R$ 200. Tudo online, e você escolhe o valor dentro da faixa. Conversar sobre o uso não leva a internação, e o que se conta fica em sigilo. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("Fora da Margem, o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento quem quer cuidar da relação com o álcool e outras drogas. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Contar o que está acontecendo", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Pode tomar remédio e beber cerveja?",
+        resposta:
+          "Depende do remédio. Com calmantes, remédios pra dormir, opioides, metronidazol e outros, a mistura pode ser perigosa. Com outros, pouca quantidade não costuma trazer problema. O farmacêutico pode responder na hora sobre o seu caso.",
+      },
+      {
+        pergunta: "Qual remédio não pode misturar com álcool?",
+        resposta:
+          "Os que mais pedem cuidado são calmantes e remédios pra dormir, opioides, antidepressivos, antialérgicos que dão sono, paracetamol, anti-inflamatórios, metronidazol, remédios pra diabetes, pra pressão e anticoagulantes.",
+      },
+      {
+        pergunta: "O álcool corta o efeito do remédio?",
+        resposta:
+          "Às vezes. O álcool pode diminuir o efeito de alguns remédios e aumentar o de outros. Na maioria dos antibióticos e no anticoncepcional, ele não corta o efeito, mas isso não quer dizer que a mistura seja recomendada.",
+      },
+      {
+        pergunta: "Quanto tempo depois de tomar remédio posso beber?",
+        resposta:
+          "Não existe um prazo único. Remédio de uso contínuo está sempre no corpo. Metronidazol e tinidazol pedem alguns dias sem álcool depois da última dose. A bula e o farmacêutico dizem o prazo do seu remédio.",
+      },
+      {
+        pergunta: "Quantas horas depois de beber posso tomar remédio?",
+        resposta:
+          "Depende de quanto você bebeu e de qual remédio. O álcool leva horas pra sair do corpo, e quanto mais se bebeu, mais tempo leva. Depois de muita bebida, o paracetamol merece atenção por causa do fígado.",
+      },
+      {
+        pergunta: "Quem toma remédio controlado pode beber vinho?",
+        resposta:
+          "Vinho tem álcool como qualquer bebida. Com calmantes e remédios pra dormir, a mistura pode deixar a respiração lenta demais. Com antidepressivos, aumenta o sono e pode piorar o humor. Vale conversar com quem receitou.",
+      },
+      {
+        pergunta: "Pode beber tomando antibiótico?",
+        resposta:
+          "Com a maioria dos antibióticos, pouca quantidade não corta o efeito, mas pode aumentar o enjoo e atrapalhar a recuperação. Com metronidazol e tinidazol, não: a mistura causa uma reação forte, inclusive dias depois da última dose.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {
