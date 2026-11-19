@@ -99,6 +99,9 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
                 <a className="app-footer-item" href="/mochila/cenarios">
                   <span>Mochila do rolê</span>
                 </a>
+                <a className="app-footer-item" href="/quem-somos">
+                  <span>Quem somos</span>
+                </a>
               </div>
             </nav>
           )}

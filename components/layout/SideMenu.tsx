@@ -62,6 +62,12 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
     router.push("/mochila/cenarios");
   }
 
+  function irParaQuemSomos() {
+    track("quem_somos_menu_clicado", { rota });
+    onClose();
+    router.push("/quem-somos");
+  }
+
   // Botão com router.push não tem o prefetch automático do <Link>, então sem isto a /profissionais só
   // começa a baixar no clique e a tela anterior fica parada até o servidor responder. Baixando quando
   // o menu abre, o clique já mostra o skeleton. As duas URLs são a mesma rota: o Next baixa uma vez só.
@@ -146,6 +152,7 @@ export function SideMenu({ open, onClose, rota, onSelecionarEspecialidade, onSel
             <div className="side-menu-professionals">
               <button type="button" onClick={irParaBlog}>Blog</button>
               <button type="button" onClick={irParaMochila}>Mochila do rolê</button>
+              <button type="button" onClick={irParaQuemSomos}>Quem somos</button>
             </div>
           </>
         )}
