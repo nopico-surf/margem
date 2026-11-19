@@ -74,7 +74,7 @@ Exceção: a tarefa agendada diária do blog (decidida em 08/11/2026) não esper
 
 ## 6. Ao escrever
 
-- Seguir o formato dos guias existentes em `lib/guias.ts` (abertura, seções, lista, FAQ, botão "Contar o que está acontecendo").
+- Seguir o formato dos guias existentes em `lib/guias.ts` (abertura, seções, lista, FAQ, botão "Receber orientação gratuita").
 - Zero travessão, pessoa antes da situação, sem "viciado", "dependente" como rótulo ou culpa.
 - Quando o assunto vai contra o que a Margem defende (abstinência como única meta, internação, comunidade terapêutica, tratamento que exclui a redução de danos), o texto diz com clareza o que a gente acredita e por quê, sem impor e sem desqualificar quem escolhe aquele caminho. Ex.: no guia do AA, "Ele não fala de redução de danos, e a Margem considera essa abordagem importante"; no de comunidade terapêutica, "A Margem acredita no cuidado em liberdade". Explicar o caminho com honestidade, posicionar a Margem e mostrar as alternativas.
 - Links internos pros guias relacionados e pra `/redes-de-apoio`.

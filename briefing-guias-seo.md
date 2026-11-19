@@ -70,7 +70,7 @@ Os marcadores `[CARROSSEL TOPO]`, `[CARROSSEL FIM]` e `[IMAGEM TOPO]` no conteú
 
 ### Links e botões que não são carrossel
 
-- Na página de álcool e outras drogas, o botão "Contar o que está acontecendo" leva pra tela de orientação da Margem (`/conversa` ou a rota equivalente que existir).
+- Na página de álcool e outras drogas, o botão "Receber orientação gratuita" leva pra tela de orientação da Margem (`/conversa` ou a rota equivalente que existir).
 - Na página "Como conferir o registro", no fim, dois botões com os textos "Ver psicólogos a valor social" e "Ver psiquiatras a valor social", levando pra página de profissionais com o filtro do tipo.
 - Os links internos entre os guias estão marcados no próprio texto, no formato markdown `[texto](/rota)`.
 
@@ -304,9 +304,9 @@ Ninguém precisa ter a resposta inteira pra dar o primeiro passo.
 
 Em emergência, como sinais de intoxicação grave, ligue para o SAMU no 192. Se precisa conversar agora, o CVV atende 24 horas pelo 188.
 
-Se quiser entender melhor o seu momento antes de falar com alguém, dá pra contar o que está acontecendo na Margem.
+Se quiser entender melhor o seu momento antes de falar com alguém, dá pra receber orientação gratuita na Margem.
 
-[BOTÃO: "Contar o que está acontecendo" leva pra tela de orientação]
+[BOTÃO: "Receber orientação gratuita" leva pra tela de orientação]
 
 [CARROSSEL FIM: psicólogos e psiquiatras + links "Ver todos os psicólogos a valor social" e "Ver todos os psiquiatras a valor social"]
 
