@@ -221,7 +221,7 @@ export function HomeHero({ text, onChangeText, onSubmit, onOpenMenu, onExpandir,
         <Header onOpenMenu={onOpenMenu} onFechar={expandido ? fechar : undefined} />
         <div className="home-hero-corpo">
           <div className="home-hero-foto" ref={fotoRef}>
-            <Image src="/assets/dois-amigos-abracando.webp" alt="" fill sizes="(min-width: 48em) 50vw, 1vw" />
+            <Image src="/assets/dois-amigos-abracando.webp" alt="Duas pessoas se abraçam com carinho" fill sizes="(min-width: 48em) 50vw, 1vw" />
           </div>
           <div className="home-hero-coluna">
             <div className="home-hero-texto" ref={textoRef}>

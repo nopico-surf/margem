@@ -199,11 +199,13 @@ export function InicioCliente({ profissionais }: { profissionais: ProfissionalCa
             <div className="home-publico">
               <CardPublico
                 foto="/assets/homem-regata-verde.webp"
+                altDaFoto="Pessoa de regata verde e braço tatuado, com olhar tranquilo"
                 titulo="Para você"
                 texto="Que quer entender melhor o próprio uso"
               />
               <CardPublico
                 foto="/assets/maos-sobre-mesa.webp"
+                altDaFoto="Mãos apoiadas umas sobre as outras numa mesa de bar, em sinal de apoio"
                 posicaoDaFoto="center 60%"
                 titulo="Por perto"
                 texto="Para quem apoia alguém em uso"

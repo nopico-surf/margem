@@ -54,7 +54,7 @@ export function BlocoCannabis() {
       <div className="bloco-cannabis-foto">
         <Image
           src="/assets/mulher-cannabis-medicinal.webp"
-          alt=""
+          alt="Pessoa sorri enquanto segura um frasco de óleo e um conta-gotas"
           fill
           sizes="(min-width: 48em) 50vw, 100vw"
         />

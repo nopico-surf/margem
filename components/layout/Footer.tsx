@@ -125,7 +125,7 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
               </Button>
             </div>
             <div className="app-footer-card-foto">
-              <Image src="/assets/grupo-conteudo-instagram.webp" alt="" fill sizes={SIZES_FOTO} />
+              <Image src="/assets/grupo-conteudo-instagram.webp" alt="Duas pessoas sentadas na calçada à noite olham juntas o celular e sorriem" fill sizes={SIZES_FOTO} />
             </div>
           </section>
 
@@ -141,7 +141,7 @@ export function Footer({ compacto = false }: { compacto?: boolean }) {
               </Button>
             </div>
             <div className="app-footer-card-foto">
-              <Image src="/assets/grupo-conversa-parque.webp" alt="" fill sizes={SIZES_FOTO} />
+              <Image src="/assets/grupo-conversa-parque.webp" alt="Quatro pessoas conversam e riem em pé num parque" fill sizes={SIZES_FOTO} />
             </div>
           </section>
         </>

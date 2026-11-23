@@ -10,6 +10,9 @@ type CardPublicoProps = {
   // Onde o corte da foto se ancora, no formato do object-position.
   posicaoDaFoto?: string;
   sizesDaFoto?: string;
+  // Descrição da foto pra leitor de tela e buscadores. Vazia por padrão: nos cards do /blog a foto
+  // acompanha o título e fica como decorativa.
+  altDaFoto?: string;
   titulo: string;
   tituloComo?: "h2" | "h3";
   // Linha de data depois do texto (cards do /blog).
@@ -26,6 +29,7 @@ export function CardPublico({
   foto,
   posicaoDaFoto = "center",
   sizesDaFoto = "(min-width: 48em) 34vw, 45vw",
+  altDaFoto = "",
   titulo,
   tituloComo: Titulo = "h3",
   data,
@@ -37,7 +41,7 @@ export function CardPublico({
     <>
       <div className="card-publico-foto">
         {foto && (
-          <Image src={foto} alt="" fill priority={prioridade} sizes={sizesDaFoto} style={{ objectPosition: posicaoDaFoto }} />
+          <Image src={foto} alt={altDaFoto} fill priority={prioridade} sizes={sizesDaFoto} style={{ objectPosition: posicaoDaFoto }} />
         )}
       </div>
       <div className="card-publico-texto">
