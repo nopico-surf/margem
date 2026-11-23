@@ -13,6 +13,7 @@ import { ValorSessaoPsicologos } from "@/components/ui/ValorSessaoPsicologos";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { rotuloAnosDeExperiencia } from "@/lib/anos-experiencia";
 import { track } from "@/lib/mixpanel";
+import { tagsComTemaPrimeiro } from "@/lib/tags-profissional";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 
 // Figma: Margem System, frames 668:924 (mobile), 670:2049 (tablet) e 670:1273 (desktop). É o mesmo
@@ -191,7 +192,7 @@ export function ProfissionalDetalhe({ profissional, rota, anoAtual }: Profission
 
             {profissional.tags.length > 0 && (
               <div className="figma-badges profissional-tags">
-                {profissional.tags.map((tag) => (
+                {tagsComTemaPrimeiro(profissional.tags).map((tag) => (
                   <span key={tag}>{tag}</span>
                 ))}
               </div>

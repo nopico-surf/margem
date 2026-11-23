@@ -4744,6 +4744,202 @@ export const GUIAS: Guia[] = [
     // As cabeças ficam perto do alto do recorte: ancorado no centro, o card podia cortá-las.
     posicaoDaFotoDoCard: "center top",
   },
+  // Guia de ansiedade e álcool (23/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/ansiedade-e-alcool.md). Formato dos títulos: afirmativo (o anterior,
+  // pode-beber-tomando-remedio, usou perguntas). Fatos conferidos contra os guias de como parar de beber e sintomas
+  // de abstinência (ansiedade, tremor e suor ao ficar sem beber; parar de uma vez pode ser perigoso), pode beber
+  // tomando remédio e clonazepam (calmante e antidepressivo com álcool); sinais de emergência iguais aos outros
+  // guias. Sem prazo fixo pra ansiedade melhorar depois de parar. Mesma exceção de copy dos outros guias.
+  {
+    slug: "ansiedade-e-alcool",
+    publicadoEm: "2026-11-23",
+    atualizadoEm: "2026-11-23",
+    title: "Ansiedade e álcool: por que a bebida acalma e depois piora | Margem",
+    descricao:
+      "Por que o álcool parece aliviar a ansiedade, por que a crise vem no dia seguinte, se quem tem ansiedade pode beber, o que fazer na hora da crise e onde encontrar apoio.",
+    h1: "Ansiedade e álcool: o alívio do começo, a crise do dia seguinte e o que dá pra fazer",
+    abertura:
+      "Muita gente bebe pra relaxar depois de um dia pesado, pra se soltar numa festa ou pra conseguir dormir. E muita gente acorda no dia seguinte com o coração acelerado, um aperto no peito e a cabeça cheia de preocupação. Não é coincidência, e não é fraqueza. Aqui a gente explica por que o álcool parece acalmar e depois piora a ansiedade, o que fazer quando a crise vem e como cuidar das duas coisas, sem sermão.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O alívio do começo",
+        blocos: [
+          p("O álcool age no cérebro diminuindo a atividade do sistema nervoso. Nos primeiros goles, isso pode trazer uma sensação de calma, de corpo mais solto e de preocupações mais distantes. É por isso que tanta gente usa a bebida pra aliviar a tensão, a timidez ou a insônia."),
+          p("O alívio é real, mas dura pouco. E o corpo cobra depois: o que o álcool segurou durante algumas horas tende a voltar mais forte quando ele sai do organismo."),
+        ],
+      },
+      {
+        titulo: "A ansiedade do dia seguinte",
+        blocos: [
+          p("Enquanto você bebe, o cérebro tenta compensar o efeito do álcool e fica mais agitado por baixo. Quando o álcool vai embora, essa agitação aparece. É o que muita gente chama de ressaca com ansiedade, ou \"hangxiety\", como o termo aparece em inglês. Ela costuma vir com:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Coração acelerado e sensação de aperto no peito",
+              "Preocupação, culpa ou vergonha pelo que fez ou disse",
+              "Irritação e sensibilidade maior que o normal",
+              "Tremor leve, suor e inquietação",
+              "Dificuldade de concentração",
+            ],
+          },
+          p("O sono também pesa. O álcool pode até ajudar a pegar no sono, mas deixa o descanso mais leve e picado, e uma noite mal dormida já deixa qualquer pessoa mais ansiosa. A desidratação e a falta de comida completam o quadro."),
+        ],
+      },
+      {
+        titulo: "Um ciclo que se alimenta",
+        blocos: [
+          p("A ansiedade e o álcool costumam andar juntos, e a relação vai nos dois sentidos. Quem tem ansiedade pode encontrar na bebida um alívio rápido. Quem bebe com frequência pode ficar mais ansioso por causa da própria bebida. Com o tempo, o corpo se acostuma e passa a precisar de mais álcool pra sentir a mesma calma."),
+          p("O ciclo costuma ser assim: a ansiedade aperta, a bebida alivia, o dia seguinte traz mais ansiedade, e a vontade de beber pra aliviar volta. Beber de novo pra passar a ressaca ou a crise funciona por algumas horas, mas empurra o problema pra frente e deixa o ciclo mais forte."),
+        ],
+      },
+      {
+        titulo: "Sinais de que o álcool está pesando na ansiedade",
+        blocos: [
+          p("Não existe um teste que responda sozinho, mas alguns sinais merecem atenção:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Você bebe principalmente pra se acalmar, e não pelo prazer do momento",
+              "Toda vez que bebe, o dia seguinte vem com crise de ansiedade",
+              "Sente que não consegue encarar uma situação social sem beber antes",
+              "Bebe pra dormir com frequência",
+              "Fica ansioso, trêmulo ou suado quando passa um tempo sem beber",
+              "Já tentou diminuir e não conseguiu",
+            ],
+          },
+          p("Reconhecer um ou mais desses sinais não diz quem você é. Diz que talvez valha conversar com alguém sobre como você está lidando com a ansiedade. [Ler sobre os caminhos pra parar ou diminuir a bebida](/blog/como-parar-de-beber)"),
+        ],
+      },
+      {
+        titulo: "Quem tem ansiedade e quer beber",
+        blocos: [
+          p("Não existe uma proibição que valha pra todo mundo, e a decisão é sua. Mas o álcool tende a piorar a ansiedade, principalmente quando se bebe muito ou com frequência. Se você já percebe que fica mais ansioso depois de beber, essa é uma informação importante sobre o seu corpo."),
+          p("Nenhuma bebida acalma a ansiedade de verdade. Cerveja, vinho ou destilado, o que conta é a quantidade de álcool. A cerveja sem álcool pode ser uma alternativa pra quem quer participar do momento sem beber, mas algumas têm um pouco de álcool, o que pesa pra quem toma certos remédios."),
+          p("O energético merece um cuidado à parte. Ele tem cafeína, que pode aumentar a agitação e acelerar o coração. Misturado com álcool, ainda pode disfarçar a sensação de estar bêbado e fazer a pessoa beber mais do que pretendia."),
+        ],
+      },
+      {
+        titulo: "Álcool, ansiedade e remédios",
+        blocos: [
+          p("Quem trata a ansiedade com remédio precisa de atenção redobrada. Calmantes como clonazepam, diazepam e alprazolam, junto com álcool, somam o efeito e podem deixar a respiração lenta demais. Antidepressivos usados pra ansiedade, com álcool, costumam aumentar o sono e a tontura, e o álcool pode piorar justamente o que o remédio está tratando."),
+          p("Se você toma remédio e bebe, vale contar ao médico que receitou. Ele não precisa concordar com o uso pra ajudar você a evitar uma combinação perigosa, e o que você conta fica em sigilo. Trocar o remédio pelo álcool, ou o álcool pelo calmante sem receita, só muda o problema de lugar. [Ler sobre o que pode e o que não pode misturar com álcool](/blog/pode-beber-tomando-remedio) [Ler sobre o clonazepam](/blog/clonazepam)"),
+        ],
+      },
+      {
+        titulo: "O que fazer na crise do dia seguinte",
+        blocos: [
+          p("Quando a ansiedade vem depois de beber, algumas coisas ajudam o corpo a atravessar:"),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Lembrar que essa sensação tem uma causa e passa, à medida que o corpo elimina o álcool",
+              "Respirar devagar: puxar o ar pelo nariz contando até quatro e soltar pela boca contando até seis, algumas vezes",
+              "Beber água aos poucos e comer algo leve",
+              "Descansar, se der, num lugar tranquilo",
+              "Evitar café em excesso e energético, que podem acelerar ainda mais o coração",
+              "Não beber de novo pra aliviar a crise",
+              "Conversar com alguém de confiança, se a cabeça estiver cheia de culpa ou preocupação",
+            ],
+          },
+          p("Se a crise vier com dor forte no peito, falta de ar que não melhora ou desmaio, procure atendimento: na dúvida, é melhor que um profissional avalie."),
+        ],
+      },
+      {
+        titulo: "Quando a ansiedade aparece ao parar de beber",
+        blocos: [
+          p("Quem bebe muito e todo dia pode sentir ansiedade forte, tremor, suor, enjoo e insônia quando fica sem beber. Isso já é abstinência, e não a ressaca comum. Em alguns casos, ela pode trazer convulsão e confusão grave."),
+          p("Por isso, se você bebe muito há bastante tempo e quer parar, vale falar com um médico antes. Com acompanhamento, a parada fica mais segura. Pode ser um psiquiatra, a Unidade Básica de Saúde ou o CAPS AD. [Ler sobre sintomas de abstinência](/blog/sintomas-de-abstinencia)"),
+          p("Pra quem para ou diminui, a ansiedade costuma melhorar com as semanas, embora possa piorar nos primeiros dias. Se ela continua forte depois de um tempo sem beber, pode ser uma ansiedade que já existia antes e que merece cuidado próprio."),
+        ],
+      },
+      {
+        titulo: "Se você vai beber, como reduzir os riscos",
+        blocos: [
+          p("Se você tem ansiedade e vai beber, algumas coisas diminuem o peso do dia seguinte. É o que se chama [redução de danos](/blog/reducao-de-danos):"),
+          {
+            tipo: "lista",
+            itens: [
+              "Comer antes e durante",
+              "Beber mais devagar e intercalar com água",
+              "Combinar consigo mesmo um limite antes de sair, e contar pra alguém de confiança",
+              "Evitar misturar com energético, calmantes ou outras drogas",
+              "Não beber sozinho pra lidar com uma crise",
+              "Deixar o dia seguinte mais leve, se puder, sem compromissos difíceis logo cedo",
+              "Não dirigir e não pegar carona com quem bebeu",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Cuidar da ansiedade e do álcool juntos",
+        blocos: [
+          p("Tratar só a bebida e deixar a ansiedade de lado, ou o contrário, costuma não se sustentar. O cuidado funciona melhor quando olha pras duas coisas ao mesmo tempo."),
+          p("Na terapia, dá pra entender o que a bebida vem resolvendo na sua vida e montar outros jeitos de lidar com a ansiedade. A terapia cognitivo-comportamental é uma das abordagens com mais estudos pra ansiedade. Um psiquiatra pode avaliar se um remédio faz sentido no seu caso, levando em conta o quanto você bebe. Conversar com psicólogo ou psiquiatra sobre o seu uso não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Quando é uma emergência",
+        blocos: [
+          p("Se alguém que bebeu estiver desacordado, não acordar quando chamado, respirar muito devagar, ficar com os lábios roxos, tiver uma convulsão ou vomitar sem acordar, ligue para o SAMU no 192. Enquanto espera, não deixe a pessoa sozinha. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+          p("Se a ansiedade vier junto com pensamentos de se machucar ou de não querer mais viver, leve a sério e procure ajuda na hora. O CVV atende 24 horas pelo 188, e o SAMU, no 192."),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
+          p("Fora da Margem, a Unidade Básica de Saúde pode fazer o primeiro acolhimento da ansiedade, e o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento quem quer cuidar da relação com o álcool. [Ver serviços públicos presenciais e online](/redes-de-apoio)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra receber orientação gratuita na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Receber orientação gratuita", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Quem tem ansiedade pode beber?",
+        resposta:
+          "Não existe uma proibição que valha pra todo mundo, mas o álcool tende a piorar a ansiedade, principalmente em quantidade ou com frequência. Quem toma calmante ou antidepressivo precisa de cuidado redobrado e vale conversar com quem receitou.",
+      },
+      {
+        pergunta: "Por que o álcool alivia a ansiedade?",
+        resposta:
+          "Porque diminui a atividade do sistema nervoso e traz uma sensação de calma nas primeiras horas. Quando o álcool sai do corpo, o cérebro fica mais agitado, e a ansiedade costuma voltar mais forte.",
+      },
+      {
+        pergunta: "Qual bebida acalma a ansiedade?",
+        resposta:
+          "Nenhuma acalma de verdade. Cerveja, vinho ou destilado, o que conta é a quantidade de álcool, e o alívio do começo costuma ser seguido de mais ansiedade depois.",
+      },
+      {
+        pergunta: "Por que toda vez que bebo tenho crise de ansiedade?",
+        resposta:
+          "Quando o álcool vai embora, o cérebro, que estava compensando o efeito dele, fica agitado. Sono pior, desidratação e falta de comida somam. Se acontece sempre, vale conversar com um profissional sobre isso.",
+      },
+      {
+        pergunta: "Quem tem ansiedade pode beber cerveja sem álcool?",
+        resposta:
+          "Pode ser uma alternativa pra participar do momento sem beber. Algumas têm um pouco de álcool, o que importa pra quem toma certos remédios: a bula do remédio e o farmacêutico tiram a dúvida.",
+      },
+      {
+        pergunta: "Quem tem ansiedade pode beber energético?",
+        resposta:
+          "O energético tem cafeína, que pode aumentar a agitação e acelerar o coração. Misturado com álcool, ainda pode disfarçar a sensação de estar bêbado e fazer a pessoa beber mais.",
+      },
+      {
+        pergunta: "A ansiedade passa quando paro de beber?",
+        resposta:
+          "Costuma melhorar com as semanas, mas pode piorar nos primeiros dias. Quem bebe muito e todo dia deve falar com um médico antes de parar. Se a ansiedade continua forte depois de um tempo, ela merece cuidado próprio.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Uma jovem de cabelo escuro preso, de camiseta clara, sentada perto de uma janela aberta numa manhã clara, de olhos fechados e com a mão no peito, respirando fundo. Ao lado, uma mesinha de madeira com um pão francês num prato e um copo d'água, e vasos de plantas numa prateleira.",
+    imagemCard: true,
+    // A cabeça fica perto do alto do recorte: ancorado no centro, o card podia cortá-la.
+    posicaoDaFotoDoCard: "center top",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {

@@ -12,7 +12,6 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 - overdose o que fazer
 - cocaína e álcool
 - como saber se sou alcoólatra
-- ansiedade e álcool
 
 ## Publicadas
 
@@ -26,3 +25,4 @@ Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
 - 2026-11-17: filho usando drogas (/blog/filho-usando-drogas)
 - 2026-11-18: internação involuntária (/blog/internacao-involuntaria)
 - 2026-11-19: pode beber tomando remédio (/blog/pode-beber-tomando-remedio)
+- 2026-11-23: ansiedade e álcool (/blog/ansiedade-e-alcool)

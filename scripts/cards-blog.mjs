@@ -44,6 +44,7 @@ const RECORTES = {
   "filho-usando-drogas": { sujeito: [230, 1840], topo: 100, largura: 1800 },
   "internacao-involuntaria": { sujeito: [165, 1935], topo: 0, largura: 1800 },
   "pode-beber-tomando-remedio": { sujeito: [360, 1650], topo: 40, largura: 1500 },
+  "ansiedade-e-alcool": { sujeito: [680, 1775], topo: 130, largura: 1540 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {
