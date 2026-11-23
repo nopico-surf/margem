@@ -463,7 +463,7 @@ export const GUIAS: Guia[] = [
     slug: "como-saber-se-o-psicologo-e-registrado",
     publicadoEm: "2026-10-31",
     atualizadoEm: "2026-11-07",
-    title: "Como consultar o CRP do psicólogo e o CRM do psiquiatra | Margem",
+    title: "Psicólogo tem CRM? Veja como consultar CRP e CRM | Margem",
     descricao:
       "Não: psicólogo tem CRP, e CRM é de médico, como o psiquiatra. Veja como conferir os dois registros de graça e como saber se estão ativos.",
     h1: "Como saber se o psicólogo ou o psiquiatra é registrado",

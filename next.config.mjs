@@ -28,8 +28,8 @@ const nextConfig = {
   // /inicio em 07/10/2026.
   async redirects() {
     return [
-      { source: "/protecao-de-dados", destination: "/inicio", permanent: false },
-      { source: "/bem-vindo", destination: "/inicio", permanent: false },
+      { source: "/protecao-de-dados", destination: "/inicio", permanent: true },
+      { source: "/bem-vindo", destination: "/inicio", permanent: true },
       // Os guias de SEO viraram o blog em 01/11/2026, um dia depois de publicados.
       { source: "/guias", destination: "/blog", permanent: true },
       { source: "/guias/:slug", destination: "/blog/:slug", permanent: true },
