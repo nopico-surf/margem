@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import {
   FRASE_OUTRA,
@@ -82,9 +82,7 @@ export function ConversaCliente() {
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

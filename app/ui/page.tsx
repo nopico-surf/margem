@@ -34,6 +34,7 @@ import { LoginSocial } from "@/components/familia/LoginSocial";
 import { ContatosEmergencia } from "@/components/familia/ContatosEmergencia";
 import { BlocoComImagem } from "@/components/familia/BlocoComImagem";
 import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { DiasDaMetaGaleria, EscalaNotaGaleria } from "./EscalaGaleria";
 import { Accordion } from "@/components/ui/Accordion";
 import { Marquee } from "@/components/ui/Marquee";
@@ -603,8 +604,33 @@ export default async function GaleriaDeComponentes() {
         <p className="text-small-regular galeria-nota">
           O anel do loader. A tela de carregamento (screen-loading) é esse loader sobre branco, fixa na viewport inteira, e aparece na /bem-vindo. <a href="/ui/loader-tela">Ver a tela cheia</a>.
         </p>
-        <div className="galeria-palco">
-          <Loader />
+        <div className="galeria-estados">
+          {(["giant", "medium", "small"] as const).map((tamanho) => (
+            <div className="galeria-estado" key={tamanho}>
+              <div className="galeria-palco">
+                <Loader tamanho={tamanho} />
+              </div>
+              <span className="label-xx-small galeria-nome">{tamanho}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-small-regular galeria-nota">medium e small são os do botão carregando (Button, estado loading).</p>
+      </section>
+
+      <section className="galeria-secao">
+        <h2 className="header-medium">EsqueletoFamilia</h2>
+        <p className="text-small-regular galeria-nota">
+          O carregando das telas do programa para familiares. Não existe no Figma: a própria tela com os ossos de figma-skeleton.
+        </p>
+        <div className="galeria-esqueletos-familia">
+          {(["secao", "painel", "modulo", "resultado", "checkout"] as const).map((variante) => (
+            <div className="galeria-estado" key={variante}>
+              <div className="galeria-esqueleto-familia">
+                <EsqueletoFamilia variante={variante} />
+              </div>
+              <span className="label-xx-small galeria-nome">{variante}</span>
+            </div>
+          ))}
         </div>
       </section>
 

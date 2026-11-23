@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { ANOTACOES_PARA_CONCLUIR, ITEM_RESUMO_M2, juntar, minuscula, resumirSemana, type Anotacao, type ResumoDaSemana } from "@/lib/familia/diario";
@@ -34,9 +34,7 @@ export function ResumoCliente() {
 
   if (apelido === null || !resumo) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

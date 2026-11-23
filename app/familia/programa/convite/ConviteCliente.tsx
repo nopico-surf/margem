@@ -7,7 +7,7 @@ import { Avatar } from "@/components/ui/Avatar";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import {
@@ -108,9 +108,7 @@ export function ConviteCliente({ profissionais, temTreino }: { profissionais: Pr
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

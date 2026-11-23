@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { lerCenario } from "@/lib/familia/conteudo";
 import { CENARIO_DO_ELOGIO } from "@/lib/familia/valorizar";
 import { ValorizarCliente } from "./ValorizarCliente";
@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Como você vai valorizar nesta seman
 // A leitura do arquivo fica dentro do Suspense, como a página do simulador (exigência do cacheComponents).
 export default function ValorizarPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia />}>
       <Conteudo />
     </Suspense>
   );

@@ -940,3 +940,93 @@ a.painel-modulo:focus-visible {
   flex-direction: column;
   gap: var(--spacing-12);
 }
+
+/* ===== Carregando (components/familia/EsqueletoFamilia.tsx) =====
+   Ossos de `.figma-skeleton` na altura de cada linha da tela pronta: o osso tem a altura da letra e o
+   espaço que sobra da linha vira o gap, pra o esqueleto ocupar o mesmo lugar do texto que chega. */
+
+.familia-osso-paragrafo {
+  display: flex;
+  flex-direction: column;
+  /* text-large: linha de 24, osso de 14. */
+  gap: var(--spacing-10);
+  padding: var(--spacing-4) 0;
+}
+
+.familia-osso-linha {
+  width: 100%;
+  height: var(--spacing-14);
+}
+
+.familia-osso-curto {
+  width: 60%;
+}
+
+/* header-large: linha de 32, osso de 24. */
+.familia-osso-titulo {
+  width: 90%;
+  height: var(--size-24);
+  margin: var(--spacing-4) 0;
+}
+
+.familia-osso-titulo.familia-osso-curto {
+  width: 55%;
+}
+
+/* Título de uma palavra só ("Seu painel", "Seu mapa da situação"). */
+.familia-osso-titulo-tela {
+  width: 45%;
+}
+
+/* header-medium: linha de 28, osso de 20. */
+.familia-osso-subtitulo {
+  width: 40%;
+  height: var(--size-20);
+  margin: var(--spacing-4) 0;
+}
+
+/* header-small: linha de 24, osso de 16. */
+.familia-osso-cartao-titulo {
+  width: 75%;
+  height: var(--size-16);
+  margin: var(--spacing-4) 0;
+}
+
+/* label-small: linha de 16, osso de 12. */
+.familia-osso-rotulo {
+  width: 30%;
+  height: var(--size-12);
+  margin: var(--spacing-2) 0;
+}
+
+/* Botão medium (48) e small (36), com o canto do botão. */
+.familia-osso-botao {
+  width: 100%;
+  height: var(--size-48);
+  border-radius: var(--radius-lg);
+}
+
+.familia-cartao > .familia-osso-botao {
+  margin-top: var(--spacing-8);
+}
+
+.familia-osso-botao-pequeno {
+  width: 60%;
+  height: calc(var(--size-32) + var(--size-4));
+}
+
+/* Opção, campo ou cartão de escolha: o bloco branco das telas de exercício. */
+.familia-osso-opcao {
+  display: block;
+  height: var(--size-56);
+  border-radius: var(--radius-xl);
+  background: var(--colors-neutral-0);
+}
+
+/* Os dois planos do checkout: o card-plano em coluna, com os ossos dentro. */
+.familia-osso-plano {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--spacing-8);
+  cursor: default;
+}

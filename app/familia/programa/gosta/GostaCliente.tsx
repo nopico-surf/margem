@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { focarCampo, TEXTO_CAMPOS_CHEIOS, TEXTO_SUGESTOES } from "@/lib/familia/campo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
@@ -52,9 +52,7 @@ export function GostaCliente() {
 
   if (!dados || !resumo) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

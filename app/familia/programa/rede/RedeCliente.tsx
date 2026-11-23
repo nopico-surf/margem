@@ -8,7 +8,7 @@ import { IconeDeAcao } from "@/components/icons";
 import { GlifoArrowBack, GlifoCheckCircle } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { diaMes } from "@/lib/familia/escala";
 import { GRUPOS_DA_REDE, gruposEmOrdem, MAXIMO_NOME, MAXIMO_NOMES, MENSAGENS_DA_REDE, TEXTOS_REDE, type GrupoId, type Rede } from "@/lib/familia/rede";
@@ -70,9 +70,7 @@ export function RedeCliente() {
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

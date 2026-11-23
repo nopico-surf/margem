@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { diagnosticoCompleto, type Respostas } from "@/lib/familia/diagnostico";
 import { lerRespostasLocais } from "@/lib/familia/fluxo-cliente";
 import type { Resultado } from "@/lib/familia/resultado";
@@ -57,9 +57,7 @@ export function ExemploCliente() {
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia variante="resultado" />
     );
   }
 

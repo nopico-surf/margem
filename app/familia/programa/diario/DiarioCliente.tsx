@@ -7,7 +7,7 @@ import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { Button } from "@/components/ui/Button";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
@@ -79,12 +79,15 @@ export function DiarioCliente({ profissionais }: { profissionais: ProfissionalCa
 
   useEffect(() => {
     (async () => {
-      const resposta = await chamarApi("/api/familia/diagnostico");
+      // Diagnóstico e anotações ao mesmo tempo: a lista não depende do diagnóstico.
+      const [resposta, lista] = await Promise.all([
+        chamarApi("/api/familia/diagnostico"),
+        chamarApi("/api/familia/diario").then(async (r) => (r?.ok ? ((await r.json()) as { anotacoes: Anotacao[] }).anotacoes : [])),
+      ]);
       if (!resposta || resposta.status === 401) return router.replace("/familia/entrar");
       if (resposta.status === 404) return router.replace("/familia/diagnostico");
       if (!resposta.ok) return;
       const busca = new URLSearchParams(window.location.search);
-      const lista = await chamarApi("/api/familia/diario").then(async (r) => (r?.ok ? ((await r.json()) as { anotacoes: Anotacao[] }).anotacoes : []));
       const editar = lista.find((anotacao) => anotacao.id === busca.get("editar"));
       const pedido = busca.get("tipo") === "bom" ? "bom" : busca.get("tipo") === "dificil" ? "dificil" : null;
       if (editar) {
@@ -122,9 +125,7 @@ export function DiarioCliente({ profissionais }: { profissionais: ProfissionalCa
 
   if (!diagnostico) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

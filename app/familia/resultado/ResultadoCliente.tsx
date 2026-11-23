@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import type { Resultado } from "@/lib/familia/resultado";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
@@ -23,12 +23,12 @@ export function ResultadoCliente({ modulosPagos, profissionais }: { modulosPagos
 
   async function carregar() {
     setErro(false);
-    const resposta = await chamarApi("/api/familia/diagnostico");
+    // Os dois ao mesmo tempo: o perfil não depende do diagnóstico.
+    const [resposta, perfil] = await Promise.all([chamarApi("/api/familia/diagnostico"), chamarApi("/api/familia/perfil")]);
     if (!resposta || resposta.status === 401) return router.replace("/familia/entrar");
     if (resposta.status === 404) return router.replace("/familia/diagnostico");
     if (!resposta.ok) return setErro(true);
     const lido = (await resposta.json()) as Dados;
-    const perfil = await chamarApi("/api/familia/perfil");
     // Sem saber se comprou, o banner não aparece: melhor faltar a oferta do que mostrar a quem já pagou.
     if (perfil?.ok) setAcessoLiberado(((await perfil.json()) as { acessoLiberado: boolean }).acessoLiberado);
     setDados(lido);
@@ -55,9 +55,7 @@ export function ResultadoCliente({ modulosPagos, profissionais }: { modulosPagos
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia variante="resultado" />
     );
   }
 

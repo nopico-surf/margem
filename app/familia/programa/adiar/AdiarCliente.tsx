@@ -7,7 +7,7 @@ import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { Button } from "@/components/ui/Button";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { focarCampo, TEXTO_SUGESTOES } from "@/lib/familia/campo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
@@ -73,9 +73,7 @@ export function AdiarCliente({ profissionais }: { profissionais: ProfissionalCad
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

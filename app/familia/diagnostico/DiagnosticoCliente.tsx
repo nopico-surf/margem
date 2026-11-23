@@ -6,7 +6,7 @@ import { GlifoArrowBack } from "@/components/icons/glifos";
 import { LoginSocial } from "@/components/familia/LoginSocial";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { LOGIN_GATE } from "@/lib/familia/config";
 import { aplicarApelido, calcularSafetyMode, perguntasVisiveis, respondida, type Problema, type Respostas } from "@/lib/familia/diagnostico";
@@ -84,9 +84,7 @@ export function DiagnosticoCliente() {
 
   if (!pronto) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

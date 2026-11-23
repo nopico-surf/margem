@@ -9,12 +9,34 @@
   height: var(--size-32);
 }
 
+/* Os tamanhos do Figma são o mesmo desenho em escala: anel e arco seguem o quadro do loader. */
+.loader[data-tamanho="medium"] {
+  width: var(--size-20);
+  height: var(--size-20);
+}
+
+.loader[data-tamanho="small"] {
+  width: var(--size-16);
+  height: var(--size-16);
+}
+
 .loader-anel,
 .loader-arco {
   position: absolute;
   top: 0;
   left: 0;
   display: block;
+}
+
+.loader-anel {
+  width: 100%;
+  height: 100%;
+}
+
+/* O arco do SVG mede 17,81 x 20,51 num anel de 31,62. */
+.loader-arco {
+  width: 56.33%;
+  height: 64.85%;
 }
 
 /* O span ocupa o anel inteiro e gira em volta do centro dele; o arco fica no canto de cima à esquerda. */

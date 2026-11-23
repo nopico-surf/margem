@@ -7,7 +7,7 @@ import { GlifoCheckCircle, GlifoLock } from "@/components/icons/glifos";
 import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { Button } from "@/components/ui/Button";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { dataLocal, diaMes, nomeDaArea, segundaDaSemana, TEXTOS_META, type Escala, type Meta } from "@/lib/familia/escala";
@@ -86,12 +86,10 @@ export function PainelCliente({
 
   useEffect(() => {
     (async () => {
-      const diagnostico = await chamarApi("/api/familia/diagnostico");
-      if (!diagnostico || diagnostico.status === 401) return router.replace("/familia/entrar");
-      if (diagnostico.status === 404) return router.replace("/familia/diagnostico");
-      if (!diagnostico.ok) return;
-      const { resultado, apelido } = (await diagnostico.json()) as { resultado: { safetyMode: boolean }; apelido: string };
-      const [progresso, meta, escalas, perfil, valorizar, frases, convite, rede] = await Promise.all([
+      // Tudo ao mesmo tempo: cada rota confere o login sozinha, e esperar o diagnóstico antes das
+      // outras somava uma ida e volta inteira. Sem sessão ou sem diagnóstico, o resto é descartado.
+      const [diagnostico, progresso, meta, escalas, perfil, valorizar, frases, convite, rede] = await Promise.all([
+        chamarApi("/api/familia/diagnostico"),
         lerJson<{ modulos: Progresso }>("/api/familia/progresso", { modulos: {} }),
         lerJson<{ meta: Meta | null }>("/api/familia/meta", { meta: null }),
         lerJson<{ escalas: Escala[] }>("/api/familia/escala", { escalas: [] }),
@@ -101,6 +99,10 @@ export function PainelCliente({
         lerJson<{ convite: Convite | null }>("/api/familia/convite", { convite: null }),
         lerJson<{ rede: Rede | null }>("/api/familia/rede", { rede: null }),
       ]);
+      if (!diagnostico || diagnostico.status === 401) return router.replace("/familia/entrar");
+      if (diagnostico.status === 404) return router.replace("/familia/diagnostico");
+      if (!diagnostico.ok) return;
+      const { resultado, apelido } = (await diagnostico.json()) as { resultado: { safetyMode: boolean }; apelido: string };
       setDados({
         apelido,
         safetyMode: resultado.safetyMode,
@@ -119,9 +121,7 @@ export function PainelCliente({
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia variante="painel" />
     );
   }
 

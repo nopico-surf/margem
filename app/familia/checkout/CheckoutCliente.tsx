@@ -15,6 +15,7 @@ import { IconeConfirmado, IconeEditar } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { PainelInferior } from "@/components/ui/PainelInferior";
 import {
   CAMPO_DO_ERRO,
@@ -310,7 +311,11 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
     track("dados_por_que_pedimos_aberto", { origem: "familia_checkout" });
   }
 
-  if (etapa === "carregando" || gerando) {
+  // Abrindo a tela: o esqueleto dos dois planos, a primeira etapa. Gerando o Pix continua o loader,
+  // porque é a espera de uma ação, não da página.
+  if (etapa === "carregando") return <EsqueletoFamilia variante="checkout" />;
+
+  if (gerando) {
     return (
       <div className="plano-pagina familia-checkout" aria-busy="true">
         <ContainerConteudo id="familia-carregando">

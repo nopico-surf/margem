@@ -6,7 +6,7 @@ import { CardHeader } from "@/components/conversa/CardHeader";
 import { GlifoCheckCircle } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { guardarDestinoDepoisDoLogin } from "@/lib/familia/fluxo-cliente";
 import { PRAZO_GRATUIDADE } from "@/lib/familia/oferta";
@@ -52,9 +52,7 @@ export function AcessoGratuitoCliente() {
 
   if (!pronto) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

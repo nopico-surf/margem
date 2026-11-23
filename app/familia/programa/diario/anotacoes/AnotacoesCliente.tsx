@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { campoOutro, CAMPOS_DO_TIPO, OUTRO, PERGUNTAS_BOM, PERGUNTAS_DIFICIL, TEXTOS_DIARIO, type Anotacao } from "@/lib/familia/diario";
@@ -41,9 +41,7 @@ export function AnotacoesCliente() {
 
   if (apelido === null) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

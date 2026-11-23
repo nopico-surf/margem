@@ -149,7 +149,7 @@ Convenção do código: `PascalCase.tsx`, mistura de português e inglês sem cr
 | `filter` | `conversa/FiltroEspecialidade` | Nome não corresponde |
 | `bloco-mais-opcoes` | `conversa/BlocoMaisOpcoes` | Corresponde desde 18/09/2026 |
 | `messages` | `conversa/Messages` | Corresponde desde 18/09/2026 |
-| `loader`, `screen-loading` | `ui/Loader`, `ui/LoaderTela` | Correspondem desde 30/09/2026. O anel cinza com arco verde; `screen-loading` é ele sobre branco, na viewport inteira, usado em `/bem-vindo/loading.tsx` |
+| `loader`, `screen-loading` | `ui/Loader` (tamanhos giant, medium e small), `ui/LoaderTela` | Correspondem desde 30/09/2026. O anel cinza com arco verde; `screen-loading` é ele sobre branco, na viewport inteira, usado em `/bem-vindo/loading.tsx` |
 | `loader-content`, `skeleton-bone` | `conversa/ResponseLoading` (a espera do Gemini, com anéis), mais os `span.figma-skeleton` soltos em 5 componentes | Não são a mesma coisa: `loader-content` é só a espera do primeiro texto do Gemini, e os `skeleton-bone` desenham os outros blocos da mesma página. **Pendente**, ver a seção 9 |
 | `header` | `layout/Header` | Corresponde. Eram dois no código até 18/09/2026, ver abaixo |
 | `menu-contatos` | `layout/MenuContatos` | Corresponde |
@@ -192,7 +192,7 @@ O Figma tem um `button` com 246 variantes. O código tinha sete componentes, cad
 | pressed | neutral-950 / branco | alpha-24 / brand-800 | alpha-16 / brand-950 |
 | focus | neutral-950 / branco | alpha-8 / brand-800 | sem fundo / brand-800 |
 | disabled | alpha-8 / alpha-24 | alpha-8 / alpha-24 | alpha-8 / alpha-24 |
-| loading | alpha-8, conteúdo oculto | idem | idem |
+| loading | alpha-8, conteúdo oculto e o `loader` no centro (20 no medium, 16 nos menores) | idem | idem |
 
 O foco ganha 2px de `brand-secondary-400` **por fora**. `outline` não ocupa espaço em CSS, ao contrário de `border`, então não empurra nada. O único lugar onde isso importava era a fileira de ações, que rola na horizontal com `overflow-y: hidden` e cortaria o stroke: ela ganhou 2px de padding vertical e a mesma margem negativa, que se cancelam.
 

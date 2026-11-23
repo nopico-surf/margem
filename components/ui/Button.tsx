@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Loader } from "./Loader";
 
 // Figma: página Button core, componente `button`.
 //
@@ -57,7 +58,18 @@ export function Button({
     ...resto,
   };
 
-  const conteudo = <span className="btn-conteudo">{children}</span>;
+  // Carregando (Figma: state=loading): o conteúdo some sem tirar o botão do lugar e o loader fica no
+  // centro, de 20 no medium e de 16 nos menores.
+  const conteudo = (
+    <>
+      <span className="btn-conteudo">{children}</span>
+      {carregando && (
+        <span className="btn-loader">
+          <Loader tamanho={tamanho === "medium" ? "medium" : "small"} />
+        </span>
+      )}
+    </>
+  );
 
   if (href) {
     return (

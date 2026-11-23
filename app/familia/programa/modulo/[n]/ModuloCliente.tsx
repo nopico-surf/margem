@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { GlifoCheckCircle } from "@/components/icons/glifos";
 import { AudioPlayer } from "@/components/ui/AudioPlayer";
 import { Button } from "@/components/ui/Button";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { CHAVE_POSICAO_AUDIO } from "@/lib/familia/config";
 import { MODO_DEV_DISPONIVEL, vendaSimulada } from "@/lib/familia/dev";
@@ -206,12 +206,17 @@ export function ModuloCliente({
 
   useEffect(() => {
     (async () => {
-      const resposta = await chamarApi("/api/familia/diagnostico");
+      // Os três ao mesmo tempo: perfil e progresso não dependem do diagnóstico, e cada rota confere o
+      // login sozinha. Esperar um pelo outro somava uma ida e volta inteira antes de abrir o módulo.
+      const [resposta, perfil, progresso] = await Promise.all([
+        chamarApi("/api/familia/diagnostico"),
+        chamarApi("/api/familia/perfil"),
+        chamarApi("/api/familia/progresso"),
+      ]);
       if (!resposta || resposta.status === 401) return router.replace("/familia/entrar");
       if (resposta.status === 404) return router.replace("/familia/diagnostico");
       if (!resposta.ok) return;
       const lido = (await resposta.json()) as Diagnostico;
-      const [perfil, progresso] = await Promise.all([chamarApi("/api/familia/perfil"), chamarApi("/api/familia/progresso")]);
       const lidoPerfil = perfil?.ok ? ((await perfil.json()) as { acessoLiberado: boolean; testador?: boolean }) : null;
       const liberado = lidoPerfil?.acessoLiberado ?? false;
       const modulos = progresso?.ok ? ((await progresso.json()) as { modulos: Record<string, { concluido_em: string | null }> }).modulos : {};
@@ -235,43 +240,66 @@ export function ModuloCliente({
       setDiagnostico(lido);
       if (situacao !== "aberto") return;
 
-      setEstado(await carregarEstado(modulo.numero));
-      // Contador "n anotações nesta semana" dos itens do diário.
-      if (modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes("diario"))) {
-        const diario = await chamarApi("/api/familia/diario");
-        if (diario?.ok) setAnotacoes(((await diario.json()) as { anotacoes: AnotacaoContada[] }).anotacoes);
-      }
+      // O que o módulo aberto completa depois de aparecer (marcas dos exercícios, contadores, convite e
+      // o resumo do módulo 8): cada leitura vai sozinha, ao mesmo tempo, em vez de uma depois da outra.
       const temAcao = (acao: string) => modulo.blocos.some((bloco) => bloco.tipo === "exercicio" && bloco.acoes.includes(acao));
+      const temEscolhaVersao = modulo.blocos.some((bloco) => bloco.tipo === "escolha" && bloco.id === "versao");
+      const leituras: Promise<void>[] = [carregarEstado(modulo.numero).then(setEstado)];
+      // Contador "n anotações nesta semana" dos itens do diário.
+      if (temAcao("diario")) {
+        leituras.push(
+          (async () => {
+            const diario = await chamarApi("/api/familia/diario");
+            if (diario?.ok) setAnotacoes(((await diario.json()) as { anotacoes: AnotacaoContada[] }).anotacoes);
+          })(),
+        );
+      }
       if (temAcao("frases")) {
-        const frases = await chamarApi("/api/familia/frases");
-        if (frases?.ok) setFrasesSalvas(((await frases.json()) as { frases: unknown[] }).frases.length);
+        leituras.push(
+          (async () => {
+            const frases = await chamarApi("/api/familia/frases");
+            if (frases?.ok) setFrasesSalvas(((await frases.json()) as { frases: unknown[] }).frases.length);
+          })(),
+        );
       }
       if (temAcao("adiar")) {
-        const valorizar = await chamarApi("/api/familia/valorizar");
-        const clima = valorizar?.ok ? ((await valorizar.json()) as { adiar: { clima: string } | null }).adiar?.clima : null;
-        if (clima === "sim" || clima === "nao_sei") setDeixados(["situacao"]);
+        leituras.push(
+          (async () => {
+            const valorizar = await chamarApi("/api/familia/valorizar");
+            const clima = valorizar?.ok ? ((await valorizar.json()) as { adiar: { clima: string } | null }).adiar?.clima : null;
+            if (clima === "sim" || clima === "nao_sei") setDeixados(["situacao"]);
+          })(),
+        );
       }
       // Convite (briefing M5): o passo do "Preparar o convite" no módulo 5 e, no módulo 8, a versão que
       // o "Contar como foi" escolhe ("Vou pensar" deixa o seletor como está).
-      const temEscolhaVersao = modulo.blocos.some((bloco) => bloco.tipo === "escolha" && bloco.id === "versao");
       if (temAcao("convite") || temEscolhaVersao) {
-        const resposta = await chamarApi("/api/familia/convite");
-        const guardado = resposta?.ok ? ((await resposta.json()) as { convite: Convite | null }).convite : null;
-        setPassoDoConvite(guardado?.passo ?? 0);
-        setConvite(guardado);
-        const versao = guardado?.resultado ? VERSAO_DO_MODULO8[guardado.resultado] : undefined;
-        if (temEscolhaVersao && versao) setEscolhas((atuais) => ({ ...atuais, versao }));
+        leituras.push(
+          (async () => {
+            const resposta = await chamarApi("/api/familia/convite");
+            const guardado = resposta?.ok ? ((await resposta.json()) as { convite: Convite | null }).convite : null;
+            setPassoDoConvite(guardado?.passo ?? 0);
+            setConvite(guardado);
+            const versao = guardado?.resultado ? VERSAO_DO_MODULO8[guardado.resultado] : undefined;
+            if (temEscolhaVersao && versao) setEscolhas((atuais) => ({ ...atuais, versao }));
+          })(),
+        );
       }
       // Encerramento do módulo 8: a escala do módulo 7 ao lado da anterior (as duas últimas), o diário e as frases.
       if (modulo.blocos.some((bloco) => bloco.tipo === "resumo")) {
-        const [escalas, diario, frases] = await Promise.all([
-          chamarApi("/api/familia/escala").then(async (r) => (r?.ok ? ((await r.json()) as { escalas: Escala[] }).escalas : [])),
-          chamarApi("/api/familia/diario").then(async (r) => (r?.ok ? ((await r.json()) as { anotacoes: unknown[] }).anotacoes.length : 0)),
-          chamarApi("/api/familia/frases").then(async (r) => (r?.ok ? ((await r.json()) as { frases: unknown[] }).frases.length : 0)),
-        ]);
-        const comparar = escalas[0]?.origem === "modulo7" && escalas[1];
-        setResumo({ antes: comparar ? escalas[1].notas : null, depois: comparar ? escalas[0].notas : null, anotacoes: diario, frases });
+        leituras.push(
+          (async () => {
+            const [escalas, diario, frases] = await Promise.all([
+              chamarApi("/api/familia/escala").then(async (r) => (r?.ok ? ((await r.json()) as { escalas: Escala[] }).escalas : [])),
+              chamarApi("/api/familia/diario").then(async (r) => (r?.ok ? ((await r.json()) as { anotacoes: unknown[] }).anotacoes.length : 0)),
+              chamarApi("/api/familia/frases").then(async (r) => (r?.ok ? ((await r.json()) as { frases: unknown[] }).frases.length : 0)),
+            ]);
+            const comparar = escalas[0]?.origem === "modulo7" && escalas[1];
+            setResumo({ antes: comparar ? escalas[1].notas : null, depois: comparar ? escalas[0].notas : null, anotacoes: diario, frases });
+          })(),
+        );
       }
+      await Promise.all(leituras);
       track(modulo.numero === 1 ? "modulo1_iniciado" : "modulo_iniciado", { modulo: modulo.numero });
       void chamarApi("/api/familia/progresso", { method: "POST", body: JSON.stringify({ modulo: modulo.numero, acao: "iniciar" }) });
     })();
@@ -279,9 +307,16 @@ export function ModuloCliente({
 
   if (!diagnostico || !acesso) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      // O rótulo e o título vêm do build: aparecem já, só o corpo espera o diagnóstico.
+      <EsqueletoFamilia
+        variante="modulo"
+        cabecalho={
+          <header className="familia-titulo">
+            <span className="label-small-medium familia-texto-suave">Módulo {modulo.numero}</span>
+            <h1 className="header-large">{modulo.titulo}</h1>
+          </header>
+        }
+      />
     );
   }
 

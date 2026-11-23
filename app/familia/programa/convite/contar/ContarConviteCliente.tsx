@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { GlifoArrowBack } from "@/components/icons/glifos";
 import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { Button } from "@/components/ui/Button";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { alvoDoAgendar, OPCOES_DO_PAINEL, RESPOSTAS_DO_CONVITE, TEXTOS_CONVITE, type Convite, type ProfissionalDoConvite, type ResultadoConvite } from "@/lib/familia/convite";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
@@ -47,9 +47,7 @@ export function ContarConviteCliente({ profissionais }: { profissionais: Profiss
 
   if (!dados) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

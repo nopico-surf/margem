@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
 import { lerModulo, TOTAL_MODULOS } from "@/lib/familia/conteudo";
 import { psicologosDoConvite } from "@/lib/familia/convite-servidor";
@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: "Seu painel", robots: { index: false,
 
 export default function ProgramaPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia variante="painel" />}>
       <Conteudo />
     </Suspense>
   );

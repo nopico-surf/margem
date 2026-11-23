@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { psicologosDoConvite } from "@/lib/familia/convite-servidor";
 import { ContarConviteCliente } from "./ContarConviteCliente";
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Contar como foi o convite", robots: 
 
 export default function ContarConvitePage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia />}>
       <Conteudo />
     </Suspense>
   );

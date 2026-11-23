@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { DiarioCliente } from "./DiarioCliente";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Anotar no diário", robots: { index:
 
 export default function DiarioPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia />}>
       <Conteudo />
     </Suspense>
   );

@@ -10,7 +10,7 @@ import { DiasDaMeta } from "@/components/familia/DiasDaMeta";
 import { EscalaNota } from "@/components/familia/EscalaNota";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
@@ -150,9 +150,7 @@ export function EscalaCliente({ profissionais }: { profissionais: ProfissionalCa
 
   if (!diagnostico) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

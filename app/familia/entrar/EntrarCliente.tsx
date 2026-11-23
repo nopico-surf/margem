@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { LoginSocial } from "@/components/familia/LoginSocial";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { provedorAtual } from "@/lib/familia/auth-cliente";
 import { concluirEntrada, temSessao, type DepoisDoLogin, type Informado } from "@/lib/familia/fluxo-cliente";
 import { mascararWhatsapp, normalizarWhatsapp } from "@/lib/familia/whatsapp";
@@ -73,9 +73,7 @@ export function EntrarCliente({ retorno = false }: { retorno?: boolean }) {
 
   if (estado === "verificando") {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

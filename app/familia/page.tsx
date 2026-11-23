@@ -39,6 +39,8 @@ export const metadata: Metadata = {
   title: TITULO,
   description: DESCRICAO,
   alternates: { canonical: "/familia" },
+  // O layout do /familia deixa as telas internas fora do Google; a LP é a única que entra.
+  robots: { index: true, follow: true },
   openGraph: { type: "website", title: TITULO, description: DESCRICAO, images: [OG_IMAGE_PADRAO], siteName: OG_SITE_NAME },
 };
 

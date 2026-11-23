@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { AdiarCliente } from "./AdiarCliente";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Quando o combinado fica para outro d
 
 export default function AdiarPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia />}>
       <Conteudo />
     </Suspense>
   );

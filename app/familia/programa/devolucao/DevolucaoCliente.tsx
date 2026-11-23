@@ -6,7 +6,7 @@ import { CardHeader } from "@/components/conversa/CardHeader";
 import { GlifoCheckCircle } from "@/components/icons/glifos";
 import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { fimDoPrazo, podeDesistir, PRAZO_DEVOLUCAO } from "@/lib/familia/oferta";
 import { track } from "@/lib/mixpanel";
@@ -50,9 +50,7 @@ export function DevolucaoCliente() {
 
   if (!ate) {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

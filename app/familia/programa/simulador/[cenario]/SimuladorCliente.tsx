@@ -11,7 +11,7 @@ import { ResponseError } from "@/components/conversa/ResponseError";
 import { ResponseLoading } from "@/components/conversa/ResponseLoading";
 import { UserMessage } from "@/components/conversa/UserMessage";
 import { Button } from "@/components/ui/Button";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { chamarApi } from "@/lib/familia/auth-cliente";
 import { SIMULADOR_MAX_CARACTERES, SIMULADOR_MAX_MENSAGENS } from "@/lib/familia/config";
 import type { Cenario } from "@/lib/familia/conteudo";
@@ -373,9 +373,7 @@ export function SimuladorCliente({
 
   if (etapa === "carregando") {
     return (
-      <div className="familia-secao" aria-busy="true">
-        <Loader />
-      </div>
+      <EsqueletoFamilia />
     );
   }
 

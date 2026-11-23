@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { MOSTRAR_REVISAO_CLINICA } from "@/lib/familia/config";
 import { lerModulo, TOTAL_MODULOS } from "@/lib/familia/conteudo";
 import { enderecosDosProfissionais } from "@/lib/familia/convite-servidor";
@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 // O params fica dentro do Suspense, como no blog (exigência do cacheComponents).
 export default function ModuloPage({ params }: Props) {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia variante="modulo" />}>
       <Conteudo params={params} />
     </Suspense>
   );

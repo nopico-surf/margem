@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { titulosDosModulosPagos } from "@/lib/familia/conteudo";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { ResultadoCliente } from "./ResultadoCliente";
@@ -8,7 +8,7 @@ import { ResultadoCliente } from "./ResultadoCliente";
 // como no painel. Os profissionais (carrosséis do aviso e da segurança) vêm da busca cacheada.
 export default function ResultadoPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia variante="resultado" />}>
       <Conteudo />
     </Suspense>
   );

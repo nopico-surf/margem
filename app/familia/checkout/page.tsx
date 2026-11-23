@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { CheckoutCliente } from "./CheckoutCliente";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia variante="checkout" />}>
       <Conteudo />
     </Suspense>
   );

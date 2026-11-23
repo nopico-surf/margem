@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Loader } from "@/components/ui/Loader";
+import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
 import { EscalaCliente } from "./EscalaCliente";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Como está a sua vida", robots: { in
 
 export default function EscalaPage() {
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<EsqueletoFamilia />}>
       <Conteudo />
     </Suspense>
   );
