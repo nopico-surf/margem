@@ -38,12 +38,15 @@ export type Guia = {
   title: string;
   descricao: string;
   h1: string;
+  // Parágrafos separados por linha em branco ("\n\n").
   abertura: string;
   // Quem aparece no carrossel do topo e do fim. Vazio: a página não tem carrossel.
   carrossel: EspecialidadeGuia[];
   // false: o carrossel aparece só no fim da página (o guia do registro é de consulta, e quem lê
   // chega aos profissionais depois de entender como conferir o registro).
   carrosselTopo: boolean;
+  // Quantas seções vêm antes do carrossel do topo. Sem ele, o carrossel fica logo depois da abertura.
+  carrosselAposSecoes?: number;
   secoes: SecaoGuia[];
   perguntas: { pergunta: string; resposta: string }[];
   // A imagem do topo fica em /public/blog/<slug>.webp. Enquanto o arquivo não existir, `imagem` fica
@@ -60,6 +63,16 @@ export type Guia = {
 };
 
 const p = (texto: string): BlocoGuia => ({ tipo: "paragrafo", texto });
+
+// Âncora da seção: o título sem acento, em minúsculas e com hífen. Os links internos usam `#<isso>`.
+export function idDaSecao(titulo: string): string {
+  return titulo
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 export const GUIAS: Guia[] = [
   // Os quatro primeiros guias foram revisados em 06/11/2026 com a pesquisa dos 10 primeiros do Google
@@ -1133,16 +1146,35 @@ export const GUIAS: Guia[] = [
   {
     slug: "como-parar-de-fumar-maconha",
     publicadoEm: "2026-11-01",
-    atualizadoEm: "2026-11-06",
-    title: "Como parar de fumar maconha: abstinência e apoio | Margem",
+    atualizadoEm: "2026-11-23",
+    title: "Como parar de fumar maconha ou diminuir o uso | Margem",
     descricao:
-      "Quer parar ou diminuir a maconha? Veja quanto tempo dura a abstinência, o que ajuda no sono e na irritação e onde encontrar apoio sem julgamento.",
-    h1: "Como parar de fumar maconha: abstinência, dicas e apoio",
+      "Como parar de fumar maconha, no seu ritmo: passo a passo, o que esperar da abstinência, como diminuir riscos e onde buscar apoio sem julgamento.",
+    h1: "Como parar de fumar maconha: passo a passo, abstinência e apoio",
     abertura:
-      "Tem gente que usa maconha sem grande problema, e tem gente que percebe que ela começou a ocupar lugar demais: o dia só engrena depois de fumar, o sono depende dela, ou o que era escolha virou automático. Perceber isso não precisa vir com culpa. Aqui a gente fala do que costuma acontecer quando a pessoa para, do que ajuda nesse período e dos cuidados pra quem não quer parar agora.",
+      "Pra parar de fumar maconha, você pode escolher entre parar de vez ou diminuir aos poucos, e o que costuma ajudar é ter um plano simples, saber o que esperar da abstinência e contar com apoio.\n\nTem gente que usa maconha sem grande problema, e tem gente que percebe que ela começou a ocupar lugar demais: o dia só engrena depois de fumar, o sono depende dela, ou o que era escolha virou automático. Perceber isso não precisa vir com culpa.\n\nAqui a gente mostra como parar com a maconha ou diminuir o uso, passo a passo, o que costuma acontecer nos primeiros dias e o que ajuda nesse período. Se você não quer parar agora, também tem uma seção sobre como diminuir riscos, que é um caminho válido.",
     carrossel: ["psicologo", "psiquiatra"],
     carrosselTopo: true,
+    carrosselAposSecoes: 1,
     secoes: [
+      {
+        titulo: "Como parar de fumar maconha: passo a passo",
+        blocos: [
+          p("Não existe um jeito único e certo de parar. Este passo a passo é um ponto de partida, e você pode adaptar cada etapa ao seu ritmo."),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Observe o seu uso por uma semana. Anote, no caderno ou no celular, quando você fuma, onde, com quem, quanto e como se sentia antes e depois. Isso mostra em quais momentos o uso acontece no automático e onde vai ser mais difícil mudar.",
+              "Escreva por que você quer mudar. Pode ser o sono, o dinheiro, uma relação, o trabalho, os estudos ou só a vontade de ter mais controle. Guarde essa lista no celular pra reler nos dias em que a vontade apertar.",
+              "Escolha como começar. Você pode marcar uma data e parar de vez, ou diminuir aos poucos, por exemplo deixando de fumar de manhã. Em qualquer caso, uma meta pequena e possível, como \"esta semana, nada antes das 18h\", é mais fácil de cumprir do que uma meta grande. Veja mais em [É melhor parar de vez ou diminuir aos poucos?](#e-melhor-parar-de-vez-ou-diminuir-aos-poucos).",
+              "Arrume o ambiente e a rotina. Guarde longe ou se desfaça do que você usa pra fumar, mantenha um horário regular pra dormir e planeje o que vai fazer nos horários em que costumava usar, como caminhar, tomar banho ou ligar pra alguém.",
+              "Tenha um plano pra quando a vontade aparecer. A vontade costuma vir em onda e passar. Tente adiar o uso por cinco minutos e fazer outra coisa nesse tempo, como assistir a um vídeo ou arrumar a casa. Nas próximas vezes, aumente esse tempo aos poucos.",
+              "Conte com alguém. Avise uma pessoa de confiança do que você está tentando fazer. Se fazer sozinho estiver difícil, ou se a abstinência pesar, um psicólogo, um psiquiatra ou o CAPS AD podem montar um plano com você. Pedir apoio faz parte do processo, não é sinal de fracasso.",
+            ],
+          },
+          p("Se você voltar a usar no meio do caminho, isso acontece com muita gente e não apaga o que você já mudou. Veja [E se eu voltar a fumar maconha?](#e-se-eu-voltar-a-fumar-maconha). Se parar não é o que você quer agora, vá pra [E se eu não quero parar de fumar maconha agora?](#e-se-eu-nao-quero-parar-de-fumar-maconha-agora)."),
+        ],
+      },
       {
         titulo: "Maconha causa dependência?",
         blocos: [
@@ -1162,7 +1194,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Existe abstinência de maconha? Quanto tempo dura?",
         blocos: [
-          p("Existe. Cerca de metade das pessoas que fazem uso regular relatam sintomas ao parar ou diminuir muito. Eles costumam começar de 24 a 48 horas depois do último uso e ficam mais fortes entre o segundo e o sexto dia. Quando o uso era intenso, podem durar de duas a três semanas ou mais, e o sono pode levar várias semanas pra voltar ao normal. Os mais comuns são:"),
+          p("Existe. Em estudos com pessoas que usam com regularidade ou de forma problemática, quase metade relatou sintomas ao parar ou diminuir muito. Eles costumam começar de 24 a 48 horas depois do último uso e ficam mais fortes entre o segundo e o sexto dia. Em geral, a maior parte dos sintomas dura de quatro dias a duas semanas. Em quem usava muito e com frequência, alguns podem durar três semanas ou mais. Os mais comuns são:"),
           {
             tipo: "lista",
             itens: [
@@ -1174,12 +1206,21 @@ export const GUIAS: Guia[] = [
             ],
           },
           p("Em menos casos, também aparecem dor de cabeça, suor, calafrio e dor de barriga. Se a tristeza pesar muito, ou se você tem outro problema de saúde mental ou usa outras substâncias, vale buscar acompanhamento."),
+          p("A abstinência de maconha costuma ser desconfortável, mas em geral não é perigosa pra vida. Mesmo assim, procure ajuda se você sentir que não está conseguindo se manter seguro, ou se aparecerem pensamentos de se machucar. Em uma emergência, ligue pro SAMU no 192. Pra conversar agora, o CVV atende 24 horas pelo 188."),
         ],
       },
       {
         titulo: "É melhor parar de vez ou diminuir aos poucos?",
         blocos: [
-          p("Depende de quanto você usa e do que quer mudar. Tem quem prefira escolher uma data e parar. Tem quem comece reduzindo os dias de uso, deixando de fumar de manhã ou empurrando o primeiro uso pra mais tarde. Parar de repente depois de um uso intenso pode trazer sintomas mais fortes, e um profissional pode ajudar a planejar."),
+          p("Depende de quanto você usa, do que quer mudar e de como foram as vezes em que você já tentou. Nenhum dos dois jeitos é o certo pra todo mundo."),
+          {
+            tipo: "lista",
+            itens: [
+              "Parar de vez: você escolhe uma data e para. É mais direto, e os sintomas de abstinência, se vierem, aparecem nos primeiros dias.",
+              "Diminuir aos poucos: você reduz os dias ou a quantidade, por exemplo deixando de fumar de manhã ou empurrando o primeiro uso pra mais tarde. Ajuda anotar uma meta simples, como \"nesta semana, nada de fumar antes das 18h\".",
+            ],
+          },
+          p("A intensidade e a duração da abstinência costumam acompanhar o quanto a pessoa usava antes. Por isso, se você usa muito e com frequência, vale planejar com a ajuda de um profissional."),
           p("Se você fuma maconha com tabaco, os sintomas da falta de nicotina podem aparecer junto. [Ler sobre como parar de fumar](/blog/como-parar-de-fumar)"),
           p("Se você usa cannabis com prescrição, vale conversar com quem prescreveu antes de mudar o tratamento."),
         ],
@@ -1211,15 +1252,15 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Terapia ajuda a parar de fumar maconha? Existe remédio?",
         blocos: [
-          p("A conversa e a orientação são o primeiro caminho recomendado. Não existe um remédio aprovado especificamente pra abstinência de maconha, mas um psiquiatra pode avaliar sintomas como ansiedade e insônia. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
-          p("O canabidiol (CBD) vem sendo estudado pra ajudar quem quer parar, mas ainda não é um tratamento estabelecido. Se você pensa em usar, converse antes com um médico."),
+          p("A terapia e o acompanhamento psicossocial são o primeiro caminho recomendado. Uma revisão da Cochrane de 2025 concluiu que, hoje, os tratamentos psicológicos são os únicos recomendados pra quem tem dificuldade de parar de usar cannabis, e que não existe um remédio específico pra isso. Um psiquiatra pode avaliar sintomas como ansiedade e insônia durante a abstinência. [Ver como funciona a consulta com psiquiatra a valor social](/blog/psiquiatra-barato)"),
+          p("O canabidiol (CBD) já foi testado em estudos pra ajudar quem quer parar, e a revisão da Cochrane concluiu que ele provavelmente não ajuda a interromper o uso, embora ainda existam poucos estudos. Se você pensa em usar CBD por esse motivo, converse antes com um médico."),
           p("A terapia ajuda a entender o que a maconha resolve na sua vida e a encontrar outras formas de lidar com isso. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
         ],
       },
       {
         titulo: "E se eu não quero parar de fumar maconha agora?",
         blocos: [
-          p("Você ainda pode diminuir riscos. É o que se chama de [redução de danos](/blog/reducao-de-danos). Alguns cuidados:"),
+          p("Tudo bem: parar não é a única escolha. Você pode diminuir riscos sem parar, e isso se chama [redução de danos](/blog/reducao-de-danos). Alguns cuidados:"),
           {
             tipo: "lista",
             itens: [
@@ -1250,7 +1291,7 @@ export const GUIAS: Guia[] = [
       {
         titulo: "Onde encontrar apoio pra parar de fumar maconha?",
         blocos: [
-          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Procurar esse cuidado não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Na Margem, o valor da sessão com psicólogo vai de R$ 60 a R$ 200, e o da consulta com psiquiatra, de R$ 110 a R$ 290. Procurar esse cuidado não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
           p("Fora da Margem, o CAPS AD atende pelo SUS sem encaminhamento, e os Narcóticos Anônimos têm reuniões presenciais e online, sem custo. Pra familiares, existe o Nar-Anon. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
           p("Se precisa conversar agora, o CVV atende 24 horas pelo 188."),
           p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra receber orientação gratuita na Margem."),
@@ -1262,7 +1303,7 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Quanto tempo dura a abstinência de maconha?",
         resposta:
-          "Os sintomas costumam começar de 24 a 48 horas depois do último uso e ficam mais fortes entre o segundo e o sexto dia. Com uso intenso, podem durar de duas a três semanas ou mais.",
+          "Os sintomas costumam começar de 24 a 48 horas depois do último uso e ficam mais fortes entre o segundo e o sexto dia. Em geral, a maior parte dura de quatro dias a duas semanas. Com uso intenso, alguns podem durar três semanas ou mais.",
       },
       {
         pergunta: "Quais são os sintomas de abstinência de maconha?",
@@ -1271,12 +1312,12 @@ export const GUIAS: Guia[] = [
       {
         pergunta: "Existe remédio pra parar de fumar maconha?",
         resposta:
-          "Não existe um remédio aprovado especificamente pra abstinência de maconha, mas um psiquiatra pode avaliar sintomas como ansiedade e insônia.",
+          "Hoje não existe um remédio específico pra ajudar a parar de usar cannabis. Os tratamentos recomendados são os psicológicos, e um psiquiatra pode avaliar sintomas como ansiedade e insônia durante a abstinência.",
       },
       {
         pergunta: "Canabidiol ajuda a parar de fumar maconha?",
         resposta:
-          "O canabidiol (CBD) vem sendo estudado pra isso, mas ainda não é um tratamento estabelecido. Se você pensa em usar, converse antes com um médico.",
+          "Uma revisão da Cochrane de 2025 concluiu que o CBD provavelmente não ajuda a interromper o uso de cannabis, embora ainda existam poucos estudos. Se você pensa em usar CBD por esse motivo, converse antes com um médico.",
       },
       {
         pergunta: "Parar de fumar maconha melhora o pulmão?",
@@ -1287,6 +1328,26 @@ export const GUIAS: Guia[] = [
         pergunta: "Dá pra usar maconha com menos risco?",
         resposta:
           "Dá pra diminuir alguns riscos: evitar o uso diário, não prender a fumaça, não misturar com álcool ou tabaco e não dirigir depois de usar. Risco menor não é risco zero.",
+      },
+      {
+        pergunta: "O que fazer quando bate a vontade de fumar maconha?",
+        resposta:
+          "A vontade costuma vir em onda e passar. Tente adiar o uso por cinco minutos e fazer outra coisa nesse tempo: caminhar, tomar banho, falar com alguém ou mudar de ambiente. Se der certo, aumente o tempo na próxima vez. Evite trocar a maconha por bebida alcoólica ou por remédio pra dormir sem orientação, porque isso pode criar outro problema.",
+      },
+      {
+        pergunta: "Como parar de fumar haxixe?",
+        resposta:
+          "O passo a passo é o mesmo. O haxixe é feito com a resina da planta de cannabis, a mesma da maconha, então a abstinência e os cuidados também são parecidos. Quanto mais frequente e intenso era o uso, maior a chance de sintomas mais fortes ao parar. Siga os passos acima e busque apoio se ficar difícil.",
+      },
+      {
+        pergunta: "Dá pra parar de fumar maconha sozinho?",
+        resposta:
+          "Você pode começar por conta própria, e tudo bem. Se você já tentou e não conseguiu, se a abstinência está pesando ou se o uso está atrapalhando o trabalho, os estudos ou as relações, vale conversar com um psicólogo, um psiquiatra ou o CAPS AD. Pedir apoio não é fracasso, é mais um recurso no seu plano.",
+      },
+      {
+        pergunta: "Existe detox de maconha?",
+        resposta:
+          "Quando as pessoas falam em \"detox\" de maconha, em geral estão falando da fase de abstinência: os dias em que o corpo se ajusta sem a substância. O que ajuda nessa fase é cuidar do sono, da alimentação, da rotina e ter apoio, como descrito acima. Em exames de urina, a maconha pode ser detectada por dias e, em alguns casos, por semanas.",
       },
     ],
     imagem: true,

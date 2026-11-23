@@ -10,7 +10,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { CardProfissionais } from "@/components/conversa/CardProfissionais";
 import { buscarTodosProfissionaisAtivos } from "@/lib/supabase";
-import { GUIAS, TEXTO_VER_TODOS, URL_PROFISSIONAIS, buscarGuia, caminhoDaImagem, formatarDataDoGuia, type BlocoGuia, type Guia } from "@/lib/guias";
+import { GUIAS, TEXTO_VER_TODOS, URL_PROFISSIONAIS, buscarGuia, caminhoDaImagem, formatarDataDoGuia, idDaSecao, type BlocoGuia, type Guia, type SecaoGuia } from "@/lib/guias";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -78,7 +78,9 @@ function Bloco({ bloco }: { bloco: BlocoGuia }) {
       return (
         <ol>
           {bloco.itens.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={item}>
+              <TextoComLinks texto={item} />
+            </li>
           ))}
         </ol>
       );
@@ -129,6 +131,17 @@ function Bloco({ bloco }: { bloco: BlocoGuia }) {
         </div>
       );
   }
+}
+
+function Secao({ secao }: { secao: SecaoGuia }) {
+  return (
+    <section id={idDaSecao(secao.titulo)}>
+      <h2>{secao.titulo}</h2>
+      {secao.blocos.map((bloco, index) => (
+        <Bloco key={index} bloco={bloco} />
+      ))}
+    </section>
+  );
 }
 
 async function CarrosselComProfissionais({ guia, posicao }: { guia: Guia; posicao: "topo" | "fim" }) {
@@ -219,6 +232,10 @@ async function GuiaConteudo({ params }: Props) {
     },
   ];
 
+  const antes = guia.carrosselAposSecoes ?? 0;
+  const antesDoCarrossel = guia.secoes.slice(0, antes);
+  const depoisDoCarrossel = guia.secoes.slice(antes);
+
   return (
     <article className="guia">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
@@ -246,19 +263,24 @@ async function GuiaConteudo({ params }: Props) {
             </>
           )}
         </p>
-        <p>{guia.abertura}</p>
+        {guia.abertura.split("\n\n").map((paragrafo) => (
+          <p key={paragrafo}>{paragrafo}</p>
+        ))}
       </div>
+
+      {antesDoCarrossel.length > 0 && (
+        <div className="figma-section-inner guia-texto">
+          {antesDoCarrossel.map((secao) => (
+            <Secao key={secao.titulo} secao={secao} />
+          ))}
+        </div>
+      )}
 
       <Carrossel guia={guia} posicao="topo" />
 
       <div className="figma-section-inner guia-texto">
-        {guia.secoes.map((secao) => (
-          <section key={secao.titulo}>
-            <h2>{secao.titulo}</h2>
-            {secao.blocos.map((bloco, index) => (
-              <Bloco key={index} bloco={bloco} />
-            ))}
-          </section>
+        {depoisDoCarrossel.map((secao) => (
+          <Secao key={secao.titulo} secao={secao} />
         ))}
       </div>
 
