@@ -22,8 +22,12 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         </ModalSection>
 
         <ModalSection titulo="O que a gente não guarda">
-          <p>Seu nome, seu e-mail, seu telefone, seu CPF ou qualquer documento. Sua localização exata ou seu endereço. Nada que permita a gente saber quem você é ou entrar em contato com você depois.</p>
+          <p>Fora do programa para familiares, a gente não guarda seu nome, seu e-mail, seu telefone, seu CPF ou qualquer documento. Sua localização exata ou seu endereço. Nada que permita a gente saber quem você é ou entrar em contato com você depois.</p>
           <p>Se você escrever seu nome ou algum dado desses no campo de texto, isso fica guardado junto com o resto do que você escreveu. Por isso a gente pede pra evitar.</p>
+        </ModalSection>
+
+        <ModalSection titulo="Programa para familiares">
+          <p>O programa para familiares é a única parte da Margem com login. Você entra com sua conta do Google, da Apple ou do Facebook, e a Margem não recebe nem guarda senha. Do provedor, a gente recebe só seu nome e seu e-mail, e o provedor fica sabendo que você entrou na Margem com a conta dele. Você informa também seu WhatsApp, que a gente usa pra mandar o acesso ao programa e os lembretes. Junto da sua conta ficam suas respostas ao diagnóstico, o que você anota e faz ao longo das semanas e o registro do pagamento, quando houver. A pessoa de quem você cuida não é identificada: você escolhe um apelido pra ela.</p>
         </ModalSection>
 
         <ModalSection titulo="Se você não aceitar">
@@ -53,8 +57,12 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
 
         <ModalSection titulo="Seus direitos">
           <p>A LGPD garante que você possa saber o que a gente tem, corrigir, pedir cópia, pedir exclusão e retirar o consentimento a qualquer momento.</p>
-          <p>Tem um detalhe honesto aqui: como a gente não pede nenhum dado seu, a gente não tem como achar suas informações depois que você fecha a página. Se quiser pedir exclusão, guarde o código da sua sessão, que aparece no fim da conversa, e mande pra gente. Com ele a gente localiza e apaga.</p>
-          <p>Se você quiser só parar, é só fechar a página. Não tem cadastro pra cancelar.</p>
+          <p>Tem um detalhe honesto aqui: fora do programa para familiares, como a gente não pede nenhum dado seu, a gente não tem como achar suas informações depois que você fecha a página. Se quiser pedir exclusão, guarde o código da sua sessão, que aparece no fim da conversa, e mande pra gente. Com ele a gente localiza e apaga.</p>
+          <p>Se você quiser só parar, é só fechar a página. Fora do programa para familiares, não tem cadastro pra cancelar.</p>
+        </ModalSection>
+
+        <ModalSection titulo="Como pedir a exclusão dos seus dados" id="exclusao">
+          <p>Se você entrou no programa para familiares, mande um e-mail pra vitor@somosmargem.com.br com o assunto &quot;Excluir meus dados&quot;, a partir do e-mail da conta que você usou pra entrar. A gente apaga sua conta e tudo que está ligado a ela (nome, e-mail, WhatsApp, respostas, anotações e progresso) em até 15 dias e responde confirmando. Registros que a lei obriga a guardar, como os de pagamento, ficam pelo prazo legal. Se você entrou com o Facebook, também dá pra tirar o acesso da Margem nas configurações do Facebook, em Aplicativos e sites.</p>
         </ModalSection>
 
         <ModalSection titulo="Cookies e armazenamento">

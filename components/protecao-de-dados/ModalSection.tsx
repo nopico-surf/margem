@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 
-export function ModalSection({ titulo, children }: { titulo: string; children: ReactNode }) {
+export function ModalSection({ titulo, id, children }: { titulo: string; id?: string; children: ReactNode }) {
   return (
-    <section className="dados-modal-section">
+    <section className="dados-modal-section" id={id}>
       <h3>{titulo}</h3>
       {children}
     </section>
