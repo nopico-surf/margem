@@ -721,6 +721,13 @@ button.dias-da-meta-dia:focus-visible {
   }
 }
 
+/* O carrossel daqui usa a variante "home", que começa os cards na esquerda (a home não tem container).
+   Na /familia há container, então, como na /conversa, os cards que cabem na fileira ficam centralizados.
+   Com scroll a margem auto vira 0 e o primeiro card continua alcançável. */
+.familia .figma-professionals-row--esquerda > :first-child {
+  margin-left: auto;
+}
+
 /* Título e subtítulo (CardHeader, o padrão do site). As regras ".familia-secao p" e ".familia-lp p"
    zeravam a margem do subtítulo; aqui volta o espaço do padrão (o mesmo 8 de resultado.css). E o
    padrão corta o título em uma linha com reticências, o que não serve pras perguntas longas do
