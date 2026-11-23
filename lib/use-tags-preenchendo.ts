@@ -1,11 +1,16 @@
 import { useLayoutEffect, useRef } from "react";
 
-// Os cards mostram duas linhas de tags (.figma-badges, max-height 54px). Sem isso, a tag que não cabe
-// inteira pula pra linha de baixo e deixa espaço em branco na de cima. Aqui a próxima tag entra no
-// espaço que sobrou, cortada com "..." (o text-overflow já está no CSS), desde que sobre ao menos
-// LARGURA_MINIMA. As que passam da segunda linha continuam escondidas pelo overflow.
+// Os cards mostram duas linhas de tags (.figma-badges, max-height 54px). Regras:
+// - tag do tema (data-tema="1": álcool, drogas, redução de danos...) tem prioridade no espaço: se não
+//   cabe inteira no que sobrou da linha, vai pra linha seguinte (cortada só se passar da linha inteira);
+// - o buraco que sobra é preenchido por tags que cabem inteiras e, se nenhuma couber, por uma tag que
+//   não é do tema, cortada com "..." (o text-overflow já está no CSS), se sobrar ao menos LARGURA_MINIMA.
+// A ordem na tela é feita com `order`, sem mexer no DOM. As que passam da segunda linha ficam
+// escondidas pelo overflow.
 const LINHAS = 2;
 const LARGURA_MINIMA = 72;
+
+type Item = { el: HTMLElement; largura: number; tema: boolean };
 
 export function useTagsPreenchendo<T extends HTMLElement>(chave: string) {
   const ref = useRef<T>(null);
@@ -16,38 +21,39 @@ export function useTagsPreenchendo<T extends HTMLElement>(chave: string) {
 
     function encaixar() {
       if (!container) return;
-      const tags = Array.from(container.children) as HTMLElement[];
-      tags.forEach((tag) => { tag.style.maxWidth = ""; });
+      const elementos = Array.from(container.children) as HTMLElement[];
+      elementos.forEach((el) => {
+        el.style.maxWidth = "";
+        el.style.order = "";
+      });
 
-      const larguraTotal = container.clientWidth;
+      // -1: a largura chega arredondada e, sem folga, a tag quebra de linha.
+      const total = container.getBoundingClientRect().width - 1;
       const folga = parseFloat(getComputedStyle(container).columnGap) || 0;
-      let linha = 0;
-      let usado = 0;
+      let restantes: Item[] = elementos.map((el) => ({ el, largura: el.offsetWidth, tema: el.dataset.tema === "1" }));
+      let ordem = 0;
 
-      for (const tag of tags) {
-        if (linha >= LINHAS) break;
-        const largura = tag.offsetWidth;
+      for (let linha = 0; linha < LINHAS && restantes.length > 0; linha++) {
+        let usado = 0;
+        const colocar = (item: Item, larguraMaxima?: number) => {
+          item.el.style.order = String(ordem++);
+          if (larguraMaxima !== undefined) item.el.style.maxWidth = `${Math.floor(larguraMaxima)}px`;
+          usado += (usado > 0 ? folga : 0) + (larguraMaxima ?? item.largura);
+          restantes = restantes.filter((outro) => outro !== item);
+        };
 
-        if (usado === 0) {
-          usado = largura;
-          continue;
+        for (const item of [...restantes]) {
+          if (usado === 0 || usado + folga + item.largura <= total) colocar(item);
         }
-        if (usado + folga + largura <= larguraTotal) {
-          usado += folga + largura;
-          continue;
-        }
-        const sobra = larguraTotal - usado - folga;
+
+        const sobra = total - usado - folga;
         if (sobra >= LARGURA_MINIMA) {
-          // -2px: a largura do contêiner chega arredondada e, sem folga, a tag quebra de linha.
-          tag.style.maxWidth = `${Math.floor(sobra) - 2}px`;
-          linha += 1;
-          usado = 0;
-        } else {
-          linha += 1;
-          if (linha >= LINHAS) break;
-          usado = largura;
+          const candidata = restantes.find((item) => !item.tema);
+          if (candidata) colocar(candidata, sobra);
         }
       }
+
+      restantes.forEach((item) => { item.el.style.order = String(ordem++); });
     }
 
     encaixar();

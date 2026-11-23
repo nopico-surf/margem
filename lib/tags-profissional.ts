@@ -14,10 +14,11 @@ const TERMOS_DO_TEMA = [
   "cannabis",
 ];
 
+export function ehTagDoTema(tag: string): boolean {
+  const normalizada = normalizarTexto(tag);
+  return TERMOS_DO_TEMA.some((termo) => normalizada.includes(termo));
+}
+
 export function tagsComTemaPrimeiro(tags: string[]): string[] {
-  const doTema = (tag: string) => {
-    const normalizada = normalizarTexto(tag);
-    return TERMOS_DO_TEMA.some((termo) => normalizada.includes(termo));
-  };
-  return [...tags.filter(doTema), ...tags.filter((tag) => !doTema(tag))];
+  return [...tags.filter(ehTagDoTema), ...tags.filter((tag) => !ehTagDoTema(tag))];
 }

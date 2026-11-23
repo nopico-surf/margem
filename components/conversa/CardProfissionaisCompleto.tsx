@@ -9,7 +9,7 @@ import { BotaoAgendar } from "@/components/ui/BotaoAgendar";
 import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { slugDoNome } from "@/lib/slug-profissional";
-import { tagsComTemaPrimeiro } from "@/lib/tags-profissional";
+import { ehTagDoTema, tagsComTemaPrimeiro } from "@/lib/tags-profissional";
 import { useTagsPreenchendo } from "@/lib/use-tags-preenchendo";
 
 // Figma: "card-profissionais-completo".
@@ -116,7 +116,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
       {profissional.tags.length > 0 && (
         <div className="figma-badges" ref={tagsRef}>
           {tagsComTemaPrimeiro(profissional.tags).map((tag) => (
-            <span key={tag}>{tag}</span>
+            <span key={tag} data-tema={ehTagDoTema(tag) ? "1" : undefined}>{tag}</span>
           ))}
         </div>
       )}
