@@ -10,9 +10,10 @@ export type LoginGate = "antes_do_resultado" | "inicio";
 export const LOGIN_GATE: LoginGate = process.env.NEXT_PUBLIC_FAMILIA_LOGIN_GATE === "inicio" ? "inicio" : "antes_do_resultado";
 
 export type Provedor = "google" | "apple" | "facebook";
+// Apple fora da tela por enquanto: falta a conta Apple Developer (paga) e ligar o provedor no Supabase.
+// Quando existir, voltar com { id: "apple", rotulo: "Entrar com Apple" } entre o Google e o Facebook.
 export const PROVEDORES: Array<{ id: Provedor; rotulo: string }> = [
   { id: "google", rotulo: "Entrar com Google" },
-  { id: "apple", rotulo: "Entrar com Apple" },
   { id: "facebook", rotulo: "Entrar com Facebook" },
 ];
 

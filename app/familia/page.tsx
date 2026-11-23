@@ -235,7 +235,7 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
       {
         pergunta: "O que vocês fazem com os meus dados?",
         resposta:
-          "Seus dados não são compartilhados sem a sua autorização. O login é pelo Google, Apple ou Facebook, e a Margem não guarda senha. Você não precisa dizer o nome de ninguém: escolhe um apelido para a pessoa.",
+          "Seus dados não são compartilhados sem a sua autorização. O login é pelo Google ou Facebook, e a Margem não guarda senha. Você não precisa dizer o nome de ninguém: escolhe um apelido para a pessoa.",
       },
       {
         pergunta: "E se eu tiver medo dentro de casa?",

@@ -27,7 +27,7 @@ export function DadosPrivacidadeModal({ onClose }: DadosPrivacidadeModalProps) {
         </ModalSection>
 
         <ModalSection titulo="Programa para familiares">
-          <p>O programa para familiares é a única parte da Margem com login. Você entra com sua conta do Google, da Apple ou do Facebook, e a Margem não recebe nem guarda senha. Do provedor, a gente recebe só seu nome e seu e-mail, e o provedor fica sabendo que você entrou na Margem com a conta dele. Você informa também seu WhatsApp, que a gente usa pra mandar o acesso ao programa e os lembretes. Junto da sua conta ficam suas respostas ao diagnóstico, o que você anota e faz ao longo das semanas e o registro do pagamento, quando houver. A pessoa de quem você cuida não é identificada: você escolhe um apelido pra ela.</p>
+          <p>O programa para familiares é a única parte da Margem com login. Você entra com sua conta do Google ou do Facebook, e a Margem não recebe nem guarda senha. Do provedor, a gente recebe só seu nome e seu e-mail, e o provedor fica sabendo que você entrou na Margem com a conta dele. Você informa também seu WhatsApp, que a gente usa pra mandar o acesso ao programa e os lembretes. Junto da sua conta ficam suas respostas ao diagnóstico, o que você anota e faz ao longo das semanas e o registro do pagamento, quando houver. A pessoa de quem você cuida não é identificada: você escolhe um apelido pra ela.</p>
         </ModalSection>
 
         <ModalSection titulo="Se você não aceitar">
