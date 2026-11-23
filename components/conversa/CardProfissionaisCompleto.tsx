@@ -10,6 +10,7 @@ import { track } from "@/lib/mixpanel";
 import type { ProfissionalCadastrado } from "@/lib/supabase";
 import { slugDoNome } from "@/lib/slug-profissional";
 import { tagsComTemaPrimeiro } from "@/lib/tags-profissional";
+import { useTagsPreenchendo } from "@/lib/use-tags-preenchendo";
 
 // Figma: "card-profissionais-completo".
 
@@ -60,6 +61,7 @@ type CardProfissionaisCompletoProps = {
 
 export function CardProfissionaisCompleto({ profissional, estado = "default", posicao, origem, anoAtual }: CardProfissionaisCompletoProps) {
   const pathname = usePathname();
+  const tagsRef = useTagsPreenchendo<HTMLDivElement>(profissional?.tags.join("|") ?? "");
 
   if (estado === "in-construction") {
     return (
@@ -112,7 +114,7 @@ export function CardProfissionaisCompleto({ profissional, estado = "default", po
         </div>
       </div>
       {profissional.tags.length > 0 && (
-        <div className="figma-badges">
+        <div className="figma-badges" ref={tagsRef}>
           {tagsComTemaPrimeiro(profissional.tags).map((tag) => (
             <span key={tag}>{tag}</span>
           ))}
