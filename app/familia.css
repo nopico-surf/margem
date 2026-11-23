@@ -19,21 +19,21 @@
 
 /* Na LP o header fica por cima da foto do topo, transparente e com logo, botão e menu brancos
    (mesmo filtro da página do profissional). Ali ele não acompanha a rolagem. */
-.familia:has(.familia-lp) .familia-cabecalho {
+.familia:has(.familia-lp:not([style*="display: none"])) .familia-cabecalho {
   position: absolute;
   inset: 0 0 auto;
 }
 
-.familia:has(.familia-lp) .app-header {
+.familia:has(.familia-lp:not([style*="display: none"])) .app-header {
   background: transparent;
 }
 
-.familia:has(.familia-lp) .app-header img,
-.familia:has(.familia-lp) .app-header svg {
+.familia:has(.familia-lp:not([style*="display: none"])) .app-header img,
+.familia:has(.familia-lp:not([style*="display: none"])) .app-header svg {
   filter: brightness(0) invert(1);
 }
 
-.familia:has(.familia-lp) .app-header .btn {
+.familia:has(.familia-lp:not([style*="display: none"])) .app-header .btn {
   color: var(--colors-neutral-0);
 }
 
@@ -65,7 +65,7 @@
 }
 
 /* A LP tem faixas de ponta a ponta: cada seção cuida da própria largura. */
-.familia-conteudo:has(> .familia-lp) {
+.familia-conteudo:has(> .familia-lp:not([style*="display: none"])) {
   max-width: none;
   padding: 0;
 }

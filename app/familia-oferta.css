@@ -261,7 +261,7 @@
 
 /* O checkout usa as faixas de tela cheia do /plano (ContainerConteudo): sem o padding e a largura do
    .familia-conteudo, que deixavam os campos estreitos, como dentro de um iframe. */
-.familia-conteudo:has(> .familia-checkout) {
+.familia-conteudo:has(> .familia-checkout:not([style*="display: none"])) {
   max-width: none;
   padding: 0;
 }
