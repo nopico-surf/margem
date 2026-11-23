@@ -7,6 +7,7 @@ import type { Respostas } from "./diagnostico";
 export type Perfil = {
   user_id: string;
   email: string | null;
+  nome: string | null;
   safety_mode: boolean;
   acesso_liberado_em: string | null;
 };
@@ -14,7 +15,7 @@ export type Perfil = {
 export async function buscarPerfil(supabase: SupabaseClient, userId: string) {
   const { data, error } = await supabase
     .from("familia_perfis")
-    .select("user_id, email, safety_mode, acesso_liberado_em")
+    .select("user_id, email, nome, safety_mode, acesso_liberado_em")
     .eq("user_id", userId)
     .maybeSingle();
   if (error) console.error("[familia] buscarPerfil falhou:", error.message);

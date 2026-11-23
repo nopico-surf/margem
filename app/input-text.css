@@ -67,6 +67,12 @@
   opacity: 0;
 }
 
+/* Exemplo de preenchimento (`focus` do Figma): cinza claro, some quando a pessoa começa a digitar. */
+.input-text input::placeholder {
+  color: var(--colors-neutral-500);
+  opacity: 1;
+}
+
 /* `hover`: só com ponteiro de verdade e com o campo vazio e sem foco. */
 @media (hover: hover) {
   .input-text[data-preenchido="false"] .input-text-caixa:not(:focus-within):hover,

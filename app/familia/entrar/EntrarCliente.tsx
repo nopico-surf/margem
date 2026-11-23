@@ -18,7 +18,8 @@ type Estado = "verificando" | "login" | "dados" | "email" | "erro";
 const DADOS_TITULO = "Confirme seus dados";
 const DADOS_DESCRICAO = "A gente usa seu WhatsApp só pra te mandar o acesso ao programa e os lembretes, com mensagem discreta.";
 const DADOS_BOTAO = "Salvar dados e continuar";
-const WHATSAPP_ERRO = "Confira o número, com DDD e 9 dígitos.";
+const WHATSAPP_EXEMPLO = "(11) 91234-5678";
+const WHATSAPP_ERRO = `Confira o número, com DDD e 9 dígitos. Exemplo: ${WHATSAPP_EXEMPLO}`;
 
 const EMAIL_VALIDO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -84,13 +85,14 @@ export function EntrarCliente({ retorno = false }: { retorno?: boolean }) {
     return (
       <section className="familia-secao">
         <CardHeader as="h1" title={DADOS_TITULO} description={DADOS_DESCRICAO} />
-        <InputText id="familia-nome" rotulo="Nome" autoComplete="given-name" maxLength={40} value={nome} onChange={setNome} />
+        <InputText id="familia-nome" rotulo="Nome completo" autoComplete="name" maxLength={100} value={nome} onChange={setNome} />
         <InputText id="familia-email" rotulo="E-mail" tipo="email" inputMode="email" autoComplete="email" value={email} onChange={setEmail} />
         <InputText
           id="familia-whatsapp"
           rotulo="WhatsApp"
           inputMode="tel"
           autoComplete="tel-national"
+          placeholder={WHATSAPP_EXEMPLO}
           value={whatsapp}
           onChange={(valor) => setWhatsapp(mascararWhatsapp(valor))}
           onBlur={() => setWhatsappTocado(true)}

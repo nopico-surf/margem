@@ -31,6 +31,8 @@ type InputTextProps = {
   autoCapitalize?: string;
   spellCheck?: boolean;
   maxLength?: number;
+  // Exemplo de como preencher. Só aparece com foco e campo vazio (nos outros estados o campo fica fechado).
+  placeholder?: string;
   iconeInicio?: ReactNode;
   iconeFim?: ReactNode;
   estadoForcado?: "hover" | "focus";
@@ -53,6 +55,7 @@ export function InputText({
   autoCapitalize,
   spellCheck,
   maxLength,
+  placeholder,
   iconeInicio,
   iconeFim,
   estadoForcado,
@@ -84,6 +87,7 @@ export function InputText({
             autoCapitalize={autoCapitalize}
             spellCheck={spellCheck}
             maxLength={maxLength}
+            placeholder={placeholder}
             aria-invalid={erro ? true : undefined}
             aria-describedby={textoAbaixo ? idTextoAbaixo : undefined}
           />

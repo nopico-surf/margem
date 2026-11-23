@@ -117,13 +117,15 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
         return router.replace("/familia/entrar");
       }
       if (!resposta.ok) return trocar("plano");
-      const perfil = (await resposta.json()) as { temPerfil: boolean; safetyMode: boolean; acessoLiberado: boolean; temDiagnostico: boolean };
+      const perfil = (await resposta.json()) as { temPerfil: boolean; nome: string | null; safetyMode: boolean; acessoLiberado: boolean; temDiagnostico: boolean };
       if (!perfil.temPerfil) {
         guardarDestinoDepoisDoLogin("/familia/checkout");
         return router.replace("/familia/entrar");
       }
       if (perfil.acessoLiberado) return router.replace("/familia/programa");
       setTemDiagnostico(perfil.temDiagnostico);
+      // O nome completo da tela de dados já vai pro Pix; a pessoa ainda pode editar.
+      if (perfil.nome) setNome(perfil.nome);
       // Em modo de segurança, o plano com acompanhamento vem pré-selecionado (briefing 01, etapa 1).
       if (perfil.safetyMode) setPlano("acompanhamento");
       trocar("plano");

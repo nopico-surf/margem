@@ -43,6 +43,9 @@ export function InputTextGaleria() {
       <Estado nome="focus">
         <InputText id="galeria-input-foco" rotulo="Nome completo" value="" onChange={nada} estadoForcado="focus" />
       </Estado>
+      <Estado nome="focus com exemplo de preenchimento">
+        <InputText id="galeria-input-foco-exemplo" rotulo="WhatsApp" value="" onChange={nada} estadoForcado="focus" placeholder="(11) 91234-5678" />
+      </Estado>
       <Estado nome="filled">
         <InputText id="galeria-input-cheio" rotulo="E-mail" value="pessoa@exemplo.com.br" onChange={nada} />
       </Estado>

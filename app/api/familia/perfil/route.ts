@@ -16,10 +16,11 @@ function ehTestador(email: string | null | undefined) {
   return lista.includes(email.trim().toLowerCase());
 }
 
-// Só o primeiro nome que o provedor mandar, pra saudação. Nunca o nome do ente querido.
+// Nome completo que o provedor mandar (o do próprio familiar, nunca o do ente querido). A tela de dados
+// já vem preenchida com ele e o checkout reaproveita no Pix.
 function nomeDoProvedor(user: User) {
   const nomeCompleto = (user.user_metadata?.full_name ?? user.user_metadata?.name) as string | undefined;
-  return nomeCompleto?.split(" ")[0]?.slice(0, 40) ?? "";
+  return nomeCompleto?.trim().replace(/\s+/g, " ").slice(0, 100) ?? "";
 }
 
 export async function GET(request: Request) {
@@ -33,6 +34,8 @@ export async function GET(request: Request) {
   ]);
   return Response.json({
     temPerfil: Boolean(perfil),
+    // Nome já salvo no perfil: o checkout usa pra preencher o nome do Pix.
+    nome: perfil?.nome ?? null,
     precisaEmail: !perfil?.email && !user.email,
     safetyMode: perfil?.safety_mode ?? false,
     acessoLiberado: Boolean(perfil?.acesso_liberado_em),
@@ -85,7 +88,7 @@ export async function POST(request: Request) {
 
   const agora = new Date().toISOString();
   const comunicacoes = corpo.consentimentoComunicacoes === true;
-  const nomeInformado = typeof corpo.nome === "string" ? corpo.nome.trim().slice(0, 40) : "";
+  const nomeInformado = typeof corpo.nome === "string" ? corpo.nome.trim().replace(/\s+/g, " ").slice(0, 100) : "";
   const { error } = await supabase.from("familia_perfis").insert({
     user_id: user.id,
     email,
