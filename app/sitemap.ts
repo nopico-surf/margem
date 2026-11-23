@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: "https://www.somosmargem.com.br/inicio" },
     { url: "https://www.somosmargem.com.br/privacidade" },
+    { url: "https://www.somosmargem.com.br/termos" },
     { url: "https://www.somosmargem.com.br/profissionais" },
     { url: "https://www.somosmargem.com.br/redes-de-apoio" },
     { url: "https://www.somosmargem.com.br/mochila" },
