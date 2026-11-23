@@ -4,8 +4,11 @@
 //
 // Uso, sempre depois do deploy (o buscador confere a chave no site no ar):
 //   node scripts/indexnow.mjs                    avisa todas as páginas do sitemap
-//   node scripts/indexnow.mjs /blog/terapia-barata /profissionais/ana-paula-lima
-//                                                avisa só essas
+//   node scripts/indexnow.mjs https://www.somosmargem.com.br/blog/terapia-barata
+//                                                avisa só essas (uma ou mais URLs)
+//
+// Passar sempre a URL completa: no Git Bash do Windows, um argumento começando com "/" vira caminho
+// de pasta (C:/Program Files/Git/blog/...) e o IndexNow recusa com 422.
 //
 // A chave não é segredo: ela fica pública em /public/<chave>.txt, é assim que o protocolo prova que
 // o site é nosso. Trocar a chave = trocar o nome e o conteúdo desse arquivo e a constante abaixo.
