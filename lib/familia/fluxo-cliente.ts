@@ -45,8 +45,14 @@ export async function temSessao() {
   return Boolean(data.session);
 }
 
+export type Sugestao = { nome: string; email: string };
+
+// O que a pessoa informou na tela de dados (perfil novo) ou o e-mail que faltava (perfil antigo).
+export type Informado = { nome?: string; email?: string; whatsapp?: string };
+
 export type DepoisDoLogin =
   | { tipo: "ir"; destino: string }
+  | { tipo: "precisa_dados"; sugestao: Sugestao }
   | { tipo: "precisa_email" }
   | { tipo: "precisa_consentimento" }
   | { tipo: "sem_sessao" }
@@ -54,24 +60,29 @@ export type DepoisDoLogin =
 
 // Depois do login (ou com sessão já aberta): garante o perfil com os consentimentos, grava o
 // diagnóstico que estava no aparelho e diz pra onde seguir.
-export async function concluirEntrada(email?: string): Promise<DepoisDoLogin> {
+export async function concluirEntrada(informado?: Informado): Promise<DepoisDoLogin> {
   const perfilResposta = await chamarApi("/api/familia/perfil");
   if (!perfilResposta) return { tipo: "sem_sessao" };
   if (!perfilResposta.ok) return { tipo: "erro" };
-  const perfil = (await perfilResposta.json()) as { temPerfil: boolean; precisaEmail: boolean; temDiagnostico: boolean };
+  const perfil = (await perfilResposta.json()) as { temPerfil: boolean; precisaEmail: boolean; temDiagnostico: boolean; sugestao: Sugestao };
 
   if (!perfil.temPerfil || perfil.precisaEmail) {
     const consentimento = lerConsentimentoPendente();
     if (!perfil.temPerfil && !consentimento?.dados) return { tipo: "precisa_consentimento" };
-    if (perfil.precisaEmail && !email) return { tipo: "precisa_email" };
+    // Perfil novo: a tela de dados vem antes de criar o perfil. Perfil antigo sem e-mail: só o e-mail.
+    if (!perfil.temPerfil && !informado) return { tipo: "precisa_dados", sugestao: perfil.sugestao };
+    if (perfil.temPerfil && !informado?.email) return { tipo: "precisa_email" };
     const criado = await chamarApi("/api/familia/perfil", {
       method: "POST",
-      body: JSON.stringify({ consentimentoDados: consentimento?.dados === true, consentimentoComunicacoes: consentimento?.comunicacoes === true, email }),
+      body: JSON.stringify({ consentimentoDados: consentimento?.dados === true, consentimentoComunicacoes: consentimento?.comunicacoes === true, ...informado }),
     });
     if (!criado) return { tipo: "sem_sessao" };
     if (!criado.ok) {
       const { error } = (await criado.json().catch(() => ({}))) as { error?: string };
-      return error === "precisa_email" ? { tipo: "precisa_email" } : { tipo: "erro" };
+      if (error === "precisa_email" || error === "whatsapp_invalido") {
+        return perfil.temPerfil ? { tipo: "precisa_email" } : { tipo: "precisa_dados", sugestao: { nome: informado?.nome ?? "", email: informado?.email ?? "" } };
+      }
+      return { tipo: "erro" };
     }
     apagar(CHAVE_CONSENTIMENTO_PENDENTE);
   }

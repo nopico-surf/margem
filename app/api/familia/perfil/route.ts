@@ -1,5 +1,7 @@
+import type { User } from "@supabase/supabase-js";
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
 import { buscarPerfil, buscarUltimoDiagnostico, emailValido } from "@/lib/familia/dados";
+import { normalizarWhatsapp } from "@/lib/familia/whatsapp";
 import { TEXTO_CONSENTIMENTO_COMUNICACOES, TEXTO_CONSENTIMENTO_DADOS } from "@/lib/familia/config";
 import { buscarCompraDaFamilia } from "@/lib/familia/compra-servidor";
 
@@ -12,6 +14,12 @@ function ehTestador(email: string | null | undefined) {
   if (!email) return false;
   const lista = (process.env.FAMILIA_TESTADORES ?? "").split(",").map((item) => item.trim().toLowerCase()).filter(Boolean);
   return lista.includes(email.trim().toLowerCase());
+}
+
+// Só o primeiro nome que o provedor mandar, pra saudação. Nunca o nome do ente querido.
+function nomeDoProvedor(user: User) {
+  const nomeCompleto = (user.user_metadata?.full_name ?? user.user_metadata?.name) as string | undefined;
+  return nomeCompleto?.split(" ")[0]?.slice(0, 40) ?? "";
 }
 
 export async function GET(request: Request) {
@@ -33,6 +41,8 @@ export async function GET(request: Request) {
     // sem compra é acesso gratuito.
     compra: perfil?.acesso_liberado_em ? compra : null,
     testador: ehTestador(user.email ?? perfil?.email),
+    // O que o provedor mandou, pra tela de dados já vir preenchida.
+    sugestao: { nome: nomeDoProvedor(user), email: user.email ?? perfil?.email ?? "" },
   });
 }
 
@@ -41,15 +51,21 @@ export async function POST(request: Request) {
   if (!sessao) return naoAutorizado();
   const { user, supabase } = sessao;
 
-  const corpo = (await request.json().catch(() => null)) as { consentimentoDados?: unknown; consentimentoComunicacoes?: unknown; email?: unknown } | null;
+  const corpo = (await request.json().catch(() => null)) as {
+    consentimentoDados?: unknown;
+    consentimentoComunicacoes?: unknown;
+    email?: unknown;
+    nome?: unknown;
+    whatsapp?: unknown;
+  } | null;
   const existente = await buscarPerfil(supabase, user.id);
 
-  // Facebook sem e-mail (conta criada com telefone): a pessoa informa depois do login.
   const emailInformado = emailValido(corpo?.email) ? corpo.email.trim().toLowerCase() : null;
-  const email = user.email ?? existente?.email ?? emailInformado;
-  if (!email) return Response.json({ error: "precisa_email" }, { status: 400 });
 
   if (existente) {
+    // Facebook sem e-mail (conta criada com telefone): a pessoa informa depois do login.
+    const email = user.email ?? existente.email ?? emailInformado;
+    if (!email) return Response.json({ error: "precisa_email" }, { status: 400 });
     if (!existente.email) {
       const { error } = await supabase.from("familia_perfis").update({ email }).eq("user_id", user.id);
       if (error) console.error("[familia] atualizar e-mail falhou:", error.message);
@@ -57,15 +73,24 @@ export async function POST(request: Request) {
     return Response.json({ ok: true });
   }
 
+  // Perfil novo: nome e e-mail vêm do provedor e a pessoa confere na tela de dados; o WhatsApp é
+  // obrigatório e ela digita.
+  const email = emailInformado ?? user.email;
+  if (!email) return Response.json({ error: "precisa_email" }, { status: 400 });
+
   if (corpo?.consentimentoDados !== true) return Response.json({ error: "sem_consentimento" }, { status: 400 });
+
+  const whatsapp = normalizarWhatsapp(corpo.whatsapp);
+  if (!whatsapp) return Response.json({ error: "whatsapp_invalido" }, { status: 400 });
 
   const agora = new Date().toISOString();
   const comunicacoes = corpo.consentimentoComunicacoes === true;
-  const nomeCompleto = (user.user_metadata?.full_name ?? user.user_metadata?.name) as string | undefined;
+  const nomeInformado = typeof corpo.nome === "string" ? corpo.nome.trim().slice(0, 40) : "";
   const { error } = await supabase.from("familia_perfis").insert({
     user_id: user.id,
     email,
-    nome: nomeCompleto?.split(" ")[0]?.slice(0, 40) ?? null,
+    whatsapp,
+    nome: nomeInformado || nomeDoProvedor(user) || null,
     consentimento_dados_em: agora,
     consentimento_dados_texto: TEXTO_CONSENTIMENTO_DADOS,
     consentimento_comunicacoes: comunicacoes,

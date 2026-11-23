@@ -99,6 +99,7 @@ Adaptar nomes ao padrão de rotas do projeto.
   - `inicio`: login antes da primeira pergunta.
   Registrar o evento `login_solicitado` e `login_concluido` (com provedor) para comparar as duas opções.
 - Dados a solicitar dos provedores: apenas nome e e-mail (escopos mínimos). Não pedir lista de amigos, contatos ou outros dados.
+- **Tela de dados (desde 23/11/2026):** no primeiro login, antes de criar o perfil, a pessoa vê nome e e-mail já preenchidos (e editáveis) e o campo **WhatsApp em branco, obrigatório**. O número é celular brasileiro com DDD, mascarado e conferido só no formato (não há confirmação de que é da pessoa nem de que tem WhatsApp). Guardado em `familia_perfis.whatsapp` como `+55DDDNÚMERO`. Perfis criados antes dessa tela ficam sem número e não são cobrados. O Facebook sem e-mail cai nessa mesma tela, com o e-mail vazio.
 - **Casos a tratar:**
   - Apple com "Ocultar meu e-mail": o e-mail recebido é um endereço de encaminhamento. Ele funciona para envio, desde que o domínio de envio da Margem esteja registrado no serviço de encaminhamento da Apple `[PENDÊNCIA DO FUNDADOR]`.
   - Facebook sem e-mail (conta criada com telefone): pedir o e-mail em um campo após o login, obrigatório para continuar.
