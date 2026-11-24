@@ -109,7 +109,6 @@ const EIXOS = [
 type Pergunta = { pergunta: string; resposta: string; link?: { rotulo: string; href: string } };
 
 // FAQ do briefing N3 (docs/familia-briefings/folego-N0-a-N4.md), em 5 blocos, com o texto exato do briefing (nivel-2).
-// O acesso gratuito fica só em texto, sem link: o pedido continua só no rodapé do checkout.
 const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> = [
   {
     titulo: "Sobre o Fôlego",
@@ -238,11 +237,6 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
         pergunta: "O que é o Fôlego com acompanhamento?",
         resposta:
           "É o programa com a primeira sessão de um profissional parceiro combinada junto. Levando a sessão, o programa começa 20% mais barato, a partir de R$ 37, e a sessão é escolhida e paga por você, no valor da faixa social do profissional. O total aparece somado antes de pagar, num Pix só. É o jeito que mais ajuda, segundo os estudos.",
-      },
-      {
-        pergunta: "E se eu não puder pagar agora?",
-        resposta:
-          "Ninguém precisa ficar de fora por causa de dinheiro. Na hora de pagar existe a opção de pedir acesso gratuito, sem comprovar renda e sem precisar explicar muito.",
       },
       {
         pergunta: "E se eu me arrepender?",

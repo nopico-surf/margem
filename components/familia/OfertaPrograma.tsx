@@ -43,8 +43,6 @@ const ITENS_LP = [
   "Plano de segurança",
 ];
 
-const HREF_GRATUITO = "/familia/acesso-gratuito";
-
 export function OfertaPrograma({ variante, apelido = "", modulos = [], seguranca = false }: OfertaProgramaProps) {
   const lightbox = useRef<HTMLDialogElement>(null);
 
@@ -193,12 +191,7 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], seguranca
           {variante === "lp" ? (
             <p>Você pode fazer o diagnóstico e experimentar um treino de conversa de graça, antes de decidir.</p>
           ) : (
-            <>
-              <p>{APOIO_PRECO}</p>
-              <Button variante="transparent" tamanho="small" semPadding href={`${HREF_GRATUITO}?origem=${variante}`} onClick={clicar("gratuito")}>
-                Pedir acesso gratuito
-              </Button>
-            </>
+            <p>{APOIO_PRECO}</p>
           )}
         </div>
       </div>

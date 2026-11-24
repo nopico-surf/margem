@@ -1,9 +1,7 @@
-import type { Metadata } from "next";
-import { AcessoGratuitoCliente } from "./AcessoGratuitoCliente";
+import { redirect } from "next/navigation";
 
-// "Pedir acesso gratuito" (briefing 01). Exige login, pra o acesso ser liberado na conta certa.
-export const metadata: Metadata = { robots: { index: false, follow: false } };
-
+// "Pedir acesso gratuito" (briefing 01) está escondido. Pra reativar, voltar este arquivo pra renderizar
+// <AcessoGratuitoCliente /> e recolocar os links no checkout, na OfertaPrograma e a pergunta na FAQ da LP.
 export default function AcessoGratuitoPage() {
-  return <AcessoGratuitoCliente />;
+  redirect("/familia");
 }

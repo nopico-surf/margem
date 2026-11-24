@@ -337,14 +337,6 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
   const textoDoValor = `Valor total: R$ ${compra.total}`;
   const podeVoltar = etapa === "plano" || etapa === "valor" || etapa === "sessao" || etapa === "resumo" || etapa === "dados";
   const continuarDoResumo = () => irPara("dados");
-  const linkGratuito = (
-    <p className="plano-nota">
-      Nem o menor valor cabe agora?{" "}
-      <Button variante="transparent" tamanho="small" semPadding href="/familia/acesso-gratuito?origem=checkout">
-        Pedir acesso gratuito
-      </Button>
-    </p>
-  );
 
   return (
     <div className="plano-pagina familia-checkout" data-etapa={etapa}>
@@ -378,7 +370,6 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
               onSelecionar={() => escolherPlano("acompanhamento")}
             />
           </div>
-          {linkGratuito}
         </ContainerConteudo>
       )}
 
@@ -411,7 +402,6 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
           <Button tamanho="medium" larguraTotal onClick={continuarDoValor}>
             Continuar para o pagamento
           </Button>
-          {linkGratuito}
         </ContainerConteudo>
       )}
 
@@ -455,7 +445,6 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
           <Button tamanho="medium" larguraTotal disabled={sessao === null} onClick={() => { setEditando(false); irPara("resumo"); }}>
             Continuar para o pagamento
           </Button>
-          {linkGratuito}
         </ContainerConteudo>
       )}
 
