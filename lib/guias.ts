@@ -5001,6 +5001,198 @@ export const GUIAS: Guia[] = [
     // A cabeça fica perto do alto do recorte: ancorado no centro, o card podia cortá-la.
     posicaoDaFotoDoCard: "center top",
   },
+  // Guia de cocaína e álcool (24/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/cocaina-e-alcool.md). Formato dos títulos: perguntas (o anterior, ansiedade-e-alcool, usou
+  // afirmativos). Fatos conferidos contra os guias de como parar de usar cocaína (cocaetileno mais tóxico pro coração
+  // e pro fígado e mais tempo no corpo, redução de danos, sinais de emergência, exame de urina), ansiedade e álcool,
+  // pode beber tomando remédio (calmante com álcool) e sintomas de abstinência. Sem número de risco: só "pode" e
+  // "aumenta". Mesma exceção de copy dos outros guias.
+  {
+    slug: "cocaina-e-alcool",
+    publicadoEm: "2026-11-24",
+    atualizadoEm: "2026-11-24",
+    title: "Cocaína e álcool: por que a mistura é perigosa | Margem",
+    descricao:
+      "O que acontece no corpo quando cocaína e álcool se misturam, por que a mistura engana, o que fazer numa emergência, como reduzir riscos e onde encontrar apoio sem julgamento.",
+    h1: "Cocaína e álcool: o que a mistura faz no corpo e como se cuidar",
+    abertura:
+      "No Brasil, cocaína e bebida costumam andar juntas: na festa, no bar, no fim de semana que começa com uma cerveja e vira a noite. Muita gente acha que uma coisa equilibra a outra. Não equilibra. Aqui a gente explica o que acontece no corpo quando as duas se encontram, por que a mistura engana, o que fazer se alguém passar mal e como cuidar de si, queira você parar, diminuir ou só entender melhor.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    secoes: [
+      {
+        titulo: "O que acontece quando cocaína e álcool se misturam?",
+        blocos: [
+          p("Quando as duas estão no corpo ao mesmo tempo, o fígado junta uma com a outra e forma uma terceira substância, o cocaetileno. Ele também age como estimulante, fica mais tempo no corpo do que a cocaína e é mais tóxico pro coração e pro fígado."),
+          p("Na prática, isso quer dizer que o efeito dura mais, o coração trabalha no limite por mais tempo e o corpo leva mais tempo pra se livrar do que foi usado. Não é preciso usar muito pra isso acontecer: basta as duas estarem no corpo juntas."),
+        ],
+      },
+      {
+        titulo: "Por que a mistura engana?",
+        blocos: [
+          p("A cocaína disfarça a sensação de estar bêbado. A pessoa se sente acordada, falante e no controle, mesmo com muito álcool no corpo. Por isso costuma beber bem mais do que beberia sem a cocaína."),
+          p("O problema aparece quando o efeito da cocaína passa, o que acontece bem antes de o álcool sair do corpo. Aí todo o álcool que estava escondido aparece de uma vez: tontura, vômito, apagão, e em alguns casos intoxicação alcoólica grave."),
+          p("A ideia de que o álcool \"corta\" a cocaína, ou de que a cocaína \"corta\" a bebedeira, é parte do engano. Uma não anula a outra. As duas continuam agindo, e o corpo paga pelas duas."),
+        ],
+      },
+      {
+        titulo: "Quais são os riscos pro coração?",
+        blocos: [
+          p("A cocaína acelera o coração, aumenta a pressão e aperta os vasos sanguíneos. O álcool também pesa no coração e na pressão. Juntos, com o cocaetileno no meio, aumentam o risco de infarto, de batimento descompassado e de AVC."),
+          p("Isso pode acontecer com gente jovem e que nunca teve problema no coração. Quem já tem pressão alta ou algum problema cardíaco corre um risco ainda maior. Energético, que tem cafeína, aumenta a carga sobre o coração quando entra na mistura."),
+        ],
+      },
+      {
+        titulo: "Por que uma puxa a outra?",
+        blocos: [
+          p("Muita gente percebe que só tem vontade de usar cocaína quando bebe. O álcool diminui o freio e aumenta a vontade. A cocaína, por sua vez, deixa a pessoa beber mais. Uma alimenta a outra, e a noite se estica."),
+          p("Isso não é falta de força de vontade. É o efeito das duas substâncias somado ao contexto: o lugar, as pessoas, o dia da semana. Reparar nesse padrão já ajuda. Se a bebida é o que costuma puxar o uso, cuidar da bebida pode ser um bom começo. [Ler sobre como parar ou diminuir a bebida](/blog/como-parar-de-beber)"),
+        ],
+      },
+      {
+        titulo: "Como fica o dia seguinte?",
+        blocos: [
+          p("O dia seguinte da mistura costuma ser mais pesado do que a ressaca comum. É comum aparecer:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Cansaço forte e corpo dolorido",
+              "Tristeza, desânimo e irritação",
+              "Ansiedade, coração acelerado e aperto no peito",
+              "Culpa ou vergonha pelo que fez, gastou ou disse",
+              "Sono picado, mesmo com muito cansaço",
+              "Vontade de usar de novo pra sair desse estado",
+            ],
+          },
+          p("Usar de novo pra aliviar o dia seguinte funciona por pouco tempo e deixa o ciclo mais forte. Água, comida leve, descanso e alguém de confiança por perto ajudam o corpo a atravessar. [Ler sobre a ansiedade que vem depois de beber](/blog/ansiedade-e-alcool)"),
+          p("A queda de humor merece atenção. Se vierem pensamentos de se machucar ou de não querer mais viver, leve a sério e procure ajuda na hora: o CVV atende 24 horas pelo 188, e o SAMU, no 192."),
+        ],
+      },
+      {
+        titulo: "Existe algo que corta o efeito?",
+        blocos: [
+          p("Não existe nada que corte o efeito da cocaína ou do álcool com segurança. O corpo precisa de tempo pra eliminar as duas. Algumas tentativas comuns podem piorar a situação:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Beber mais pra \"baixar\" a cocaína aumenta o cocaetileno e o risco de intoxicação",
+              "Tomar calmante, como clonazepam ou diazepam, junto com álcool pode deixar a respiração lenta demais",
+              "Café e energético aceleram ainda mais o coração",
+            ],
+          },
+          p("Beber água ajuda o corpo a se hidratar, mas não faz a cocaína sair mais rápido. No exame de urina, ela costuma aparecer por 2 a 4 dias depois do último uso. [Ler sobre o que pode e o que não pode misturar com álcool](/blog/pode-beber-tomando-remedio)"),
+        ],
+      },
+      {
+        titulo: "Quais são os sinais de emergência?",
+        blocos: [
+          p("Ligue para o SAMU no 192 se a pessoa tiver:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Dor ou aperto no peito",
+              "Coração muito acelerado ou batendo descompassado",
+              "Corpo muito quente",
+              "Falta de ar ou respiração muito lenta",
+              "Convulsão",
+              "Fala enrolada ou fraqueza de um lado do corpo",
+              "Desmaio, ou não acordar quando chamada",
+              "Lábios roxos",
+              "Vômito sem acordar",
+              "Pânico ou paranoia muito fortes",
+            ],
+          },
+          p("Diga ao atendente o que foi usado: isso ajuda no atendimento, e o objetivo do SAMU é cuidar da saúde. Enquanto espera, não deixe a pessoa sozinha, não dê mais bebida nem remédio e deixe o ambiente arejado. Se ela estiver desacordada e respirando, deixar de lado ajuda a evitar que engasgue com vômito."),
+        ],
+      },
+      {
+        titulo: "Se você vai misturar, como reduzir os riscos?",
+        blocos: [
+          p("O mais seguro é não misturar. Se você vai usar as duas mesmo assim, alguns cuidados diminuem o risco. É o que se chama [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Combinar consigo mesmo um limite de bebida antes de sair, e lembrar que a cocaína vai esconder o quanto você bebeu",
+              "Comer antes e intercalar a bebida com água",
+              "Beber menos do que beberia numa noite sem cocaína",
+              "Começar com pouca cocaína e esperar, porque a força e a mistura variam muito",
+              "Fazer pausas longas e não emendar a noite no dia seguinte",
+              "Não juntar com calmantes, energético ou outras drogas",
+              "Não compartilhar canudo ou nota, que podem transmitir hepatite B, hepatite C e HIV",
+              "Estar com alguém de confiança que saiba o que você usou",
+              "Não dirigir e não pegar carona com quem usou",
+              "Ter ainda mais cuidado se você tem pressão alta ou algum problema no coração",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Como ajudar alguém que mistura cocaína e álcool?",
+        blocos: [
+          p("Ver alguém próximo misturando dá medo, e a vontade é dar bronca ou cortar relações. Costuma funcionar melhor escolher um momento em que a pessoa não esteja sob efeito, falar do que você viu e do que sentiu, sem rótulo e sem ameaça, e perguntar como ela está."),
+          p("Você não precisa resolver sozinho, e nem consegue decidir pela pessoa. Mas pode deixar a porta aberta, conhecer os sinais de emergência e cuidar de você também. O Nar-Anon e o Al-Anon reúnem familiares, e uma terapia pra você pode ajudar a atravessar esse momento. [Ler sobre como lidar quando um filho usa drogas](/blog/filho-usando-drogas)"),
+        ],
+      },
+      {
+        titulo: "Quem quer parar, precisa parar as duas ao mesmo tempo?",
+        blocos: [
+          p("Não existe um único jeito. Tem gente que começa pela bebida, porque é ela que puxa a cocaína. Tem gente que prefere parar as duas juntas. Um profissional pode ajudar a montar um plano que faça sentido pra você."),
+          p("Se você bebe muito e todo dia, fale com um médico antes de parar o álcool de repente: a abstinência de álcool pode ser perigosa. [Ler sobre sintomas de abstinência](/blog/sintomas-de-abstinencia) [Ler sobre como parar de usar cocaína](/blog/como-parar-de-usar-cocaina)"),
+          p("Conversar com psicólogo ou psiquiatra sobre o seu uso não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio?",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
+          p("Fora da Margem, o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento quem quer cuidar da relação com o álcool e a cocaína, e os Narcóticos Anônimos e os Alcoólicos Anônimos têm reuniões presenciais e online, sem custo. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra receber orientação gratuita na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Receber orientação gratuita", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Por que é perigoso misturar cocaína e álcool?",
+        resposta:
+          "Juntos, eles formam o cocaetileno, uma substância mais tóxica pro coração e pro fígado, que fica mais tempo no corpo. A cocaína também disfarça a bebedeira, e a pessoa acaba bebendo mais do que percebe.",
+      },
+      {
+        pergunta: "O álcool corta o efeito da cocaína?",
+        resposta:
+          "Não. Uma não anula a outra: as duas continuam agindo, e juntas pesam mais no coração. Beber mais pra \"baixar\" a cocaína aumenta o risco de intoxicação.",
+      },
+      {
+        pergunta: "O que corta o efeito do pó?",
+        resposta:
+          "Nada corta com segurança: o corpo precisa de tempo. Bebida, calmante, café ou energético pra tentar cortar o efeito podem piorar. Se aparecer dor no peito, falta de ar, convulsão ou desmaio, ligue para o SAMU no 192.",
+      },
+      {
+        pergunta: "É possível ter overdose com álcool?",
+        resposta:
+          "Sim. A intoxicação alcoólica pode deixar a pessoa desacordada, com respiração lenta, lábios roxos ou vomitando sem acordar. Misturado com cocaína, o risco aumenta porque a pessoa não percebe o quanto bebeu. Nesses casos, ligue para o SAMU no 192.",
+      },
+      {
+        pergunta: "Qual o primeiro sinal de overdose?",
+        resposta:
+          "Não existe um sinal único. Dor no peito, coração muito acelerado, corpo muito quente, falta de ar, confusão, convulsão ou dificuldade de acordar já pedem atendimento. Na dúvida, ligue para o SAMU no 192.",
+      },
+      {
+        pergunta: "Água ajuda a eliminar a cocaína do corpo?",
+        resposta:
+          "A água ajuda o corpo a se hidratar, mas não faz a cocaína sair mais rápido. No exame de urina, ela costuma aparecer por 2 a 4 dias depois do último uso, e por mais tempo em quem usa muito e com frequência.",
+      },
+      {
+        pergunta: "Por que a ressaca de álcool e cocaína é tão forte?",
+        resposta:
+          "Porque o corpo passou horas acelerado, sem comer e sem dormir direito, e o efeito do álcool fica mais longo com a mistura. Tristeza, ansiedade e culpa no dia seguinte são comuns. Se vierem pensamentos de se machucar, o CVV atende 24 horas pelo 188.",
+      },
+    ],
+    imagem: true,
+    imagemAlt: "Uma jovem de cabelo cacheado e um rapaz de camisa jeans sentados lado a lado no degrau de uma calçada de bairro, de manhã cedo. Ela estende uma garrafa de água a ele, que está cansado, com os braços apoiados nos joelhos. Ao fundo, uma rua tranquila com casas, portões e um poste.",
+    imagemCard: true,
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {

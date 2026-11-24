@@ -45,6 +45,7 @@ const RECORTES = {
   "internacao-involuntaria": { sujeito: [165, 1935], topo: 0, largura: 1800 },
   "pode-beber-tomando-remedio": { sujeito: [360, 1650], topo: 40, largura: 1500 },
   "ansiedade-e-alcool": { sujeito: [680, 1775], topo: 130, largura: 1540 },
+  "cocaina-e-alcool": { sujeito: [470, 1630], topo: 80, largura: 1400 },
 };
 
 for (const [slug, { sujeito, topo, largura }] of Object.entries(RECORTES)) {
