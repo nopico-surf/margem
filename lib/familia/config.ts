@@ -25,8 +25,8 @@ export const TEXTO_CONSENTIMENTO_COMUNICACOES = "Quero receber conteúdos e novi
 
 // Liberava os módulos 2 a 8 só fora de produção, enquanto a revisão era de uma psicóloga parceira.
 // A curadoria do conteúdo passou a ser feita pela equipe, então a trava saiu: os 8 módulos valem em
-// produção igual ao servidor local. As marcas [REVISÃO CLÍNICA] nos .md viraram só histórico do que
-// foi revisado, e não escondem nada. A compra continua sendo o que libera módulo, no painel.
+// produção igual ao servidor local. Não existe revisão clínica externa: os arquivos de conteúdo
+// trazem nivel-1, nivel-2 ou nivel-3 (docs/revisao-conteudo.md), e nada fica escondido por isso. A compra continua sendo o que libera módulo, no painel.
 export const MOSTRAR_REVISAO_CLINICA = true;
 
 // [PENDÊNCIA DO FUNDADOR] Prazo de acesso depois das 8 semanas (FAQ da LP), ex.: "12 meses". Nulo: a

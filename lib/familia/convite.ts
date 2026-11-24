@@ -10,7 +10,7 @@ export const SEMANAS_PADRAO_RETORNO = 4;
 
 export const CENARIO_DO_CONVITE = "convite-para-ajuda";
 
-// "Se não houver horário rápido" (módulo 5): serviços que podem ser salvos no lugar do profissional.
+// "Se você preferir o serviço público" (módulo 5): serviços que podem ser salvos no lugar do profissional.
 export const SERVICOS_DO_CONVITE: Array<{ id: string; nome: string; descricao: string; href: string }> = [
   {
     id: "servico:caps_ad",
@@ -114,11 +114,11 @@ export const TEXTOS_CONVITE = {
   continuar: "Continuar",
 
   passo1Titulo: "Deixe a ajuda pronta antes de convidar",
-  passo1Texto: "Quando {{apelido}} diz 'tá bom, eu vou', essa vontade pode durar pouco. Por isso, escolha agora um profissional e veja um horário possível nos próximos dias.",
+  passo1Texto: "Quando {{apelido}} diz 'tá bom, eu vou', essa vontade pode durar pouco. Por isso, deixe um profissional salvo agora, para não ter que procurar depois.",
   salvarProfissional: "Deixar salvo para o convite",
   salvoProfissional: "Salvo para o convite",
   passo1Apoio: "{{apelido}} também pode escolher outro profissional depois. O importante é ter uma opção pronta.",
-  semHorarioTitulo: "Se não houver horário rápido",
+  semHorarioTitulo: "Se você preferir o serviço público",
   semHorarioTexto: "Se nenhum profissional parceiro tiver horário em até 3 dias, existem outras portas:",
   servicosPerto: "Ver serviços perto de mim",
 

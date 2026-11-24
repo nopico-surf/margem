@@ -2,6 +2,7 @@
 numero: 4
 titulo: "Valorizar o que é bom"
 descricao: "Descobrir do que {{apelido}} gosta e planejar jeitos simples de valorizar os dias sem uso, com elogios sinceros e sem ironia."
+regua: "Elogiar vai parecer falso na primeira vez, para você e para {{apelido}}. É o que acontece quando um elogio chega numa casa que andava só cobrando. Diga curto, uma coisa só, e vá fazer outra coisa. Na terceira vez já não soa estranho."
 publicado: true
 cenario_simulador: "elogiar-sem-ironia"
 bloqueado_em_modo_seguranca: true
@@ -10,7 +11,7 @@ video: ""
 minutos: 6
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 O cenário "elogiar-sem-ironia" ainda não tem arquivo em content/familia/cenarios: até ter, o
 "Treinar um elogio" não aparece.

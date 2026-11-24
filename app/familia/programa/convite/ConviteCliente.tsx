@@ -45,8 +45,8 @@ import { track } from "@/lib/mixpanel";
 // abre do passo 1 com tudo preenchido ("Ver e editar meu convite"). Salvar o passo 5 volta ao módulo
 // (o briefing não traz texto de confirmação).
 //
-// Sem agenda nem preço no banco, a lista do passo 1 não filtra por horário em até 3 dias, e o bloco "Se
-// não houver horário rápido" aparece sempre embaixo dela. O banco não guarda o gênero do profissional:
+// Sem agenda nem preço no banco, a lista do passo 1 não filtra por horário, e o bloco "Se
+// você preferir o serviço público" aparece sempre embaixo dela. O banco não guarda o gênero do profissional:
 // a oferta usa "alguém". caution_mode ainda não tem regra (contextoDo, exercicio-cliente.ts), então a
 // opção "Eu tenho feito um programa..." aparece sempre; a constante CAUTELA fica pronta pra quando tiver.
 //

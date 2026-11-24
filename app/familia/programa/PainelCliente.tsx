@@ -36,7 +36,7 @@ import type { ProfissionalCadastrado } from "@/lib/supabase";
 // antes, todos os módulos abrem pra revisão, a menos que a venda simulada esteja ligada
 // (lib/familia/dev.ts). Em produção, as contas de teste (FAMILIA_TESTADORES) também abrem todos.
 
-// liberado: o servidor pode mandar o conteúdo (módulo 1 sempre; 2 a 8 depois da revisão clínica).
+// liberado: o servidor pode mandar o conteúdo (módulo 1 sempre; 2 a 8 com a liberação semanal).
 export type ModuloDoPainel = {
   numero: number;
   titulo: string;

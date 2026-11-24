@@ -6,7 +6,7 @@ import { normalizarTexto } from "@/lib/normalizar";
 // {"tipo":"seguranca"} é só uma segunda camada, nunca a única.
 //
 // Os termos ficam já normalizados (minúsculo, sem acento, sem pontuação), como o texto comparado.
-// [REVISÃO CLÍNICA] Lista inicial do briefing, ampliada com variações próximas.
+// nivel-1 Lista inicial do briefing, ampliada com variações próximas.
 export const TERMOS_RISCO_SIMULADOR = [
   "me bateu",
   "me bate",

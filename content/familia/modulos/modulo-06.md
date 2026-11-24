@@ -2,6 +2,7 @@
 numero: 6
 titulo: "Deixar as consequências acontecerem e resolver problemas"
 descricao: "Parar de cobrir o que é responsabilidade de {{apelido}}, como desculpas no trabalho e dívidas, e proteger o dinheiro da casa, sempre com segurança."
+regua: "Parar de resolver pela pessoa costuma piorar antes de melhorar. Nos primeiros dias vem reclamação, drama e a sensação de que você está sendo cruel justamente com quem você mais quer proteger. Cumpra com calma e não volte a discutir. A vida fazendo o seu trabalho é mais convincente do que qualquer coisa que você diga."
 publicado: true
 cenario_simulador: "pedido-de-dinheiro"   # apostas; demais: "pedido-de-desculpa-pro-trabalho"
 bloqueado_em_modo_seguranca: true
@@ -10,7 +11,7 @@ video: ""
 minutos: 7
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 Este módulo não tem "Ensaiar no treino" no exercício, e os dois cenários ainda não têm arquivo.
 Botões que ainda não têm ferramenta ficam como "Marcar como feito":

@@ -2,6 +2,7 @@
 numero: 7
 titulo: "A sua vida e a sua rede"
 descricao: "Dar notas de novo para a sua vida, comparar com as notas do módulo 1 e encontrar pessoas e grupos que acolhem familiares."
+regua: "Olhar para a sua vida depois de seis semanas olhando para {{apelido}} pode doer mais do que você espera. Às vezes a conta de tudo o que você deixou de lado só aparece quando você para para ver. Aparecer é o começo de recuperar."
 publicado: true
 bloqueado_em_modo_seguranca: false
 audio: ""
@@ -9,7 +10,7 @@ video: ""
 minutos: 5
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 Os três cards do exercício abrem uma ferramenta (briefing M7, 11/11/2026):
 - escala: "Dar notas de novo e comparar" (C1 no modo refazer e comparar; conclui ao terminar a escala);
@@ -87,5 +88,5 @@ O Nar-Anon e o Amor-Exigente têm grupos em muitas cidades. O CAPS AD também po
 :::se problema=apostas
 ## Para apostas
 
-O Meu SUS Digital oferece atendimento on-line gratuito em saúde mental para quem tem problema com apostas, e também para familiares. Para a pessoa que aposta, existem os Jogadores Anônimos.
+O Meu SUS Digital oferece atendimento on-line gratuito em saúde mental para quem tem problema com apostas, e também para familiares. Para famílias de quem aposta ainda não existe um grupo com encontros em todo o país. O Amor-Exigente recebe famílias de qualquer compulsão, inclusive apostas, e o CAPS da sua cidade atende de graça. Se quem aposta quiser um grupo, Jogadores Anônimos é o caminho, e é para a pessoa que aposta, não para você.
 :::

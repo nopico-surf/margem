@@ -2,6 +2,7 @@
 numero: 3
 titulo: "Conversar sem brigar"
 descricao: "Trocar as frases que viram briga por outras mais curtas e calmas, e treinar o que dizer quando {{apelido}} nega o problema."
+regua: "Na primeira vez que você falar diferente, {{apelido}} pode desconfiar e até debochar: \"tá falando bonito agora\". Isso não quer dizer que não funcionou. Quer dizer que ele notou. Quem muda o jeito de falar depois de anos chama atenção. Siga, sem explicar o que você está fazendo."
 publicado: true
 cenario_simulador: "nega-o-problema"
 bloqueado_em_modo_seguranca: true
@@ -10,7 +11,7 @@ video: ""
 minutos: 6
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 Os três cards do exercício abrem uma ferramenta (briefing M3, 10/11/2026):
 - frases: "Reescrever minhas frases" (conclui na terceira frase salva);

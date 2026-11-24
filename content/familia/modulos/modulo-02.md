@@ -2,6 +2,7 @@
 numero: 2
 titulo: "Entender o padrão"
 descricao: "Anotar por 7 dias os momentos difíceis e os bons com {{apelido}} e descobrir o que costuma vir antes do uso."
+regua: "Anotar momentos difíceis dá uma sensação estranha de estar fazendo uma ficha de alguém que você ama. Vai passar. Em uns dias as anotações começam a se repetir, e é essa repetição que vira o seu mapa."
 publicado: true
 bloqueado_em_modo_seguranca: false
 audio: ""
@@ -9,7 +10,7 @@ video: ""
 minutos: 5
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 Os três cards do exercício abrem uma ferramenta (briefing M2, 10/11/2026): diário (momento difícil e momento bom) e resumo da semana. -->
 

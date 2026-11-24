@@ -1030,3 +1030,13 @@ a.painel-modulo:focus-visible {
   gap: var(--spacing-8);
   cursor: default;
 }
+
+/* Briefing N4: "O que costuma acontecer nesta semana", card claro logo abaixo do tempo de leitura. */
+.familia-regua {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding: var(--spacing-16);
+  border-radius: var(--radius-lg);
+  background: var(--colors-neutral-50);
+}

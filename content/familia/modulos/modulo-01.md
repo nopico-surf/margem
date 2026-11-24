@@ -2,6 +2,7 @@
 numero: 1
 titulo: "O que está acontecendo (e o que não é culpa sua)"
 descricao: "Entender por que é tão difícil parar, o que não é culpa sua e o que costuma piorar as coisas em casa."
+regua: "Nesta semana você vai só olhar, e isso incomoda. Depois de tanto tempo tentando resolver, observar sem reagir parece pouco, parece até errado. Não é. Quase ninguém consegue mudar o que não enxerga direito, e você está no começo de enxergar."
 publicado: true
 cenario_simulador: "primeira-conversa"
 bloqueado_em_modo_seguranca: false
@@ -10,7 +11,7 @@ video: ""
 minutos: 6
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 O título e o "Tempo de leitura" saem do frontmatter (cabeçalho do módulo).
 Blocos ":::se problema=..." aparecem pra cada problema marcado na Q3.

@@ -7,4 +7,4 @@ bloqueado_em_modo_seguranca: false
 gratis: false
 ---
 
-<!-- [REVISÃO CLÍNICA] Entra com o módulo 3 (Fase 3). O arquivo existe pra lógica do simulador já conhecer o cenário. -->
+<!-- nivel-2 Entra com o módulo 3 (Fase 3). O arquivo existe pra lógica do simulador já conhecer o cenário. -->

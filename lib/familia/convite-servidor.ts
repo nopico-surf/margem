@@ -11,7 +11,7 @@ export async function enderecosDosProfissionais(): Promise<Record<string, string
 
 // Psicólogos parceiros do passo 1 do convite (briefing M5). Vem da mesma lista em cache da
 // /profissionais, só com o que a tela usa. Não há agenda nem preço no banco (o agendamento é pelo
-// WhatsApp): a lista não filtra por horário em até 3 dias.
+// WhatsApp): a lista não filtra por horário.
 export async function psicologosDoConvite(): Promise<ProfissionalDoConvite[]> {
   const todos = await buscarTodosProfissionaisAtivos();
   return todos

@@ -2,6 +2,7 @@
 numero: 8
 titulo: "Depois da resposta"
 descricao: "Depois do convite para buscar ajuda, apoiar sem vigiar se vier um sim, tentar outra vez se vier um não e manter a calma se o uso voltar."
+regua: "Chegar ao fim de um programa com a situação ainda em aberto é frustrante, e provavelmente é o que vai acontecer. Oito semanas mudam o jeito da casa funcionar, raramente mudam o desfecho. O que você construiu continua valendo depois que o programa acaba."
 publicado: true
 bloqueado_em_modo_seguranca: true
 versao_por_checkin: true   # aceitou | recusou | recaida; se não houver check-in, mostrar o seletor "Como estão as coisas agora?"
@@ -10,7 +11,7 @@ video: ""
 minutos: 5
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 O check-in ainda não existe. O seletor começa marcado pelo "Contar como foi o convite" do módulo 5
 (Sim: aceitou; Não: recusou); com "Vou pensar" ou sem resposta, começa sem nada marcado e a versão
@@ -24,7 +25,7 @@ Cards do exercício (briefing M8, 11/11/2026), todos abrindo uma ferramenta:
 - recaida: "Escolher minha frase" ("Minhas frases", C3; conclui ao copiar uma frase ou salvar uma nova) e
   "Ver o profissional ou serviço de antes" (o salvo no convite; sem nada salvo, o carrossel de profissionais).
 Encerramento (C12): "Oito semanas depois", o resumo (@resumo) e os botões. O "Voltar ao painel" é o do
-rodapé do módulo. Fica de fora até existir o resumo da jornada: "Baixar o resumo para o profissional". -->
+rodapé do módulo. -->
 
 :::escolha id=versao
 Como estão as coisas agora?

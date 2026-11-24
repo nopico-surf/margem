@@ -13,7 +13,7 @@ export const MENSAGENS_DA_REDE = [
   "Bateu saudade. Vamos marcar alguma coisa? Ia me fazer bem.",
 ];
 
-export type GrupoId = "al_anon" | "nar_anon" | "amor_exigente" | "caps_ad" | "cras" | "meu_sus" | "jogadores_anonimos";
+export type GrupoId = "al_anon" | "nar_anon" | "amor_exigente" | "caps_ad" | "cras" | "meu_sus";
 
 // Grupos da tela 2. `href` externo abre o site oficial em nova aba ("Ver reuniões"); `servicos` leva à
 // busca de serviços perto da pessoa. `problemas`: os do problema marcado aparecem primeiro.
@@ -32,7 +32,6 @@ export const GRUPOS_DA_REDE: Array<{ id: GrupoId; nome: string; texto: string; h
     servicos: false,
     problemas: ["apostas"],
   },
-  { id: "jogadores_anonimos", nome: "Jogadores Anônimos", texto: "Para a pessoa que aposta.", href: "https://jogadoresanonimos.com.br/", servicos: false, problemas: ["apostas"] },
 ];
 
 export const IDS_GRUPOS = GRUPOS_DA_REDE.map((grupo) => grupo.id);

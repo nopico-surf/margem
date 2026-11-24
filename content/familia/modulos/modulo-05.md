@@ -1,7 +1,8 @@
 ---
 numero: 5
 titulo: "O convite"
-descricao: "Deixar um profissional e um horário prontos antes de convidar {{apelido}} para buscar ajuda, e saber o que fazer com cada resposta."
+descricao: "Deixar um profissional pronto antes de convidar {{apelido}} para buscar ajuda, e saber o que fazer com cada resposta."
+regua: "Esta é a semana em que mais gente trava, e o motivo não é falta de preparo: é medo do não. Vale lembrar que um não hoje não fecha a porta, e que muita gente aceita ajuda depois de algumas tentativas. O convite não é uma prova que você passa ou não."
 publicado: true
 cenario_simulador: "convite-para-ajuda"
 bloqueado_em_modo_seguranca: true
@@ -10,7 +11,7 @@ video: ""
 minutos: 6
 ---
 
-<!-- [REVISÃO CLÍNICA] Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
+<!-- nivel-2 Conteúdo v2 de 10/11/2026 (rascunho do Gemini, revisão do Claude).
 
 Os dois cards do exercício abrem uma ferramenta (briefing M5, 10/11/2026):
 - preparar: "Preparar meu convite", 5 passos (conclui ao salvar o passo 5);
@@ -31,7 +32,7 @@ Você contou que às vezes tem medo. Antes deste passo, pense: isso pode deixar 
 
 Quando {{apelido}} diz "tá bom, eu vou", essa vontade pode durar pouco. Se você ainda precisar procurar profissional, ver preço e esperar semanas, a porta fecha de novo.
 
-Por isso, antes de convidar, escolha um profissional e veja um horário possível em até 3 dias. Assim, um "sim" vira um passo de verdade no mesmo dia.
+Por isso, escolha agora um profissional e deixe salvo. Quando {{apelido}} disser sim, você já sabe para quem mandar mensagem, no mesmo dia.
 
 ## O momento certo
 
@@ -82,7 +83,7 @@ Aja no mesmo dia. Mande a mensagem para o profissional, combine o horário e con
 
 Se {{apelido}} quiser, você pode ajudar com o que for prático: marcar, lembrar do horário, ir junto até a porta.
 
-## Se não houver horário rápido
+## Se você preferir o serviço público
 
 Se nenhum profissional parceiro tiver horário em até 3 dias, existem outras portas:
 

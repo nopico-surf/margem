@@ -16,7 +16,7 @@ const MODULOS_COM_CARROSSEL = new Set([5, 6]);
 // O texto é lido no build; quem pode ver, o apelido e as variações por problema são resolvidos no
 // cliente, com o diagnóstico da pessoa. Todos os módulos abrem com a compra (briefing 01b: o módulo 1
 // deixou de ser grátis), e do 2 ao 8 com a liberação semanal (briefing 01); o conteúdo deles
-// (v2, [REVISÃO CLÍNICA]) só sai no servidor local até a revisão da psicóloga parceira.
+// (v2, nivel-2) valem em produção, com a leitura depois (docs/revisao-conteudo.md).
 export async function generateStaticParams() {
   const numeros = Array.from({ length: TOTAL_MODULOS }, (_, indice) => indice + 1);
   const existentes = await Promise.all(numeros.map(async (numero) => ((await lerModulo(numero)) ? numero : null)));
@@ -36,7 +36,7 @@ async function Conteudo({ params }: Props) {
   const { n } = await params;
   const modulo = await lerModulo(Number(n));
   if (!modulo || !modulo.publicado) notFound();
-  // Em revisão (produção, antes da revisão clínica): o texto não sai daqui, só os subtítulos, pra a
+  // Em revisão (hoje não acontece em produção): o texto não sai daqui, só os subtítulos, pra a
   // página de módulo bloqueado mostrar "O que você vai aprender" em vez de um erro (briefing 01).
   const emRevisao = modulo.numero !== 1 && !MOSTRAR_REVISAO_CLINICA;
   const enviado = emRevisao ? { ...modulo, blocos: modulo.blocos.filter((bloco) => bloco.tipo === "titulo"), audio: null, video: null } : modulo;

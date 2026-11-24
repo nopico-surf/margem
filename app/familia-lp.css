@@ -500,3 +500,17 @@
     font-size: var(--font-size-lg);
   }
 }
+
+/* Briefing N4: amostra do conteúdo. A primeira frase em cinza secundário, a segunda em destaque. */
+.familia-lp-amostra-frase {
+  margin: 0;
+  padding-left: var(--spacing-16);
+  border-left: var(--spacing-4) solid var(--colors-neutral-200);
+  font-style: italic;
+  color: var(--colors-neutral-600);
+}
+
+.familia-lp-amostra-frase-destaque {
+  border-left-color: var(--colors-brand-primary-700);
+  color: inherit;
+}

@@ -1,4 +1,4 @@
-<!-- [REVISÃO CLÍNICA] Prompt do feedback do simulador (briefing, seções 8 e 16). Tudo antes da linha "---" fica fora do prompt. -->
+<!-- nivel-2 Prompt do feedback do simulador (briefing, seções 8 e 16). Tudo antes da linha "---" fica fora do prompt. -->
 ---
 Saia do personagem. Avalie a conversa do familiar com base nas 7 habilidades:
 ser breve; ser positivo; falar de comportamento específico; nomear o próprio sentimento;

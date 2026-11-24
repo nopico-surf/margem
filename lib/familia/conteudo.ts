@@ -13,6 +13,8 @@ export type Modulo = {
   numero: number;
   titulo: string;
   descricao: string | null;
+  // Briefing N4: "O que costuma acontecer nesta semana", o card logo abaixo do tempo de leitura.
+  regua: string | null;
   publicado: boolean;
   cenarioSimulador: string | null;
   bloqueadoEmModoSeguranca: boolean;
@@ -61,6 +63,7 @@ export async function lerModulo(numero: number): Promise<Modulo | null> {
     numero,
     titulo: texto(dados.titulo) ?? `Módulo ${numero}`,
     descricao: texto(dados.descricao),
+    regua: texto(dados.regua),
     publicado: dados.publicado === true,
     cenarioSimulador,
     bloqueadoEmModoSeguranca: dados.bloqueado_em_modo_seguranca === true,

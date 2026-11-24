@@ -7,4 +7,4 @@ bloqueado_em_modo_seguranca: true
 gratis: true
 ---
 
-<!-- [REVISÃO CLÍNICA] Bloqueado no modo segurança porque, com risco de violência, o resultado também não mostra o roteiro da primeira conversa (briefing, seção 5). -->
+<!-- nivel-2 Bloqueado no modo segurança porque, com risco de violência, o resultado também não mostra o roteiro da primeira conversa (briefing, seção 5). -->

@@ -19,7 +19,7 @@ import {
 import { Accordion } from "@/components/ui/Accordion";
 import { Button } from "@/components/ui/Button";
 import { Marquee } from "@/components/ui/Marquee";
-import { MOSTRAR_REVISAO_CLINICA, PRAZO_ACESSO, REVISAO_DO_TREINO_DECIDIDA } from "@/lib/familia/config";
+import { REVISAO_DO_TREINO_DECIDIDA } from "@/lib/familia/config";
 import { resumosDosModulos } from "@/lib/familia/conteudo";
 import { aplicarApelido } from "@/lib/familia/diagnostico";
 import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
@@ -108,26 +108,36 @@ const EIXOS = [
 
 type Pergunta = { pergunta: string; resposta: string; link?: { rotulo: string; href: string } };
 
-// FAQ do conteúdo v2, em 5 blocos. Os itens [PENDÊNCIA DO FUNDADOR] e [REVISÃO CLÍNICA] dependem de
-// lib/familia/config.ts.
+// FAQ do briefing N3 (docs/familia-briefings/folego-N0-a-N4.md), em 5 blocos, com o texto exato do briefing (nivel-2).
+// O acesso gratuito fica só em texto, sem link: o pedido continua só no rodapé do checkout.
 const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> = [
   {
-    titulo: "Sobre o programa",
+    titulo: "Sobre o Fôlego",
     perguntas: [
+      {
+        pergunta: "O que é o Fôlego?",
+        resposta:
+          "É um programa de 8 semanas da Margem para quem convive com alguém que tem problema com álcool, outras drogas ou apostas. Uma leitura curta por semana, também em áudio, com ferramentas para usar no dia a dia e um treino onde você ensaia as conversas difíceis antes de ter que fazer de verdade.",
+      },
       {
         pergunta: "Isso é terapia?",
         resposta:
-          "Não. É um programa de apoio e aprendizado para familiares, com coisas práticas para fazer a cada semana. Se você ou quem você ama quiser atendimento, a Margem tem psicólogos e psiquiatras parceiros, e o programa te ajuda a chegar até eles.",
+          "Não. É um programa de apoio e aprendizado, com coisas práticas para fazer a cada semana. Se você ou quem você ama quiser atendimento, a Margem tem psicólogos e psiquiatras parceiros, e o programa te ajuda a chegar até eles.",
       },
-      MOSTRAR_REVISAO_CLINICA && {
+      {
         pergunta: "Isso funciona mesmo?",
         resposta:
-          "O programa segue uma abordagem para familiares estudada há décadas. Nos estudos, quando o familiar teve apoio de um terapeuta, cerca de 2 em cada 3 pessoas acabaram buscando tratamento. Com material sem acompanhamento, os números são menores, e por isso a gente recomenda combinar o programa com um profissional.",
+          "O Fôlego junta duas abordagens estudadas há décadas, e elas prometem coisas diferentes. Uma trabalha o que a família pode fazer para que a mudança fique mais atraente: nos estudos, quando o familiar teve apoio de um terapeuta, cerca de 2 em cada 3 pessoas acabaram buscando tratamento. A outra trabalha você, por direito próprio, e o que ela melhora é medido em você: menos sobrecarga, menos ansiedade, mais apoio por perto, aconteça o que acontecer com quem você ama.\nCom material sem acompanhamento, os números são menores nas duas. Por isso a gente recomenda combinar o programa com um profissional.\nSe você quiser procurar por conta própria: a primeira abordagem se chama treinamento de reforço comunitário e familiar, conhecida pela sigla CRAFT. A segunda é o método de cinco passos para familiares, construído sobre o modelo de estresse, tensão, enfrentamento e apoio.",
       },
       {
         pergunta: "Já tentei de tudo. O que tem de diferente aqui?",
         resposta:
-          "Aqui você não vai ouvir conselho genérico. Você aprende o que dizer, quando dizer e o que fazer quando a conversa esquenta, e ensaia antes num treino de conversa. E boa parte do programa é sobre você: o que muda em casa quando você muda o jeito de reagir.",
+          "Aqui você não vai ouvir conselho genérico. Você aprende o que dizer, quando dizer e o que fazer quando a conversa esquenta, e ensaia antes num treino de conversa. E boa parte do programa é sobre você: o que muda em casa quando você muda o jeito de reagir, e o que muda em você no caminho.",
+      },
+      {
+        pergunta: "O que eu consigo ver antes de pagar?",
+        resposta:
+          "O diagnóstico, o resultado inteiro com o roteiro e as frases para a sua situação, e um treino de conversa completo, com retorno no fim. A página de segurança, o plano de segurança e os telefones de emergência são abertos para qualquer pessoa, sempre, com ou sem compra.",
       },
       {
         pergunta: "Eu não tenho tempo. Dá para fazer?",
@@ -135,13 +145,14 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
           "Dá. Cada semana tem uma leitura de 5 a 7 minutos, que você também pode ouvir, e alguns exercícios para encaixar no dia a dia. Você faz no seu ritmo, pelo celular.",
       },
       {
-        pergunta: "Já existe grupo de apoio de graça. Por que fazer o programa?",
+        pergunta: "Já existe grupo de apoio de graça. Por que fazer o Fôlego?",
         resposta:
-          "Grupos de familiares ajudam muito, e o próprio programa indica onde encontrar. A diferença é que aqui o foco é prático e personalizado para a sua situação: o que dizer, como ensaiar e o que fazer em casa. Dá para fazer os dois.",
+          "Grupos de familiares ajudam muito, e o próprio programa indica onde encontrar. A diferença é que aqui o foco é prático e montado para a sua situação: o que dizer, como ensaiar e o que fazer em casa. Dá para fazer os dois.",
       },
-      PRAZO_ACESSO !== null && {
+      {
         pergunta: "O que acontece depois das 8 semanas?",
-        resposta: `Você continua com acesso ao conteúdo por ${PRAZO_ACESSO}, para rever quando precisar. Os profissionais parceiros continuam disponíveis.`,
+        resposta:
+          "O conteúdo continua disponível para você rever quando precisar, sem prazo. Os profissionais parceiros continuam por perto.",
       },
     ],
   },
@@ -156,7 +167,7 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
       {
         pergunta: "Garante que a pessoa vai aceitar ajuda?",
         resposta:
-          "Não, e desconfie de quem garante. O que o programa faz é aumentar as chances e te ajudar a ficar melhor, qualquer que seja a decisão da pessoa. Os melhores resultados aparecem quando o familiar tem apoio de um profissional.",
+          "Não, e desconfie de quem garante. O que o programa faz é aumentar as chances e te ajudar a ficar melhor, qualquer que seja a decisão da pessoa. Nos estudos, os melhores resultados aparecem quando o familiar tem apoio de um profissional.",
       },
       {
         pergunta: "A culpa é minha?",
@@ -175,16 +186,18 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
       },
       {
         pergunta: "A pessoa já está em tratamento, ou voltou a usar depois de parar. Faz sentido?",
-        resposta: "Faz. Você aprende a apoiar sem vigiar, a valorizar o que vai bem e a lidar com uma volta ao uso sem culpa e sem briga.",
+        resposta:
+          "Faz. Você aprende a apoiar sem vigiar, a valorizar o que vai bem e a lidar com uma volta ao uso sem culpa e sem briga.",
       },
       {
         pergunta: "O objetivo é a pessoa parar de vez?",
-        resposta: "Não necessariamente. Parar de vez e diminuir os riscos do uso são caminhos válidos. Quem escolhe é a própria pessoa, de preferência com um profissional.",
+        resposta:
+          "Não necessariamente. Parar de vez e diminuir os riscos do uso são caminhos válidos. Quem escolhe é a própria pessoa, de preferência com um profissional.",
       },
       {
         pergunta: "Funciona para apostas?",
         resposta:
-          "O programa tem conteúdo específico para apostas, inclusive sobre proteger o dinheiro da casa. Sendo transparente: para apostas, os estudos com programas para familiares ainda são poucos, e o apoio de um profissional faz mais diferença. Por isso, recomendamos combinar o programa com conversas com alguém da nossa rede.",
+          "Sim. O programa tem conteúdo específico para apostas, inclusive sobre proteger o dinheiro da casa. Com uma diferença que vale dizer: a parte que trabalha o convite para tratamento tem menos estudo em apostas do que em álcool e outras drogas. A parte que cuida de você foi estudada também com familiares de quem aposta. De qualquer jeito, em apostas o apoio de um profissional faz ainda mais diferença.",
       },
     ],
   },
@@ -198,7 +211,8 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
       },
       {
         pergunta: "A inteligência artificial fala com quem eu amo?",
-        resposta: "Não. A IA só aparece no treino de conversa, com você. Ela segue regras para não sair do método, sem dar diagnóstico nem orientação médica.",
+        resposta:
+          "Não. A IA só aparece no treino de conversa, com você. Ela segue regras para não sair do método, sem dar diagnóstico nem orientação médica.",
       },
       REVISAO_DO_TREINO_DECIDIDA && {
         pergunta: "Alguém lê o que eu escrevo no treino?",
@@ -208,7 +222,7 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
       {
         pergunta: "Como falo com um profissional?",
         resposta:
-          "Pelo próprio programa, você vê os psicólogos e psiquiatras parceiros e os horários disponíveis. Pode agendar para você ou indicar para quem você ama quando a pessoa topar. As sessões são pagas à parte, a não ser no plano com acompanhamento.",
+          "Pelo próprio programa, você vê os psicólogos e psiquiatras parceiros da Margem e fala direto com quem escolher, pelo WhatsApp, para combinar o atendimento. Pode ser para você ou para quem você ama, quando a pessoa topar. As sessões são pagas à parte, direto com o profissional, no valor social que você escolher dentro da faixa dele.",
       },
     ],
   },
@@ -217,14 +231,24 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
     perguntas: [
       {
         pergunta: "Quanto custa?",
-        resposta: "Você escolhe quanto pagar, entre R$ 47 e R$ 147. O valor sugerido é R$ 97, em pagamento único por Pix. O diagnóstico é grátis.",
+        resposta:
+          "Você escolhe quanto pagar, entre R$ 47 e R$ 147, em pagamento único no Pix. O valor sugerido é R$ 97, e o conteúdo é o mesmo em qualquer valor.",
       },
-      { pergunta: "E se eu não puder pagar agora?", resposta: "Você pode pedir acesso gratuito. Ninguém precisa ficar de fora por causa de dinheiro." },
       {
-        pergunta: "O que é o plano com acompanhamento?",
-        resposta: "É o programa completo com a primeira sessão com um profissional parceiro já incluída. É o jeito que mais ajuda, segundo os estudos.",
+        pergunta: "O que é o Fôlego com acompanhamento?",
+        resposta:
+          "É o programa com a primeira sessão de um profissional parceiro combinada junto. Levando a sessão, o programa começa 20% mais barato, a partir de R$ 37, e a sessão é escolhida e paga por você, no valor da faixa social do profissional. O total aparece somado antes de pagar, num Pix só. É o jeito que mais ajuda, segundo os estudos.",
       },
-      { pergunta: "E se eu me arrepender?", resposta: "Você pode pedir o dinheiro de volta em até 14 dias depois da compra. Num toque, sem precisar explicar por quê." },
+      {
+        pergunta: "E se eu não puder pagar agora?",
+        resposta:
+          "Ninguém precisa ficar de fora por causa de dinheiro. Na hora de pagar existe a opção de pedir acesso gratuito, sem comprovar renda e sem precisar explicar muito.",
+      },
+      {
+        pergunta: "E se eu me arrepender?",
+        resposta:
+          "Você tem 14 dias para pedir o seu dinheiro de volta, num toque, sem precisar explicar por quê.",
+      },
     ],
   },
   {
@@ -233,12 +257,12 @@ const GRUPOS_FAQ: Array<{ titulo: string; perguntas: Array<Pergunta | false> }> 
       {
         pergunta: "Alguém vai ver isso no meu celular?",
         resposta:
-          'Você pode usar o modo discreto, que deixa a tela sem nada que denuncie o assunto, e o botão "Sair rápido", que fecha a página na hora. Também pode apagar tudo quando quiser.',
+          "O programa se chama Fôlego justamente para não denunciar o assunto na tela. Você também pode usar o modo discreto e o botão \"Sair rápido\", que fecha a página na hora. E pode apagar tudo quando quiser.",
       },
       {
         pergunta: "O que vocês fazem com os meus dados?",
         resposta:
-          "Seus dados não são compartilhados sem a sua autorização. O login é pelo Google ou Facebook, e a Margem não guarda senha. Você não precisa dizer o nome de ninguém: escolhe um apelido para a pessoa.",
+          "Seus dados não são compartilhados sem a sua autorização. O login é pelo Google, Apple ou Facebook, e a Margem não guarda senha. Você não precisa dizer o nome de ninguém: escolhe um apelido para a pessoa.",
       },
       {
         pergunta: "E se eu tiver medo dentro de casa?",
@@ -318,6 +342,21 @@ export default async function FamiliaPage() {
         </div>
       </section>
 
+      {/* Amostra do conteúdo (briefing N4), entre "O que você vai aprender" e o preço. Sem botão e sem ícone. */}
+      <section className="familia-lp-secao">
+        <h2 className="home-secao-titulo">O que você vai aprender, na prática</h2>
+        <p className="text-medium-regular">O que costuma sair:</p>
+        <p className="text-large familia-lp-amostra-frase">&ldquo;Você gastou tudo de novo! Vai acabar com a família!&rdquo;</p>
+        <p className="text-medium-regular">O que você vai aprender a dizer:</p>
+        <p className="text-large familia-lp-amostra-frase familia-lp-amostra-frase-destaque">
+          &ldquo;Vi que a conta ficou no negativo e fiquei com medo. Vamos sentar no domingo para olhar as contas juntos?&rdquo;
+        </p>
+        <p className="text-medium-regular">
+          A segunda frase não é mais educada. Ela é mais eficiente, e tem motivo para cada pedaço dela: fala de um fato, diz o que você sente e pede algo possível, sem acusar ninguém.
+        </p>
+        <p className="text-medium-regular">São 8 semanas disso, com as frases da sua casa.</p>
+      </section>
+
       <section className="familia-lp-secao familia-lp-grade familia-lp-grade-2">
         <BlocoComImagem variante="bloco">
           <CardHeader
@@ -368,7 +407,11 @@ export default async function FamiliaPage() {
               (item) =>
                 item && (
                   <Accordion key={item.pergunta} titulo={item.pergunta}>
-                    <p className="text-medium-regular">{item.resposta}</p>
+                    {item.resposta.split("\n").map((paragrafo) => (
+                      <p key={paragrafo} className="text-medium-regular">
+                        {paragrafo}
+                      </p>
+                    ))}
                     {item.link && (
                       <div className="familia-exercicio-acoes">
                         <Button variante="transparent" tamanho="small" href={item.link.href}>

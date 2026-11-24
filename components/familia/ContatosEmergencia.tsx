@@ -8,7 +8,7 @@ import { paraCardResource } from "@/lib/recursos";
 import type { AcaoContato, ProfissionalCadastrado } from "@/lib/supabase";
 import { track } from "@/lib/mixpanel";
 
-// Contatos de emergência do programa para familiares [REVISÃO CLÍNICA]. Textos do conteúdo v2
+// Contatos de emergência do programa para familiares nivel-1. Textos do conteúdo v2
 // (10/11/2026). Mesmo card dos serviços públicos e espaços de apoio da /conversa (Figma:
 // cards-instituicoes-completo), com o nome no formato do banco ("188 • CVV") e as mesmas ações que
 // esses serviços têm hoje em servicos_publicos (telefone, WhatsApp, chat, site...). O 180 não está no

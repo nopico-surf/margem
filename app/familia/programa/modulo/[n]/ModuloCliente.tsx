@@ -162,7 +162,7 @@ function Blocos({ blocos, apelido, problemas, contexto, onEscolher, exercicio, r
   );
 }
 
-// `emRevisao`: o módulo chegou sem o texto (produção, antes da revisão clínica). Quem comprou vê o
+// `emRevisao`: o módulo chegou sem o texto (hoje não acontece em produção). Quem comprou vê o
 // título e volta ao painel; quem não comprou, a página de módulo bloqueado.
 // `enderecos`: página de cada profissional ativo, por id (só no módulo 8, pro "Retomar o apoio").
 // `profissionais`: lista dos carrosséis do módulo ("@profissionais" no texto e ação "profissional" do
@@ -410,6 +410,15 @@ export function ModuloCliente({
         </span>
         <h1 className="header-large">{modulo.titulo}</h1>
       </header>
+
+      {modulo.regua && (
+        <section className="familia-regua" aria-labelledby={`regua-${modulo.numero}`}>
+          <h2 id={`regua-${modulo.numero}`} className="header-small">
+            O que costuma acontecer nesta semana
+          </h2>
+          <p className="text-medium-regular">{aplicarApelido(modulo.regua, apelido)}</p>
+        </section>
+      )}
 
       {modulo.video && (
         // Vídeo vertical, no formato dos reels da Margem. Sem vídeo, nada aparece.
