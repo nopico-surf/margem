@@ -362,14 +362,14 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
           <div className="plano-cards">
             <CardPlano
               arranjo="opcional"
-              nome="Programa de 8 semanas"
+              nome="Fôlego"
               descricao="Você escolhe quanto pode pagar."
               faixa={{ valor: `R$ ${MINIMO_PROGRAMA} a R$ ${MAXIMO_PROGRAMA}` }}
               onSelecionar={() => escolherPlano("programa")}
             />
             <CardPlano
               arranjo="opcional"
-              nome="Programa com acompanhamento"
+              nome="Fôlego com acompanhamento"
               selo="20% de desconto"
               descricao="Tudo do programa de 8 semanas, mais:"
               complemento="a primeira sessão com um psicólogo parceiro, no valor que você escolher"
@@ -538,7 +538,7 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
             <h1>Pagamento confirmado</h1>
           </div>
           <div className="familia-confirmado-textos">
-            <p className="text-medium-regular">O acesso às 8 semanas do programa já está liberado para você.</p>
+            <p className="text-medium-regular">O acesso às 8 semanas do Fôlego já está liberado para você.</p>
             <p className="text-medium-regular">
               {modulo2Em ? `O módulo 2 chega em ${diaMes(modulo2Em.toISOString())}, e um` : "Um"} módulo novo fica disponível a cada semana.
             </p>

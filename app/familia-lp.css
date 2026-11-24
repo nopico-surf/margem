@@ -39,6 +39,10 @@
   gap: var(--spacing-16);
 }
 
+.familia-lp-rotulo {
+  color: var(--colors-neutral-700);
+}
+
 .familia-lp-titulo-topo {
   font-family: var(--font-urbanist), sans-serif;
   font-size: var(--font-size-3xl);

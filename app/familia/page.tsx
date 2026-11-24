@@ -27,10 +27,11 @@ import { OG_IMAGE_PADRAO, OG_SITE_NAME } from "@/lib/metadata";
 // Landing page do programa para familiares. Texto do conteúdo v2 (10/11/2026); layout das
 // referências do fundador de 09/11/2026. Onde vai imagem, por enquanto, fica o espaço vazio.
 
-const TITULO = "Programa para familiares";
-// Textos do conteúdo v2 (10/11/2026): rascunho do Gemini, revisão do Claude.
+// Briefing N1: o nome do programa é o título da aba (nada de "família", "álcool", "drogas" ou "apostas" nela).
+const TITULO = "Fôlego · Margem";
+// Textos do conteúdo v2 (10/11/2026): rascunho do Gemini, revisão do Claude. Subtítulo do hero: briefing N1.
 const DESCRICAO =
-  "Um programa de 8 semanas para quem convive com alguém que tem problema com álcool, outras drogas ou apostas. Você aprende o que dizer, ensaia antes e conta com psicólogos e psiquiatras da Margem.";
+  "O Fôlego é um programa de 8 semanas para quem convive com alguém que tem problema com álcool, outras drogas ou apostas. Você aprende o que dizer, ensaia antes e conta com psicólogos e psiquiatras parceiros da Margem.";
 const CTA = "Fazer o diagnóstico grátis (3 minutos)";
 // Mesma cor dos ícones dos cards de caminho da home (IconeCaminho).
 const COR_DO_ICONE = "var(--colors-brand-primary-700)";
@@ -265,6 +266,7 @@ export default async function FamiliaPage() {
       <Rastrear evento="lp_visualizada" />
 
       <BlocoComImagem variante="topo">
+        <p className="text-small-regular familia-lp-rotulo">Fôlego · um programa da Margem</p>
         <h1 className="familia-lp-titulo-topo">Você não precisa escolher entre ajudar quem você ama e cuidar de você.</h1>
         <p className="text-medium-regular">{DESCRICAO}</p>
         <div className="familia-lp-cta-topo">

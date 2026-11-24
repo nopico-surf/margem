@@ -169,7 +169,7 @@ export function PainelCliente({
   return (
     <>
       <section className="familia-secao">
-        <h1 className="header-large">Seu painel</h1>
+        <h1 className="header-large">Fôlego</h1>
       </section>
 
       {safetyMode && (

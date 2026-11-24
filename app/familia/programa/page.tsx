@@ -12,7 +12,7 @@ import { PainelCliente, type ModuloDoPainel } from "./PainelCliente";
 // pelas rotas /api/familia, no cliente. Como na página do módulo, o conteúdo dos módulos 2 a 8
 // ([REVISÃO CLÍNICA]) só sai no servidor local até a revisão; a compra (que vale também pro módulo 1,
 // briefing 01b) e a liberação semanal são conferidas no cliente (PainelCliente, briefing 01).
-export const metadata: Metadata = { title: "Seu painel", robots: { index: false, follow: false } };
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function ProgramaPage() {
   return (
