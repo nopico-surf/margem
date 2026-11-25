@@ -1,4 +1,4 @@
-import type { User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { naoAutorizado, usuarioDaRequisicao } from "@/lib/familia/auth-servidor";
 import { buscarPerfil, buscarUltimoDiagnostico, emailValido } from "@/lib/familia/dados";
 import { normalizarWhatsapp } from "@/lib/familia/whatsapp";
@@ -21,6 +21,18 @@ function ehTestador(email: string | null | undefined) {
 function nomeDoProvedor(user: User) {
   const nomeCompleto = (user.user_metadata?.full_name ?? user.user_metadata?.name) as string | undefined;
   return nomeCompleto?.trim().replace(/\s+/g, " ").slice(0, 100) ?? "";
+}
+
+// E-mails pré-liberados (tabela familia_emails_liberados): entram sem a etapa de pagamento.
+async function emailPreLiberado(supabase: SupabaseClient, email: string | null | undefined) {
+  if (!email) return false;
+  const { data, error } = await supabase
+    .from("familia_emails_liberados")
+    .select("email")
+    .eq("email", email.trim().toLowerCase())
+    .maybeSingle();
+  if (error) console.error("[familia] consultar e-mail liberado falhou:", error.message);
+  return Boolean(data);
 }
 
 export async function GET(request: Request) {
@@ -73,6 +85,14 @@ export async function POST(request: Request) {
       const { error } = await supabase.from("familia_perfis").update({ email }).eq("user_id", user.id);
       if (error) console.error("[familia] atualizar e-mail falhou:", error.message);
     }
+    if (!existente.acesso_liberado_em && (await emailPreLiberado(supabase, email))) {
+      const { error } = await supabase
+        .from("familia_perfis")
+        .update({ acesso_liberado_em: new Date().toISOString() })
+        .eq("user_id", user.id)
+        .is("acesso_liberado_em", null);
+      if (error) console.error("[familia] liberar e-mail pré-liberado falhou:", error.message);
+    }
     return Response.json({ ok: true });
   }
 
@@ -89,9 +109,11 @@ export async function POST(request: Request) {
   const agora = new Date().toISOString();
   const comunicacoes = corpo.consentimentoComunicacoes === true;
   const nomeInformado = typeof corpo.nome === "string" ? corpo.nome.trim().replace(/\s+/g, " ").slice(0, 100) : "";
+  const preLiberado = await emailPreLiberado(supabase, email);
   const { error } = await supabase.from("familia_perfis").insert({
     user_id: user.id,
     email,
+    acesso_liberado_em: preLiberado ? agora : null,
     whatsapp,
     nome: nomeInformado || nomeDoProvedor(user) || null,
     consentimento_dados_em: agora,
