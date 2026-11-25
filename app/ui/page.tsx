@@ -500,8 +500,9 @@ export default async function GaleriaDeComponentes() {
       <section className="galeria-secao">
         <h2 className="header-medium">Banner de oferta (programa para familiares)</h2>
         <p className="text-small-regular galeria-nota">
-          Canvas &quot;Banner de oferta&quot;, briefing 01. Quatro variações do mesmo cartão; nunca em modal ou barra fixa, e
-          some depois da compra.
+          Canvas &quot;Banner de oferta&quot; (briefing 01) e &quot;Ofertas do Fôlego&quot; (25/11/2026). Quatro variações do
+          mesmo cartão; nunca em modal, e some depois da compra. Na LP e no resultado, no celular, o botão &quot;Escolher meu
+          valor e continuar&quot; fica fixo embaixo quando a pessoa chega ao bloco (aqui desligado, porque a página tem vários).
         </p>
         <OfertaProgramaGaleria modulos={await titulosDosModulosPagos()} />
       </section>

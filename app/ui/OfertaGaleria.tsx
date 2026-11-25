@@ -17,13 +17,13 @@ export function OfertaProgramaGaleria({ modulos }: { modulos: string[] }) {
   return (
     <div className="galeria-estados">
       <Estado nome="lp (antes da FAQ)">
-        <OfertaPrograma variante="lp" />
+        <OfertaPrograma variante="lp" barraFixa={false} />
       </Estado>
-      <Estado nome="resultado (módulos 1 a 8 trancados)">
-        <OfertaPrograma variante="resultado" apelido="Lu" modulos={modulos} />
+      <Estado nome="resultado (módulos 1 a 8 numerados)">
+        <OfertaPrograma variante="resultado" apelido="Lu" modulos={modulos} barraFixa={false} />
       </Estado>
       <Estado nome="resultado em modo de segurança">
-        <OfertaPrograma variante="resultado" apelido="Lu" modulos={modulos} seguranca />
+        <OfertaPrograma variante="resultado" apelido="Lu" modulos={modulos} seguranca barraFixa={false} />
       </Estado>
       <Estado nome="treino (fim do treino grátis)">
         <OfertaPrograma variante="treino" apelido="Lu" />

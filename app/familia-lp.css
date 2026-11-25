@@ -125,6 +125,14 @@
   box-shadow: var(--shadow-glow);
 }
 
+/* Enquanto a barra do "Escolher meu valor e continuar" (OfertaPrograma) está na tela, a do diagnóstico sai:
+   são duas barras no mesmo lugar. A do diagnóstico volta quando a da oferta some. */
+@media (max-width: 47.99em) {
+  html[data-oferta-barra] .familia-lp-cta-barra:not(.oferta-programa-barra) {
+    display: none;
+  }
+}
+
 /* Botão repetido no fim dos blocos: só no desktop, porque no celular a barra acima já fica fixa. */
 .familia-lp-cta-bloco {
   display: none;

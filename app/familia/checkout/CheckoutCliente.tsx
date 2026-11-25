@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/Button";
 import { InputText } from "@/components/ui/InputText";
 import { Loader } from "@/components/ui/Loader";
 import { EsqueletoFamilia } from "@/components/familia/EsqueletoFamilia";
+import { SeloDevolucao } from "@/components/familia/SeloDevolucao";
 import { PainelInferior } from "@/components/ui/PainelInferior";
 import {
   CAMPO_DO_ERRO,
@@ -396,9 +397,9 @@ export function CheckoutCliente({ profissionais }: { profissionais: Profissional
             ))}
           </div>
           {plano === "acompanhamento" && <p className="plano-nota">Ao incluir a primeira sessão, o valor do programa começa 20% menor.</p>}
-          {plano === "programa" && (
-            <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso · {DIAS_PARA_DESISTIR} dias para pedir o dinheiro de volta.</p>
-          )}
+          {/* Os 14 dias ficam no selo logo abaixo: a nota não repete (uma vez por tela). */}
+          {plano === "programa" && <p className="plano-nota">Pagamento único no Pix · 8 semanas de acesso.</p>}
+          <SeloDevolucao />
           <Button tamanho="medium" larguraTotal onClick={continuarDoValor}>
             Continuar para o pagamento
           </Button>

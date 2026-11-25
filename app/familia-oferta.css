@@ -61,9 +61,7 @@
 }
 
 .oferta-programa-texto,
-.oferta-programa-subtitulo,
-.oferta-programa-lista,
-.oferta-programa-modulos {
+.oferta-programa-lista {
   font-size: var(--font-size-md);
   line-height: var(--line-height-2xl);
 }
@@ -71,62 +69,165 @@
 .oferta-programa-inclui {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
+  gap: var(--spacing-12);
 }
 
-.oferta-programa-subtitulo {
-  font-weight: var(--font-weight-medium);
+/* Títulos de bloco do corpo (design: Urbanist 18, semibold). */
+.oferta-programa .oferta-programa-subtitulo-urbanist {
+  margin: 0;
+  color: var(--colors-neutral-950);
+  font: var(--font-weight-semi-bold) var(--font-size-lg) / var(--line-height-2xl) var(--font-urbanist), sans-serif;
 }
 
-.oferta-programa-lista,
-.oferta-programa-modulos {
+/* Linha de apoio do corpo (design: 14, na cor de texto suave). */
+.oferta-programa-nota {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+  color: var(--colors-alpha-88);
+}
+
+.oferta-programa-corpo .oferta-programa-nota-forte {
+  color: var(--colors-neutral-950);
+  font-weight: var(--font-weight-semi-bold);
+}
+
+.oferta-programa-cabecalho-planos {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
+  gap: var(--spacing-4);
+}
+
+.oferta-programa-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(var(--size-96) * 4), 100%), 1fr));
+  gap: var(--spacing-8) var(--spacing-24);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.oferta-programa-lista li,
-.oferta-programa-modulos li {
+.oferta-programa-lista li {
   display: flex;
   gap: var(--spacing-8);
 }
 
-.oferta-programa-lista svg,
-.oferta-programa-modulos svg {
+.oferta-programa-lista svg {
   flex: none;
   margin-top: var(--spacing-2);
 }
 
-/* Cadeado discreto, cinza, sem vermelho (briefing 01). */
+/* Resultado: os módulos 1 a 8 numerados, numa caixa cinza-clara (design "Ofertas do Fôlego"). */
 .oferta-programa-modulos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
   padding: var(--spacing-16);
   border-radius: var(--radius-lg);
   background: var(--colors-neutral-50);
-  color: var(--colors-neutral-700);
+}
+
+.oferta-programa-modulos-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(var(--size-96) * 3), 100%), 1fr));
+  gap: var(--spacing-12) var(--spacing-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-xl);
+}
+
+.oferta-programa-modulos-lista li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-12);
+}
+
+.oferta-programa-modulo-numero {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 28 do design: 24 + 4, que não é degrau da escala. */
+  width: calc(var(--size-24) + var(--spacing-4));
+  height: calc(var(--size-24) + var(--spacing-4));
+  border: var(--border-width-thin) solid var(--colors-neutral-200);
+  border-radius: var(--radius-full);
+  background: var(--colors-neutral-0);
+  color: var(--colors-brand-primary-800);
+  font: var(--font-weight-semi-bold) var(--font-size-sm) / 1 var(--font-urbanist), sans-serif;
+}
+
+/* Modo de segurança do resultado: a frase vira um aviso suave, em verde bem claro. */
+.oferta-programa-corpo .oferta-programa-seguranca {
+  padding: var(--spacing-12) var(--spacing-16);
+  border-radius: var(--radius-lg);
+  background: var(--colors-brand-primary-50);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-2xl);
 }
 
 .oferta-programa-plano {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-8);
+  gap: var(--spacing-6);
   padding: var(--spacing-16);
   border-radius: var(--radius-lg);
   background: var(--colors-neutral-50);
 }
 
-/* Os dois mini-cards da LP: lado a lado no desktop, empilhados no celular. */
+.oferta-programa-plano-preco {
+  font: var(--font-weight-semi-bold) var(--font-size-xl) / var(--line-height-3xl) var(--font-urbanist), sans-serif;
+}
+
+/* Os dois jeitos: lado a lado quando cabem (288 de cada), empilhados no celular. */
 .oferta-programa-planos {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-16);
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(var(--size-96) * 3), 100%), 1fr));
+  gap: var(--spacing-12);
+}
+
+/* Selo dos 14 dias (components/familia/SeloDevolucao): ícone e texto no centro, acima dos botões. */
+.selo-devolucao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8);
+}
+
+/* 32 no celular e 36 no desktop (design). */
+.selo-devolucao svg {
+  flex: none;
+  width: var(--size-32);
+  height: var(--size-32);
 }
 
 @media (min-width: 48em) {
-  .oferta-programa-planos {
-    grid-template-columns: 1fr 1fr;
+  .selo-devolucao svg {
+    width: calc(var(--size-32) + var(--spacing-4));
+    height: calc(var(--size-32) + var(--spacing-4));
+  }
+}
+
+.selo-devolucao p {
+  margin: 0;
+  color: var(--colors-brand-primary-950);
+  font: var(--font-weight-semi-bold) var(--font-size-md) / var(--line-height-xl) var(--font-urbanist), sans-serif;
+}
+
+/* Selo + botões: o selo fica colado nos botões, com 12 de distância (design: 8 + 4). */
+.oferta-programa-fim {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+}
+
+/* Barra fixa do "Escolher meu valor e continuar": só no celular. É a .familia-lp-cta-barra (mesmo
+   desenho do "Agendar" do profissional); no desktop os botões ficam lado a lado dentro do bloco. */
+@media (min-width: 48em) {
+  .oferta-programa-barra {
+    display: none;
   }
 }
 
@@ -214,6 +315,7 @@
 }
 
 .oferta-programa-plano-nome {
+  margin: 0;
   font: var(--font-weight-semi-bold) var(--font-size-lg) / var(--line-height-2xl) var(--font-urbanist), sans-serif;
 }
 
@@ -221,6 +323,28 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
+}
+
+/* Desktop: os dois botões lado a lado, cada um com metade da linha; o espaço do bloco também cresce
+   (design: 32 em volta). */
+@media (min-width: 48em) {
+  .oferta-programa-acoes {
+    flex-direction: row;
+  }
+
+  .oferta-programa-acoes > .btn {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .oferta-programa:is([data-variante="lp"], [data-variante="resultado"]) .oferta-programa-faixa {
+    padding: var(--spacing-32);
+  }
+
+  .oferta-programa:is([data-variante="lp"], [data-variante="resultado"]) .oferta-programa-corpo {
+    gap: var(--spacing-24);
+    padding: var(--spacing-32);
+  }
 }
 
 .oferta-programa-rodape {
