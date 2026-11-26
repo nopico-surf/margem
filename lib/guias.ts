@@ -5193,6 +5193,210 @@ export const GUIAS: Guia[] = [
     imagemAlt: "Uma jovem de cabelo cacheado e um rapaz de camisa jeans sentados lado a lado no degrau de uma calçada de bairro, de manhã cedo. Ela estende uma garrafa de água a ele, que está cansado, com os braços apoiados nos joelhos. Ao fundo, uma rua tranquila com casas, portões e um poste.",
     imagemCard: true,
   },
+  // Guia de overdose (26/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do Google
+  // (docs/pesquisas-blog/overdose.md). Formato dos títulos: afirmativo (o anterior, cocaina-e-alcool, usou
+  // perguntas). Fatos conferidos contra os guias de opioides (sinais, naloxona com as equipes de emergência, avaliar
+  // mesmo que melhore), clonazepam (calmante sozinho raramente é fatal, misturado o risco cresce), cocaína e álcool
+  // (sinais de estimulante, SAMU cuida da saúde), comunidade terapêutica (tolerância cai depois de meses sem usar) e
+  // contra Rede D'Or, Tua Saúde e Einstein (não provocar vômito, não dar comida ou bebida, sem banho gelado, de lado
+  // se desacordada e respirando, massagem cardíaca com orientação do 192). O carrossel vem depois dos primeiros
+  // socorros: quem chega aqui pode estar no meio de uma emergência. Mesma exceção de copy dos outros guias.
+  {
+    slug: "overdose",
+    publicadoEm: "2026-11-26",
+    atualizadoEm: "2026-11-26",
+    title: "Overdose: o que fazer, os sinais e como ajudar | Margem",
+    descricao:
+      "O que fazer numa overdose enquanto o socorro não chega, os sinais de alerta, o que não fazer, como reduzir o risco e onde encontrar apoio depois, sem julgamento.",
+    h1: "Overdose: o que fazer na hora, os sinais e como cuidar depois",
+    abertura:
+      "Se alguém está desacordado, respirando muito devagar, com os lábios roxos, com dor no peito ou tendo uma convulsão depois de usar álcool, remédio ou outra droga, ligue agora para o SAMU no 192. Os passos de primeiros socorros estão logo abaixo.\n\nSe você chegou aqui pra entender melhor, seja por você ou por alguém próximo, a gente explica o que é uma overdose, como reconhecer os sinais, o que fazer e o que evitar enquanto a ajuda não chega, e como cuidar de quem passou por isso, sem julgamento.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    carrosselAposSecoes: 4,
+    secoes: [
+      {
+        titulo: "O que fazer na hora",
+        blocos: [
+          p("Numa overdose, cada minuto conta. Enquanto espera o socorro:"),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Ligue para o SAMU no 192. Se não conseguir, ligue para os Bombeiros no 193",
+              "Diga o endereço, o que a pessoa usou, se souber, e como ela está. O atendente vai orientar você",
+              "Chame a pessoa pelo nome e toque no ombro dela com firmeza pra ver se reage",
+              "Veja se ela está respirando: olhe o peito subir e descer",
+              "Se estiver desacordada e respirando, deite a pessoa de lado, com a cabeça um pouco pra trás. Isso ajuda a evitar que ela engasgue com vômito",
+              "Se não estiver respirando, ou só puxar o ar de vez em quando, avise o atendente: ele vai orientar a massagem no peito até a ambulância chegar",
+              "Fique com a pessoa o tempo todo e observe se a respiração muda",
+              "Se puder, separe embalagens, cartelas de remédio ou o que sobrou, pra mostrar à equipe",
+            ],
+          },
+          p("Se a pessoa estiver acordada, mas agitada, com o corpo muito quente, leve pra um lugar fresco e arejado, afrouxe a roupa e fale com calma. Não segure com força durante uma convulsão: tire de perto o que pode machucar e espere passar, protegendo a cabeça."),
+        ],
+      },
+      {
+        titulo: "O que não fazer",
+        blocos: [
+          p("Algumas ideias muito comuns não ajudam e podem piorar:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Provocar vômito: a pessoa pode engasgar e o líquido pode ir pro pulmão",
+              "Dar leite, café, sal, água ou comida pra \"cortar\" o efeito: não corta, e quem está sonolento pode engasgar",
+              "Dar outro remédio, bebida ou droga pra \"equilibrar\": costuma somar o efeito",
+              "Dar banho gelado ou jogar gelo: não reverte a overdose e aumenta o risco de queda e de o corpo esfriar demais",
+              "Deixar a pessoa dormindo sozinha \"pra passar\": a respiração pode piorar durante o sono",
+              "Esperar pra ver se melhora antes de ligar",
+            ],
+          },
+          p("Não existe receita caseira que corte uma overdose. O que funciona é o atendimento de emergência. [Ler sobre o que pode e o que não pode misturar com álcool](/blog/pode-beber-tomando-remedio)"),
+        ],
+      },
+      {
+        titulo: "Os sinais de overdose",
+        blocos: [
+          p("Overdose é quando o corpo recebe mais de uma substância do que consegue suportar. Pode acontecer com álcool, remédio ou outras drogas, na primeira vez ou com quem usa há anos. Os sinais mudam conforme o que foi usado."),
+          p("Com álcool, calmantes como clonazepam e diazepam, remédios pra dormir e opioides, que deixam o corpo mais lento:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Sono muito profundo, ou não acordar quando chamada",
+              "Respiração muito lenta, fraca, ou com ronco alto e barulho de engasgo",
+              "Lábios e pontas dos dedos roxos ou azulados",
+              "Pele fria, pálida ou suada",
+              "Corpo mole",
+              "Vômito sem acordar",
+              "Pupilas muito pequenas, principalmente com opioides",
+            ],
+          },
+          p("Com cocaína, crack, anfetaminas e ecstasy, que aceleram o corpo:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Dor ou aperto no peito",
+              "Coração muito acelerado ou batendo descompassado",
+              "Corpo muito quente e suor intenso",
+              "Agitação, confusão, pânico ou paranoia fortes",
+              "Convulsão",
+              "Falta de ar",
+              "Fala enrolada ou fraqueza de um lado do corpo",
+            ],
+          },
+          p("Na mistura, os sinais podem vir juntos ou se alternar. Você não precisa ter certeza de que é overdose pra ligar: na dúvida, ligue para o 192."),
+        ],
+      },
+      {
+        titulo: "Mesmo que a pessoa melhore, ela precisa ser avaliada",
+        blocos: [
+          p("Às vezes a pessoa acorda, diz que está bem e não quer ir pro hospital. Mesmo assim, vale a avaliação. Algumas substâncias continuam agindo por horas, e o efeito de alguns opioides dura mais do que o do remédio que a equipe usa pra reverter a overdose. Uma overdose de paracetamol, por exemplo, pode não dar sinal nenhum no começo e machucar o fígado depois."),
+          p("No caso dos opioides, as equipes de emergência têm a naloxona, um remédio que pode reverter a overdose. Por isso ligar rápido faz tanta diferença. [Ler sobre opioides](/blog/opioides)"),
+        ],
+      },
+      {
+        titulo: "O medo de chamar ajuda",
+        blocos: [
+          p("Muita gente demora a ligar por medo: da polícia, de se complicar, de expor a pessoa ou de levar bronca. Esse medo é compreensível, e é comum. Mas numa overdose, o atraso é o que mais pesa."),
+          p("O objetivo do SAMU é cuidar da saúde. Contar o que foi usado não é dedurar ninguém: ajuda a equipe a saber o que fazer. Médicos e outros profissionais de saúde têm o dever de guardar sigilo sobre o atendimento."),
+        ],
+      },
+      {
+        titulo: "O que aumenta o risco de overdose",
+        blocos: [
+          p("Algumas situações deixam a overdose mais provável:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Misturar substâncias, principalmente álcool com calmantes, remédios pra dormir ou opioides. Sozinho, o clonazepam raramente leva a uma overdose fatal. Misturado, o risco cresce muito",
+              "Misturar cocaína e álcool, que juntos pesam mais no coração",
+              "Voltar a usar depois de um tempo sem usar: o corpo perde a tolerância, e a quantidade de antes pode ser demais",
+              "Usar algo de origem desconhecida, que pode ser mais forte ou vir misturado com outra coisa",
+              "Usar sozinho, sem ninguém por perto pra pedir ajuda",
+              "Usar seguido, sem dar tempo de o efeito passar",
+              "Ter algum problema de saúde, como no coração, no fígado ou nos pulmões",
+            ],
+          },
+          p("[Ler sobre os riscos de misturar cocaína e álcool](/blog/cocaina-e-alcool) [Ler sobre o clonazepam](/blog/clonazepam)"),
+        ],
+      },
+      {
+        titulo: "Como reduzir o risco",
+        blocos: [
+          p("O mais seguro é não usar. Se você vai usar mesmo assim, alguns cuidados diminuem o risco de overdose. É o que se chama [redução de danos](/blog/reducao-de-danos). Risco menor não é risco zero:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Não usar sozinho, e estar com alguém de confiança que saiba o que você usou e saiba ligar para o 192",
+              "Começar com pouco e esperar o efeito antes de usar mais",
+              "Não misturar, principalmente álcool com calmantes ou opioides",
+              "Ter ainda mais cuidado depois de um tempo sem usar, começando com bem menos do que antes",
+              "Comer, beber água e fazer pausas",
+              "Combinar com quem está junto o que fazer se alguém passar mal",
+              "Guardar remédios longe de crianças e fora do alcance de quem está numa fase difícil",
+            ],
+          },
+        ],
+      },
+      {
+        titulo: "Depois de uma overdose",
+        blocos: [
+          p("Passar por uma overdose, ou ver alguém passar, costuma deixar marcas: susto, vergonha, culpa, medo de acontecer de novo. Tudo isso é esperado, e falar sobre o que aconteceu ajuda. Pode ser um bom momento pra olhar com cuidado pra relação com o uso, sem pressa de decidir tudo de uma vez."),
+          p("Se a overdose não foi um acidente, ou se vierem pensamentos de se machucar ou de não querer mais viver, leve a sério e procure ajuda. O CVV atende 24 horas pelo 188, e numa emergência o SAMU atende no 192."),
+          p("Se foi com alguém próximo, a vontade pode ser dar bronca ou cortar relações. Costuma funcionar melhor esperar a pessoa estar bem, dizer o que você sentiu, sem rótulo e sem ameaça, e perguntar como ela está. Cuidar de você também conta. [Ler sobre como lidar quando um filho usa drogas](/blog/filho-usando-drogas)"),
+          p("Conversar com psicólogo ou psiquiatra sobre o uso não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. [Ver como funciona a terapia a valor social](/blog/terapia-barata)"),
+          p("Fora da Margem, o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento quem quer cuidar da relação com o álcool e outras drogas, e os Narcóticos Anônimos e os Alcoólicos Anônimos têm reuniões presenciais e online, sem custo. Familiares encontram apoio no Nar-Anon e no Al-Anon. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra receber orientação gratuita na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Receber orientação gratuita", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Qual o primeiro sinal de overdose?",
+        resposta:
+          "Não existe um sinal único. Sono profundo do qual a pessoa não acorda, respiração muito lenta, lábios roxos, dor no peito, coração muito acelerado, corpo muito quente ou convulsão já pedem atendimento. Na dúvida, ligue para o SAMU no 192.",
+      },
+      {
+        pergunta: "É possível sobreviver a uma overdose?",
+        resposta:
+          "Sim, e o socorro rápido faz muita diferença. Por isso é importante ligar para o 192 logo, ficar com a pessoa e seguir as orientações do atendente até a ambulância chegar.",
+      },
+      {
+        pergunta: "Quanto tempo dura uma overdose?",
+        resposta:
+          "Depende do que foi usado, da quantidade e da mistura. Algumas substâncias continuam agindo por horas, e a pessoa pode piorar depois de parecer melhor. Por isso ela precisa ser avaliada mesmo que acorde.",
+      },
+      {
+        pergunta: "Quem tem overdose sente dor?",
+        resposta:
+          "Depende. Com cocaína e outros estimulantes, pode haver dor ou aperto no peito. Com álcool, calmantes e opioides, a pessoa costuma ficar sonolenta ou desacordada e pode não sentir nem reclamar de nada, o que torna os sinais ainda mais importantes.",
+      },
+      {
+        pergunta: "O que corta uma overdose?",
+        resposta:
+          "Nenhuma receita caseira. Leite, café, sal, banho gelado ou provocar vômito não cortam e podem piorar. O que funciona é o atendimento de emergência: ligue para o SAMU no 192.",
+      },
+      {
+        pergunta: "Overdose deixa sequelas?",
+        resposta:
+          "Pode deixar, principalmente quando a respiração ficou fraca ou parada por um tempo e faltou oxigênio no cérebro, ou quando órgãos como coração, fígado e rins foram atingidos. Muita gente se recupera sem sequelas, e o socorro rápido ajuda.",
+      },
+      {
+        pergunta: "Dá pra ter overdose de álcool?",
+        resposta:
+          "Sim. A intoxicação alcoólica pode deixar a pessoa desacordada, com respiração lenta, lábios roxos ou vomitando sem acordar. Misturado com calmantes ou opioides, o risco aumenta. Nesses casos, ligue para o SAMU no 192.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {

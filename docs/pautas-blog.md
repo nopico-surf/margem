@@ -9,7 +9,6 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 - como parar de usar crack
 - como ajudar alguém que usa drogas
 - recaída drogas
-- overdose o que fazer
 - como saber se sou alcoólatra
 
 ## Publicadas
@@ -26,3 +25,4 @@ Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
 - 2026-11-19: pode beber tomando remédio (/blog/pode-beber-tomando-remedio)
 - 2026-11-23: ansiedade e álcool (/blog/ansiedade-e-alcool)
 - 2026-11-24: cocaína e álcool (/blog/cocaina-e-alcool)
+- 2026-11-26: overdose o que fazer (/blog/overdose)
