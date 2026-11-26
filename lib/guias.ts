@@ -5394,8 +5394,11 @@ export const GUIAS: Guia[] = [
           "Sim. A intoxicação alcoólica pode deixar a pessoa desacordada, com respiração lenta, lábios roxos ou vomitando sem acordar. Misturado com calmantes ou opioides, o risco aumenta. Nesses casos, ligue para o SAMU no 192.",
       },
     ],
-    imagem: false,
-    imagemAlt: "",
+    imagem: true,
+    imagemAlt: "Uma jovem enrolada numa manta colorida de crochê, sentada num sofá de uma sala com plantas, recebe um copo d'água de um rapaz de moletom escuro sentado ao lado dela. Os dois se olham com calma, e a luz da manhã entra pela janela.",
+    imagemCard: true,
+    // As cabeças ficam perto do alto do recorte: ancorado no centro, o card podia cortá-las.
+    posicaoDaFotoDoCard: "center top",
   },
 ];
 
