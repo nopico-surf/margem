@@ -1,4 +1,7 @@
 {
+  "z-index-cru": {
+    "app/botao.css": 1
+  },
   "px-cru": {
     "app/dados-privacidade-modal.css": 20,
     "app/familia.css": 2,
@@ -14,7 +17,8 @@
     "components/app/KeyboardDiagnostics.tsx": 6,
     "components/app/MessageInput.tsx": 4,
     "components/icons/index.tsx": 1,
-    "components/ui/BotaoMenu.tsx": 1
+    "components/ui/BotaoMenu.tsx": 1,
+    "lib/use-tags-preenchendo.ts": 1
   },
   "hex-cru": {
     "app/dados-privacidade-modal.css": 2,
