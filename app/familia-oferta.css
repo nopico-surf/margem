@@ -242,6 +242,11 @@
   flex: none;
 }
 
+/* Selo de conteúdo: Badge abaixo da lista do que está incluído, sem esticar na coluna. */
+.oferta-programa-selo-conteudo {
+  align-self: flex-start;
+}
+
 /* "Saiba mais": link em texto, na cor de destaque do bloco, logo abaixo da linha de apoio. */
 .oferta-programa-saiba-mais {
   align-self: flex-start;

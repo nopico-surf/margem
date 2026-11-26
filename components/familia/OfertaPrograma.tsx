@@ -205,7 +205,7 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], seguranca
                 </li>
               ))}
             </ul>
-            <p className="oferta-programa-nota">O conteúdo é o mesmo em qualquer valor.</p>
+            <Badge color="primary" className="oferta-programa-selo-conteudo">O conteúdo é o mesmo em qualquer valor</Badge>
           </div>
         )}
 
@@ -228,6 +228,7 @@ export function OfertaPrograma({ variante, apelido = "", modulos = [], seguranca
                   R$ {MINIMO} a R$ {MAXIMO}
                 </p>
                 <p className="oferta-programa-nota">Você faz as 8 semanas por conta própria, um módulo por semana.</p>
+                <p className="oferta-programa-nota oferta-programa-nota-forte">Você escolhe o valor dentro dessa faixa, sem precisar justificar.</p>
               </div>
               <div className="oferta-programa-plano">
                 <div className="oferta-programa-plano-cabecalho">

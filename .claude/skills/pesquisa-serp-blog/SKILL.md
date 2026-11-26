@@ -7,6 +7,15 @@ description: Pesquisa os 10 primeiros resultados do Google pra palavra-chave ant
 
 Nenhum guia novo do blog (`lib/guias.ts`, `/blog/<slug>`) é escrito sem esta pesquisa. Ela diz o que o Google já mostra, o que as pessoas perguntam e onde a Margem pode responder melhor.
 
+## Localização: sempre como brasileiro, de preferência em São Paulo
+
+Toda busca desta skill (Trends e Google, inclusive a dos 10 primeiros resultados e a segunda página) é feita com a localização de uma pessoa no Brasil, de preferência em São Paulo, nunca como estrangeiro. Resultado de fora do Brasil não serve de referência.
+
+- **Google:** usar sempre `google.com.br` com `hl=pt-BR&gl=br&uule=w%2BCAIQICIiU2FvIFBhdWxvLFN0YXRlIG9mIFNhbyBQYXVsbyxCcmF6aWw=` (esse `uule` é São Paulo, SP).
+- **Trends:** manter `geo=BR`; se a interface permitir, `geo=BR-SP` quando o volume em São Paulo for suficiente.
+- **Conferir antes de ler:** no rodapé da página de resultados do Google tem que aparecer São Paulo (ou o Brasil) como localização, e os resultados têm que vir em português, de sites brasileiros. Se aparecer outro país, ou o parâmetro `uule` for ignorado, tentar uma vez de novo; se persistir, parar e avisar, sem escolher pauta nem salvar pesquisa.
+- **Registrar:** no arquivo `docs/pesquisas-blog/<slug>.md`, anotar a localização que o Google mostrou.
+
 ## 0. Escolher a pauta pelo Google Trends
 
 A pauta nunca é escolhida no chute: quem decide qual guia vem agora é o Google Trends. Vale pra tarefa diária e pra quando o Vitor pedir um guia sem dizer o assunto. Se ele pedir um assunto específico, esse assunto vale e este passo só registra os números.
@@ -31,8 +40,10 @@ Usar a busca exata que a pessoa digitaria (ex.: `como parar de usar drogas`). Se
 Usar o navegador embutido (`mcp__Claude_Browser__*`), não o WebSearch, que não é o Google do Brasil:
 
 ```
-https://www.google.com.br/search?q=<palavra+chave>&hl=pt-BR&gl=br
+https://www.google.com.br/search?q=<palavra+chave>&hl=pt-BR&gl=br&uule=w%2BCAIQICIiU2FvIFBhdWxvLFN0YXRlIG9mIFNhbyBQYXVsbyxCcmF6aWw=
 ```
+
+Conferir a localização no rodapé (ver "Localização" acima) antes de coletar.
 
 Se aparecer CAPTCHA, parar e pedir pra pessoa resolver no painel. Nunca tentar contornar.
 

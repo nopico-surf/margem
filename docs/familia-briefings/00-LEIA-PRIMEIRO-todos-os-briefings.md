@@ -727,6 +727,136 @@ Mantém os eventos do briefing 01, com duas correções:
 
 ---
 
+# Briefing 01e: a oferta mostra os dois caminhos, na LP e no resultado
+
+**Claude Code · Sonnet 5.5 · esforço médio.** Os textos de tela já estão prontos aqui. Não escreva texto novo. Textos escritos e revisados direto no briefing, sem passagem pelo Gemini, como no N0 a N4.
+
+Pré-requisito: briefings 01, 01b, 01c, 01d e N1 aplicados. Este briefing **substitui** os textos das variações a (LP) e b (resultado) do 01d, e a regra de preço do plano com acompanhamento do 01d, item 1. As variações c (fim do treino) e d (módulo bloqueado) continuam como estão, salvo a correção do apelido no item 1 abaixo.
+
+Design de referência: canvas "Ofertas do Fôlego" (https://claude.ai/artifact/8Pz5zcnfysHpNWRMDa2cK4), com LP e resultado, no desktop e no celular. O Tweak `seguranca` do resultado mostra o modo de segurança.
+
+## O problema
+
+1. **O apelido não passa por `aplicarApelido`.** Em `components/familia/OfertaPrograma.tsx`, linhas 66, 67 e 70, os textos do resultado e do treino montam a frase com `${apelido}` cru. Sem apelido, a frase termina em "com ." em vez de cair em "quem você ama". Com o apelido "a", sai "com a.", que foi o que apareceu na tela.
+2. **O resultado promete o que não existe.** "As 8 semanas foram pensadas para a sua situação" (linha 66) é falso: os módulos vêm de `content/familia/modulos/*.md` (`lib/familia/conteudo.ts`, `titulosDosModulosPagos`) e são iguais para todo mundo. O que é da pessoa é o mapa e o roteiro do resultado.
+3. **O caminho com profissional some depois do diagnóstico.** A LP mostra os dois planos (linhas 128 a 147). A variação `resultado` mostra só o programa, justo no momento em que a pessoa está mais engajada.
+4. **Os dois mini-cards da LP parecem opções para tocar, e não são.** Nada diz que o plano e o valor se escolhem no checkout. O botão "Já quero garantir meu acesso" (linha 170) não diz o que acontece ao tocar, e "garantir" puxa pressão de compra.
+5. **O preço do acompanhamento está incompleto.** "A partir de R$ 37" não diz até quanto vai, e o card não mostra a faixa da sessão nem quanto custa no total.
+6. **"Pedir acesso gratuito" não existe em nenhuma tela.** O 01d pede o link no resultado e no checkout, e a FAQ da LP promete que "na hora de pagar existe a opção de pedir acesso gratuito". A página `/familia/acesso-gratuito` existe, mas nenhum link leva até ela.
+7. **Cadeados.** A lista dos módulos no resultado tem 8 `GlifoLock` seguidos (linha 153). Lido de cima para baixo, é uma lista do que está proibido, não do que vem pela frente.
+8. **O nome muda entre telas.** A LP chama os planos de "Programa de 8 semanas" e "Programa com acompanhamento", e o checkout chama de "Fôlego" e "Fôlego com acompanhamento" (N1, item e).
+
+## O que fazer
+
+### Regras de preço que valem a partir daqui
+
+- **Fôlego:** "R$ 47 a R$ 147".
+- **Fôlego com acompanhamento:** "R$ 37 a R$ 147" pelo programa, mais a sessão de R$ 60 a R$ 200. Substitui o "A partir de R$ 37" do 01d. O começo da faixa é 20% menor, e o fim continua igual.
+- O desconto é no programa, nunca na sessão. O selo diz isso.
+- O total mínimo do acompanhamento é R$ 97 (R$ 37 + R$ 60). Calcule a partir das constantes, nunca escreva o número fixo.
+- Preço e 14 dias, uma vez por tela.
+
+### Os dois jeitos (bloco novo, usado na LP e no resultado)
+
+**Só exibição. Nada aqui é selecionável.** O plano e o valor continuam sendo escolhidos no checkout, nas etapas `plano` e `valor`, como hoje. Os dois cards servem para a pessoa comparar antes de tocar no botão.
+
+- Dois cards lado a lado no desktop, empilhados no celular, em `colors-neutral-50`, sem borda, sem radio, sem estado selecionado, sem hover e sem `onClick`. Nada que pareça botão.
+- Acima dos cards, título (`header-small`) e uma linha de apoio (`text-medium-regular`, `colors-alpha-88`) dizendo onde a escolha acontece.
+- Conteúdo de cada card, nesta ordem: nome (`header-small`), preço (`header-medium`, `colors-neutral-950`), uma frase (`text-medium-regular`, `colors-alpha-88`). No acompanhamento, o selo fica ao lado do nome, e a frase do total vem por último, em `text-medium-semibold`.
+- "R$" e o número nunca quebram de linha separados (espaço não separável).
+- No modo de segurança, nada muda nos cards. O checkout já pré-seleciona o acompanhamento.
+
+**Título:** Os dois jeitos de fazer o Fôlego
+**Apoio:** Você escolhe o jeito e o valor na próxima tela.
+
+**Card 1**
+> **Fôlego**
+> R$ 47 a R$ 147
+> Você faz as 8 semanas por conta própria, um módulo por semana.
+
+**Card 2**
+> **Fôlego com acompanhamento** · selo: **20% de desconto no programa**
+> R$ 37 a R$ 147
+> Inclui a primeira sessão com um psicólogo parceiro da Margem, e você escolhe quanto paga por ela, de R$ 60 a R$ 200.
+> **O total começa em R$ 97, pago num Pix só.**
+
+### Variação a: LP, bloco "Quanto custa"
+
+Ordem, de cima para baixo:
+
+1. Faixa verde, como hoje: rótulo "Quanto custa", preço "R$ 47 a R$ 147", e a linha de apoio nova:
+   > Você escolhe quanto pagar, e o valor sugerido é R$ 97. Uma vez só, no Pix, com 14 dias para pedir o dinheiro de volta.
+2. Logo abaixo, o link que abre o lightbox "Como funciona o valor" (o lightbox não muda). O texto "Saiba mais" sai, e entra:
+   > Ver como funciona o valor
+3. Corpo branco: "O que está incluído", a lista de 4 itens como está hoje, e logo abaixo da lista:
+   > O conteúdo é o mesmo em qualquer valor.
+4. Os dois jeitos.
+5. Botão principal: **"Escolher meu valor e continuar"**. Leva para `/familia/checkout?origem=lp`, que abre na etapa `plano`, como hoje.
+6. Botão secundário: **"Começar pelo diagnóstico grátis"**, como hoje.
+7. Linha de rodapé, como hoje: "Você pode fazer o diagnóstico e experimentar um treino de conversa de graça, antes de decidir."
+
+Na LP não entra "Pedir acesso gratuito" (01c).
+
+### Variação b: resultado do diagnóstico
+
+A posição não muda (depois dos avisos e, no modo de segurança, depois do cartão de segurança). Ordem:
+
+1. Faixa verde com o título:
+   > Os próximos passos com {{apelido}}
+2. Texto:
+   > Você já tem o mapa da situação e o roteiro da primeira conversa com {{apelido}}. Nas 8 semanas do Fôlego, você aprende e treina o que dizer e o que fazer, um módulo por semana.
+3. Caixa em `colors-neutral-50` com o título "O que vem nas 8 semanas do Fôlego" e os 8 módulos em lista numerada. Cada número num círculo branco com borda `colors-neutral-200` e o número em `colors-brand-primary-800`. **Sem cadeado.** Duas colunas no desktop, uma no celular.
+4. "O que está incluído", a mesma lista de 4 itens da LP e, logo abaixo, a mesma frase: "O conteúdo é o mesmo em qualquer valor."
+5. Só em modo de segurança: a frase que já existe, "Na sua situação, ter um profissional junto faz ainda mais diferença.", num bloco em `colors-brand-primary-50`, logo acima dos dois jeitos.
+6. Os dois jeitos.
+7. Botão principal: **"Escolher meu valor e continuar"**. Leva para `/familia/checkout?origem=resultado`, que abre na etapa `plano`, como hoje.
+8. Botão secundário: **"Treinar o meu roteiro"**, como hoje.
+9. Rodapé:
+   > Você escolhe quanto pagar, e o valor sugerido é R$ 97. Uma vez só, no Pix, com 14 dias para pedir o dinheiro de volta.
+10. Link pequeno, logo abaixo do rodapé: **"Nem o menor valor cabe agora? Pedir acesso gratuito"**, para `/familia/acesso-gratuito`.
+
+### Checkout
+
+O fluxo não muda: plano, depois valor. Duas mudanças pequenas:
+
+1. **Card "Fôlego com acompanhamento" da etapa 1:** a faixa passa de "A partir de R$ 37 + sessão" para "R$ 37 a R$ 147 + sessão".
+2. **Link de acesso gratuito**, na etapa `valor`, abaixo da nota do pagamento, nos dois planos: **"Nem o menor valor cabe agora? Pedir acesso gratuito"**, para `/familia/acesso-gratuito`.
+
+## Código
+
+**`components/familia/OfertaPrograma.tsx`**
+- Importar `aplicarApelido` de `@/lib/familia/diagnostico`. Os textos das variações `resultado` e `treino` passam a ser escritos com `{{apelido}}` e passam por `aplicarApelido(texto, apelido)` na renderização. Nenhum texto monta apelido com template string.
+- Todo número dos textos (R$ 47, R$ 147, R$ 37, R$ 97 sugerido, R$ 60, R$ 200, o total mínimo e os 14 dias) vem de `lib/familia/oferta.ts`, nunca escrito à mão. No canvas, o apelido de exemplo é "Lu".
+- Trocar `ITENS_LP` por `ITENS_INCLUIDOS`, usado pela LP e pelo resultado.
+- Criar o bloco dos dois jeitos (no mesmo arquivo ou em `components/familia/DoisJeitos.tsx`), sem estado e sem handler. Os preços saem de `lib/familia/oferta.ts`: `VALORES_PROGRAMA`, `VALORES_PROGRAMA_COM_ACOMPANHAMENTO`, `SESSAO_MINIMA`, `SESSAO_MAXIMA`, `VALOR_SUGERIDO`. O total mínimo é `VALORES_PROGRAMA_COM_ACOMPANHAMENTO[0] + SESSAO_MINIMA`.
+- Variação `lp`: tirar `oferta-programa-planos` (linhas 128 a 147) e o botão "Já quero garantir meu acesso". Entram os dois jeitos e o botão novo, para `/familia/checkout?origem=lp`.
+- Variação `resultado`: tirar o `GlifoLock` da lista. Entram o número em círculo, "O que está incluído", os dois jeitos e o link de acesso gratuito. A frase de segurança sobe para antes dos dois jeitos.
+- Variações `treino` e `bloqueado`: só a correção do apelido.
+- Analytics: o `oferta_clicada` do botão principal usa `acao: "escolher_valor"` também na LP (a ação `garantir_acesso` sai).
+- CSS: apagar as classes `oferta-programa-planos`, `oferta-programa-plano`, `oferta-programa-plano-nome` e `oferta-programa-plano-cabecalho` se ficarem sem uso. Usar os tokens do Margem System, sem valor cru.
+
+**`app/familia/checkout/CheckoutCliente.tsx`**
+- Linha 368: `faixa={{ valor: \`R$ ${VALORES_PROGRAMA_COM_ACOMPANHAMENTO[0]} a R$ ${MAXIMO_PROGRAMA}\`, depois: " + sessão" }}`, sem o `antes`.
+- Etapa `valor`: o link de acesso gratuito.
+
+**`app/familia/acesso-gratuito/AcessoGratuitoCliente.tsx`:** não muda. Confira se a página funciona para quem chega pelos links novos (com login e sem acesso liberado).
+
+## Critério de aceite
+
+- Com apelido vazio, o resultado e o fim do treino dizem "quem você ama", com a preposição certa. Nenhuma frase termina em "com ." ou "com a.".
+- Em nenhuma tela sobra "foram pensadas para a sua situação" nem "Seu programa já está montado".
+- A lista de módulos do resultado não tem cadeado.
+- LP e resultado mostram os dois jeitos, e nada nos dois cards é clicável, selecionável ou focável pelo teclado.
+- O botão principal leva ao checkout, que abre na etapa de plano como hoje. O valor só se escolhe no checkout.
+- O acompanhamento aparece como "R$ 37 a R$ 147" na LP, no resultado e no checkout, e o total mínimo vem das constantes.
+- "Pedir acesso gratuito" aparece no resultado e no checkout, e não aparece na LP.
+- Nenhum botão diz "Já quero garantir meu acesso".
+- Os nomes dos planos são "Fôlego" e "Fôlego com acompanhamento" na LP, no resultado e no checkout.
+- Preço e 14 dias aparecem uma vez por tela.
+- Sem travessão, sem gênero marcado na pessoa, sem palavra proibida.
+
+---
+
 # Briefing L1: os 8 módulos, com descrição, na LP e no painel
 
 Pré-requisito: nenhum. Não substitui nenhum briefing. Mexe na LP (`/familia`), no painel (`/familia/programa`), nos 8 arquivos de módulo e em `lib/familia/conteudo.ts`.
@@ -1937,3 +2067,1597 @@ O link de JA pode ficar nessa frase, marcado como para a pessoa que aposta.
 - "Sim, e ficou tenso" liga o `caution_mode`, e a ferramenta de adiar some na semana seguinte.
 - Nenhuma tela do check-in manda e-mail nem pede permissão de notificação.
 - Sem travessão, sem gênero marcado na pessoa, sem palavra proibida.
+
+---
+
+# Briefing N5: a trilha "O que é seu" e o bloco que abre o resultado
+
+Pré-requisito: briefings 00, N1, N2, N3 e N4 aplicados. Substitui a proposta 2.1 de `claude/programa-familia-melhorias-conteudo.md`, que fica como histórico.
+
+**Como executar.** Duas partes, com modelos diferentes, na ordem abaixo.
+
+| Parte | O que é | Modelo | Esforço |
+|---|---|---|---|
+| **1** | Os 8 blocos de módulo. Markdown puro, nenhuma linha de código. | Sonnet 5.5 | médio |
+| **2** | O bloco que abre a página de resultado. Decide estado, ordem de tela e o que aparece em modo segurança. | Opus 5 | alto |
+
+Todo o texto de tela já está escrito aqui. Não reescreva, não complete, não invente microcopy. Nada passou pelo Gemini.
+
+---
+
+## O problema
+
+Das 8 semanas, 6 são sobre {{apelido}} e 2 têm o familiar como assunto. O título da LP promete as duas coisas ("Você não precisa escolher entre ajudar quem você ama e cuidar de você") e o conteúdo entrega uma. Quem compra na segunda recebe explicação e tarefa de observação, e o benefício próprio chega na semana 7.
+
+Além disso, três coisas que só aparecem lendo o código:
+
+**1. O PHQ-4 não é coletado no diagnóstico.** Ele existe só no check-in semanal, que acontece dentro do programa, depois da compra (`docs/familia-briefings/M8b-checkin-semanal.md`, item 3). No diagnóstico o que existe é uma pergunta única, a Q11 `esgotamento`, de 0 a 3 (`lib/familia/diagnostico.ts:173`), e ela serve só para escolher entre dois textos de "Um passo para você" (`lib/familia/resultado.ts:103` e `:133`). Então o bloco novo deste briefing é construído sobre a Q11, que é o dado que existe naquele ponto. Levar o PHQ-4 para o diagnóstico é outra decisão, de outro briefing, e tem custo: são 4 perguntas a mais antes do resultado, em texto de nível 1. O bloco abaixo não depende dessa decisão.
+
+**2. O `caution_mode` nunca liga.** `lib/familia/markdown.ts:38` diz com todas as letras que não existe regra que ligue o modo, então `cautela` vale sempre "nao". Só que o texto de cautela já está escrito e já está no repositório, em quatro lugares: `modulo-03.md:109`, `modulo-04.md:69` e `:73`, `modulo-05.md:22` e `:95`, `modulo-06.md:82` e `:86`. Hoje é texto morto. Este briefing liga o modo, e o item 3 abaixo diz exatamente o que passa a aparecer.
+
+**3. Em modo segurança, a página de resultado manda a pessoa retomar um hobby.** `umPasso` é escolhido só pela Q11 (`lib/familia/resultado.ts:133`), sem olhar o modo. Quem respondeu "tenho esse medo hoje" recebe, logo abaixo do cartão de segurança, "Retome nesta semana algo que você gostava de fazer e deixou de lado". O item 2 abaixo corrige isso.
+
+---
+
+## 1. Os 8 blocos de módulo
+
+Cada módulo passa a ter um bloco fixo chamado **"O que é seu"**, com uma ação de dois minutos e um botão. Markdown comum: título `##`, parágrafos e uma linha `@botao`. O leitor de `lib/familia/markdown.ts` já entende tudo isso, e nenhum componente novo é necessário.
+
+**Onde entra, em cada arquivo de `content/familia/modulos/`:**
+
+| Arquivo | Entra logo antes de | Linha de referência hoje |
+|---|---|---|
+| `modulo-01.md` | `## Exercício da semana` | 95 |
+| `modulo-02.md` | `## Exercício da semana: o diário de 7 dias` | 52 |
+| `modulo-03.md` | `## Exercício da semana` | 96 |
+| `modulo-04.md` | `## Exercício da semana` | 59 |
+| `modulo-05.md` | `## Exercício da semana` | 99 |
+| `modulo-06.md` | `## Exercício da semana` | 80 |
+| `modulo-07.md` | `## Exercício da semana` | 61 |
+| `modulo-08.md` | `## Oito semanas depois` | 122 |
+
+**Duas regras de posição, e elas não são detalhe.**
+
+O bloco vai **sempre depois do último título de conteúdo e antes do exercício**, nunca no topo. O motivo está em `app/familia/programa/modulo/[n]/ModuloCliente.tsx:328`: a tela do módulo bloqueado monta "O que você vai ver nesta semana" com os **dois primeiros títulos `##` de primeiro nível** do arquivo. Subir o bloco troca a vitrine do módulo pago sem ninguém pedir.
+
+No módulo 8 ele fica entre o último `:::exercicio` e `## Oito semanas depois`, porque ali o encerramento é a última palavra da tela e continua sendo.
+
+### Módulo 1
+
+```
+## O que é seu
+
+Faz tempo que a pergunta da casa é sobre {{apelido}}: como chegou, de que humor, se dormiu. Quase ninguém pergunta como você andou na semana.
+
+Essa conta existe e tem nome. O sono que encurtou, as contas da casa que passaram a ser só sua responsabilidade, as amizades que foram ficando para depois.
+
+Nesta semana, antes de olhar para o padrão de {{apelido}}, olhe para o seu. Dê uma nota honesta para cada área da sua vida, inclusive as que você prefere não encarar.
+
+Dois minutos, e a nota não precisa ser bonita. Ela serve para você ter de onde sair, não para provar nada a ninguém.
+
+@botao [Dar uma nota para as 8 áreas da sua vida](/familia/programa/escala)
+```
+
+### Módulo 2
+
+```
+## O que é seu
+
+Durante sete dias você vai anotar o que {{apelido}} fez, o que veio antes e como você reagiu. Repare onde você aparece nessas anotações: quase só na linha da sua reação.
+
+Isso não é falha do diário. É o retrato de como a casa foi ficando, com uma pessoa no centro e as outras em volta, reagindo.
+
+Hoje, dois minutos para reler o que você escreveu. Em vez de procurar o padrão de {{apelido}}, procure o seu: a que horas você fica em alerta, o que você já nem conta para ninguém.
+
+Enxergar isso não tira nada de {{apelido}}. Só devolve você para dentro da história.
+
+@botao [Ver as suas anotações](/familia/programa/diario/anotacoes)
+```
+
+### Módulo 3
+
+```
+## O que é seu
+
+Falar diferente cansa. Nas primeiras vezes você vai sair da conversa com o coração batendo e com a sensação de ter engolido metade do que queria dizer.
+
+Essa metade não desaparece. Ela fica em você, e costuma voltar à noite, quando a casa silencia.
+
+Então combine uma coisa com você: depois de cada conversa difícil, dois minutos para descarregar. Pode ser anotar aqui o que você não disse, uma volta no quarteirão, ou ligar para alguém e falar de qualquer outro assunto.
+
+Guardar a frase certa é com {{apelido}}. O que você guardou é com você.
+
+@botao [Anotar um momento difícil](/familia/programa/diario)
+```
+
+### Módulo 4
+
+```
+## O que é seu
+
+Esta semana pede que você repare no que vai bem com {{apelido}} e diga isso em voz alta. Vale reparar também que ninguém tem feito isso com você.
+
+Quem passa meses no modo de resolver problema perde o costume de notar o que presta no próprio dia. Não é falta de vontade: é o que o cansaço faz com a atenção.
+
+Então, junto com o momento bom de {{apelido}}, anote um que foi seu. Um café que deu tempo de tomar com calma, uma música no caminho, cinco minutos de silêncio.
+
+Dois minutos, uma linha. Casa que só registra o que deu errado vai ficando sem memória de coisa boa.
+
+@botao [Anotar um momento bom](/familia/programa/diario)
+```
+
+### Módulo 5
+
+```
+## O que é seu
+
+Convidar expõe. Você vai estender a mão sabendo que ela pode ser recusada, e isso mexe com qualquer pessoa.
+
+O que costuma derrubar não é o não em si. É receber o não sem ter para onde ir depois, e passar a noite remoendo a conversa.
+
+Antes de convidar, decida uma coisa só: quem você vai procurar no dia em que a resposta vier, qualquer que ela seja. Uma pessoa, um grupo, um lugar para ir.
+
+Dois minutos para escolher esse nome agora, com a cabeça fria. Um não não te deixa sem chão quando você já combinou onde pisar.
+
+@botao [Escolher quem você pode procurar](/familia/programa/rede)
+```
+
+### Módulo 6
+
+```
+## O que é seu
+
+Parar de resolver pela outra pessoa libera tempo e dinheiro, e quase ninguém se prepara para isso.
+
+Nas primeiras semanas esse espaço vazio costuma incomodar mais do que a tarefa que você deixou de fazer. Resolver também era um jeito de sentir que você estava fazendo algo.
+
+Por isso, escolha agora para onde esse espaço vai. Não precisa ser grande: dormir no seu horário, um banho sem pressa, uma série que é sua.
+
+Dois minutos para virar isso numa meta pequena desta semana, com dia e hora. Espaço que fica vazio volta a ser ocupado pelo problema.
+
+@botao [Criar a sua meta desta semana](/familia/programa/escala?etapa=meta)
+```
+
+### Módulo 7
+
+```
+## O que é seu
+
+Este módulo inteiro é seu, e é o mais difícil de começar. Olhar para a própria vida depois de seis semanas olhando para {{apelido}} costuma doer mais do que as pessoas esperam.
+
+A conta do que ficou de lado só aparece quando alguém para para ver: os planos adiados, o corpo, as pessoas que sumiram da sua semana sem briga nenhuma.
+
+Dar as notas de novo serve para isso, e não para se comparar com o módulo 1. Algumas áreas vão ter subido, outras não, e as duas coisas são informação.
+
+Dois minutos para a primeira nota. Depois siga, uma área por vez, sem arredondar para cima.
+
+@botao [Dar notas de novo para as 8 áreas da sua vida](/familia/programa/escala)
+```
+
+### Módulo 8
+
+```
+## O que é seu
+
+O programa acaba aqui, e a situação de {{apelido}} provavelmente continua em aberto. As duas coisas podem ser verdade ao mesmo tempo.
+
+O que você aprendeu em oito semanas não fica com {{apelido}}, fica com você: o jeito de falar, o que você devolveu, as metas que você cumpriu em semanas difíceis.
+
+O que sustenta isso depois não é força de vontade, é companhia. Quem segue com um grupo, um profissional ou uma pessoa de confiança por perto costuma manter o que construiu por muito mais tempo.
+
+Dois minutos para escolher onde você vai continuar aparecendo depois desta semana. Um grupo de familiares, uma conversa marcada, um nome no celular.
+
+@botao [Ver grupos para familiares](/redes-de-apoio)
+```
+
+### Sobre os botões, para ninguém "consertar" depois
+
+Todos os oito destinos já existem. Nenhuma rota nova, nenhum parâmetro inventado:
+
+| Módulo | Destino | Já usado em |
+|---|---|---|
+| 1 e 7 | `/familia/programa/escala` | painel e exercício dos módulos 1 e 7 |
+| 2 | `/familia/programa/diario/anotacoes` | exercício do módulo 2 |
+| 3 e 4 | `/familia/programa/diario` | exercícios dos módulos 1 e 2 |
+| 5 | `/familia/programa/rede` | exercício do módulo 7 |
+| 6 | `/familia/programa/escala?etapa=meta` | painel (`PainelCliente.tsx:306`) |
+| 8 | `/redes-de-apoio` | módulos 5 e 7 |
+
+Nos módulos 1 e 7 o botão leva à mesma ferramenta do primeiro card do exercício, e isso é de propósito: nesses dois módulos o bloco é a espinha, e o botão existe para que a pessoa abra a escala pelo motivo certo, que é ela mesma. Em nenhum outro módulo o botão repete a ferramenta da semana.
+
+### Uma linha a mais no módulo 1
+
+A lista "O que vem pela frente" (`modulo-01.md:72`) descreve o programa antigo. Acrescente uma linha ao fim do bloco `:::se seguranca=nao`, depois do item 7:
+
+```
+Em todas as oito semanas, uma parte do módulo é sobre você, e não sobre {{apelido}}.
+```
+
+No bloco `:::se seguranca=sim` (linha 86), acrescente a mesma linha depois do item 2.
+
+---
+
+## 2. O bloco que abre a página de resultado
+
+**Parte de Opus 5, esforço alto.** É aqui que está a lógica.
+
+### O que muda na tela
+
+A página de resultado passa a ter, como primeira seção depois do topo verde, um bloco chamado **"O que isso está fazendo com você"**. A ordem nova fica assim:
+
+1. Topo (h1 "Seu mapa da situação" e acolhimento), como é hoje
+2. **"O que isso está fazendo com você"** (novo)
+3. "O que joga a seu favor" e "Ponto de atenção"
+4. "Sua primeira conversa", ou "Sua segurança vem primeiro" em modo segurança
+5. Avisos
+6. Banner de oferta ou "Começar o módulo 1"
+
+**A seção "Um passo para você" deixa de existir como seção própria.** O texto dela (`ResultadoVisao.tsx:116`) passa para dentro do bloco novo, como último parágrafo, sob o rótulo **"O seu passo desta semana"**. Hoje ela aparece depois do roteiro da conversa, solta, e é a única parte da página que fala do familiar. Dentro do bloco novo ela fica no lugar certo, e a página deixa de ganhar uma seção: ela troca de lugar.
+
+**Em modo segurança o passo não aparece.** O passo da pessoa, nesse caso, é o cartão de segurança que vem logo abaixo, e ele já diz o que fazer. É isso que corrige o furo 3 do começo deste briefing.
+
+### Os três modos
+
+```ts
+// lib/familia/diagnostico.ts, ao lado de calcularSafetyMode (linha 198).
+
+// Q8 "já aconteceu no passado" ou Q9 "sim, raramente": houve medo ou agressão, e não é hoje.
+// Violência passada é o preditor mais forte de violência futura, então o programa fica mais
+// cuidadoso, nunca menos. O check-in semanal (briefing M8b, item 5) soma a este valor quando a
+// pessoa responde "Sim, e ficou tenso" na ferramenta de adiar.
+export function calcularCautela(respostas: Respostas, cautelaDoCheckin = false) {
+  if (calcularSafetyMode(respostas)) return false; // segurança vence cautela
+  return cautelaDoCheckin || respostas.medo === "passado" || respostas.agressao === "raramente";
+}
+
+export type Modo = "normal" | "cautela" | "seguranca";
+
+export function calcularModo(respostas: Respostas, cautelaDoCheckin = false): Modo {
+  if (calcularSafetyMode(respostas)) return "seguranca";
+  return calcularCautela(respostas, cautelaDoCheckin) ? "cautela" : "normal";
+}
+```
+
+`safetyMode` continua existindo em `Resultado` exatamente como está (`resultado.ts:13`), porque o painel, o rastreio e o banner de oferta usam esse campo. `modo` entra ao lado, não no lugar.
+
+### O que isso liga nos módulos
+
+O `contexto.cautela` que alimenta os `:::se cautela=sim` passa a vir de `calcularCautela`. Isso acende quatro textos que já estão escritos no repositório e que nunca apareceram. Leia antes de subir, porque a partir daqui eles vão para a tela:
+
+| Onde | O que passa a acontecer em cautela |
+|---|---|
+| `modulo-03.md:109` | dentro do item "Usar uma frase nova na vida real", entra "Se o clima estiver tenso, deixe para outro dia. Não existe hora certa com medo." |
+| `modulo-04.md:69` e `:73` | a ferramenta de adiar sai do exercício e o card vira "Esta parte fica para quando você tiver conversado com um profissional." |
+| `modulo-05.md:22` | o módulo do convite abre com o card de cautela e o carrossel de psicólogos |
+| `modulo-05.md:95` | antes do exercício, entra "Se você tem receio da reação, faça o convite com outra pessoa por perto ou converse antes com um profissional." |
+| `modulo-06.md:86` | o item "Escolher o que devolver" ganha a linha sobre escolher algo que não envolva conversa direta |
+| `ModuloCliente.tsx:469` | o carrossel do fim dos módulos 5 e 6 sai, porque já aparece no texto |
+
+Quem marcou "já aconteceu no passado" na Q8 hoje recebe o programa idêntico a quem nunca teve medo em casa. A única diferença atual é o `FAVOR_SEM_VIOLENCIA` não aparecer na lista do resultado (`resultado.ts:88`). Se você preferir que a cautela valha só na página de resultado e não nos módulos, é uma linha: passe `cautela: false` no contexto do módulo. Prefiro não, e o motivo é que todos os seis textos acima são mais cuidadosos, nenhum é mais arriscado.
+
+### Os textos
+
+Entram em `content/familia/resultado-blocos.md`, numa seção nova chamada `## O que isso está fazendo com você`, antes da seção "Um passo para você". **Todos são nível 1** do briefing N2: leia em voz alta antes de subir.
+
+**Cada linha do bloco é um parágrafo na tela.** Use `linhas()` e não `texto()` em `resultado.ts`: `texto()` junta tudo com espaço e entregaria um parágrafo único de seis frases, que é o oposto do que estes blocos precisam ser. Por isso `comoAfeta` é `string[]`, e a tela renderiza um `<p className="text-large">` por item. As linhas em branco dentro do bloco são ignoradas pelo `lerBlocos`, então pode escrever com ou sem elas.
+
+```
+[AFETA_NORMAL_LEVE]
+Você contou que o cansaço, a ansiedade ou o sono ruim apareceram em alguns dias das últimas duas semanas. É menos do que muita gente que chega aqui carrega, e é um bom lugar para começar.
+Vale saber como isso costuma andar: o desgaste de quem convive com o problema sobe devagar, sem aviso, e quase sempre é percebido tarde. Quem acompanha a própria semana percebe antes.
+Por isso o programa tem duas partes que andam juntas. Uma é o que você pode fazer com {{apelido}}, e a outra é o que acontece com você, que vale por si, aconteça o que acontecer com {{apelido}}.
+
+[AFETA_NORMAL_PESADO]
+Você contou que o cansaço, a ansiedade ou o sono ruim apareceram na maior parte dos dias das últimas duas semanas. Isso não é fraqueza nem exagero: é o que acontece com um corpo que passa meses em estado de alerta.
+Quem vive isso costuma achar que vai cuidar de si quando a situação de {{apelido}} melhorar. Na prática funciona ao contrário, porque pouca gente consegue manter a calma numa conversa difícil estando no limite.
+Então o seu cuidado não entra no fim da fila. Ele começa nesta semana, junto com o resto.
+
+[AFETA_CAUTELA]
+Você contou que já houve medo ou agressão em casa, mesmo que não seja hoje. Isso muda o que vem a seguir, e muda para mais cuidado, não para menos.
+O corpo de quem já passou por isso aprende a ficar de guarda, e ficar de guarda cansa até nos dias calmos. Boa parte do que aparece de noite tem essa explicação, e não falta de motivo.
+Nas próximas semanas, algumas partes vêm com um aviso antes: mudar o jeito de reagir em casa pode mexer com o clima, e vale conversar com um profissional antes de mexer. O seu plano de segurança fica salvo e disponível a qualquer momento, com ou sem o programa.
+
+[AFETA_SEGURANCA]
+Você contou que esse medo existe hoje. Antes de qualquer coisa sobre {{apelido}}, vale dizer o que viver assim faz com uma pessoa.
+Viver em alerta cobra do corpo todos os dias: o sono fica raso, a atenção fica presa na porta, o estômago fecha. Isso não é frescura nem falta de amor por {{apelido}}, é o que acontece com qualquer pessoa que não se sente protegida dentro de casa.
+E costuma vir com uma conta a mais, que é a vergonha de sentir alívio quando a casa está vazia. Esse alívio não diz nada contra você.
+Logo abaixo, o programa começa pela sua segurança, e não por uma conversa. Essa ordem não é um atraso no caminho: ela é o caminho.
+```
+
+### Qual texto entra, e com o que embaixo
+
+| Modo | Texto | "O seu passo desta semana" | Extra |
+|---|---|---|---|
+| normal, Q11 igual a 0 ou 1 | `AFETA_NORMAL_LEVE` | `PASSO_MODERADO` | nada |
+| normal, Q11 igual a 2 ou 3 | `AFETA_NORMAL_PESADO` | `PASSO_ESGOTADO` | nada |
+| cautela, Q11 igual a 0 ou 1 | `AFETA_CAUTELA` | `PASSO_MODERADO` | botão secundário "Ver o que fazer em caso de risco" para `/familia/seguranca` |
+| cautela, Q11 igual a 2 ou 3 | `AFETA_CAUTELA` | `PASSO_ESGOTADO` | o mesmo botão |
+| segurança | `AFETA_SEGURANCA` | não aparece | nada, porque o cartão de segurança vem logo abaixo |
+
+A regra da Q11 é a que já existe no código (`esgotado = Number(respostas.esgotamento ?? "0") >= 2`). Nenhum corte novo, nenhuma faixa nova.
+
+---
+
+## Código
+
+**Parte 1, markdown apenas:**
+- `content/familia/modulos/modulo-01.md` a `modulo-08.md`: o bloco "O que é seu" na posição da tabela do item 1, e as duas linhas novas em `modulo-01.md`.
+
+**Parte 2:**
+- `lib/familia/diagnostico.ts`: `calcularCautela`, `calcularModo` e o tipo `Modo`, ao lado de `calcularSafetyMode` (linha 198).
+- `lib/familia/resultado.ts`: `Resultado` ganha `modo: Modo` e `comoAfeta: string[]`, preenchido com `linhas()`. `montarResultado` ganha o modo por parâmetro, no lugar do `safetyMode: boolean` de hoje (linha 99), e continua preenchendo `safetyMode` a partir dele. `umPasso` continua como está na linha 133.
+- `content/familia/resultado-blocos.md`: a seção nova com os quatro blocos.
+- `app/familia/resultado/ResultadoVisao.tsx`: a seção nova depois do topo (linha 50), e a remoção da seção "Um passo para você" de hoje (linhas 114 a 119), cujo texto passa para dentro da seção nova.
+- `app/familia/resultado/exemplo/ExemploCliente.tsx` e `ResultadoCliente.tsx`: passam o modo para `montarResultado`.
+- `app/familia/programa/modulo/[n]/ModuloCliente.tsx`: `contexto.cautela` deixa de ser fixo e passa a vir do diagnóstico.
+- `lib/familia/markdown.ts`: apagar o comentário das linhas 38 e 39, que diz que a regra não existe.
+- `docs/revisao-conteudo.md`: os quatro blocos `AFETA_*` entram na lista "a publicar", como nível 1.
+- Teste de `montarResultado` em Node: um caso por modo, conferindo que em segurança o `umPasso` não vai para a tela.
+
+---
+
+## Critério de aceite
+
+- Os 8 módulos têm o bloco "O que é seu", sempre depois do último título de conteúdo e antes do exercício.
+- A tela do módulo bloqueado continua mostrando os mesmos dois títulos de antes, em nenhum módulo "O que é seu" aparece ali.
+- Os 8 botões abrem as rotas da tabela, e nenhuma rota nova foi criada.
+- A página de resultado abre, depois do topo, com "O que isso está fazendo com você".
+- Não existe mais uma seção "Um passo para você" solta na página; o passo aparece dentro do bloco novo, com o rótulo "O seu passo desta semana".
+- O bloco novo aparece com um parágrafo por linha do arquivo, nunca como um parágrafo único.
+- Em modo segurança nenhum passo de autocuidado aparece na página.
+- Em modo cautela o bloco traz o botão para `/familia/seguranca`.
+- Os `:::se cautela=sim` dos módulos 3, 4, 5 e 6 aparecem para quem marcou "já aconteceu no passado" na Q8 ou "sim, raramente" na Q9.
+- Nenhum número de escore, nem as palavras leve, moderado, grave, ansiedade ou depressão, aparece na tela.
+- Os quatro blocos `AFETA_*` estão em `docs/revisao-conteudo.md` como nível 1.
+- Sem travessão, sem gênero marcado na pessoa que lê, sem palavra proibida.
+
+---
+
+# Briefing N6: raiva, luto e a vontade de ir embora
+
+Pré-requisito: briefings 00, N1, N2, N3, N4 e **N5 aplicado antes deste**, porque os dois mexem no mesmo ponto do módulo 6. Substitui a proposta 2.2 de `claude/programa-familia-melhorias-conteudo.md`.
+
+**Sessão 5 · Claude Code · Sonnet 5.5 · esforço médio.** Markdown nos módulos 2, 6 e 7, mais uma página estática no molde de `app/familia/seguranca/page.tsx`. Todo o texto está escrito aqui. Nada passou pelo Gemini.
+
+**Tudo neste briefing é nível 1** do briefing N2: leia em voz alta antes de subir. Entra inteiro em `docs/revisao-conteudo.md`, na lista "a publicar".
+
+---
+
+## O problema
+
+O programa diz "a culpa não é sua" no módulo 1 e segue para a técnica. Em nenhum dos oito módulos existe uma linha sobre a raiva, sobre a vergonha de sentir raiva, sobre a saudade da pessoa que {{apelido}} era, sobre o alívio quando a casa está vazia, ou sobre o pensamento de ir embora.
+
+São esses os assuntos da cabeça de quem chega. A pessoa lê oito semanas de habilidade de comunicação e não encontra em lugar nenhum a própria terça-feira à noite.
+
+E tem um ponto que não é de adesão, é de ética: **o programa tem um viés silencioso de permanência.** Em nenhum texto se admite que, para parte das famílias, a resposta é se afastar, sair de casa ou parar de sustentar. Um programa que nunca admite a saída é um programa que, no limite, serve a quem usa, e não a quem cuida.
+
+---
+
+## Onde cada bloco encaixa, e por quê
+
+| Bloco | Onde | Por quê |
+|---|---|---|
+| **Você também tem raiva** | `modulo-02.md`, entre `## As suas reações` (linha 40) e `## As janelas` (linha 46) | É a semana em que a pessoa anota, por sete dias, cada momento difícil. Anotar remexe, e a raiva aparece justamente aí. O módulo 2 também é o mais leve dos oito (3,5 KB contra 6 KB do módulo 6), então tem espaço. |
+| **Saudade de quem ainda está aqui** | `modulo-07.md`, entre `## Lugares que acolhem familiares` (linha 43) e `## O que dá sentido aos seus dias` (linha 55) | É a semana de olhar para a própria vida, e a régua de realidade do N4 já avisa que a conta do que ficou de lado costuma doer aí. Nomear a perda antes do bloco sobre o que dá sentido aos dias deixa os dois no lugar certo. |
+| **E se eu quiser sair** | Texto inteiro numa página livre, `/familia/decisao`. No `modulo-06.md`, um bloco curto que leva até ela, entre `## Cuidar do dinheiro da casa` (linha 70) e o bloco "O que é seu" do briefing N5 | O módulo 6 é literalmente "sair do papel de quem resolve tudo", então é ali que a distinção entre as duas saídas fica concreta. Mas o módulo 6 tem `bloqueado_em_modo_seguranca: true`: quem respondeu que tem medo hoje nunca abre esse módulo, e é exatamente quem mais precisa deste texto. Por isso o conteúdo vive fora do módulo, numa página livre, sem compra e sem modo. |
+
+**Ordem no módulo 6, para os dois briefings não colidirem:** `## Cuidar do dinheiro da casa`, depois `## E se eu quiser sair` (este briefing), depois `## O que é seu` (briefing N5), depois `## Exercício da semana`.
+
+**Posição e vitrine.** Nenhum dos três blocos pode ficar entre os dois primeiros títulos `##` do arquivo, porque a tela do módulo bloqueado monta "O que você vai ver nesta semana" com esses dois (`app/familia/programa/modulo/[n]/ModuloCliente.tsx:328`). Nas posições acima isso está respeitado. "Você também tem raiva" é a frase mais reconhecível que o programa tem, e ainda assim não vira vitrine de venda: conteúdo pesado não é chamariz.
+
+---
+
+## 1. Você também tem raiva
+
+Entra em `content/familia/modulos/modulo-02.md`.
+
+```
+## Você também tem raiva
+
+Tem dia em que você faz tudo certo. E tem dia em que você olha {{apelido}} dormindo e sente uma raiva que assusta.
+
+Quase ninguém fala disso em voz alta. A gente fala do medo, da preocupação, do cansaço. A raiva fica guardada, porque parece feia em quem ama.
+
+Ela não é feia. Ela é a conta de tudo o que foi deixado de lado por causa disso: as noites, o dinheiro, as festas de família, os planos que não aconteceram. Sentir raiva não diz nada sobre o tamanho do seu amor.
+
+O que complica não é sentir. É descarregar na hora e pagar depois com culpa, e recomeçar tudo no dia seguinte.
+
+Entre sentir e descarregar cabe um intervalo, e é esse intervalo que a gente vai treinar. Na próxima vez, antes de responder, saia do ambiente: um copo de água, a varanda, a escada, qualquer coisa que coloque dois minutos entre você e a frase que já está pronta.
+
+Esses dois minutos não resolvem o problema de {{apelido}}. Eles evitam que o resto do dia seja sobre pedir desculpa.
+
+:::se seguranca=sim
+Se a raiva dentro de casa já virou medo ou agressão, sair do ambiente não é um intervalo, é segurança. Veja o seu plano antes de qualquer conversa.
+
+[Ver o que fazer em caso de risco](/familia/seguranca)
+:::
+```
+
+---
+
+## 2. Saudade de quem ainda está aqui
+
+Entra em `content/familia/modulos/modulo-07.md`.
+
+```
+## Saudade de quem ainda está aqui
+
+Existe um tipo de saudade que não tem nome e não tem velório: a saudade de alguém que continua ali, do outro lado da mesa.
+
+Você sente falta das conversas que vocês tinham, do jeito que {{apelido}} ria, dos planos que vocês faziam juntos. E, quando sente, parece exagero, porque a pessoa não morreu.
+
+Não é exagero. Perder a convivência com alguém que continua vivo é uma perda de verdade, e ela merece ser chorada.
+
+Dar esse nome costuma aliviar mais do que tentar não pensar. Quem chora a perda para de esperar que o dia seguinte devolva a pessoa de antes, e volta a enxergar quem está ali hoje.
+
+Nada disso quer dizer que {{apelido}} não volte a ser quem era. Quando o uso diminui, parte do que vocês tinham costuma voltar, e parte volta diferente. Chorar agora não é desistir de {{apelido}}.
+```
+
+Sem botão: o bloco "O que é seu" do briefing N5, no mesmo módulo, já leva à escala.
+
+---
+
+## 3. E se eu quiser sair
+
+### 3a. O bloco curto, no módulo 6
+
+Entra em `content/familia/modulos/modulo-06.md`.
+
+```
+## E se eu quiser sair
+
+Em algum momento, quase toda pessoa que cuida pensa em ir embora. E quase sempre esse pensamento vem com vergonha, como se pensar já fosse traição.
+
+Pensar não é traição. E este programa não existe para te convencer a ficar.
+
+Vale separar duas saídas, porque elas são bem diferentes. Uma é sair da relação. A outra é sair do papel de quem resolve tudo, continuando na relação.
+
+A segunda é o assunto desta semana, e é o que muita gente que chega aqui está procurando sem ter nome para isso.
+
+A primeira é uma decisão sua, e não cabe a este programa opinar sobre ela. O que cabe é deixar escrito, num lugar que você encontra quando precisar, o que ajuda ter na mão antes de decidir qualquer uma das duas.
+
+@botao [Ver o que ter na mão antes de decidir](/familia/decisao)
+```
+
+### 3b. A página livre, em `/familia/decisao`
+
+Página estática, no molde de `app/familia/seguranca/page.tsx`: sem compra, sem login, sem modo de segurança, sem diagnóstico. Indexável, como a página de segurança. Título da aba: `Fôlego · Margem`, como manda o briefing N1.
+
+O `{{apelido}}` não existe nesta página, porque ela abre fora do programa, sem diagnóstico carregado. O texto abaixo já está escrito sem a variável.
+
+**Título da página:** E se eu quiser sair
+**Descrição, abaixo do título:** Duas saídas diferentes, o que ajuda ter na mão antes de decidir, e onde buscar orientação de graça.
+
+```
+Em algum momento, quase toda pessoa que cuida pensa em ir embora. E quase sempre esse pensamento vem com vergonha, como se pensar já fosse traição.
+
+Pensar não é traição. Esta página não existe para te convencer a ficar nem para te convencer a sair.
+
+## Duas saídas, que são bem diferentes
+
+Uma é sair da relação: morar em outro lugar, se separar, se afastar de quem você ama.
+
+A outra é sair do papel de quem resolve tudo, continuando na relação: parar de pagar as contas que não são suas, parar de dar desculpas no trabalho de outra pessoa, deixar de ser a única pessoa que segura a casa.
+
+As duas são escolhas legítimas, e nenhuma das duas é mais corajosa que a outra. Muita gente chega aqui achando que só existe a primeira, e descobre que o que queria era a segunda.
+
+O programa trabalha a segunda, semana por semana, principalmente no módulo 6. A primeira é sua, e ninguém precisa autorizar.
+
+## Antes de decidir qualquer uma das duas
+
+- Escolha um dia calmo. Decisão tomada no pior dia da semana quase sempre é revista no melhor, e o contrário também acontece.
+- Converse com uma pessoa de fora antes: alguém de confiança, um profissional, um grupo de familiares.
+- Saiba quais dívidas são suas, quais são da outra pessoa e quais são das duas. Isso muda tudo nas duas saídas.
+- Guarde os seus documentos e os das crianças num lugar que só você sabe.
+
+## Se for sair da relação
+
+- Onde você vai ficar, mesmo que seja por alguns dias.
+- Uma conta no seu nome, para receber o que é seu.
+- Cópia dos documentos de todo mundo: identidade, CPF, certidão de nascimento, carteira de vacinação das crianças, comprovante de residência.
+- Celular, carregador, chaves, remédios de uso contínuo e algum dinheiro separado.
+- Quem vai saber antes, e quando.
+
+Se houver medo da reação, não avise sem ter alguém por perto, e não avise dentro de casa. Nesse caso, a ordem muda: primeiro a sua segurança, depois a conversa.
+
+## Se for sair do papel de resolver tudo
+
+- Escolha uma coisa só para parar de fazer, a mais simples da lista.
+- Avise antes, com calma, num momento sem efeito, e sem acusar ninguém.
+- Espere piorar antes de melhorar. Nos primeiros dias vem reclamação e a sensação de estar sendo cruel.
+- Não volte a discutir o assunto a cada cobrança. Você já avisou uma vez, e isso é suficiente.
+
+O módulo 6 do programa trata disso em detalhe, com as quatro perguntas que ajudam a escolher o que devolver.
+
+## Onde buscar orientação de graça
+
+- **Defensoria Pública da sua cidade:** orienta sobre separação, guarda, pensão e divisão de dívida, sem custo, e pode pedir medida protetiva ao juiz quando há violência.
+- **CRAS:** o centro de assistência social do seu bairro, que orienta sobre direitos, benefícios e serviços da cidade.
+- **CREAS:** atende famílias e pessoas em situação de violência ou violação de direitos, com escuta, orientação jurídica e apoio para conseguir documentos.
+- **Ligue 180:** a Central de Atendimento à Mulher funciona 24 horas, todos os dias, orienta e encaminha para os serviços da rede. Qualquer pessoa pode ligar, inclusive para pedir orientação sobre outra pessoa.
+- **190:** se você estiver em perigo agora.
+
+@botao [Ver serviços perto de mim](/redes-de-apoio?tipo=publicas)
+
+## E se você decidir ficar
+
+Ficar também é uma decisão, e vale o mesmo que as outras duas. Ficar por escolha é diferente de ficar por não ver saída, e a diferença entre as duas coisas aparece no dia a dia.
+
+Essa decisão também não é definitiva. Dá para rever em um mês, em seis, em um ano, e rever não é fraqueza: é informação nova chegando.
+```
+
+### 3c. O link no painel
+
+O conteúdo vai ser procurado num dia que não é o dia do módulo. Entra um card na seção "Ferramentas" do painel (`app/familia/programa/PainelCliente.tsx:262`), como último item, no mesmo padrão visual dos outros três:
+
+- Título: **E se eu quiser sair**
+- Botão secundário: **"Ver o que ter na mão antes de decidir"**, para `/familia/decisao`
+
+Aparece sempre, inclusive em modo de segurança, e não depende de módulo liberado.
+
+### 3d. O link na página de segurança
+
+Em `app/familia/seguranca/page.tsx`, depois dos contatos de emergência, nunca antes deles:
+
+- Link: **"Se você estiver pensando em ir embora"**, para `/familia/decisao`
+
+Quem chega na página de segurança pelo resultado em modo segurança é quem mais precisa achar esse texto, e é quem não vai abrir o módulo 6.
+
+---
+
+## O que não entra neste texto, em nenhuma revisão futura
+
+Esta lista existe para ninguém "melhorar" o bloco depois e quebrar a decisão.
+
+**Nada de linguagem de codependência.** Sem as palavras codependência e codependente, sem "facilitador", sem "amar demais", sem "você se anulou", sem "aprenda a se amar primeiro", sem "solte a mão". A Margem não adota esse vocabulário, e o modelo de estresse e enfrentamento que sustenta esta parte do programa rejeita essa explicação: o papel de quem resolve tudo foi construído pela situação, não por um defeito de quem cuida.
+
+**Nada de recomendação.** O texto oferece critérios, nunca conselho sobre ficar ou sair. Se alguma frase futura começar com "o melhor é", ela está errada.
+
+**Nada de promessa.** Nem de que sair resolve, nem de que ficar melhora.
+
+**Nenhum passo a passo de como internar alguém.** Internação é assunto do briefing N9.
+
+---
+
+## Código
+
+- `content/familia/modulos/modulo-02.md`: o bloco "Você também tem raiva" na posição da tabela.
+- `content/familia/modulos/modulo-07.md`: o bloco "Saudade de quem ainda está aqui".
+- `content/familia/modulos/modulo-06.md`: o bloco curto "E se eu quiser sair", antes do bloco "O que é seu" do N5.
+- `app/familia/decisao/page.tsx`: página nova, estática, texto do item 3b inline, com o comentário `// nivel-1` no topo. Sem `robots: noindex`.
+- `app/familia/programa/PainelCliente.tsx`: o card novo no fim da seção "Ferramentas".
+- `app/familia/seguranca/page.tsx`: o link do item 3d, depois de `ContatosEmergencia`.
+- `docs/revisao-conteudo.md`: os três blocos e a página nova na lista "a publicar", como nível 1.
+
+---
+
+## Critério de aceite
+
+- "Você também tem raiva" está no módulo 2, depois de "As suas reações", e aparece também em modo de segurança, com o parágrafo extra e o link do plano.
+- "Saudade de quem ainda está aqui" está no módulo 7, antes de "O que dá sentido aos seus dias".
+- No módulo 6, a ordem é: Cuidar do dinheiro da casa, E se eu quiser sair, O que é seu, Exercício da semana.
+- Nenhum dos três blocos aparece em "O que você vai ver nesta semana" de nenhum módulo bloqueado.
+- `/familia/decisao` abre sem login, sem compra e em modo de segurança, e não quebra sem diagnóstico carregado.
+- A página não contém `{{apelido}}`.
+- A página separa as duas saídas, tem o checklist das duas e os cinco serviços, e não recomenda nenhum dos dois caminhos.
+- O card "E se eu quiser sair" aparece no painel, inclusive em modo de segurança.
+- Na página de segurança, o link novo vem depois dos contatos de emergência.
+- Nenhuma ocorrência das palavras codependência, codependente ou facilitador em `content/familia` e em `app/familia`.
+- Sem travessão, sem gênero marcado na pessoa que lê, sem palavra proibida.
+
+---
+
+# Briefing N9: internação e as substâncias separadas
+
+Pré-requisito: briefings 00, 00d, N1, N2, N3 e N4 aplicados, mais o conteúdo v2 e as ferramentas partes 1 e 2. Não substitui briefing nenhum: acrescenta conteúdo novo.
+
+**Nível 1 do briefing N2.** Nenhum texto daqui sobe sem o fundador ler em voz alta, e cada bloco entra em `/docs/revisao-conteudo.md` na lista "a publicar", com a data e o nível.
+
+**Toda lei, prazo, número e nome de serviço deste briefing foi conferido na fonte em 24/11/2026.** A lista está no fim do arquivo. Nada saiu de memória.
+
+**Sessão 5 · Claude Code · Sonnet 5.5, esforço médio, para o markdown; Opus 5, esforço alto, para os itens 1, 2 e 3 do "Código".**
+
+Todo o texto de tela deste briefing está escrito aqui. Não reescreva, não complete, não invente microcopy.
+
+## O problema
+
+Quatro furos, confirmados no repositório em 24/11/2026.
+
+**1. Internação não existe no produto.** `grep -ril "interna" content/familia` devolve zero. É a pergunta número um de familiar brasileiro, e quem pesquisa isso encontra clínica vendendo remoção, às vezes na mesma ligação em que pediu informação. Hoje a Margem não tem uma linha para proteger essa pessoa.
+
+**2. "Outras drogas" é um balde só.** A variação por substância existe em três arquivos e trata crack, cocaína, calmante e maconha como a mesma coisa:
+
+| Arquivo | Bloco | O que diz hoje |
+|---|---|---|
+| `content/familia/modulos/modulo-01.md` | `:::se problema=outras_drogas` | "As drogas mexem com o sistema de recompensa do cérebro." |
+| `content/familia/modulos/modulo-05.md` | `:::se problema=outras_drogas` | "O medo de exposição ou de problema com a lei costuma pesar." |
+| `content/familia/modulos/modulo-06.md` | `:::se problema=outras_drogas` | "Cobrir compromissos cancelados, dar dinheiro sem saber para onde vai." |
+
+`grep -ril "crack\|cocaína\|maconha\|remédio\|calmante" content/familia` devolve zero nos três casos. E, em `lib/familia/resultado.ts`, a função `avisos` tem card para álcool diário e para apostas, e **nenhum** para outras drogas: o comentário da função diz com todas as letras "outras drogas: sem card".
+
+**3. O dado da substância não existe.** `lib/familia/diagnostico.ts` tem `export type Problema = "alcool" | "outras_drogas" | "apostas"` e nada abaixo disso. Sem um campo novo, nenhum texto pode variar por substância. O caminho já está aberto: a Q3b `frequencia_alcool` é uma pergunta condicional que só aparece para quem marcou álcool, com `condicao: (respostas) => Boolean(respostas.problemas?.includes("alcool"))`, limpeza no fim de `sanitizarRespostas` e card de aviso próprio. A Q3c deste briefing é a mesma coisa, para outras drogas.
+
+**4. Falta o conteúdo de segurança de dívida com terceiro e de desaparecimento.** `grep -ril "desapare" content/familia` devolve zero. E a especificação do C7 (ferramentas parte 2) lista, para quem marcou outras drogas, o chip **"Resolver problemas com pessoas a quem {{apelido}} deve"** entre as coisas que o familiar deve escolher parar de fazer, como exercício da semana. Isso está errado e é perigoso: negociar com quem cobra dívida de droga não é uma tarefa que a família devolve numa semana, é segurança da casa inteira. O C7 ainda não foi construído (o `modulo-06.md` tem `acao=marcar` nos três exercícios), então dá para corrigir antes de existir.
+
+## O que fazer
+
+### 1. Q3c do diagnóstico: qual substância
+
+Pergunta condicional nova, depois da Q3b (`frequencia_alcool`) e antes da Q4 (`tempo`). Só aparece para quem marcou "Outras drogas" na Q3. Múltipla escolha, porque é comum ser mais de uma.
+
+> **Quais dessas te preocupam mais?**
+>
+> - Crack ou cocaína
+> - Remédio de farmácia (calmante, remédio para dormir, remédio para dor)
+> - Maconha
+> - Outra
+> - Não sei
+
+Texto de apoio abaixo da pergunta: "Isso muda o que o programa te mostra. Pode marcar mais de uma."
+
+Valores: `crack_cocaina`, `remedio`, `maconha`, `outra`, `nao_sei`.
+
+### 2. A página sobre internação
+
+Página livre nova em `/familia/internacao`, no mesmo padrão da `/familia/decisao` que o briefing N6 criou: página estática, texto inline, sem login e sem compra. **Aberta para qualquer pessoa, sempre**, pelo mesmo critério da página de segurança: é conteúdo que protege a família de ser explorada num dia de desespero. Link no módulo 5 e na página de segurança.
+
+Como a página abre sem diagnóstico carregado, ela não usa `{{apelido}}` em lugar nenhum, igual à `/familia/decisao`.
+
+Texto final:
+
+> # Internação: o que a lei permite e o que ela não resolve
+>
+> Se existe risco à vida agora, isso é emergência: ligue 192. O resto desta página pode esperar uma hora.
+>
+> ## Os tipos que existem
+>
+> A Lei 10.216, de 2001, prevê três tipos de internação em saúde mental. **Voluntária**, quando a própria pessoa aceita e declara isso por escrito. **Involuntária**, sem o consentimento da pessoa, a pedido de um familiar ou do responsável legal. **Compulsória**, determinada por um juiz.
+>
+> Para álcool e outras drogas existe uma lei específica, a Lei 13.840, de 2019, que mudou a Lei 11.343, de 2006. Ela trata de dois tipos, voluntária e involuntária, e dá o detalhe que mais importa para a sua decisão.
+>
+> ## O que a lei exige numa internação involuntária
+>
+> - Quem formaliza é o **médico responsável**, registrado no CRM do estado onde fica o serviço. A decisão não é da família.
+> - O médico só pode indicar depois de avaliar o tipo de droga, o padrão de uso e a **impossibilidade comprovada** de outro caminho de tratamento.
+> - Só pode acontecer em **unidade de saúde ou hospital geral**, com equipe de várias áreas.
+> - Dura o tempo necessário à desintoxicação, com **prazo máximo de 90 dias**, e o fim é determinado pelo médico responsável.
+> - A família ou o representante legal **pode pedir ao médico a interrupção a qualquer momento**.
+> - Toda internação e toda alta são informadas em até **72 horas** ao Ministério Público, à Defensoria Pública e aos órgãos de fiscalização.
+> - Qualquer internação só é indicada quando os recursos fora do hospital não deram conta.
+>
+> Em resumo: a decisão é médica, tem prazo, é fiscalizada e pode ser interrompida. Quem te oferecer qualquer coisa diferente disso está oferecendo o que a lei não permite.
+>
+> ## Comunidade terapêutica não interna
+>
+> A lei proíbe qualquer modalidade de internação nas comunidades terapêuticas acolhedoras. O que existe ali é **acolhimento**: a pessoa aceita e assina, passa por avaliação médica antes de entrar, e o isolamento físico é proibido. Quem precisa de cuidado médico contínuo não pode ser acolhido ali, e sim encaminhado para a rede de saúde.
+>
+> ## O que a internação não resolve
+>
+> Desintoxicar é tirar a substância do corpo. O que decide o resto é o depois: para qual casa a pessoa volta, com quais horários, com quais companhias e com qual acompanhamento. Internação sem esse depois costuma comprar tempo, não mudança.
+>
+> E ela acontece sem o acordo da pessoa. Isso quase sempre custa confiança entre vocês dois, que é justamente o que o resto do programa está construindo. Não é um argumento contra: é uma conta para você fazer com os olhos abertos.
+>
+> ## Antes de fechar com qualquer clínica, pergunte e anote
+>
+> 1. **Isso é serviço de saúde ou comunidade terapêutica?** São coisas diferentes, com regras diferentes. Comunidade terapêutica não interna.
+> 2. **A licença sanitária está atualizada?** A regra da Anvisa para esses serviços exige que ela fique visível ao público. Peça para ver.
+> 3. **Quem é o responsável técnico?** Nome e registro no conselho da profissão. A regra exige um de nível superior e um substituto com a mesma qualificação.
+> 4. **Quem é o médico responsável?** Nome e CRM. Sem isso não existe internação dentro da lei.
+> 5. **Quanto custa, por escrito, com tudo incluído?** Preço só no telefone, com pressa para fechar hoje, é sinal.
+> 6. **Como funciona a visita e o contato?** Quem atende quando você ligar, em que horário, quantas vezes por semana você pode ver a pessoa.
+> 7. **A pessoa pode sair?** Privar alguém de liberdade é crime no Brasil (artigo 148 do Código Penal), e a pena é maior quando isso acontece por meio de internação em casa de saúde ou hospital.
+> 8. **Tem remédio guardado sem receita?** A regra da Anvisa proíbe estoque de medicamento sem prescrição médica.
+>
+> Se alguma resposta vier atravessada, ou se oferecerem uma equipe para buscar a pessoa à força, isso já é a resposta.
+>
+> ## O que costuma ajudar mais, e é de graça
+>
+> - **CAPS AD da sua cidade:** avalia, acompanha e, quando a internação é necessária, encaminha pela rede pública, inclusive para hospital geral. Em muitos lugares dá para ir direto, sem encaminhamento.
+> - **CAPS AD III:** onde existe, tem leito de acolhimento noturno, para desintoxicação, observação e proteção, com permanência de até 14 dias dentro de 30. É o caminho mais perto de "internação curta" que a rede pública oferece, sem sair da cidade e sem custo.
+> - **UBS:** a porta de entrada do SUS, que também encaminha.
+> - **Meu SUS Digital:** atendimento on-line gratuito em saúde mental.
+> - **188, CVV:** para você, a qualquer hora, de graça.
+>
+> @botao [Ver serviços perto de mim](/redes-de-apoio?tipo=publicas)
+>
+> ## Se uma clínica estiver maltratando alguém
+>
+> A Vigilância Sanitária do município fiscaliza o funcionamento. O Ministério Público do seu estado recebe denúncia. O 100 recebe denúncia de violação de direitos humanos, 24 horas, de graça, e pode ser anônima.
+>
+> [Ver meu plano de segurança](/familia/seguranca)
+
+### 3. Os três blocos de substância
+
+Entram nos módulos como `:::se substancia=...`, **dentro** do bloco `:::se problema=outras_drogas` que já existe. Quem marcou mais de uma substância vê mais de um bloco, na ordem em que estão no arquivo. Quem marcou "Outra" ou "Não sei" continua vendo só o texto geral de outras drogas, que não muda.
+
+#### 3.1 Crack e cocaína
+
+**Módulo 1, dentro de `:::se problema=outras_drogas`:**
+
+> ### Quando é crack ou cocaína
+>
+> O uso costuma vir em ciclos de muitas horas, e não em doses espaçadas pelo dia. É por isso que, de fora, parece que a pessoa desaparece: enquanto dura o ciclo, nada mais existe.
+>
+> Depois vem a descida, e ela é pesada. Nessas horas aparece tristeza funda, irritação e muito sono, e é comum a pessoa dizer coisas duras sobre si mesma. Se {{apelido}} falar em se machucar ou em acabar com a própria vida, isso não é hora de conversa sobre uso: veja o seu plano de segurança e, se precisar, ligue 188.
+>
+> Depois de muitas horas de uso também pode aparecer desconfiança forte, do tipo que faz a pessoa achar que está sendo vigiada ou perseguida. Isso é efeito, não é a pessoa mentindo para você. Discutir ali não funciona, e contrariar aumenta.
+>
+> Duas coisas aparecem quase sempre nessas casas: dinheiro e objetos que somem, e dívida com gente de fora. As duas têm conteúdo próprio aqui, porque nenhuma delas se resolve com conversa.
+>
+> [Ver o que fazer quando alguém vem cobrar em casa](/familia/divida)
+> [Ver o que fazer quando {{apelido}} desaparece](/familia/desaparecimento)
+
+**Bloco de emergência, no mesmo lugar, logo abaixo. Nível 1:**
+
+> ### Quando ligar 192
+>
+> A cocaína aperta os vasos e sobrecarrega o coração, e isso acontece também com gente jovem e sem problema de saúde antes. Ligue 192 se aparecer dor no peito, falta de ar, batimento muito acelerado, convulsão, pele muito quente com confusão, fala enrolada, ou fraqueza de um lado do corpo.
+>
+> Não existe antídoto para cocaína e crack. O caminho é o 192, e não esperar para ver.
+>
+> Misturar com álcool é mais perigoso do que cada um separado: o corpo forma uma terceira substância, que dura mais tempo e pesa mais no coração.
+>
+> Enquanto a ajuda não chega: não deixe a pessoa sem companhia, afrouxe a roupa, ambiente fresco e sem barulho, e não dê nada para comer ou beber.
+
+**Módulo 5, dentro de `:::se problema=outras_drogas`:**
+
+> ### No convite, quando é crack ou cocaína
+>
+> Aqui o medo que mais pesa é o de problema com a lei. Vale deixar claro que o atendimento é sigiloso, que o profissional não comunica nada a ninguém, e que procurar ajuda não expõe {{apelido}} a nada.
+>
+> Uma coisa que circula errado e vale corrigir: a decisão do Supremo de 2024 sobre porte para uso próprio vale para maconha, e não para cocaína e crack.
+>
+> O melhor momento para convidar é no dia seguinte ao ciclo, quando a descida já passou e o arrependimento ainda está fresco. Durante o uso, nenhuma conversa vale.
+
+**Módulo 6, dentro de `:::se problema=outras_drogas`:**
+
+> ### Guardar o que é seu, sem virar uma delegacia
+>
+> Guardar documentos, cartões, chaves e dinheiro em um lugar que só você sabe é cuidado, e você não precisa de autorização de ninguém para isso.
+>
+> O que faz diferença é como você conta. Diga uma vez, num momento calmo, que você passou a guardar as suas coisas em outro lugar, e não entre em lista do que sumiu nem em interrogatório. Lista vira briga, e briga não traz nada de volta.
+>
+> Revistar quarto, mochila e celular todos os dias desgasta você e não muda o uso. Se você precisa saber de algo para decidir alguma coisa concreta, pergunte direto. Se não for para decidir nada, não procure.
+
+#### 3.2 Remédio de farmácia
+
+**Módulo 1, dentro de `:::se problema=outras_drogas`:**
+
+> ### Quando é remédio de farmácia
+>
+> Esta é a que a família demora mais a enxergar, e com motivo: tem receita, tem médico, tem caixa na gaveta. Um uso que começou certo pode virar problema sem ninguém mudar de farmácia.
+>
+> Os mais comuns são os calmantes e os remédios para dormir, como clonazepam, alprazolam e diazepam, e os remédios para dor ou para tosse que têm opioide, como codeína e tramadol.
+>
+> O que costuma indicar que passou do ponto: a dose que o médico passou já não faz efeito, a caixa acaba antes do fim do mês, aparecem receitas de mais de um médico, ou a pessoa fica mal quando a farmácia não tem. Essas receitas têm regra: o calmante e o remédio para dormir dessa lista são vendidos com a Notificação de Receita B, aquele papel azul, que vale 30 dias e cobre no máximo 60 dias de tratamento.
+
+**Bloco de aviso, no mesmo lugar. Nível 1:**
+
+> ### Parar de uma vez pode ser perigoso
+>
+> Interromper calmante ou remédio para dormir de repente, ou reduzir rápido demais, pode causar abstinência grave, incluindo convulsão, com risco de vida. Esse é o aviso mais forte que existe na bula desses remédios.
+>
+> Então não esconda a caixa, não corte a dose e não jogue nada fora para ajudar. A retirada é feita devagar, com médico, ao longo de semanas, e a dose vai diminuindo em etapas.
+>
+> O que você pode fazer é pedir uma consulta e contar o que você vê, levando a lista de tudo o que {{apelido}} toma. Quem decide a dose é quem prescreve.
+>
+> Ligue 192 se a respiração ficar lenta ou difícil, se a pessoa não acordar quando você chamar, se os lábios ou as pontas dos dedos ficarem arroxeados, ou se houver confusão forte. Esse risco aumenta muito quando esses remédios são tomados junto com álcool, ou quando um calmante é tomado junto com um remédio para dor com opioide.
+
+**Módulo 5, dentro de `:::se problema=outras_drogas`:**
+
+> ### No convite, quando é remédio de farmácia
+>
+> Aqui você tem uma vantagem que as outras casas não têm: já existe um médico na história. O convite mais fácil de aceitar é o de ir junto.
+>
+> "Quer que eu vá com você na próxima consulta?" costuma passar melhor do que qualquer frase sobre uso. Dentro da consulta, quem fala é {{apelido}}, e você só conta o que viu, se perguntarem.
+>
+> Se a receita vem de vários médicos, vale levar isso para um só, de preferência um psiquiatra. Não para dedurar: porque ninguém consegue ajustar o que não sabe que existe.
+
+**Módulo 6, dentro de `:::se problema=outras_drogas`:**
+
+> ### Sobre comprar o remédio
+>
+> Em muitas casas é a família que vai à farmácia. Parar de comprar parece o passo óbvio, e aqui ele não é: com esses remédios, a falta repentina tem risco próprio.
+>
+> O caminho é outro. Marque a consulta, conte o que está acontecendo e peça um plano de retirada com data. Enquanto esse plano não existir, continuar comprando não é você amortecendo nada, é segurança.
+>
+> O que dá para devolver desde já é o resto: a corrida atrás de receita, a ligação para o médico, a desculpa para quem pergunta.
+
+#### 3.3 Maconha
+
+**Módulo 1, dentro de `:::se problema=outras_drogas`:**
+
+> ### Quando é maconha
+>
+> Nas casas que chegam aqui por maconha, a família costuma ficar entre duas pontas: "isso é natural, não faz nada" e "ele vai ficar louco". As duas travam a conversa, e a verdade mora no meio.
+>
+> O que se sabe: a maior parte de quem usa não desenvolve problema, e existe problema sim. Parar depois de um tempo de uso diário costuma dar irritação, sono ruim e menos apetite, por alguns dias, sem risco de vida. Não existe remédio com eficácia comprovada para ajudar a parar, então o caminho é acompanhamento.
+>
+> Dois pontos merecem atenção de verdade. Em quem tem esquizofrenia, a maconha pode piorar ou desencadear a psicose. E existe uma síndrome em quem usa muito e há muito tempo, com crises de vômito e dor na barriga que aliviam no banho quente e só passam de vez com a parada do uso. Quem vive isso passa anos achando que é problema de estômago.
+>
+> Para conversar, deixe a droga de lado e fale do que é concreto na vida de vocês: as faltas, o dinheiro, o sono, as brigas, o que ficou para trás. Discussão sobre a maconha em si não vai a lugar nenhum.
+
+**Módulo 1, bloco curto logo abaixo:**
+
+> ### Sobre a lei
+>
+> Em junho de 2024, o Supremo decidiu que ter até 40 gramas de maconha, ou seis plantas fêmeas, para uso próprio não é crime, e manteve essa decisão em 2025.
+>
+> Isso não quer dizer que está liberado. A droga continua sendo apreendida e a pessoa pode receber advertência e medidas educativas. A quantidade é uma presunção, e a autoridade pode tratar o caso como tráfico se houver outros sinais, como balança e registro de venda.
+>
+> Vale saber disso por um motivo prático: medo de prisão costuma ser o que tranca a conversa dentro de casa.
+
+**Módulo 5, dentro de `:::se problema=outras_drogas`:**
+
+> ### No convite, quando é maconha
+>
+> O "não preciso de ajuda, isso não faz nada" é a resposta mais comum aqui, e brigar com ela não funciona.
+>
+> Então não convide para tratar maconha. Convide para resolver o que incomoda {{apelido}}: o sono, a falta de ânimo, a ansiedade, a briga em casa, a prova que não saiu. Essas portas são verdadeiras e elas levam ao mesmo lugar.
+>
+> Se aparecer vômito repetido, crise de pânico forte ou fala desconexa que não passa, isso é atendimento agora: UPA ou 192.
+
+### 4. Os avisos no resultado do diagnóstico
+
+Hoje a função `avisos`, em `lib/familia/resultado.ts`, não devolve nada para outras drogas. Passa a devolver, pela Q3c, pela mesma lógica da Q3b do álcool. Textos novos em `content/familia/resultado-blocos.md`, na seção "Avisos":
+
+> `[AVISO_REMEDIO]`
+> Você contou que a preocupação envolve remédio de farmácia. Antes de qualquer plano, saiba de uma coisa: calmante e remédio para dormir não podem ser interrompidos de uma vez, porque a retirada repentina pode causar convulsão. Essa conversa é com um médico, e o programa te ajuda a chegar até lá.
+
+> `[AVISO_CRACK_COCAINA]`
+> Você contou que a preocupação envolve crack ou cocaína. Duas coisas que valem desde já: dor no peito, convulsão ou confusão forte depois do uso são emergência, e o número é 192. E dívida com gente de fora não é assunto para a família negociar.
+
+Regra: `AVISO_REMEDIO` leva o botão "Ver psiquiatra parceiro", igual ao `AVISO_ALCOOL_DIARIO`. `AVISO_CRACK_COCAINA` leva o link "Ver o que fazer quando alguém vem cobrar em casa", para `/familia/divida`. Maconha, "Outra" e "Não sei" não geram card: o conteúdo delas não tem risco imediato, e card demais apaga o que importa.
+
+### 5. Dívida com terceiro
+
+Página livre nova em `/familia/divida`, no mesmo padrão da `/familia/decisao`: estática, texto inline, sem login, sem compra, sem `{{apelido}}`. É também a página para onde a ficha 6 da biblioteca do "agora" vai apontar quando o briefing N8 existir. Nível 1.
+
+> # Se alguém vem cobrar uma dívida na sua casa
+>
+> Se tem alguém ameaçando você ou sua casa agora, ligue 190. Esta página é para depois disso, ou para antes que aconteça.
+>
+> ## A primeira coisa, porque ela muda tudo
+>
+> A dívida de uma pessoa adulta é dela. Ninguém da família responde por ela, e existe uma única exceção: quem assinou como fiador ou avalista.
+>
+> Isso vale mesmo quando vocês moram juntos, mesmo quando é seu filho, mesmo quando a cobrança acontece no seu portão.
+>
+> ## Cobrança com ameaça é crime, mesmo quando a dívida existe
+>
+> Ameaçar alguém é crime (artigo 147 do Código Penal). Exigir dinheiro mediante ameaça é extorsão (artigo 158). Usar ameaça ou constrangimento para cobrar uma dívida também é crime pelo Código de Defesa do Consumidor (artigo 71). E emprestar dinheiro com juros muito acima do permitido é o crime de usura, previsto na Lei 1.521, de 1951.
+>
+> Uma coisa importante para você não travar na hora de pedir ajuda: quem pegou o dinheiro emprestado não comete crime por estar devendo. Procurar a polícia não coloca a pessoa que deve em risco jurídico por causa da dívida.
+>
+> ## Na hora, na porta
+>
+> - Não abra a porta. Converse pela janela ou pelo interfone, ou não converse.
+> - Não negocie, não combine valor, não assine nada e não entregue dinheiro.
+> - Não diga onde a pessoa está nem para onde foi.
+> - Se tiver criança em casa, leve para o quarto mais longe da porta antes de responder qualquer coisa.
+>
+> Uma frase, dita uma vez: "Essa dívida não é minha e eu não vou tratar dela. Pode procurar a pessoa."
+>
+> ## Depois
+>
+> - **Registre boletim de ocorrência**, na delegacia ou pela delegacia eletrônica do seu estado. Ameaça de cobrança é fato para registrar, e o registro é o que faz existir uma história se acontecer de novo.
+> - **Guarde tudo:** mensagens, áudios, prints, e uma anotação com dia, hora e o que foi dito. Não apague nada.
+> - **A Defensoria Pública da sua cidade orienta de graça**, inclusive sobre o que fazer se alguém assinou algo.
+> - Se a sua casa virou o endereço da cobrança, pense em passar alguns dias em outro lugar. Leve documentos e remédios, e avise a escola das crianças sobre quem pode buscar.
+>
+> ## O que não fazer
+>
+> Pagar para "resolver de uma vez" raramente encerra, e costuma marcar a sua casa como o lugar onde a cobrança funciona. Procurar quem cobra para negociar te coloca na história. E mandar a pessoa que deve negociar com você do lado também.
+>
+> Se essa dívida precisa de uma decisão, ela merece cabeça fria, um dia depois, e de preferência com orientação da Defensoria. Nunca na porta, nunca à noite.
+>
+> [Ver meu plano de segurança](/familia/seguranca)
+
+**Correção no C7 (ferramentas parte 2).** Tirar o chip "Resolver problemas com pessoas a quem {{apelido}} deve" da lista de outras drogas. No lugar, um card fixo abaixo da lista, sem ser escolhível:
+
+> **Dívida com gente de fora não entra aqui.** Negociar com quem cobra não é uma tarefa que você devolve numa semana: é segurança da casa. Veja o que fazer.
+> [Ver o que fazer quando alguém vem cobrar em casa](/familia/divida)
+
+### 6. Desaparecimento
+
+Página livre nova em `/familia/desaparecimento`, no mesmo padrão da `/familia/decisao`: estática, texto inline, sem login, sem compra, sem `{{apelido}}`. É também a página para onde a ficha 3 da biblioteca do "agora" vai apontar quando o briefing N8 existir. Nível 1.
+
+> # Se a pessoa não aparece e não responde
+>
+> ## Não existe prazo de espera
+>
+> Você não precisa esperar 24 horas, nem 48, nem nada. A Política Nacional de Busca de Pessoas Desaparecidas, da Lei 13.812, de 2019, manda registrar na hora, e a polícia tem o dever de fazer o registro, que entra no Cadastro Nacional de Pessoas Desaparecidas no mesmo momento.
+>
+> Se alguém disser para você voltar depois, diga isso com essas palavras: não existe prazo mínimo para registrar desaparecimento.
+>
+> Procure a delegacia mais perto. Se for criança ou adolescente, o desaparecimento também é comunicado ao Conselho Tutelar, e isso é a lei, não é denúncia contra você.
+>
+> ## O que levar para o registro
+>
+> - Uma foto recente, de preferência de corpo inteiro e uma do rosto.
+> - A roupa que a pessoa vestia e o que levava.
+> - Altura, peso aproximado, tatuagens, cicatrizes, óculos, dentes.
+> - Documentos e o número do telefone, com a operadora.
+> - Lugares que costuma frequentar, com quem falou por último e a que horas.
+> - Se toma algum remédio ou tem alguma condição de saúde que precise de cuidado.
+>
+> ## Enquanto isso
+>
+> - Ligue para os hospitais e as UPAs da região, e também para o IML. É a parte mais difícil da lista, e é a que mais encontra gente.
+> - Procure os serviços de rua da cidade e deixe uma foto e um telefone: o Consultório na Rua, o Centro POP, e o serviço de abordagem social. Onde não existe Centro POP, o CREAS atende.
+> - O aplicativo Sinesp Cidadão recebe informação sobre localização de pessoas desaparecidas, e o portal gov.br tem a consulta pública do cadastro.
+> - Peça para duas ou três pessoas dividirem as ligações com você. Fazer isso por muitas horas sem ninguém do lado tira a sua capacidade de decidir.
+>
+> ## Quando a pessoa voltar
+>
+> Avise a delegacia. A lei pede que você informe o reaparecimento, e isso tira o nome do cadastro.
+>
+> E guarde a conversa para outro dia. Primeiro comida, banho e dormir. Sermão na porta é o jeito mais rápido de a próxima saída acontecer sem aviso.
+>
+> ## Você também precisa de cuidado
+>
+> A mesma lei prevê atendimento psicossocial para a família de quem desapareceu. O CRAS e o CREAS da sua cidade são a porta. E o 188 atende a qualquer hora, de graça, inclusive de madrugada, que é quando isso costuma pesar mais.
+
+## Código
+
+**1. `lib/familia/diagnostico.ts`**
+
+- Novo tipo: `export type Substancia = "crack_cocaina" | "remedio" | "maconha" | "outra" | "nao_sei";`
+- Novo campo em `Respostas`, logo abaixo de `frequencia_alcool`, com comentário no mesmo padrão: `// Q3c: só pra quem marcou outras drogas.` e `substancias?: Substancia[];`
+- Nova pergunta em `PERGUNTAS`, entre `frequencia_alcool` e `tempo`, com `tipo: "multipla"` e `condicao: (respostas) => Boolean(respostas.problemas?.includes("outras_drogas"))`.
+- No fim de `sanitizarRespostas`, junto da linha que já existe para o álcool: `if (!resultado.problemas?.includes("outras_drogas")) delete resultado.substancias;`
+- Novo `ROTULO_SUBSTANCIA`, no padrão do `ROTULO_PROBLEMA`.
+- A pergunta é condicional e de múltipla escolha. `respondida` já trata as duas coisas, então não precisa de mudança: confira com um teste que o diagnóstico fecha sem a Q3c quando outras drogas não está marcada.
+
+**2. `lib/familia/markdown.ts`**
+
+- `Contexto` ganha `substancias: string[]`.
+- `condicoesBatem` ganha a chave `substancia`, tratada exatamente como `problema` (lista, com `!` negando): `if (chave === "substancia") return negado ? !contexto.substancias.includes(esperado) : contexto.substancias.includes(esperado);`
+- Atualizar o comentário que documenta as condições, acrescentando a linha de `substancia`, no mesmo formato das outras.
+
+**3. `lib/familia/exercicio-cliente.ts`**
+
+- O tipo local `Diagnostico` ganha `substancias?: string[]`.
+- `contextoDo` passa a devolver `substancias: diagnostico.substancias ?? []`.
+
+**4. `app/familia/programa/modulo/[n]/ModuloCliente.tsx`**
+
+- O tipo `Diagnostico` da linha 28 ganha `substancias?: Substancia[]`, e o valor segue para `contextoDo`. O que vem da API é a linha `respostas` do diagnóstico, então o campo novo chega junto; confira no servidor local com um diagnóstico novo e um antigo.
+- Diagnóstico antigo, gravado antes desta mudança, não tem o campo. Nesse caso `substancias` fica vazio e os blocos novos não aparecem, sem erro. Não escreva script de migração.
+
+**5. `lib/familia/resultado.ts`**
+
+- Em `avisos`, dentro do `for`, acrescentar o ramo de outras drogas:
+  - `substancias` inclui `remedio`: card `AVISO_REMEDIO`, com `psiquiatra: true`.
+  - `substancias` inclui `crack_cocaina`: card `AVISO_CRACK_COCAINA`.
+  - `maconha`, `outra` e `nao_sei`: nenhum card.
+- Atualizar o comentário da função, que hoje diz "outras drogas: sem card".
+- O tipo `Resultado["avisos"]` tem `problema: Problema`. Os dois cards novos entram com `problema: "outras_drogas"`, então o tipo não muda.
+
+**6. Três páginas livres novas**
+
+Mesmo padrão da `app/familia/decisao/page.tsx`, criada pelo briefing N6. Não crie rota dinâmica e não invente padrão novo:
+
+- `app/familia/internacao/page.tsx`
+- `app/familia/divida/page.tsx`
+- `app/familia/desaparecimento/page.tsx`
+
+Em cada uma:
+
+- Página estática, texto inline, com o comentário `// nivel-1` no topo.
+- Sem `robots: noindex`, igual à `/familia/decisao`. Quem procura isso de madrugada precisa achar.
+- Sem login, sem compra, funcionando em modo de segurança e sem diagnóstico carregado.
+- Nenhuma ocorrência de `{{apelido}}`, porque a página abre para quem nunca respondeu o diagnóstico.
+- Título da aba: "Fôlego · Margem", como manda o N1.
+- Nenhuma delas entra no painel agora. O lugar natural desse conteúdo no painel é a biblioteca do "agora" do briefing N8, que ainda não foi escrito, e duas portas para a mesma coisa viram duas verdades.
+
+**7. Links**
+
+- `content/familia/modulos/modulo-05.md`, no fim do bloco "Se não houver horário rápido": `[Ver o que a lei permite sobre internação](/familia/internacao)`.
+- `app/familia/seguranca/page.tsx`: três links no fim da página, depois dos contatos, antes do carrossel de profissionais.
+- Fichas 3 e 6 da biblioteca do "agora": o briefing N8 ainda não foi escrito, então isso não é tarefa desta sessão. Quando ele subir, o campo "Amanhã" das duas fichas aponta para `/familia/divida` e `/familia/desaparecimento`.
+
+## Critério de aceite
+
+- A Q3c aparece para quem marca outras drogas e não aparece para quem não marca, e o diagnóstico fecha nos dois casos.
+- `substancias` não é gravado quando outras drogas não está marcado.
+- Um diagnóstico com `crack_cocaina` mostra, no módulo 1, o bloco de crack e cocaína e o bloco de quando ligar 192, e não mostra os de remédio e maconha.
+- Um diagnóstico com duas substâncias mostra os dois blocos, na ordem do arquivo.
+- Diagnóstico antigo, sem o campo, abre os módulos sem erro e sem bloco de substância.
+- O resultado mostra `AVISO_REMEDIO` com o botão do psiquiatra, e `AVISO_CRACK_COCAINA` com o link da dívida. Maconha não gera card.
+- `/familia/internacao`, `/familia/divida` e `/familia/desaparecimento` abrem sem login e sem compra, em aba anônima, e não quebram sem diagnóstico carregado.
+- Nenhuma das três contém `{{apelido}}`.
+- As três páginas abrem no celular sem rolagem lateral e lidas em voz alta fazem sentido sem contexto nenhum.
+- A especificação do C7 não tem mais o chip "Resolver problemas com pessoas a quem {{apelido}} deve".
+- `grep -rln "Internação" app/familia` encontra a página nova, e nenhum texto do produto ensina a internar alguém à força.
+- Os três textos de nível 1 (internação, dívida, desaparecimento) e os dois avisos novos estão em `/docs/revisao-conteudo.md`, na lista "a publicar".
+- Sem travessão, sem gênero marcado na pessoa, sem palavra proibida.
+
+---
+
+# Fontes, conferidas em 24/11/2026
+
+**Internação**
+- Lei 11.343/2006, art. 23-A e art. 26-A, com as mudanças da Lei 13.840/2019, em planalto.gov.br: tipos de internação, laudo e CRM, 90 dias, interrupção a pedido da família, comunicação em 72 horas ao Ministério Público e à Defensoria Pública, proibição de internação em comunidade terapêutica acolhedora, acolhimento voluntário por escrito, avaliação médica prévia e proibição de isolamento físico.
+- Lei 10.216/2001, art. 6º e art. 8º, em planalto.gov.br e na publicação da Câmara: as três modalidades e as 72 horas.
+- RDC Anvisa nº 29, de 30/06/2011: licença sanitária visível, responsável técnico de nível superior com substituto, proibição de estoque de medicamento sem prescrição, proibição de admitir quem precisa de serviço de saúde que a instituição não oferece.
+- Código Penal, art. 148, caput e § 1º, II: privar alguém de liberdade é crime, com pena maior quando praticado mediante internação em casa de saúde ou hospital.
+- Portaria GM/MS nº 130/2012 e a tabela de procedimentos do SUS: leito de acolhimento noturno do CAPS AD III, até 14 dias em 30.
+
+**Substâncias**
+- MSD Manuals, versão para profissionais, verbetes de cocaína e de canábis: efeitos agudos, infarto, AVC, convulsão, hipertermia, psicose em quem tem esquizofrenia, abstinência de maconha e síndrome do vômito cíclico.
+- Cocaetileno, formado na mistura de cocaína com álcool, com ação mais longa e mais cardiotóxica.
+- Portaria SVS/MS nº 344/1998 e materiais de vigilância sanitária estadual: Notificação de Receita B, azul, válida 30 dias, quantidade para no máximo 60 dias de tratamento.
+- FDA, comunicado de segurança de 31/08/2016: aviso em caixa sobre opioide com benzodiazepínico ou outro depressor, inclusive álcool, com sonolência extrema, depressão respiratória, coma e morte. E o aviso da FDA sobre interrupção abrupta de benzodiazepínico, com abstinência grave e convulsão potencialmente fatal.
+- UNA-SUS, Segunda Opinião Formativa sobre retirada de benzodiazepínico: retirada gradual ao longo de semanas.
+- Cochrane, revisão de medicamentos para dependência de maconha, evidência atualizada até maio de 2024: nenhum medicamento com eficácia estabelecida.
+- STF, RE 635.659, tese de repercussão geral de 26/06/2024, mantida em fevereiro de 2025: até 40 gramas de cannabis ou seis plantas fêmeas para consumo pessoal não é infração penal, com apreensão e sanções administrativas, e a quantidade é presunção relativa.
+
+**Dívida com terceiro**
+- Código Penal, art. 147 (ameaça) e art. 158 (extorsão).
+- Lei 8.078/1990, art. 71: usar ameaça ou constrangimento na cobrança de dívida é crime.
+- Lei 1.521/1951, art. 4º: usura.
+- Código Civil, arts. 818 a 839, e a doutrina sobre aval: só responde pela dívida de outra pessoa quem assinou como fiador ou avalista.
+
+**Desaparecimento**
+- Lei 13.812/2019, arts. 5º, 8º e 15, em planalto.gov.br: Cadastro Nacional de Pessoas Desaparecidas com banco público de livre acesso, registro imediato, comunicação ao Conselho Tutelar quando é criança ou adolescente, aviso de reaparecimento e atendimento psicossocial à família.
+- Ministério da Justiça e Segurança Pública, cartilha da Política Nacional de Busca de Pessoas Desaparecidas: não há tempo mínimo para considerar uma pessoa desaparecida, e as instituições de segurança têm o dever de registrar.
+- Serviços gov.br "Consultar pessoa desaparecida" e "Informar localização de desaparecido no aplicativo Sinesp Cidadão".
+- Serviços do SUAS: Centro POP, Serviço Especializado de Abordagem Social, CREAS onde não há Centro POP, e Consultório na Rua na saúde.
+
+## O que conferir antes de publicar
+
+- Todo número de telefone e todo endereço de site deste arquivo, uma última vez. Serviço público muda canal sem avisar.
+- A cada 6 meses, ou quando o Congresso mexer na Lei de Drogas. A tese do STF sobre porte de maconha vale até o Congresso legislar, e a própria decisão diz isso. Se sair lei nova, o bloco da maconha muda no mesmo dia.
+- A cada 6 meses, a RDC 29/2011 e a Portaria 344/1998. São normas antigas e vivas, e a Anvisa mexe nos anexos com frequência. O que muda primeiro é a lista de substância e o tipo de receita.
+- Quando a biblioteca do "agora" do briefing N8 subir, conferir se as fichas 3 e 6 apontam para `/familia/desaparecimento` e `/familia/divida`.
+- Se o guia `/blog/internacao-involuntaria` já existir em `lib/guias.ts`, não copie texto entre o blog e a página do Fôlego, e não faça um apontar para o outro. São públicos diferentes, e texto duplicado em dois lugares diverge em um mês.
+
+---
+
+# Briefing N10: a casa inteira, e o que dizer para uma criança
+
+Pré-requisito: briefings 00, 00d, N1 a N4, e o N9 aplicado, porque a página livre deste briefing segue o mesmo padrão das três de lá e da `/familia/decisao` do N6.
+
+**Nível 1 do briefing N2.** Nenhum texto daqui sobe sem o fundador ler em voz alta, e cada bloco entra em `/docs/revisao-conteudo.md` na lista "a publicar", com a data e o nível.
+
+**Toda lei, prazo, número e nome de serviço deste briefing foi conferido na fonte em 24/11/2026.** A lista está no fim do arquivo. Nada saiu de memória.
+
+**Sessão 5 · Claude Code · Sonnet 5.5 · esforço médio.** É markdown de módulo, uma linha no resultado e uma página livre nova, no mesmo padrão das três do N9. Todo o texto está escrito aqui.
+
+## O problema
+
+**1. A criança não existe no produto.** `grep -ril "criança" content/familia` devolve zero. A única aparição em toda a documentação é como exemplo de problema na tela 0 do C8: "As crianças perguntam o que está acontecendo". O programa inteiro pressupõe um adulto falando sobre outro adulto, e boa parte do público real não é isso: é a avó que cria o neto, a irmã mais velha que segura a casa, o pai que está tentando proteger duas crianças de uma vez.
+
+**2. O Conselho Tutelar não aparece em lugar nenhum.** `grep -ril "Conselho" content/familia` devolve zero. O 100 existe, e está correto, em `components/familia/ContatosEmergencia.tsx`, com o telefone, o WhatsApp (61) 99611-0100, o Telegram e o atendimento em Libras, todos conferidos hoje na fonte oficial. Mas ele só aparece na página de segurança, sem nenhum texto que explique para quê.
+
+**3. O módulo 6 quebra quando a casa não está junta.** Se o familiar para de pagar as dívidas de {{apelido}} e a avó continua pagando escondido, nada muda, e a briga passa a ser entre os dois adultos. Nenhum texto do programa trata disso, e é o ponto de falha silenciosa mais comum do método.
+
+## O que fazer
+
+### 1. Bloco "Quando a casa não está junta"
+
+Entra em `content/familia/modulos/modulo-06.md`, depois de "Cuidar do dinheiro da casa" e antes de "Exercício da semana".
+
+> ## Quando a casa não está junta
+>
+> Tem uma parte deste módulo que depende de outras pessoas, e vale dizer isso com clareza. Se você parar de cobrir e alguém da casa continuar cobrindo, pouca coisa muda, e a briga sai do problema e passa para dentro da família.
+>
+> Não é tarefa sua convencer mais ninguém. O que ajuda é uma conversa, com uma pessoa, sem reunião de família.
+>
+> Escolha quem mais faz o que você decidiu parar de fazer. Fale com essa pessoa a sós, num momento calmo, e sem explicar que você está fazendo um programa.
+>
+> Uma frase que costuma funcionar:
+>
+> "Eu decidi parar de pagar as contas de {{apelido}}. Não é castigo, e eu não vou te pedir para fazer igual. Eu só queria te contar antes de você saber por fora."
+>
+> ### Se a outra pessoa não topar
+>
+> Você ainda pode seguir, com menos efeito, e ainda vale a pena. Diga qual é o seu limite, não o dela: "isso é o que eu vou fazer, o que você faz é com você".
+>
+> Depois, não cobre, não vigie, não conte quanto a outra pessoa deu e não peça para ninguém escolher um lado. Cobrança entre adultos da casa rende meses de desgaste e nenhum resultado.
+>
+> ### Quando alguém na casa ironiza os momentos bons
+>
+> Acontece: você elogia, e alguém completa com "até que enfim" ou com um riso. Isso apaga o elogio.
+>
+> Não corrija na frente de {{apelido}}. Depois, faça um pedido concreto e pequeno: "quando ele estiver bem, não precisa elogiar, mas não comenta, tá?".
+>
+> ### Se a outra pessoa também bebe ou usa
+>
+> Aí o combinado não vai existir, e insistir só machuca você. Trabalhe o que depende de você, proteja o seu dinheiro e os seus documentos, e leve essa parte para um profissional.
+>
+> ### Onde buscar ajuda para a casa
+>
+> O CRAS orienta a família sobre direitos, benefícios e serviços da cidade, de graça. O CREAS atende famílias quando há violação de direitos. O CAPS da sua cidade também acolhe familiares. Se houver violência, 190 agora, e o 180 orienta sobre medida protetiva.
+>
+> @botao [Ver serviços perto de mim](/redes-de-apoio?tipo=publicas)
+
+### 2. A página "O que dizer para uma criança"
+
+Página livre nova em `/familia/criancas`, no mesmo padrão da `/familia/decisao` e das três páginas do N9: estática, texto inline, sem login, sem compra, sem `{{apelido}}`. Criança em casa é segurança, e por isso esta página não fica atrás de pagamento.
+
+Texto final:
+
+> # O que dizer para uma criança
+>
+> Se a criança está em risco agora, ligue 190. Se houve ou está havendo violência contra ela, o Conselho Tutelar da sua cidade e o 100 atendem, e o fim desta página explica como.
+>
+> ## Antes de começar, uma troca
+>
+> Os exemplos desta página falam do pai e da bebida, porque um exemplo precisa escolher alguém. Troque por mãe, filho, irmão, avó, ou o nome que a criança usa, e troque "bebida" pelo que acontece na sua casa.
+>
+> ## Ela já sabe que tem algo errado
+>
+> Crianças percebem clima, cheiro, voz diferente e porta batendo. O que o silêncio faz não é proteger: é deixar a criança montando a própria explicação do que está acontecendo.
+>
+> E crianças explicam com culpa. A versão que elas montam quase sempre tem elas no meio: foi porque eu briguei, foi porque eu dei trabalho, foi porque eu não fiz o suficiente.
+>
+> Então a conversa não é para contar uma novidade. É para trocar a versão que ela já tem por uma verdadeira, do tamanho dela.
+>
+> ## As três regras
+>
+> ### 1. A culpa não é dela
+>
+> Diga isso com estas palavras, e diga mais de uma vez, em dias diferentes: "isso não é culpa sua, e não é tarefa sua resolver".
+>
+> Vale dizer também as duas coisas que vêm junto: ela não causou, e ela não consegue fazer parar. Nenhuma criança fica bem enquanto acha que o jeito dela de se comportar decide se o pai bebe hoje.
+>
+> E vale dizer o que ela pode fazer: contar como está se sentindo para você ou para outro adulto de confiança, e continuar com a vida dela, a escola, os amigos, o que ela gosta.
+>
+> ### 2. A criança não é confidente
+>
+> O que você sente, você conta para um adulto. Chorar na frente dela pode acontecer, e não tem problema: o que não pode é ela virar a pessoa que te consola.
+>
+> Se escapar um desabafo, dá para consertar depois: "ontem eu falei de um jeito que não era pra você carregar, desculpa".
+>
+> ### 3. A criança não é mensageira e não é vigia
+>
+> Ela não avisa quando o pai chegou, não conta quanto ele bebeu, não esconde garrafa, não liga para você do banheiro, não cobra nada de ninguém.
+>
+> Se hoje ela já faz alguma dessas coisas, tire a tarefa dela com nome: "isso não é trabalho de criança, isso é meu".
+>
+> ## A verdade do tamanho dela
+>
+> ### Até 3 anos
+>
+> Não se explica, se previne. O que protege nessa idade é rotina igual todos os dias: as mesmas pessoas, o mesmo horário de dormir, a mesma comida no mesmo lugar.
+>
+> Se houver grito ou coisa quebrada, tire a criança do ambiente antes de qualquer outra coisa.
+>
+> ### 4 a 6 anos
+>
+> Frases curtas e concretas, uma por vez: "o papai está doente de um jeito que mexe com o jeito dele falar e andar. Tem gente cuidando disso. Você não tem culpa, e você vai ter quem cuida de você."
+>
+> Responda a pergunta que ela fez, e não a próxima. Repetir a mesma resposta muitas vezes é normal nessa idade, e cada repetição acalma.
+>
+> ### 7 a 11 anos
+>
+> Aqui ela já compara a casa dela com a casa dos amigos, e já sente vergonha. Dá para nomear: "é um problema com a bebida, e é uma doença. Ele não consegue parar com força de vontade, e é por isso que existe tratamento."
+>
+> O que mais acalma nessa idade é saber o que muda na vida dela: quem busca na escola, com quem ela fica, o que fazer se o pai chegar alterado. Combine um adulto de plantão, com nome e telefone, e deixe o número anotado com ela.
+>
+> ### 12 a 14 anos
+>
+> Provavelmente ela sabe mais do que você imagina, e já guardou segredo por você. Ouça antes de explicar: pergunte o que ela já percebeu e o que ela acha que está acontecendo.
+>
+> Dê informação de verdade, inclusive a parte difícil. Se ela perguntar se vai ficar assim também, a resposta honesta é que ter alguém na família com esse problema aumenta um pouco o risco dela, e que saber disso cedo ajuda a se cuidar: aprender sobre o assunto, pedir ajuda para pessoas seguras e cuidar de si são as coisas que diminuem esse risco.
+>
+> ### 15 a 17 anos
+>
+> Trate como quase adulto, sem dar tarefa de adulto. Conte o nome do problema, o que a família está fazendo e o que ainda não está resolvido.
+>
+> Depois faça uma pergunta e aguente o silêncio: "o que você precisa?". E ofereça alguém de fora para conversar, porque nessa idade falar com os pais sobre os pais é quase impossível.
+>
+> ### Em qualquer idade
+>
+> Separe a pessoa do problema: "o pai que você ama e a doença que ele tem não são a mesma coisa". E deixe a porta aberta, com uma frase que ela possa usar depois: "você pode falar disso comigo quando quiser, inclusive quando eu estiver de mau humor".
+>
+> ## O que não dizer
+>
+> - "Não conta pra ninguém." O segredo é o que mais machuca, e é o que deixa a criança sem socorro.
+> - "Agora você é o homem da casa." Isso entrega uma função que não é dela.
+> - "Se você se comportar, o papai melhora." Isso amarra o problema ao comportamento dela.
+> - Falar mal de quem usa. Ela ama as duas pessoas, e vai ter que escolher entre defender e concordar.
+> - Prometer que não vai acontecer de novo. Prometa o que você controla: que você vai contar a verdade e que ela vai estar cuidada.
+>
+> ## Quando é hora de pedir ajuda para a criança
+>
+> Alguns sinais pedem ajuda de fora, e pedir não é entregar sua família para ninguém:
+>
+> - faltar à escola, dormir na aula, cair muito de rendimento;
+> - ficar sem comida, sem remédio, sem alguém responsável por ela;
+> - ver violência dentro de casa, mesmo quando não é contra ela;
+> - ficar com quem está sob efeito, sem outro adulto por perto, ou ser levada para lugar de uso ou de cobrança;
+> - dor de barriga e dor de cabeça sem causa, voltar a fazer xixi na cama, medo de dormir;
+> - se machucar, ou dizer que não quer mais viver. Nesse caso, procure atendimento hoje, e o 188 atende você a qualquer hora.
+>
+> A lei trata como violência psicológica expor a criança, direta ou indiretamente, a crime violento contra alguém da família, principalmente quando isso faz dela testemunha. Isso está na Lei 13.431, de 2017, e serve para você saber que o que ela está vendo conta, e não é exagero seu.
+>
+> ## Os serviços, e para que serve cada um
+>
+> - **Conselho Tutelar da sua cidade:** existe pelo menos um em cada município e atende casos de direito de criança ou adolescente ameaçado ou violado. O horário e o plantão são definidos por lei municipal, e em muitas cidades existe atendimento fora do horário comercial. Qualquer pessoa pode levar um caso, inclusive você, pela própria família. Ele pode pedir medidas de proteção e acionar a polícia e o Ministério Público.
+> - **100, Disque Direitos Humanos:** recebe denúncia de violação de direitos de criança e adolescente, 24 horas, todos os dias, de graça. Pode ser anônima, não precisa de prova, e você recebe um número de protocolo para acompanhar. O 100 não substitui emergência: perigo agora é 190.
+> - **Escola:** muitas vezes já percebeu antes de você contar. Uma conversa com a coordenação costuma render olhar atento e paciência com a criança, e não castigo.
+> - **UBS e equipe de saúde da família:** porta de entrada do SUS, inclusive para a criança.
+> - **CAPS infantojuvenil, o CAPSi:** atende criança e adolescente em sofrimento mental, de graça, e em algumas cidades também atende questões de uso de substância.
+> - **CRAS e CREAS:** o CRAS orienta a família, o CREAS atende quando há direito violado.
+> - **Defensoria Pública:** de graça, para guarda, pensão e medida de proteção.
+> - **Alateen:** faz parte dos Grupos Familiares Al-Anon e é para jovens cuja vida foi afetada pela bebida de alguém. O site do Al-Anon do Brasil tem a busca de grupos, e vale conferir se existe um perto, porque não existe grupo em toda cidade.
+>
+> ## Se a casa está em separação
+>
+> Se houver elementos que mostrem risco de violência doméstica ou familiar, não cabe guarda compartilhada: a lei mudou nisso em 2023, e nesse caso a guarda fica com quem não é responsável pelo risco. Nas ações de guarda, o juiz pergunta às partes e ao Ministério Público sobre risco de violência antes da audiência.
+>
+> Existem medidas protetivas específicas para criança e adolescente desde 2022. Elas podem ser pedidas pelo Ministério Público, pela autoridade policial, pelo Conselho Tutelar ou por quem atua em favor da criança, e o juiz decide em até 24 horas.
+>
+> A Defensoria Pública da sua cidade cuida disso de graça. Você não precisa de advogado particular para proteger uma criança.
+>
+> ## Uma coisa sobre a Margem
+>
+> A Margem não comunica nada a ninguém, não acompanha a sua família e não entra em contato com escola, conselho ou polícia. Quem decide o que fazer com isto que você leu é você.
+
+### 3. Uma linha no resultado, em modo segurança
+
+No fim do bloco `[SEGURANCA]` de `content/familia/resultado-blocos.md`, acrescentar:
+
+> Se tem criança ou adolescente morando com vocês, ela também está dentro disso, mesmo que não seja com ela a briga.
+> [Ver o que dizer para uma criança](/familia/criancas)
+
+### 4. Links
+
+- `content/familia/modulos/modulo-06.md`, no fim do bloco "Quando a casa não está junta": `[Ver o que dizer para uma criança](/familia/criancas)`.
+- `app/familia/seguranca/page.tsx`: o quarto link da lista criada no N9.
+- Tela 0 do C8, nos problemas de exemplo: o item "As crianças perguntam o que está acontecendo" ganha, abaixo da lista, a linha "Se o seu problema é esse, comece por aqui" com o link da página.
+
+## Código
+
+- `app/familia/criancas/page.tsx`: página nova, estática, texto inline, com `// nivel-1` no topo, no mesmo padrão da `/familia/decisao` e das três páginas do N9. Sem `robots: noindex`.
+- `content/familia/modulos/modulo-06.md`: bloco novo, sem condição. Aparece para todo mundo, inclusive para quem não tem criança em casa, porque a parte "quando a casa não está junta" vale para qualquer casa com mais de um adulto.
+- `content/familia/resultado-blocos.md`: a linha nova no `[SEGURANCA]`.
+- `docs/revisao-conteudo.md`: a página nova e o bloco do módulo 6 na lista "a publicar", como nível 1.
+- **Não existe pergunta nova no diagnóstico neste briefing.** Chegamos a considerar perguntar se há criança na casa, para mostrar o conteúdo só a quem tem. A decisão é não perguntar: a página é aberta, o link está em três lugares, e uma pergunta a mais no diagnóstico custa conversão sem melhorar a proteção.
+- O C8 ainda não foi construído (o `modulo-06.md` tem `acao=marcar`). A mudança da tela 0 é na especificação, para quando ele for construído.
+
+## Critério de aceite
+
+- `/familia/criancas` abre sem login e sem compra, em aba anônima, não quebra sem diagnóstico carregado e não contém `{{apelido}}`.
+- O módulo 6 mostra "Quando a casa não está junta" para qualquer diagnóstico, antes do exercício.
+- O resultado em modo segurança mostra a linha nova e o link funciona.
+- `grep -rln "Conselho Tutelar" app/familia` encontra a página nova, e em nenhum texto a Margem aparece como quem comunica ou acompanha o caso.
+- Nenhum texto desta página promete resultado, e nenhum diz para a criança guardar segredo.
+- Lida em voz alta, a parte das faixas de idade funciona para quem tem uma criança de 5 anos e para quem tem uma de 16, sem parecer escrita para outra família.
+- A página e o bloco do módulo 6 estão em `/docs/revisao-conteudo.md`, na lista "a publicar", como nível 1.
+- Sem travessão, sem gênero marcado na pessoa, sem palavra proibida.
+
+---
+
+# Fontes, conferidas em 24/11/2026
+
+**Criança**
+- ECA, Lei 8.069/1990, arts. 131 a 136, e Resolução Conanda nº 139/2010: ao menos um Conselho Tutelar por município e as atribuições do art. 136. O horário de funcionamento e o regime de plantão são fixados por lei municipal, e a escala de plantão fora do horário comercial foi conferida em material de município, não em norma federal: é por isso que o texto da página diz "definidos por lei municipal".
+- Lei 13.431/2017, art. 4º: expor a criança, direta ou indiretamente, a crime violento contra membro da família é violência psicológica, em especial quando a torna testemunha.
+- Lei 14.344/2022, arts. 11, 13 e 16: atendimento pela autoridade policial, encaminhamento ao Conselho Tutelar e medidas protetivas de urgência pedidas pelo Ministério Público, pela autoridade policial, pelo Conselho Tutelar ou por quem atua em favor da criança, com decisão do juiz em 24 horas.
+- Lei 14.713/2023: altera o art. 1.584, § 2º, do Código Civil, afastando a guarda compartilhada quando há elementos que evidenciem risco de violência doméstica ou familiar, e acrescenta o art. 699-A ao Código de Processo Civil.
+- NACoA, os sete Cs, de Jerry Moe, e o material "Language with Kids": não causei, não controlo, não curo, e posso cuidar de mim contando o que sinto, fazendo escolhas boas e me valorizando. Também a orientação de separar a pessoa da doença e de falar com adolescente sobre risco familiar e sobre o que diminui esse risco.
+- Disque 100: gratuito, 24 horas todos os dias, aceita denúncia anônima, não exige prova, dá protocolo e não substitui emergência. Canais oficiais do Ministério dos Direitos Humanos e da Cidadania: telefone 100, WhatsApp (61) 99611-0100, Telegram, atendimento em Libras e chat da Ouvidoria. Os canais no `ContatosEmergencia.tsx` conferem com a fonte oficial.
+- Al-Anon do Brasil, al-anon.org.br: o Alateen faz parte dos Grupos Familiares Al-Anon, a busca de grupos está na página de grupos, e a sede atende em (11) 3331-8799 e (11) 3222-2099, das 12h às 18h.
+- CVV: 188, nacional, 24 horas, sem custo de ligação, por convênio com o Ministério da Saúde, mais chat e e-mail em cvv.org.br.
+
+## O que conferir antes de publicar
+
+- Todo número de telefone e todo endereço de site deste arquivo, uma última vez. Serviço público muda canal sem avisar.
+
+---
+
+# Briefing N11: as demandas para o Gemini escrever o volume de baixo risco
+
+Pré-requisito: ferramentas partes 1 e 2, briefing 00d, e o N9 aplicado antes do lote 5.
+
+**Sessão 4 · claude.ai · este briefing não é para o Claude Code.** É para o fundador colar no notebook "familiar" do Gemini, um lote por conversa. O que volta do Gemini é rascunho: a revisão é do Claude, e só depois disso o texto entra em briefing para o Claude Code.
+
+## Por que separar assim
+
+O que o Gemini escreve aqui é tudo o que é volume e baixo risco: frase de exemplo, meta pequena, ideia de lazer, rótulo de chip. Errar nesses textos custa um item fraco numa lista. Errar num texto de internação, de dívida, de criança ou de segurança pode mudar o desfecho de uma noite, e é por isso que N9 e N10 não passam por aqui.
+
+## Como rodar
+
+1. Uma conversa nova por lote, no notebook "familiar". Lote grande na mesma conversa faz o modelo repetir o que já escreveu.
+2. Cole o lote inteiro, inclusive as regras. Elas estão dentro de cada lote de propósito, para o lote funcionar sozinho, meses depois, sem este arquivo na frente.
+3. Se a resposta vier vazia, cortada ou fora do formato, abra conversa nova e cole de novo. Não peça para continuar.
+4. Guarde a resposta crua antes de mexer, para a revisão poder comparar.
+5. Na revisão, o Claude diz quais itens mudou e por quê, e quantos descartou.
+
+## Lote 1: frases F11 a F30 do "reescrever minhas frases"
+
+```
+Você escreve para a Margem, uma plataforma brasileira que acolhe pessoas com problema
+com álcool, outras drogas ou apostas, e as famílias dessas pessoas. Quem vai ler é um
+familiar com muito cansaço, no celular, num dia difícil.
+
+TAREFA
+Escrever 20 pares de frases, numerados de F11 a F30. Cada par tem:
+- a frase "de antes": o que costuma sair na hora da raiva, dentro de casa, no Brasil;
+- a frase "nova": a mesma intenção dita de um jeito que não vira briga;
+- três etiquetas de habilidade, escolhidas APENAS nesta lista de oito:
+  sentimento, pedido, fato, breve, valorizar, ajuda, compreensão, parte.
+  ("parte" é quando a pessoa reconhece a parte dela: "acho que eu falei num tom duro".)
+
+JÁ EXISTEM ESTES DEZ. NÃO REPITA O TEMA DE NENHUM DELES:
+1. "Você nunca ajuda em nada nesta casa." / "A casa tá pesando pra mim esta semana. Você pode lavar a louça hoje?"
+2. "Nossa, resolveu aparecer? Milagre!" / "Que bom que você veio jantar. Eu gosto muito quando a gente come junto."
+3. "Você não tem responsabilidade nenhuma." / "Ontem você perdeu o compromisso das 9h, e isso me deu medo. Se quiser, eu te lembro na próxima."
+4. "Tá escondendo alguma coisa de novo, né?" / "Quando você chega tarde sem avisar, eu fico com medo. Me manda uma mensagem quando atrasar?"
+5. "Você gastou tudo de novo! Vai acabar com a família!" / "Vi que a conta ficou no negativo e fiquei com medo. Vamos sentar no domingo para olhar as contas juntos?"
+6. "Se continuar assim, eu vou embora." / "Eu tô no meu limite com essas brigas. Queria muito ter dias mais tranquilos com você."
+7. "Olha todo mundo da sua idade trabalhando, e você aí." / "Eu sei que tá difícil achar o seu caminho. Se quiser, eu te ajudo a procurar alguma coisa."
+8. "Você estragou o fim de semana de novo." / "Eu fiquei triste de não sair no sábado. Queria muito passear com você no próximo."
+9. "Onde você tava? Com quem? Quanto gastou?" / "Eu me preocupei ontem à noite. E acho que exagerei mandando tanta mensagem."
+10. "Eu não aguento mais ver você se destruindo." / "Eu te amo e fico com medo de te ver assim. Tô aqui se você quiser conversar."
+
+OS 20 NOVOS DEVEM COBRIR, UM TEMA CADA, NESTA ORDEM:
+F11 pedido de dinheiro na hora
+F12 promessa que não foi cumprida
+F13 mentira descoberta
+F14 voltar a usar depois de um tempo bem
+F15 chegar em casa sob efeito na frente das crianças
+F16 querer dirigir depois de beber
+F17 parente de fora dando palpite na frente de todos
+F18 vergonha do que os vizinhos ou a família vão pensar
+F19 faltar no trabalho de novo
+F20 celular na mão de madrugada
+F21 festa de família chegando
+F22 remédio da farmácia acabando antes do fim do mês
+F23 tratamento começado e abandonado
+F24 aniversário ou data importante esquecida
+F25 pedir o carro emprestado
+F26 sumir por um dia sem avisar
+F27 saúde piorando e exame não feito
+F28 pedir para parar por amor a alguém da casa
+F29 dividir a conta da casa que não fecha
+F30 silêncio de dias dentro de casa
+
+REGRAS DE ESCRITA, TODAS OBRIGATÓRIAS
+- Português do Brasil falado, como gente fala em casa. Sem "vossa", sem gíria regional forte,
+  sem palavra difícil.
+- A frase nova tem que caber numa respiração. No máximo 20 palavras.
+- Sem travessão em lugar nenhum. Use vírgula ou ponto.
+- Sem nenhuma palavra que marque gênero de quem lê. Nada de "sozinho", "preocupada",
+  "cansado". Se precisar, mude a frase.
+- Palavras proibidas, em qualquer lugar: viciado, viciada, alcoólatra, bêbado, bêbada,
+  drogado, drogada, jogador compulsivo, dependente, jornada, transformar, empoderar,
+  resgatar, "é só", "basta".
+- A frase nova não promete resultado e não cobra promessa em troca.
+- A frase nova não pode ter "mas" depois de uma parte boa. "Eu te amo, mas..." soa como bronca.
+- A frase nova nunca usa "você sempre" nem "você nunca".
+- Onde entraria o nome da pessoa que usa, escreva exatamente {{apelido}}.
+- Nenhuma frase pode citar programa, aplicativo, terapia ou método.
+
+CALIBRAÇÃO
+Boa: "Vi que o dinheiro do mês acabou antes. Me ajuda a olhar as contas no sábado?"
+  (fato, pedido possível, curta.)
+Boa: "Fiquei com medo quando você pegou a chave do carro. Eu te levo onde você precisar."
+  (sentimento, oferta concreta, sem acusação.)
+Ruim: "Eu entendo que você esteja passando por um momento difícil, mas você precisa
+  entender que suas atitudes afetam toda a família." (longa, "mas", sermão.)
+Ruim: "Se você me ama, você para." (chantagem, e não é pedido.)
+
+FORMATO DA RESPOSTA
+Uma tabela com quatro colunas: ID, Frase de antes, Frase nova, Habilidades.
+Nada antes da tabela e nada depois. Sem introdução, sem comentário, sem explicação.
+```
+
+**O que o Claude confere depois:** tema repetido com F1 a F10, frase nova com mais de 20 palavras, "mas" no meio, gênero marcado, etiqueta fora das oito, palavra proibida, e se a frase nova resolve de verdade a intenção da frase de antes. Descarte sem pena: 20 pares bons valem mais que 30 medianos.
+
+## Lote 2: mais exemplos de meta por área
+
+```
+Você escreve para a Margem, uma plataforma brasileira que acolhe famílias de pessoas com
+problema com álcool, outras drogas ou apostas. Quem vai ler é um familiar com muito
+cansaço, que vai escolher uma meta pequena para a própria semana.
+
+TAREFA
+Escrever 4 exemplos novos de meta para cada uma das 8 áreas abaixo, 32 no total. Cada
+exemplo é um chip tocável: a pessoa toca e ele preenche o campo "o que você vai fazer",
+que continua editável.
+
+AS 8 ÁREAS E OS 4 EXEMPLOS QUE JÁ EXISTEM EM CADA. NÃO REPITA NENHUM:
+Sono e saúde: Beber um copo de água ao acordar, em 3 dias | Deitar 30 minutos mais cedo, em 2 noites | Fazer uma refeição sem celular, em 3 dias | Caminhar 15 minutos, em 2 dias
+Família: Mandar uma mensagem carinhosa para um parente, 1 vez | Conversar 10 minutos sobre um assunto leve com alguém da casa, em 2 dias | Fazer uma refeição em família sem falar do problema, 1 vez | Ver um filme com alguém da família no fim de semana
+Amizades e vida social: Mandar um "oi, sumi" para alguém de quem sinto falta, 1 vez | Ligar 10 minutos para uma pessoa amiga, 1 vez | Tomar um café com alguém, 1 vez | Marcar um encontro no fim de semana
+Lazer: Ouvir 3 músicas de que eu gosto, 1 dia | Ver um episódio de uma série só por prazer, 1 vez | Ler 5 páginas de um livro, em 2 dias | Reservar 1 hora no fim de semana para algo de que eu gosto
+Trabalho ou estudo: Fazer uma pausa de 5 minutos para respirar no trabalho, em 2 dias | Organizar meu espaço no começo de 1 dia | Parar de trabalhar no horário, em 2 dias | Listar as 3 prioridades da semana na segunda
+Dinheiro: Anotar o que eu gastei em 1 dia | Conferir meu saldo antes de uma compra, 1 vez | Listar as contas essenciais do mês, 1 vez | Separar um valor pequeno só meu, 1 vez
+Vida emocional: Fazer 3 respirações lentas quando a ansiedade subir, em 2 dias | Escrever 3 coisas boas do dia, 1 vez | Ficar 10 minutos em silêncio, só para mim, em 2 dias | Contar para alguém de confiança como eu estou, 1 vez
+Sentido, do seu jeito: Olhar o céu ou uma planta por 5 minutos, em 2 dias | Um momento de reflexão ou oração ao acordar, em 3 dias | Escrever uma frase que me faz bem, 1 vez | 15 minutos de leitura ou silêncio no fim de semana
+
+REGRAS, TODAS OBRIGATÓRIAS
+- Dá para saber se a pessoa fez. "Caminhar 15 minutos" serve, "me cuidar mais" não serve.
+- Cabe num dia ruim. Se precisa de 1 hora livre, de dinheiro ou de boa vontade de outra
+  pessoa, não serve.
+- Depende só de quem lê. Nada que precise da pessoa que usa, nem de ninguém da casa.
+- Custo zero ou quase zero. Nada de academia, curso, viagem, terapia paga, compra.
+- Tem quantidade no fim, no mesmo formato dos exemplos: "em 2 dias", "em 3 dias", "1 vez",
+  "no fim de semana".
+- No máximo 60 caracteres por exemplo, contando a quantidade.
+- Sem travessão. Sem palavra que marque gênero de quem lê.
+- Palavras proibidas: viciado, viciada, alcoólatra, bêbado, bêbada, drogado, drogada,
+  jogador compulsivo, dependente, jornada, transformar, empoderar, resgatar, "é só", "basta".
+- Nada que envolva bebida, aposta ou dinheiro apostado, nem em "Lazer".
+- Nada de meta sobre a pessoa que usa. Esta lista é sobre a vida de quem lê.
+- Nada religioso de uma religião só. "Sentido, do seu jeito" aceita oração e aceita silêncio.
+
+CALIBRAÇÃO
+Boa: "Tomar banho sem pressa, em 2 dias" (concreta, pequena, de graça, só depende de quem lê.)
+Boa: "Levar a marmita em vez de pular o almoço, em 3 dias" (observável e cabe num dia corrido.)
+Ruim: "Ter mais paciência" (ninguém sabe se fez.)
+Ruim: "Marcar uma consulta com a nutricionista" (custa dinheiro e depende de agenda de terceiro.)
+
+FORMATO DA RESPOSTA
+Uma tabela com duas colunas: Área, Exemplo. Uma linha por exemplo, 32 linhas.
+Nada antes e nada depois da tabela.
+```
+
+**O que o Claude confere depois:** meta que depende de outra pessoa, meta com custo, meta sem quantidade, meta acima de 60 caracteres, e repetição disfarçada de um dos 32 que já existem.
+
+## Lote 3: mais ideias de lazer por tipo de busca do diário
+
+```
+Você escreve para a Margem, uma plataforma brasileira que acolhe famílias de pessoas com
+problema com álcool, outras drogas ou apostas. Quem vai ler é um familiar que está
+montando uma lista do que a pessoa que usa gosta de fazer, para ter algo bom à mão
+justamente nos horários mais difíceis.
+
+TAREFA
+Escrever 5 ideias novas para cada uma das 6 buscas abaixo, 30 no total. Cada ideia é um
+chip tocável que preenche um campo editável. A ideia é algo que pode trazer, de outro
+jeito, aquilo que o uso parece trazer.
+
+AS 6 BUSCAS E AS 5 IDEIAS QUE JÁ EXISTEM EM CADA. NÃO REPITA NENHUMA:
+Relaxar: Ouvir uma música calma juntos | Um banho demorado | Sentar na varanda ou na calçada para ver o movimento | Um chá ou café no fim da tarde | Uma massagem nos ombros
+Se divertir: Ver um filme de comédia juntos | Uma partida de baralho ou dominó | Ver vídeos engraçados juntos | Olhar fotos de momentos bons | Cozinhar uma receita nova
+Se enturmar: Chamar amigos ou parentes para um café em casa | Um passeio na praça do bairro | Ver um jogo de futebol com a família | Um lanche com gente querida | Uma ligação de vídeo com alguém de quem {{apelido}} gosta
+Alívio de um problema: Uma caminhada ao ar livre | Ajudar a colocar o problema no papel | Resolver juntos uma pendência pequena | Um tempo em silêncio, sem cobrança | Conversar sobre outra coisa
+Sentir emoção: Assistir a um jogo importante do time | Um esporte ou exercício juntos | Um passeio a um lugar novo | Montar ou consertar algo juntos | Ver um filme de ação ou suspense
+Conseguir dormir: Quarto escuro e silencioso | Um som de chuva para dormir | Um leite ou chá quente antes de deitar | Deixar o celular longe na hora de deitar | Uma rotina tranquila no fim da noite
+
+REGRAS, TODAS OBRIGATÓRIAS
+- Nada que envolva bebida, dinheiro, aposta, sorteio ou jogo de apostar. Nem como piada.
+- Custo zero ou quase zero, e possível em casa, na rua da casa ou no bairro.
+- Possível num dia comum, sem planejar com antecedência, sem carro e sem marcar com ninguém
+  de fora, com exceção da busca "Se enturmar".
+- Entre 3 e 8 palavras por ideia.
+- Serve para gente de qualquer idade e de qualquer cidade do Brasil, inclusive cidade
+  pequena.
+- Sem travessão. Sem palavra que marque gênero.
+- Palavras proibidas: viciado, viciada, alcoólatra, bêbado, bêbada, drogado, drogada,
+  jogador compulsivo, dependente, jornada, transformar, empoderar, resgatar, "é só", "basta".
+- Onde entraria o nome da pessoa que usa, escreva exatamente {{apelido}}.
+- Não escreva frase de instrução nem explicação. A ideia é um rótulo curto.
+- Metade das ideias de cada busca deve ser coisa de fazer junto, e metade coisa que a
+  própria pessoa faz sozinha, porque nem todo dia dá para estar perto.
+
+CALIBRAÇÃO
+Boa, em Relaxar: "Regar as plantas no fim do dia" (curta, de graça, cabe em qualquer casa.)
+Boa, em Conseguir dormir: "Ventilador ligado, luz apagada" (concreta e sem custo.)
+Ruim: "Fazer uma viagem de fim de semana" (custa, precisa planejar.)
+Ruim: "Tomar um chopp assistindo ao jogo" (envolve bebida.)
+
+FORMATO DA RESPOSTA
+Uma tabela com duas colunas: Busca, Ideia. Uma linha por ideia, 30 linhas.
+Nada antes e nada depois da tabela.
+```
+
+**O que o Claude confere depois:** qualquer coisa com bebida, dinheiro ou aposta sai na hora, pelo critério de aceite do C4. Depois: custo escondido, ideia que só existe em cidade grande, ideia com mais de 8 palavras, e o equilíbrio entre junto e sozinho.
+
+## Lote 4: variações de chip do diário
+
+```
+Você escreve para a Margem, uma plataforma brasileira que acolhe famílias de pessoas com
+problema com álcool, outras drogas ou apostas. Quem vai ler é um familiar anotando, em
+menos de um minuto, um momento difícil que acabou de acontecer em casa.
+
+CONTEXTO QUE MUDA TUDO NESTA TAREFA
+Estes chips não são frases: são CATEGORIAS. O sistema conta quantas vezes cada uma foi
+marcada e, no fim da semana, mostra a mais comum como pista. Uma categoria que acontece
+uma vez só na vida de uma família não serve para nada: ela nunca vira pista. Então cada
+chip precisa ser geral o suficiente para se repetir em semanas diferentes, e específico o
+suficiente para dizer alguma coisa.
+
+TAREFA
+Escrever no máximo 4 chips novos para cada uma das 5 perguntas abaixo, 20 no total.
+Menos de 4 é aceitável se você não tiver 4 boas: escreva só as boas.
+
+AS 5 PERGUNTAS E OS CHIPS QUE JÁ EXISTEM. NÃO REPITA NENHUM:
+1. "O que aconteceu pouco antes?": Estresse ou cansaço | Discussão ou clima pesado em casa | Notícia ruim ou preocupação | Tédio ou tempo livre | Encontro, festa ou comemoração | Dinheiro recebido | Dia ou horário em que costuma acontecer | Não sei
+2. "O que você percebeu?": Fala ou tom de voz diferente | Humor mudou de repente | Irritação ou agitação | Muito silêncio ou isolamento | Sono ou cansaço fora do normal | Desequilíbrio ou desatenção | Celular o tempo todo
+3. "O que você acha que a pessoa buscou com isso?": Relaxar | Se divertir | Se enturmar | Fugir de um problema | Sentir emoção | Conseguir dormir | Não sei
+4. "E você, como reagiu?": Briguei ou discuti | Tentei convencer a parar | Fiquei em silêncio | Fingi que não vi | Resolvi por ela | Conversei com calma | Saí de perto para me proteger
+5. "Como ficou depois?": Clima pesado em casa | Foi dormir ou se fechou | Pediu desculpas ou mostrou arrependimento | Ninguém tocou no assunto | Conversamos com calma depois | Eu fiquei com raiva, medo ou sem energia
+
+REGRAS, TODAS OBRIGATÓRIAS
+- Entre 2 e 6 palavras por chip.
+- Cada chip tem que ser uma coisa que pode acontecer em muitas semanas diferentes.
+- Dois chips da mesma pergunta não podem se sobrepor. Se um familiar ficaria em dúvida
+  sobre qual marcar, um dos dois está errado.
+- Nada que peça interpretação de dentro da cabeça da outra pessoa, exceto na pergunta 3,
+  que já é declarada como palpite.
+- Na pergunta 4, nenhum chip pode julgar quem lê. "Perdi a paciência" serve,
+  "explodi sem motivo" não serve.
+- Sem travessão. Sem palavra que marque gênero de quem lê nem da outra pessoa.
+- Palavras proibidas: viciado, viciada, alcoólatra, bêbado, bêbada, drogado, drogada,
+  jogador compulsivo, dependente, jornada, transformar, empoderar, resgatar, "é só", "basta".
+- Não escreva "Outro" nem "Não sei": eles já existem e ficam sempre no fim.
+- Nada específico de uma substância só: isso vai em outro lote.
+
+CALIBRAÇÃO
+Boa, na pergunta 1: "Cobrança ou conta vencida" (repete, e é diferente de "notícia ruim".)
+Boa, na pergunta 5: "Saiu de casa e demorou" (observável e conta uma coisa nova.)
+Ruim: "Lembrou da infância" (não dá para saber, e quase não repete.)
+Ruim: "Ficou nervoso" (se sobrepõe a "Irritação ou agitação".)
+
+FORMATO DA RESPOSTA
+Uma tabela com duas colunas: Pergunta (o número), Chip. Nada antes e nada depois.
+```
+
+**O que o Claude confere depois:** sobreposição com chip existente, chip que não repete, julgamento na pergunta 4, e o total. O limite de 4 por pergunta não é estético: categoria demais dilui a contagem e o resumo da semana para de achar "o mais comum", que é exatamente o que o briefing M2b entrega. Se um chip novo for bom mas raro, ele fica de fora.
+
+## Lote 5, depois do N9: chips por substância
+
+Só rode este lote depois de o N9 estar aplicado, porque ele depende do campo `substancias` existir. Os chips entram nos extras por problema que o diário já tem, do mesmo jeito que hoje existem extras para álcool, outras drogas e apostas.
+
+```
+Você escreve para a Margem, uma plataforma brasileira que acolhe famílias de pessoas com
+problema com álcool, outras drogas ou apostas. Quem vai ler é um familiar anotando um
+momento difícil em menos de um minuto.
+
+CONTEXTO
+Estes chips são categorias que o sistema conta para mostrar o padrão da semana. Eles
+aparecem só para quem marcou aquela substância específica no começo do programa.
+
+TAREFA
+Escrever 3 chips para "O que aconteceu pouco antes?" e 3 chips para "O que você percebeu?"
+para cada uma destas três situações, 18 no total:
+A. crack ou cocaína
+B. remédio de farmácia, como calmante, remédio para dormir e remédio para dor
+C. maconha
+
+EXEMPLOS DO QUE JÁ EXISTE, PARA OUTROS CASOS. NÃO REPITA:
+Álcool, antes: Fim do expediente | Fim de semana ou véspera de feriado | Jogo de futebol ou encontro com quem bebe
+Outras drogas, antes: Muito tempo no quarto, longe de todo mundo | Mensagem ou ligação de alguém específico | Saída à noite com certas companhias
+Apostas, antes: Celular na mão sem nada para fazer | Vontade de recuperar uma perda | Notificação ou propaganda de aposta
+
+REGRAS, TODAS OBRIGATÓRIAS
+- Entre 2 e 6 palavras por chip.
+- Só o que um familiar vê de fora, sem revistar nada e sem perguntar nada.
+- Cada chip tem que poder se repetir em semanas diferentes.
+- Nada que ensine a reconhecer, comprar, guardar ou usar qualquer substância.
+- Nada que descreva quantidade, preço, ponto de venda, nome de boca de fumo, nem o jeito
+  de usar.
+- Nada que soe como ficha policial. O familiar está anotando a própria casa.
+- Sem travessão. Sem palavra que marque gênero.
+- Palavras proibidas: viciado, viciada, alcoólatra, bêbado, bêbada, drogado, drogada,
+  jogador compulsivo, dependente, jornada, transformar, empoderar, resgatar, "é só", "basta".
+
+CALIBRAÇÃO
+Boa, em B, antes: "Receita vencendo ou caixa acabando" (visível, repete, sem julgar.)
+Boa, em C, percebeu: "Olhos vermelhos e muita fome" (visível de fora e comum.)
+Ruim: "Comprou 10 reais de pedra" (quantidade e preço, e isso não é dado para anotar.)
+Ruim: "Pupilas dilatadas e nariz escorrendo" (vira exame médico dentro de casa.)
+
+FORMATO DA RESPOSTA
+Uma tabela com três colunas: Situação (A, B ou C), Pergunta, Chip. 18 linhas.
+Nada antes e nada depois.
+```
+
+**O que o Claude confere depois:** qualquer chip que ensine algo sobre a substância sai, mesmo que seja verdade. A pergunta que resolve: se este chip aparecesse num post público, ele informaria quem quer usar? Se sim, ele não entra.
+
+## Critério de aceite do N11
+
+- Cada lote funciona colado sozinho numa conversa nova, sem este arquivo na frente.
+- Cada lote tem: papel, tarefa, o que já existe, regras, calibração com dois exemplos bons e dois ruins, e formato de saída exato.
+- Nenhum lote pede texto de tela de risco: internação, dívida, desaparecimento, criança, violência, autolesão e segurança não aparecem em nenhum lote.
+- Nenhum lote cita o nome do método.
+- A lista de palavras proibidas está dentro de cada lote, por extenso.
+- Depois de cada lote, a revisão do Claude diz o que mudou, o que descartou e por quê.
+- Sem travessão, sem gênero marcado na pessoa, sem palavra proibida, inclusive dentro dos lotes.
