@@ -122,15 +122,29 @@
   line-height: var(--line-height-xl);
 }
 
-/* `padding=false` no Figma: 2 em cima e embaixo, nada nos lados, em todos os tamanhos. */
+/* Sem padding: o botão ocupa só o texto, em todos os tamanhos. A água não cabe mais dentro dele,
+   então sobe num halo (::before) que passa 2 px em cima e embaixo e 6 px nos lados, por fora do
+   layout. O halo não reserva espaço: pode ser cortado por um pai com overflow hidden e passa por
+   cima do que estiver a menos de 6 px. As cores registradas não herdam sozinhas, por isso o
+   `inherit` explícito: o halo segue o valor animado do botão a cada quadro. */
 .btn[data-sem-padding="true"] {
-  padding: var(--spacing-2) 0;
+  position: relative;
+  isolation: isolate;
+  padding: 0;
+  background: none;
 }
 
-/* O frame externo não tem padding lateral, mas o conteúdo por dentro tem 6 px de cada lado, em
-   todos os tamanhos. É esse espaço que dá folga entre a borda do hover e o texto. */
-.btn[data-sem-padding="true"] .btn-conteudo {
-  padding: 0 var(--spacing-6);
+.btn[data-sem-padding="true"]::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--spacing-2) * -1) calc(var(--spacing-6) * -1);
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  --btn-fundo: inherit;
+  --btn-agua: inherit;
+  --btn-nivel: inherit;
+  background: linear-gradient(to top, var(--btn-agua) var(--btn-nivel), var(--btn-fundo) var(--btn-nivel));
 }
 
 /* No Figma o ícone do botão medium é 20 (control-icon-md); nos menores continua 16. */
@@ -209,6 +223,14 @@
     background: color-mix(in srgb, var(--btn-agua) var(--btn-nivel), var(--btn-fundo));
   }
 
+  .btn[data-sem-padding="true"] {
+    background: none;
+  }
+
+  .btn[data-sem-padding="true"]::before {
+    background: color-mix(in srgb, var(--btn-agua) var(--btn-nivel), var(--btn-fundo));
+  }
+
   .btn:active:not(:disabled):not([data-carregando="true"]),
   [data-estado-forcado="pressed"] .btn {
     transform: none;
@@ -219,6 +241,18 @@
 
 .btn:focus-visible,
 [data-estado-forcado="focus"] .btn {
+  outline: var(--border-width-medium) solid var(--colors-brand-secondary-400);
+  outline-offset: 0;
+}
+
+/* Sem padding: o stroke vai pro halo, pra ter o mesmo tamanho do hover. */
+.btn[data-sem-padding="true"]:focus-visible,
+[data-estado-forcado="focus"] .btn[data-sem-padding="true"] {
+  outline: none;
+}
+
+.btn[data-sem-padding="true"]:focus-visible::before,
+[data-estado-forcado="focus"] .btn[data-sem-padding="true"]::before {
   outline: var(--border-width-medium) solid var(--colors-brand-secondary-400);
   outline-offset: 0;
 }
