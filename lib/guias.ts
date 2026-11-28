@@ -5400,6 +5400,202 @@ export const GUIAS: Guia[] = [
     // As cabeças ficam perto do alto do recorte: ancorado no centro, o card podia cortá-las.
     posicaoDaFotoDoCard: "center top",
   },
+  // Guia "como saber se sou alcoólatra" (28/11/2026, tarefa diária), escrito depois da pesquisa dos 10 primeiros do
+  // Google (docs/pesquisas-blog/como-saber-se-sou-alcoolatra.md). Formato dos títulos: perguntas (o anterior, overdose,
+  // usou afirmativos). Fatos conferidos contra o guia de como parar de beber (sinais, abstinência, OMS sem quantidade
+  // segura, remédios com receita, nunca dar remédio escondido) e contra Einstein, BVS Atenção Primária e Medprev: os
+  // critérios de dependência (perda de controle, fissura, tolerância, abstinência, abandono de outros interesses,
+  // continuar apesar dos danos), o CAGE e o AUDIT como triagem feita por profissional. A gradação leve, moderado e
+  // grave (2 a 3, 4 a 5, 6 ou mais sinais em 12 meses) é a do DSM-5. Mesma exceção de copy dos outros guias.
+  {
+    slug: "como-saber-se-sou-alcoolatra",
+    publicadoEm: "2026-11-28",
+    atualizadoEm: "2026-11-28",
+    title: "Como saber se sou alcoólatra: sinais, teste e o que fazer | Margem",
+    descricao:
+      "Os sinais de que a bebida virou um problema, um teste simples, o que pensar de quem bebe todo fim de semana ou todo dia e onde encontrar apoio sem julgamento.",
+    h1: "Como saber se sou alcoólatra: os sinais e o que fazer se você se reconhecer",
+    abertura:
+      "Se você está se perguntando se é alcoólatra, alguma coisa na sua relação com a bebida chamou a sua atenção. Pode ter sido uma ressaca que levou o dia inteiro, um comentário de alguém de casa, um pedaço da noite de que você não lembra ou só a sensação de que a bebida está ocupando mais espaço do que você gostaria. Fazer essa pergunta já é olhar pra si com cuidado.\n\nNeste guia, a gente explica o que essa palavra quer dizer, quais sinais merecem atenção, como funcionam os testes, o que pensar de quem bebe todo fim de semana ou todo dia e quais caminhos existem se você se reconhecer. Sem julgamento e sem pressa.",
+    carrossel: ["psicologo", "psiquiatra"],
+    carrosselTopo: true,
+    carrosselAposSecoes: 3,
+    secoes: [
+      {
+        titulo: "O que quer dizer ser alcoólatra?",
+        blocos: [
+          p("Alcoólatra é a palavra que muita gente usa pra quem tem uma relação difícil com a bebida. Os profissionais de saúde falam em transtorno por uso de álcool, que pode ser leve, moderado ou grave. Alcoolismo é o nome mais conhecido pra isso."),
+          p("A palavra alcoólatra carrega muito peso, e por isso muitos profissionais evitam usar. A gente usa aqui porque é como as pessoas procuram. Mas, mais útil do que decidir se você é ou não é alguma coisa, é olhar pro que a bebida tem feito na sua vida e se você consegue escolher quando e quanto beber."),
+          p("Nenhum desses nomes define quem você é. E não precisa esperar as coisas ficarem graves pra procurar cuidado."),
+        ],
+      },
+      {
+        titulo: "Quais são os sinais de que a bebida virou um problema?",
+        blocos: [
+          p("Os profissionais olham pra uma lista de sinais parecida com esta, sempre pensando nos últimos 12 meses:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Você bebe mais ou por mais tempo do que tinha planejado",
+              "Já quis diminuir ou parar e não conseguiu",
+              "Passa muito tempo bebendo, atrás de bebida ou se recuperando da ressaca",
+              "Sente uma vontade forte de beber, difícil de tirar da cabeça",
+              "Deixou de cumprir compromissos no trabalho, nos estudos ou em casa por causa da bebida",
+              "Continua bebendo mesmo com brigas e problemas nas relações",
+              "Deixou de lado coisas de que gostava pra beber",
+              "Bebe em situações de risco, como antes de dirigir",
+              "Continua bebendo mesmo percebendo que piora a saúde, o sono ou a ansiedade",
+              "Precisa de mais bebida pra sentir o mesmo efeito",
+              "Sente mal-estar quando fica sem beber, como tremor, suor, enjoo, ansiedade ou insônia, ou bebe pra aliviar isso",
+            ],
+          },
+          p("Pela forma como os profissionais avaliam, dois ou três desses sinais indicam um quadro leve, quatro ou cinco um quadro moderado, e seis ou mais um quadro grave. Quem fecha essa avaliação é um profissional, numa conversa. A lista serve pra você olhar com mais clareza pro seu momento."),
+          p("Outros sinais costumam aparecer junto: esconder garrafas ou o quanto bebeu, se irritar quando alguém toca no assunto, beber sozinho pra aguentar o dia ou esquecer o que aconteceu enquanto bebia."),
+        ],
+      },
+      {
+        titulo: "Existe teste para saber se sou alcoólatra?",
+        blocos: [
+          p("Existem questionários curtos que os profissionais usam pra uma primeira triagem. Um dos mais simples tem quatro perguntas:"),
+          {
+            tipo: "lista-numerada",
+            itens: [
+              "Você já sentiu que deveria diminuir a bebida?",
+              "Já se incomodou com críticas de outras pessoas sobre o seu jeito de beber?",
+              "Já sentiu culpa ou vergonha pela forma como bebe?",
+              "Já bebeu logo de manhã pra acalmar os nervos ou melhorar a ressaca?",
+            ],
+          },
+          p("Duas ou mais respostas sim são um sinal de alerta. Esse teste se chama CAGE. Ele não dá diagnóstico, só mostra que vale conversar com alguém sobre isso. Outro questionário muito usado é o AUDIT, da Organização Mundial da Saúde, com dez perguntas sobre quantidade, frequência e consequências da bebida. Ele é aplicado em Unidades Básicas de Saúde e no [CAPS AD](/blog/caps-ad)."),
+          p("Os Alcoólicos Anônimos também têm uma lista de perguntas no site deles. O AA ajuda muita gente, mas trabalha só com a ideia de parar de beber por completo. A Margem considera que diminuir também pode ser um caminho, e que essa escolha é sua. [Ler sobre como funcionam os Alcoólicos Anônimos](/blog/alcoolicos-anonimos)"),
+        ],
+      },
+      {
+        titulo: "Quem bebe todo final de semana é alcoólatra?",
+        blocos: [
+          p("Não necessariamente. A frequência sozinha não define. O que pesa é quanto você bebe, o que acontece quando bebe e se consegue parar quando quer."),
+          p("Mesmo assim, beber muito numa mesma ocasião, como quatro ou cinco doses ou mais, aumenta o risco de acidente, briga, apagão e intoxicação, mesmo pra quem não bebe durante a semana. Uma dose é mais ou menos uma lata de cerveja, uma taça de vinho ou uma dose de destilado. Se o fim de semana sempre termina em ressaca forte, esquecimento ou arrependimento, vale prestar atenção, com ou sem o rótulo."),
+        ],
+      },
+      {
+        titulo: "Quem bebe todo dia é alcoólatra?",
+        blocos: [
+          p("Também não automaticamente. Mas beber todo dia faz o corpo se acostumar com o álcool. Com o tempo, pode ser preciso beber mais pra sentir o mesmo efeito, e ficar sem beber pode trazer mal-estar. A Organização Mundial da Saúde considera que não existe quantidade de álcool sem risco, e cada dose a menos já diminui esse risco."),
+          p("Se você bebe todo dia e sente tremor, suor, enjoo ou ansiedade quando fica sem beber, não pare de uma vez por conta própria: a abstinência de álcool pode ser perigosa. Fale com um médico antes. [Ler sobre os sintomas de abstinência](/blog/sintomas-de-abstinencia)"),
+        ],
+      },
+      {
+        titulo: "O que é alcoolismo funcional?",
+        blocos: [
+          p("É como muita gente chama a situação de quem bebe de um jeito que já traz prejuízo, mas segue trabalhando, cuidando da casa e cumprindo os compromissos. De fora, ninguém percebe. Às vezes nem a própria pessoa."),
+          p("Estar dando conta da rotina não quer dizer que está tudo bem. Se você se reconheceu nos sinais acima, isso vale mesmo que a vida pareça em ordem."),
+        ],
+      },
+      {
+        titulo: "Quais são as fases do alcoolismo?",
+        blocos: [
+          p("Não existe uma divisão oficial em fases. O que os profissionais usam é a gradação de leve, moderado e grave, pela quantidade de sinais. E não é uma escada que todo mundo sobe até o fim: a relação com a bebida pode mudar, pra melhor, com cuidado e apoio."),
+        ],
+      },
+      {
+        titulo: "Eu me reconheci. E agora?",
+        blocos: [
+          p("Não precisa decidir tudo hoje. Alguns passos possíveis:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Anotar por duas semanas quando, quanto e por que você bebeu, no caderno ou no celular",
+              "Reparar no que vem antes da vontade: cansaço, ansiedade, solidão, uma briga, um lugar",
+              "Contar pra alguém de confiança o que você está percebendo",
+              "Conversar com um psicólogo ou psiquiatra, que pode ajudar a entender o seu momento",
+              "Pensar se o seu objetivo é diminuir ou parar. As duas escolhas são válidas, e um profissional pode ajudar a decidir",
+            ],
+          },
+          p("Se a bebida virou um jeito de lidar com a ansiedade ou com a tristeza, vale cuidar disso também. [Ler sobre ansiedade e álcool](/blog/ansiedade-e-alcool)"),
+          p("Quando decidir mudar, o guia de [como parar de beber](/blog/como-parar-de-beber) mostra o que ajuda a beber menos ou parar, e quando parar de uma vez pode ser perigoso."),
+        ],
+      },
+      {
+        titulo: "E se eu não quero parar de beber agora?",
+        blocos: [
+          p("Tudo bem. Você ainda pode diminuir os riscos. É o que se chama de [redução de danos](/blog/reducao-de-danos). Alguns cuidados:"),
+          {
+            tipo: "lista",
+            itens: [
+              "Comer antes e enquanto bebe",
+              "Intercalar com água",
+              "Definir antes quantas doses vai beber e quanto vai gastar",
+              "Não misturar com remédios, principalmente calmantes e remédios pra dormir",
+              "Não dirigir e combinar a volta antes de sair",
+              "Ter alguns dias da semana sem bebida",
+            ],
+          },
+          p("[Ler sobre o que pode e o que não pode misturar com álcool](/blog/pode-beber-tomando-remedio)"),
+        ],
+      },
+      {
+        titulo: "E se a preocupação é com alguém próximo?",
+        blocos: [
+          p("Você não precisa dar um diagnóstico pra outra pessoa, e chamar alguém de alcoólatra costuma fechar a conversa. Funciona melhor dizer o que você tem visto e como isso afeta você, num momento em que a pessoa não bebeu, sem acusação e sem ameaça, e mostrar que existem caminhos de apoio."),
+          p("O Al-Anon reúne familiares e amigos de pessoas que bebem, sem custo, e uma terapia pra você também é cuidado, mesmo que a outra pessoa não queira buscar ajuda agora. Nunca coloque remédio escondido na comida ou na bebida de alguém: além de desrespeitar a pessoa, pode ser perigoso. [Ler sobre como lidar quando um filho usa drogas](/blog/filho-usando-drogas)"),
+        ],
+      },
+      {
+        titulo: "Onde encontrar apoio?",
+        blocos: [
+          p("Na Margem, a sessão com psicólogo custa de R$ 60 a R$ 200, e a consulta com psiquiatra, de R$ 110 a R$ 290. Tudo online, e você escolhe o valor dentro da faixa. Conversar sobre a bebida não leva a internação, e o que você conta fica em sigilo. [Entender como funciona o atendimento pra álcool e outras drogas](/blog/psicologo-alcool-e-drogas)"),
+          p("Fora da Margem, o [CAPS AD](/blog/caps-ad) atende pelo SUS sem encaminhamento, a Unidade Básica de Saúde pode fazer uma primeira avaliação, e os Alcoólicos Anônimos têm reuniões presenciais e online, sem custo. Familiares encontram apoio no Al-Anon. [Ver serviços públicos presenciais e online](/redes-de-apoio) [Ver grupos de apoio presenciais e online](/redes-de-apoio?tipo=independentes)"),
+          p("Se precisa conversar agora, o CVV atende 24 horas pelo 188. Numa emergência de saúde, o SAMU atende no 192."),
+          p("Se quiser entender melhor o seu momento antes de falar com alguém, dá pra receber orientação gratuita na Margem."),
+          { tipo: "botoes", botoes: [{ texto: "Receber orientação gratuita", href: "/inicio" }] },
+        ],
+      },
+    ],
+    perguntas: [
+      {
+        pergunta: "Como saber se sou alcoólatra?",
+        resposta:
+          "Olhando pra alguns sinais dos últimos 12 meses: beber mais do que planejou, não conseguir diminuir, sentir vontade forte de beber, precisar de mais pra sentir o efeito, ter mal-estar sem beber e continuar bebendo mesmo com prejuízos. Quanto mais sinais, mais vale conversar com um profissional.",
+      },
+      {
+        pergunta: "Quem bebe todo final de semana é alcoólatra?",
+        resposta:
+          "Não necessariamente. O que pesa é quanto você bebe, o que acontece quando bebe e se consegue parar quando quer. Beber quatro ou cinco doses ou mais numa mesma ocasião já aumenta o risco de acidente, briga e intoxicação.",
+      },
+      {
+        pergunta: "Beber todos os dias é considerado alcoolismo?",
+        resposta:
+          "Não automaticamente, mas o corpo se acostuma com o álcool e o risco aumenta. Se você sente tremor, suor, enjoo ou ansiedade quando fica sem beber, fale com um médico antes de parar.",
+      },
+      {
+        pergunta: "Existe teste para saber se sou alcoólatra?",
+        resposta:
+          "Existem questionários de triagem, como o CAGE, com quatro perguntas, e o AUDIT, da Organização Mundial da Saúde, com dez. Eles não dão diagnóstico, só mostram se vale conversar com um profissional.",
+      },
+      {
+        pergunta: "Quais são os 5 sinais de alcoolismo?",
+        resposta:
+          "Não existe uma lista oficial de cinco. Entre os sinais mais lembrados estão perder o controle de quanto bebe, sentir vontade forte de beber, precisar de mais pra sentir o efeito, ter mal-estar sem beber e continuar bebendo mesmo com prejuízos.",
+      },
+      {
+        pergunta: "Quais são as 3 fases do alcoolismo?",
+        resposta:
+          "Não existe uma divisão oficial em fases. Os profissionais falam em transtorno por uso de álcool leve, moderado ou grave, conforme a quantidade de sinais, e a relação com a bebida pode mudar com cuidado e apoio.",
+      },
+      {
+        pergunta: "O que corta a vontade de beber?",
+        resposta:
+          "Não existe receita caseira. Alguns remédios, como naltrexona e acamprosato, ajudam a reduzir a vontade, mas pedem receita e acompanhamento médico. Terapia, apoio de pessoas de confiança e mudanças na rotina também ajudam.",
+      },
+      {
+        pergunta: "Alcoolismo tem cura?",
+        resposta:
+          "Muita gente deixa de ter problemas com a bebida, parando ou diminuindo, e existe tratamento. A vontade pode voltar em alguns momentos, e voltar a beber não apaga o caminho feito. Com apoio, dá pra retomar.",
+      },
+    ],
+    imagem: false,
+    imagemAlt: "",
+  },
 ];
 
 export function caminhoDaImagem(guia: Guia) {

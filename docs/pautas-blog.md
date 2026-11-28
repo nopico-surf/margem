@@ -9,7 +9,8 @@ Não entra aqui assunto que já tem guia, nem notícia do momento (essa vai pro 
 - como parar de usar crack
 - como ajudar alguém que usa drogas
 - recaída drogas
-- como saber se sou alcoólatra
+- como ajudar uma pessoa alcoólatra
+- amigo alcoólatra
 
 ## Publicadas
 
@@ -26,3 +27,4 @@ Pauta escolhida sai das candidatas e entra aqui, com a data e o slug do guia.
 - 2026-11-23: ansiedade e álcool (/blog/ansiedade-e-alcool)
 - 2026-11-24: cocaína e álcool (/blog/cocaina-e-alcool)
 - 2026-11-26: overdose o que fazer (/blog/overdose)
+- 2026-11-28: como saber se sou alcoólatra (/blog/como-saber-se-sou-alcoolatra)
